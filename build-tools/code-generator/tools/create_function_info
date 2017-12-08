@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -uxe
+if [ -e $1/doc/functions.rst ]
+then
+    root=$(cd $(dirname $0)/../../.. && pwd)
+    PYTHONPATH=$1/build-tools/code_generator python3 \
+              $root/build-tools/code-generator/tools/create_function_info.py \
+                  $root/build-tools/code-generator/function_info.json
+              
+else
+    echo Specify NNABLA path.
+    echo  $0 Usage
+    echo     $0 NNABLA_DIRECTORY
+fi
