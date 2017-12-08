@@ -2,7 +2,7 @@ import json
 import sys
 from collections import OrderedDict
 
-from  utils.load_function_rst import Functions
+from utils.load_function_rst import Functions
 
 info = OrderedDict()
 f = Functions()

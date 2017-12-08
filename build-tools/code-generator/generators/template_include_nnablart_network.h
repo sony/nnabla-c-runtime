@@ -6,11 +6,10 @@
 extern "C" {{
 #endif /* __cplusplus */
 
-#include <stdlib.h> // for size_t
 #include <stdint.h> // for fixed bit length integer type
+#include <stdlib.h> // for size_t
 
 #define NN_BINARY_FORMAT_VERSION {BINARY_VERSION}
-  
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
@@ -27,8 +26,8 @@ typedef uint32_t nn_size_t; ///< データの場所を示すインデックス
 
 /// @brief 整数のリスト
 typedef struct {{
-    nn_size_t size;     ///< リストのサイズ
-    pointer_index_t list; ///< リストデータへのインデックス
+  nn_size_t size;       ///< リストのサイズ
+  pointer_index_t list; ///< リストデータへのインデックス
 }} nn_list_t;
 
 /// @brief Parameter types.
@@ -45,7 +44,7 @@ typedef struct {{
   nn_list_t shape;      ///< Shape of param
   nn_param_type_t type; ///< Type of param values
   nn_size_t scale;      ///< Scale of param values
-  pointer_index_t data;   ///< Location of param data
+  pointer_index_t data; ///< Location of param data
 }} nn_param_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,20 +52,18 @@ typedef struct {{
 /// @brief Definitions for functions.
 /// @{{
 
-
 /// @brief Function types.
 typedef enum {{
-  {FUNCTION_ENUMS}
+    {FUNCTION_ENUMS}
 }} nn_function_type_t;
-
 
 /// @brief Common definition of Function.
 /// This type is to be used for the function does not have arguements.
 /// @{{
 typedef struct {{
-    nn_function_type_t type;    ///< Common: type of function.
-    nn_list_t inputs;   ///< Common: List of input variables.
-    nn_list_t outputs;  ///< Common: List of output variables.
+  nn_function_type_t type; ///< Common: type of function.
+  nn_list_t inputs;        ///< Common: List of input variables.
+  nn_list_t outputs;       ///< Common: List of output variables.
 }} nn_function_t;
 
 /// @}}
@@ -80,14 +77,14 @@ typedef struct {{
 
 /// @brief Definition of Variable.
 typedef struct {{
-    uint32_t id;
-    nn_list_t shape;
-    int32_t buffer_index;
+  uint32_t id;
+  nn_list_t shape;
+  int32_t buffer_index;
 }} nn_variable_t;
 
 typedef struct {{
-    nn_size_t num_of_data;
-    nn_size_t data_size;
+  nn_size_t num_of_data;
+  nn_size_t data_size;
 }} nn_memory_t;
 
 /// @brief Definition of Network.
@@ -111,8 +108,13 @@ typedef struct {{
 ///
 /// @{{
 #ifndef WHOAMI
-#define WHOAMI( ... ) {{printf( "%s:%d :", __FILE__, __LINE__ ); printf(__VA_ARGS__); fflush(stdout); }}
-#endif  //WHOAMI
+#define WHOAMI(...)                                                            \
+  {{                                                                            \
+    printf("%s:%d :", __FILE__, __LINE__);                                     \
+    printf(__VA_ARGS__);                                                       \
+    fflush(stdout);                                                            \
+  }}
+#endif // WHOAMI
 /// @}}
 
 #ifdef __cplusplus
@@ -120,4 +122,3 @@ typedef struct {{
 #endif /* __cplusplus */
 
 #endif // H_NETWORK_H__
-

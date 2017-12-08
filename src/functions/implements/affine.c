@@ -1,21 +1,11 @@
 // -*- coding:utf-8 -*-
-// -*- coding:utf-8 -*-
 
 #include <nnablart/functions.h>
 
-void initAffineConfig(AffineConfig *config, int32_t base_axis)
-{
-}
+void initAffineConfig(AffineConfig *config, int32_t base_axis) {}
 
-void initAffineLocalContext(Function *f)
-{
-}
+void initAffineLocalContext(rt_function_t *f) {}
 
-void freeAffineLocalContext(Function *f)
-{
-}
+void freeAffineLocalContext(rt_function_t *f) {}
 
-void execAffine(Function *f)
-{
-}
-
+void execAffine(rt_function_t *f) {}
