@@ -81,11 +81,11 @@ typedef struct {
 typedef struct {
   int32_t base_axis;
   void *local_context;
-} AffineConfig;
-void initAffineConfig(AffineConfig *config, int32_t base_axis);
-void initAffineLocalContext(rt_function_t *f);
-void freeAffineLocalContext(rt_function_t *f);
-void execAffine(rt_function_t *f);
+} affine_config_t;
+void init_affine_config(affine_config_t *config, int32_t base_axis);
+void init_affine_local_context(rt_function_t *f);
+void free_affinelocal_context(rt_function_t *f);
+void exec_affine(rt_function_t *f);
 
 // Convolution
 typedef struct {
@@ -95,13 +95,13 @@ typedef struct {
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;
   void *local_context;
-} ConvolutionConfig;
-void initConvolutionConfig(ConvolutionConfig *config, int32_t base_axis,
-                           rt_list_t pad, rt_list_t stride, rt_list_t dilation,
-                           int32_t group);
-void initConvolutionLocalContext(rt_function_t *f);
-void freeConvolutionLocalContext(rt_function_t *f);
-void execConvolution(rt_function_t *f);
+} convolution_config_t;
+void init_convolution_config(convolution_config_t *config, int32_t base_axis,
+                             rt_list_t pad, rt_list_t stride,
+                             rt_list_t dilation, int32_t group);
+void init_convolution_local_context(rt_function_t *f);
+void free_convolutionlocal_context(rt_function_t *f);
+void exec_convolution(rt_function_t *f);
 
 // DepthwiseConvolution
 typedef struct {
@@ -111,14 +111,14 @@ typedef struct {
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t multiplier;
   void *local_context;
-} DepthwiseConvolutionConfig;
-void initDepthwiseConvolutionConfig(DepthwiseConvolutionConfig *config,
-                                    int32_t base_axis, rt_list_t pad,
-                                    rt_list_t stride, rt_list_t dilation,
-                                    int32_t multiplier);
-void initDepthwiseConvolutionLocalContext(rt_function_t *f);
-void freeDepthwiseConvolutionLocalContext(rt_function_t *f);
-void execDepthwiseConvolution(rt_function_t *f);
+} depthwise_convolution_config_t;
+void init_depthwise_convolution_config(depthwise_convolution_config_t *config,
+                                       int32_t base_axis, rt_list_t pad,
+                                       rt_list_t stride, rt_list_t dilation,
+                                       int32_t multiplier);
+void init_depthwise_convolution_local_context(rt_function_t *f);
+void free_depthwise_convolutionlocal_context(rt_function_t *f);
+void exec_depthwise_convolution(rt_function_t *f);
 
 // Deconvolution
 typedef struct {
@@ -128,13 +128,14 @@ typedef struct {
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;
   void *local_context;
-} DeconvolutionConfig;
-void initDeconvolutionConfig(DeconvolutionConfig *config, int32_t base_axis,
-                             rt_list_t pad, rt_list_t stride,
-                             rt_list_t dilation, int32_t group);
-void initDeconvolutionLocalContext(rt_function_t *f);
-void freeDeconvolutionLocalContext(rt_function_t *f);
-void execDeconvolution(rt_function_t *f);
+} deconvolution_config_t;
+void init_deconvolution_config(deconvolution_config_t *config,
+                               int32_t base_axis, rt_list_t pad,
+                               rt_list_t stride, rt_list_t dilation,
+                               int32_t group);
+void init_deconvolution_local_context(rt_function_t *f);
+void free_deconvolutionlocal_context(rt_function_t *f);
+void exec_deconvolution(rt_function_t *f);
 
 // MaxPooling
 typedef struct {
@@ -143,13 +144,13 @@ typedef struct {
   uint8_t ignore_border;
   rt_list_t pad; ///< Original type is [Shape]
   void *local_context;
-} MaxPoolingConfig;
-void initMaxPoolingConfig(MaxPoolingConfig *config, rt_list_t kernel,
-                          rt_list_t stride, uint8_t ignore_border,
-                          rt_list_t pad);
-void initMaxPoolingLocalContext(rt_function_t *f);
-void freeMaxPoolingLocalContext(rt_function_t *f);
-void execMaxPooling(rt_function_t *f);
+} max_pooling_config_t;
+void init_max_pooling_config(max_pooling_config_t *config, rt_list_t kernel,
+                             rt_list_t stride, uint8_t ignore_border,
+                             rt_list_t pad);
+void init_max_pooling_local_context(rt_function_t *f);
+void free_max_poolinglocal_context(rt_function_t *f);
+void exec_max_pooling(rt_function_t *f);
 
 // AveragePooling
 typedef struct {
@@ -159,13 +160,14 @@ typedef struct {
   rt_list_t pad; ///< Original type is [Shape]
   uint8_t including_pad;
   void *local_context;
-} AveragePoolingConfig;
-void initAveragePoolingConfig(AveragePoolingConfig *config, rt_list_t kernel,
-                              rt_list_t stride, uint8_t ignore_border,
-                              rt_list_t pad, uint8_t including_pad);
-void initAveragePoolingLocalContext(rt_function_t *f);
-void freeAveragePoolingLocalContext(rt_function_t *f);
-void execAveragePooling(rt_function_t *f);
+} average_pooling_config_t;
+void init_average_pooling_config(average_pooling_config_t *config,
+                                 rt_list_t kernel, rt_list_t stride,
+                                 uint8_t ignore_border, rt_list_t pad,
+                                 uint8_t including_pad);
+void init_average_pooling_local_context(rt_function_t *f);
+void free_average_poolinglocal_context(rt_function_t *f);
+void exec_average_pooling(rt_function_t *f);
 
 // SumPooling
 typedef struct {
@@ -174,121 +176,121 @@ typedef struct {
   uint8_t ignore_border;
   rt_list_t pad; ///< Original type is [Shape]
   void *local_context;
-} SumPoolingConfig;
-void initSumPoolingConfig(SumPoolingConfig *config, rt_list_t kernel,
-                          rt_list_t stride, uint8_t ignore_border,
-                          rt_list_t pad);
-void initSumPoolingLocalContext(rt_function_t *f);
-void freeSumPoolingLocalContext(rt_function_t *f);
-void execSumPooling(rt_function_t *f);
+} sum_pooling_config_t;
+void init_sum_pooling_config(sum_pooling_config_t *config, rt_list_t kernel,
+                             rt_list_t stride, uint8_t ignore_border,
+                             rt_list_t pad);
+void init_sum_pooling_local_context(rt_function_t *f);
+void free_sum_poolinglocal_context(rt_function_t *f);
+void exec_sum_pooling(rt_function_t *f);
 
 // Unpooling
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]
   void *local_context;
-} UnpoolingConfig;
-void initUnpoolingConfig(UnpoolingConfig *config, rt_list_t kernel);
-void initUnpoolingLocalContext(rt_function_t *f);
-void freeUnpoolingLocalContext(rt_function_t *f);
-void execUnpooling(rt_function_t *f);
+} unpooling_config_t;
+void init_unpooling_config(unpooling_config_t *config, rt_list_t kernel);
+void init_unpooling_local_context(rt_function_t *f);
+void free_unpoolinglocal_context(rt_function_t *f);
+void exec_unpooling(rt_function_t *f);
 
 // Embed
-void execEmbed(rt_function_t *f);
+void exec_embed(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
 
 // Sigmoid
-void execSigmoid(rt_function_t *f);
+void exec_sigmoid(rt_function_t *f);
 
 // Swish
-void execSwish(rt_function_t *f);
+void exec_swish(rt_function_t *f);
 
 // Tanh
-void execTanh(rt_function_t *f);
+void exec_tanh(rt_function_t *f);
 
 // ReLU
 typedef struct {
   uint8_t inplace;
   void *local_context;
-} ReLUConfig;
-void initReLUConfig(ReLUConfig *config, uint8_t inplace);
-void initReLULocalContext(rt_function_t *f);
-void freeReLULocalContext(rt_function_t *f);
-void execReLU(rt_function_t *f);
+} relu_config_t;
+void init_relu_config(relu_config_t *config, uint8_t inplace);
+void init_relu_local_context(rt_function_t *f);
+void free_relulocal_context(rt_function_t *f);
+void exec_relu(rt_function_t *f);
 
 // LeakyReLU
 typedef struct {
   float alpha;
   void *local_context;
-} LeakyReLUConfig;
-void initLeakyReLUConfig(LeakyReLUConfig *config, float alpha);
-void initLeakyReLULocalContext(rt_function_t *f);
-void freeLeakyReLULocalContext(rt_function_t *f);
-void execLeakyReLU(rt_function_t *f);
+} leaky_relu_config_t;
+void init_leaky_relu_config(leaky_relu_config_t *config, float alpha);
+void init_leaky_relu_local_context(rt_function_t *f);
+void free_leaky_relulocal_context(rt_function_t *f);
+void exec_leaky_relu(rt_function_t *f);
 
 // Softmax
 typedef struct {
   int32_t axis;
   void *local_context;
-} SoftmaxConfig;
-void initSoftmaxConfig(SoftmaxConfig *config, int32_t axis);
-void initSoftmaxLocalContext(rt_function_t *f);
-void freeSoftmaxLocalContext(rt_function_t *f);
-void execSoftmax(rt_function_t *f);
+} softmax_config_t;
+void init_softmax_config(softmax_config_t *config, int32_t axis);
+void init_softmax_local_context(rt_function_t *f);
+void free_softmaxlocal_context(rt_function_t *f);
+void exec_softmax(rt_function_t *f);
 
 // ELU
 typedef struct {
   float alpha;
   void *local_context;
-} ELUConfig;
-void initELUConfig(ELUConfig *config, float alpha);
-void initELULocalContext(rt_function_t *f);
-void freeELULocalContext(rt_function_t *f);
-void execELU(rt_function_t *f);
+} elu_config_t;
+void init_elu_config(elu_config_t *config, float alpha);
+void init_elu_local_context(rt_function_t *f);
+void free_elulocal_context(rt_function_t *f);
+void exec_elu(rt_function_t *f);
 
 // SELU
 typedef struct {
   float scale;
   float alpha;
   void *local_context;
-} SELUConfig;
-void initSELUConfig(SELUConfig *config, float scale, float alpha);
-void initSELULocalContext(rt_function_t *f);
-void freeSELULocalContext(rt_function_t *f);
-void execSELU(rt_function_t *f);
+} selu_config_t;
+void init_selu_config(selu_config_t *config, float scale, float alpha);
+void init_selu_local_context(rt_function_t *f);
+void free_selulocal_context(rt_function_t *f);
+void exec_selu(rt_function_t *f);
 
 // CReLU
 typedef struct {
   int32_t axis;
   void *local_context;
-} CReLUConfig;
-void initCReLUConfig(CReLUConfig *config, int32_t axis);
-void initCReLULocalContext(rt_function_t *f);
-void freeCReLULocalContext(rt_function_t *f);
-void execCReLU(rt_function_t *f);
+} crelu_config_t;
+void init_crelu_config(crelu_config_t *config, int32_t axis);
+void init_crelu_local_context(rt_function_t *f);
+void free_crelulocal_context(rt_function_t *f);
+void exec_crelu(rt_function_t *f);
 
 // CELU
 typedef struct {
   float alpha;
   int32_t axis;
   void *local_context;
-} CELUConfig;
-void initCELUConfig(CELUConfig *config, float alpha, int32_t axis);
-void initCELULocalContext(rt_function_t *f);
-void freeCELULocalContext(rt_function_t *f);
-void execCELU(rt_function_t *f);
+} celu_config_t;
+void init_celu_config(celu_config_t *config, float alpha, int32_t axis);
+void init_celu_local_context(rt_function_t *f);
+void free_celulocal_context(rt_function_t *f);
+void exec_celu(rt_function_t *f);
 
 // PReLU
 typedef struct {
   int32_t base_axis;
   void *local_context;
-} PReLUConfig;
-void initPReLUConfig(PReLUConfig *config, int32_t base_axis);
-void initPReLULocalContext(rt_function_t *f);
-void freePReLULocalContext(rt_function_t *f);
-void execPReLU(rt_function_t *f);
+} prelu_config_t;
+void init_prelu_config(prelu_config_t *config, int32_t base_axis);
+void init_prelu_local_context(rt_function_t *f);
+void free_prelulocal_context(rt_function_t *f);
+void exec_prelu(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Normalization
@@ -301,25 +303,26 @@ typedef struct {
   float eps;
   uint8_t batch_stat;
   void *local_context;
-} BatchNormalizationConfig;
-void initBatchNormalizationConfig(BatchNormalizationConfig *config,
-                                  rt_list_t axes, float decay_rate, float eps,
-                                  uint8_t batch_stat);
-void initBatchNormalizationLocalContext(rt_function_t *f);
-void freeBatchNormalizationLocalContext(rt_function_t *f);
-void execBatchNormalization(rt_function_t *f);
+} batch_normalization_config_t;
+void init_batch_normalization_config(batch_normalization_config_t *config,
+                                     rt_list_t axes, float decay_rate,
+                                     float eps, uint8_t batch_stat);
+void init_batch_normalization_local_context(rt_function_t *f);
+void free_batch_normalizationlocal_context(rt_function_t *f);
+void exec_batch_normalization(rt_function_t *f);
 
 // MeanSubtraction
 typedef struct {
   int32_t base_axis;
   uint8_t update_running_mean;
   void *local_context;
-} MeanSubtractionConfig;
-void initMeanSubtractionConfig(MeanSubtractionConfig *config, int32_t base_axis,
-                               uint8_t update_running_mean);
-void initMeanSubtractionLocalContext(rt_function_t *f);
-void freeMeanSubtractionLocalContext(rt_function_t *f);
-void execMeanSubtraction(rt_function_t *f);
+} mean_subtraction_config_t;
+void init_mean_subtraction_config(mean_subtraction_config_t *config,
+                                  int32_t base_axis,
+                                  uint8_t update_running_mean);
+void init_mean_subtraction_local_context(rt_function_t *f);
+void free_mean_subtractionlocal_context(rt_function_t *f);
+void exec_mean_subtraction(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Reduction
@@ -330,61 +333,61 @@ typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   uint8_t keep_dims;
   void *local_context;
-} SumConfig;
-void initSumConfig(SumConfig *config, rt_list_t axes, uint8_t keep_dims);
-void initSumLocalContext(rt_function_t *f);
-void freeSumLocalContext(rt_function_t *f);
-void execSum(rt_function_t *f);
+} sum_config_t;
+void init_sum_config(sum_config_t *config, rt_list_t axes, uint8_t keep_dims);
+void init_sum_local_context(rt_function_t *f);
+void free_sumlocal_context(rt_function_t *f);
+void exec_sum(rt_function_t *f);
 
 // Mean
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   uint8_t keep_dims;
   void *local_context;
-} MeanConfig;
-void initMeanConfig(MeanConfig *config, rt_list_t axes, uint8_t keep_dims);
-void initMeanLocalContext(rt_function_t *f);
-void freeMeanLocalContext(rt_function_t *f);
-void execMean(rt_function_t *f);
+} mean_config_t;
+void init_mean_config(mean_config_t *config, rt_list_t axes, uint8_t keep_dims);
+void init_mean_local_context(rt_function_t *f);
+void free_meanlocal_context(rt_function_t *f);
+void exec_mean(rt_function_t *f);
 
 // Max
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   uint8_t keep_dims;
   void *local_context;
-} MaxConfig;
-void initMaxConfig(MaxConfig *config, rt_list_t axes, uint8_t keep_dims);
-void initMaxLocalContext(rt_function_t *f);
-void freeMaxLocalContext(rt_function_t *f);
-void execMax(rt_function_t *f);
+} max_config_t;
+void init_max_config(max_config_t *config, rt_list_t axes, uint8_t keep_dims);
+void init_max_local_context(rt_function_t *f);
+void free_maxlocal_context(rt_function_t *f);
+void exec_max(rt_function_t *f);
 
 // Min
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   uint8_t keep_dims;
   void *local_context;
-} MinConfig;
-void initMinConfig(MinConfig *config, rt_list_t axes, uint8_t keep_dims);
-void initMinLocalContext(rt_function_t *f);
-void freeMinLocalContext(rt_function_t *f);
-void execMin(rt_function_t *f);
+} min_config_t;
+void init_min_config(min_config_t *config, rt_list_t axes, uint8_t keep_dims);
+void init_min_local_context(rt_function_t *f);
+void free_minlocal_context(rt_function_t *f);
+void exec_min(rt_function_t *f);
 
 // Prod
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   uint8_t keep_dims;
   void *local_context;
-} ProdConfig;
-void initProdConfig(ProdConfig *config, rt_list_t axes, uint8_t keep_dims);
-void initProdLocalContext(rt_function_t *f);
-void freeProdLocalContext(rt_function_t *f);
-void execProd(rt_function_t *f);
+} prod_config_t;
+void init_prod_config(prod_config_t *config, rt_list_t axes, uint8_t keep_dims);
+void init_prod_local_context(rt_function_t *f);
+void free_prodlocal_context(rt_function_t *f);
+void exec_prod(rt_function_t *f);
 
 // ReduceSum
-void execReduceSum(rt_function_t *f);
+void exec_reduce_sum(rt_function_t *f);
 
 // ReduceMean
-void execReduceMean(rt_function_t *f);
+void exec_reduce_mean(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Arithmetic
@@ -394,86 +397,86 @@ void execReduceMean(rt_function_t *f);
 typedef struct {
   uint8_t inplace;
   void *local_context;
-} Add2Config;
-void initAdd2Config(Add2Config *config, uint8_t inplace);
-void initAdd2LocalContext(rt_function_t *f);
-void freeAdd2LocalContext(rt_function_t *f);
-void execAdd2(rt_function_t *f);
+} add2_config_t;
+void init_add2_config(add2_config_t *config, uint8_t inplace);
+void init_add2_local_context(rt_function_t *f);
+void free_add2local_context(rt_function_t *f);
+void exec_add2(rt_function_t *f);
 
 // BcAdd2
-void execBcAdd2(rt_function_t *f);
+void exec_bc_add2(rt_function_t *f);
 
 // Sub2
-void execSub2(rt_function_t *f);
+void exec_sub2(rt_function_t *f);
 
 // Mul2
-void execMul2(rt_function_t *f);
+void exec_mul2(rt_function_t *f);
 
 // Div2
-void execDiv2(rt_function_t *f);
+void exec_div2(rt_function_t *f);
 
 // Pow2
-void execPow2(rt_function_t *f);
+void exec_pow2(rt_function_t *f);
 
 // AddScalar
 typedef struct {
   float val;
   void *local_context;
-} AddScalarConfig;
-void initAddScalarConfig(AddScalarConfig *config, float val);
-void initAddScalarLocalContext(rt_function_t *f);
-void freeAddScalarLocalContext(rt_function_t *f);
-void execAddScalar(rt_function_t *f);
+} add_scalar_config_t;
+void init_add_scalar_config(add_scalar_config_t *config, float val);
+void init_add_scalar_local_context(rt_function_t *f);
+void free_add_scalarlocal_context(rt_function_t *f);
+void exec_add_scalar(rt_function_t *f);
 
 // MulScalar
 typedef struct {
   float val;
   void *local_context;
-} MulScalarConfig;
-void initMulScalarConfig(MulScalarConfig *config, float val);
-void initMulScalarLocalContext(rt_function_t *f);
-void freeMulScalarLocalContext(rt_function_t *f);
-void execMulScalar(rt_function_t *f);
+} mul_scalar_config_t;
+void init_mul_scalar_config(mul_scalar_config_t *config, float val);
+void init_mul_scalar_local_context(rt_function_t *f);
+void free_mul_scalarlocal_context(rt_function_t *f);
+void exec_mul_scalar(rt_function_t *f);
 
 // PowScalar
 typedef struct {
   float val;
   void *local_context;
-} PowScalarConfig;
-void initPowScalarConfig(PowScalarConfig *config, float val);
-void initPowScalarLocalContext(rt_function_t *f);
-void freePowScalarLocalContext(rt_function_t *f);
-void execPowScalar(rt_function_t *f);
+} pow_scalar_config_t;
+void init_pow_scalar_config(pow_scalar_config_t *config, float val);
+void init_pow_scalar_local_context(rt_function_t *f);
+void free_pow_scalarlocal_context(rt_function_t *f);
+void exec_pow_scalar(rt_function_t *f);
 
 // RSubScalar
 typedef struct {
   float val;
   void *local_context;
-} RSubScalarConfig;
-void initRSubScalarConfig(RSubScalarConfig *config, float val);
-void initRSubScalarLocalContext(rt_function_t *f);
-void freeRSubScalarLocalContext(rt_function_t *f);
-void execRSubScalar(rt_function_t *f);
+} r_sub_scalar_config_t;
+void init_r_sub_scalar_config(r_sub_scalar_config_t *config, float val);
+void init_r_sub_scalar_local_context(rt_function_t *f);
+void free_r_sub_scalarlocal_context(rt_function_t *f);
+void exec_r_sub_scalar(rt_function_t *f);
 
 // RDivScalar
 typedef struct {
   float val;
   void *local_context;
-} RDivScalarConfig;
-void initRDivScalarConfig(RDivScalarConfig *config, float val);
-void initRDivScalarLocalContext(rt_function_t *f);
-void freeRDivScalarLocalContext(rt_function_t *f);
-void execRDivScalar(rt_function_t *f);
+} r_div_scalar_config_t;
+void init_r_div_scalar_config(r_div_scalar_config_t *config, float val);
+void init_r_div_scalar_local_context(rt_function_t *f);
+void free_r_div_scalarlocal_context(rt_function_t *f);
+void exec_r_div_scalar(rt_function_t *f);
 
 // RPowScalar
 typedef struct {
   float val;
   void *local_context;
-} RPowScalarConfig;
-void initRPowScalarConfig(RPowScalarConfig *config, float val);
-void initRPowScalarLocalContext(rt_function_t *f);
-void freeRPowScalarLocalContext(rt_function_t *f);
-void execRPowScalar(rt_function_t *f);
+} r_pow_scalar_config_t;
+void init_r_pow_scalar_config(r_pow_scalar_config_t *config, float val);
+void init_r_pow_scalar_local_context(rt_function_t *f);
+void free_r_pow_scalarlocal_context(rt_function_t *f);
+void exec_r_pow_scalar(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
@@ -483,157 +486,162 @@ void execRPowScalar(rt_function_t *f);
 typedef struct {
   float alpha;
   void *local_context;
-} SignConfig;
-void initSignConfig(SignConfig *config, float alpha);
-void initSignLocalContext(rt_function_t *f);
-void freeSignLocalContext(rt_function_t *f);
-void execSign(rt_function_t *f);
+} sign_config_t;
+void init_sign_config(sign_config_t *config, float alpha);
+void init_sign_local_context(rt_function_t *f);
+void free_signlocal_context(rt_function_t *f);
+void exec_sign(rt_function_t *f);
 
 // Minimum2
-void execMinimum2(rt_function_t *f);
+void exec_minimum2(rt_function_t *f);
 
 // Maximum2
-void execMaximum2(rt_function_t *f);
+void exec_maximum2(rt_function_t *f);
 
 // MinimumScalar
 typedef struct {
   float val;
   void *local_context;
-} MinimumScalarConfig;
-void initMinimumScalarConfig(MinimumScalarConfig *config, float val);
-void initMinimumScalarLocalContext(rt_function_t *f);
-void freeMinimumScalarLocalContext(rt_function_t *f);
-void execMinimumScalar(rt_function_t *f);
+} minimum_scalar_config_t;
+void init_minimum_scalar_config(minimum_scalar_config_t *config, float val);
+void init_minimum_scalar_local_context(rt_function_t *f);
+void free_minimum_scalarlocal_context(rt_function_t *f);
+void exec_minimum_scalar(rt_function_t *f);
 
 // MaximumScalar
 typedef struct {
   float val;
   void *local_context;
-} MaximumScalarConfig;
-void initMaximumScalarConfig(MaximumScalarConfig *config, float val);
-void initMaximumScalarLocalContext(rt_function_t *f);
-void freeMaximumScalarLocalContext(rt_function_t *f);
-void execMaximumScalar(rt_function_t *f);
+} maximum_scalar_config_t;
+void init_maximum_scalar_config(maximum_scalar_config_t *config, float val);
+void init_maximum_scalar_local_context(rt_function_t *f);
+void free_maximum_scalarlocal_context(rt_function_t *f);
+void exec_maximum_scalar(rt_function_t *f);
 
 // LogicalAnd
-void execLogicalAnd(rt_function_t *f);
+void exec_logical_and(rt_function_t *f);
 
 // LogicalOr
-void execLogicalOr(rt_function_t *f);
+void exec_logical_or(rt_function_t *f);
 
 // LogicalXor
-void execLogicalXor(rt_function_t *f);
+void exec_logical_xor(rt_function_t *f);
 
 // Equal
-void execEqual(rt_function_t *f);
+void exec_equal(rt_function_t *f);
 
 // NotEqual
-void execNotEqual(rt_function_t *f);
+void exec_not_equal(rt_function_t *f);
 
 // GreaterEqual
-void execGreaterEqual(rt_function_t *f);
+void exec_greater_equal(rt_function_t *f);
 
 // Greater
-void execGreater(rt_function_t *f);
+void exec_greater(rt_function_t *f);
 
 // LessEqual
-void execLessEqual(rt_function_t *f);
+void exec_less_equal(rt_function_t *f);
 
 // Less
-void execLess(rt_function_t *f);
+void exec_less(rt_function_t *f);
 
 // LogicalAndScalar
 typedef struct {
   uint8_t val;
   void *local_context;
-} LogicalAndScalarConfig;
-void initLogicalAndScalarConfig(LogicalAndScalarConfig *config, uint8_t val);
-void initLogicalAndScalarLocalContext(rt_function_t *f);
-void freeLogicalAndScalarLocalContext(rt_function_t *f);
-void execLogicalAndScalar(rt_function_t *f);
+} logical_and_scalar_config_t;
+void init_logical_and_scalar_config(logical_and_scalar_config_t *config,
+                                    uint8_t val);
+void init_logical_and_scalar_local_context(rt_function_t *f);
+void free_logical_and_scalarlocal_context(rt_function_t *f);
+void exec_logical_and_scalar(rt_function_t *f);
 
 // LogicalOrScalar
 typedef struct {
   uint8_t val;
   void *local_context;
-} LogicalOrScalarConfig;
-void initLogicalOrScalarConfig(LogicalOrScalarConfig *config, uint8_t val);
-void initLogicalOrScalarLocalContext(rt_function_t *f);
-void freeLogicalOrScalarLocalContext(rt_function_t *f);
-void execLogicalOrScalar(rt_function_t *f);
+} logical_or_scalar_config_t;
+void init_logical_or_scalar_config(logical_or_scalar_config_t *config,
+                                   uint8_t val);
+void init_logical_or_scalar_local_context(rt_function_t *f);
+void free_logical_or_scalarlocal_context(rt_function_t *f);
+void exec_logical_or_scalar(rt_function_t *f);
 
 // LogicalXorScalar
 typedef struct {
   uint8_t val;
   void *local_context;
-} LogicalXorScalarConfig;
-void initLogicalXorScalarConfig(LogicalXorScalarConfig *config, uint8_t val);
-void initLogicalXorScalarLocalContext(rt_function_t *f);
-void freeLogicalXorScalarLocalContext(rt_function_t *f);
-void execLogicalXorScalar(rt_function_t *f);
+} logical_xor_scalar_config_t;
+void init_logical_xor_scalar_config(logical_xor_scalar_config_t *config,
+                                    uint8_t val);
+void init_logical_xor_scalar_local_context(rt_function_t *f);
+void free_logical_xor_scalarlocal_context(rt_function_t *f);
+void exec_logical_xor_scalar(rt_function_t *f);
 
 // EqualScalar
 typedef struct {
   float val;
   void *local_context;
-} EqualScalarConfig;
-void initEqualScalarConfig(EqualScalarConfig *config, float val);
-void initEqualScalarLocalContext(rt_function_t *f);
-void freeEqualScalarLocalContext(rt_function_t *f);
-void execEqualScalar(rt_function_t *f);
+} equal_scalar_config_t;
+void init_equal_scalar_config(equal_scalar_config_t *config, float val);
+void init_equal_scalar_local_context(rt_function_t *f);
+void free_equal_scalarlocal_context(rt_function_t *f);
+void exec_equal_scalar(rt_function_t *f);
 
 // NotEqualScalar
 typedef struct {
   float val;
   void *local_context;
-} NotEqualScalarConfig;
-void initNotEqualScalarConfig(NotEqualScalarConfig *config, float val);
-void initNotEqualScalarLocalContext(rt_function_t *f);
-void freeNotEqualScalarLocalContext(rt_function_t *f);
-void execNotEqualScalar(rt_function_t *f);
+} not_equal_scalar_config_t;
+void init_not_equal_scalar_config(not_equal_scalar_config_t *config, float val);
+void init_not_equal_scalar_local_context(rt_function_t *f);
+void free_not_equal_scalarlocal_context(rt_function_t *f);
+void exec_not_equal_scalar(rt_function_t *f);
 
 // GreaterEqualScalar
 typedef struct {
   float val;
   void *local_context;
-} GreaterEqualScalarConfig;
-void initGreaterEqualScalarConfig(GreaterEqualScalarConfig *config, float val);
-void initGreaterEqualScalarLocalContext(rt_function_t *f);
-void freeGreaterEqualScalarLocalContext(rt_function_t *f);
-void execGreaterEqualScalar(rt_function_t *f);
+} greater_equal_scalar_config_t;
+void init_greater_equal_scalar_config(greater_equal_scalar_config_t *config,
+                                      float val);
+void init_greater_equal_scalar_local_context(rt_function_t *f);
+void free_greater_equal_scalarlocal_context(rt_function_t *f);
+void exec_greater_equal_scalar(rt_function_t *f);
 
 // GreaterScalar
 typedef struct {
   float val;
   void *local_context;
-} GreaterScalarConfig;
-void initGreaterScalarConfig(GreaterScalarConfig *config, float val);
-void initGreaterScalarLocalContext(rt_function_t *f);
-void freeGreaterScalarLocalContext(rt_function_t *f);
-void execGreaterScalar(rt_function_t *f);
+} greater_scalar_config_t;
+void init_greater_scalar_config(greater_scalar_config_t *config, float val);
+void init_greater_scalar_local_context(rt_function_t *f);
+void free_greater_scalarlocal_context(rt_function_t *f);
+void exec_greater_scalar(rt_function_t *f);
 
 // LessEqualScalar
 typedef struct {
   float val;
   void *local_context;
-} LessEqualScalarConfig;
-void initLessEqualScalarConfig(LessEqualScalarConfig *config, float val);
-void initLessEqualScalarLocalContext(rt_function_t *f);
-void freeLessEqualScalarLocalContext(rt_function_t *f);
-void execLessEqualScalar(rt_function_t *f);
+} less_equal_scalar_config_t;
+void init_less_equal_scalar_config(less_equal_scalar_config_t *config,
+                                   float val);
+void init_less_equal_scalar_local_context(rt_function_t *f);
+void free_less_equal_scalarlocal_context(rt_function_t *f);
+void exec_less_equal_scalar(rt_function_t *f);
 
 // LessScalar
 typedef struct {
   float val;
   void *local_context;
-} LessScalarConfig;
-void initLessScalarConfig(LessScalarConfig *config, float val);
-void initLessScalarLocalContext(rt_function_t *f);
-void freeLessScalarLocalContext(rt_function_t *f);
-void execLessScalar(rt_function_t *f);
+} less_scalar_config_t;
+void init_less_scalar_config(less_scalar_config_t *config, float val);
+void init_less_scalar_local_context(rt_function_t *f);
+void free_less_scalarlocal_context(rt_function_t *f);
+void exec_less_scalar(rt_function_t *f);
 
 // LogicalNot
-void execLogicalNot(rt_function_t *f);
+void exec_logical_not(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Math
@@ -644,35 +652,36 @@ typedef struct {
   float val;
   rt_list_t shape; ///< Original type is [Shape]
   void *local_context;
-} ConstantConfig;
-void initConstantConfig(ConstantConfig *config, float val, rt_list_t shape);
-void initConstantLocalContext(rt_function_t *f);
-void freeConstantLocalContext(rt_function_t *f);
-void execConstant(rt_function_t *f);
+} constant_config_t;
+void init_constant_config(constant_config_t *config, float val,
+                          rt_list_t shape);
+void init_constant_local_context(rt_function_t *f);
+void free_constantlocal_context(rt_function_t *f);
+void exec_constant(rt_function_t *f);
 
 // Abs
-void execAbs(rt_function_t *f);
+void exec_abs(rt_function_t *f);
 
 // Exp
-void execExp(rt_function_t *f);
+void exec_exp(rt_function_t *f);
 
 // Log
-void execLog(rt_function_t *f);
+void exec_log(rt_function_t *f);
 
 // Identity
-void execIdentity(rt_function_t *f);
+void exec_identity(rt_function_t *f);
 
 // BatchMatmul
 typedef struct {
   uint8_t transpose_a;
   uint8_t transpose_b;
   void *local_context;
-} BatchMatmulConfig;
-void initBatchMatmulConfig(BatchMatmulConfig *config, uint8_t transpose_a,
-                           uint8_t transpose_b);
-void initBatchMatmulLocalContext(rt_function_t *f);
-void freeBatchMatmulLocalContext(rt_function_t *f);
-void execBatchMatmul(rt_function_t *f);
+} batch_matmul_config_t;
+void init_batch_matmul_config(batch_matmul_config_t *config,
+                              uint8_t transpose_a, uint8_t transpose_b);
+void init_batch_matmul_local_context(rt_function_t *f);
+void free_batch_matmullocal_context(rt_function_t *f);
+void exec_batch_matmul(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
@@ -682,31 +691,31 @@ void execBatchMatmul(rt_function_t *f);
 typedef struct {
   int32_t axis;
   void *local_context;
-} ConcatenateConfig;
-void initConcatenateConfig(ConcatenateConfig *config, int32_t axis);
-void initConcatenateLocalContext(rt_function_t *f);
-void freeConcatenateLocalContext(rt_function_t *f);
-void execConcatenate(rt_function_t *f);
+} concatenate_config_t;
+void init_concatenate_config(concatenate_config_t *config, int32_t axis);
+void init_concatenate_local_context(rt_function_t *f);
+void free_concatenatelocal_context(rt_function_t *f);
+void exec_concatenate(rt_function_t *f);
 
 // Split
 typedef struct {
   int32_t axis;
   void *local_context;
-} SplitConfig;
-void initSplitConfig(SplitConfig *config, int32_t axis);
-void initSplitLocalContext(rt_function_t *f);
-void freeSplitLocalContext(rt_function_t *f);
-void execSplit(rt_function_t *f);
+} split_config_t;
+void init_split_config(split_config_t *config, int32_t axis);
+void init_split_local_context(rt_function_t *f);
+void free_splitlocal_context(rt_function_t *f);
+void exec_split(rt_function_t *f);
 
 // Stack
 typedef struct {
   int32_t axis;
   void *local_context;
-} StackConfig;
-void initStackConfig(StackConfig *config, int32_t axis);
-void initStackLocalContext(rt_function_t *f);
-void freeStackLocalContext(rt_function_t *f);
-void execStack(rt_function_t *f);
+} stack_config_t;
+void init_stack_config(stack_config_t *config, int32_t axis);
+void init_stack_local_context(rt_function_t *f);
+void free_stacklocal_context(rt_function_t *f);
+void exec_stack(rt_function_t *f);
 
 // Slice
 typedef struct {
@@ -714,80 +723,80 @@ typedef struct {
   rt_list_t stop;  ///< Original type is [repeated int64]
   rt_list_t step;  ///< Original type is [repeated int64]
   void *local_context;
-} SliceConfig;
-void initSliceConfig(SliceConfig *config, rt_list_t start, rt_list_t stop,
-                     rt_list_t step);
-void initSliceLocalContext(rt_function_t *f);
-void freeSliceLocalContext(rt_function_t *f);
-void execSlice(rt_function_t *f);
+} slice_config_t;
+void init_slice_config(slice_config_t *config, rt_list_t start, rt_list_t stop,
+                       rt_list_t step);
+void init_slice_local_context(rt_function_t *f);
+void free_slicelocal_context(rt_function_t *f);
+void exec_slice(rt_function_t *f);
 
 // Transpose
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   void *local_context;
-} TransposeConfig;
-void initTransposeConfig(TransposeConfig *config, rt_list_t axes);
-void initTransposeLocalContext(rt_function_t *f);
-void freeTransposeLocalContext(rt_function_t *f);
-void execTranspose(rt_function_t *f);
+} transpose_config_t;
+void init_transpose_config(transpose_config_t *config, rt_list_t axes);
+void init_transpose_local_context(rt_function_t *f);
+void free_transposelocal_context(rt_function_t *f);
+void exec_transpose(rt_function_t *f);
 
 // Broadcast
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
   void *local_context;
-} BroadcastConfig;
-void initBroadcastConfig(BroadcastConfig *config, rt_list_t shape);
-void initBroadcastLocalContext(rt_function_t *f);
-void freeBroadcastLocalContext(rt_function_t *f);
-void execBroadcast(rt_function_t *f);
+} broadcast_config_t;
+void init_broadcast_config(broadcast_config_t *config, rt_list_t shape);
+void init_broadcast_local_context(rt_function_t *f);
+void free_broadcastlocal_context(rt_function_t *f);
+void exec_broadcast(rt_function_t *f);
 
 // OneHot
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
   void *local_context;
-} OneHotConfig;
-void initOneHotConfig(OneHotConfig *config, rt_list_t shape);
-void initOneHotLocalContext(rt_function_t *f);
-void freeOneHotLocalContext(rt_function_t *f);
-void execOneHot(rt_function_t *f);
+} one_hot_config_t;
+void init_one_hot_config(one_hot_config_t *config, rt_list_t shape);
+void init_one_hot_local_context(rt_function_t *f);
+void free_one_hotlocal_context(rt_function_t *f);
+void exec_one_hot(rt_function_t *f);
 
 // Flip
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
   void *local_context;
-} FlipConfig;
-void initFlipConfig(FlipConfig *config, rt_list_t axes);
-void initFlipLocalContext(rt_function_t *f);
-void freeFlipLocalContext(rt_function_t *f);
-void execFlip(rt_function_t *f);
+} flip_config_t;
+void init_flip_config(flip_config_t *config, rt_list_t axes);
+void init_flip_local_context(rt_function_t *f);
+void free_fliplocal_context(rt_function_t *f);
+void exec_flip(rt_function_t *f);
 
 // Shift
 typedef struct {
   rt_list_t shifts;     ///< Original type is [repeated int64]
   uint32_t border_mode; ///< Original type is [string]
   void *local_context;
-} ShiftConfig;
-void initShiftConfig(ShiftConfig *config, rt_list_t shifts,
-                     uint32_t border_mode);
-void initShiftLocalContext(rt_function_t *f);
-void freeShiftLocalContext(rt_function_t *f);
-void execShift(rt_function_t *f);
+} shift_config_t;
+void init_shift_config(shift_config_t *config, rt_list_t shifts,
+                       uint32_t border_mode);
+void init_shift_local_context(rt_function_t *f);
+void free_shiftlocal_context(rt_function_t *f);
+void exec_shift(rt_function_t *f);
 
 // Reshape
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
   void *local_context;
-} ReshapeConfig;
-void initReshapeConfig(ReshapeConfig *config, rt_list_t shape);
-void initReshapeLocalContext(rt_function_t *f);
-void freeReshapeLocalContext(rt_function_t *f);
-void execReshape(rt_function_t *f);
+} reshape_config_t;
+void init_reshape_config(reshape_config_t *config, rt_list_t shape);
+void init_reshape_local_context(rt_function_t *f);
+void free_reshapelocal_context(rt_function_t *f);
+void exec_reshape(rt_function_t *f);
 
 // MatrixDiag
-void execMatrixDiag(rt_function_t *f);
+void exec_matrix_diag(rt_function_t *f);
 
 // MatrixDiagPart
-void execMatrixDiagPart(rt_function_t *f);
+void exec_matrix_diag_part(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Stochasticity
@@ -798,11 +807,11 @@ typedef struct {
   float p;
   int32_t seed;
   void *local_context;
-} DropoutConfig;
-void initDropoutConfig(DropoutConfig *config, float p, int32_t seed);
-void initDropoutLocalContext(rt_function_t *f);
-void freeDropoutLocalContext(rt_function_t *f);
-void execDropout(rt_function_t *f);
+} dropout_config_t;
+void init_dropout_config(dropout_config_t *config, float p, int32_t seed);
+void init_dropout_local_context(rt_function_t *f);
+void free_dropoutlocal_context(rt_function_t *f);
+void exec_dropout(rt_function_t *f);
 
 // Rand
 typedef struct {
@@ -811,12 +820,12 @@ typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;
   void *local_context;
-} RandConfig;
-void initRandConfig(RandConfig *config, float low, float high, rt_list_t shape,
-                    int32_t seed);
-void initRandLocalContext(rt_function_t *f);
-void freeRandLocalContext(rt_function_t *f);
-void execRand(rt_function_t *f);
+} rand_config_t;
+void init_rand_config(rand_config_t *config, float low, float high,
+                      rt_list_t shape, int32_t seed);
+void init_rand_local_context(rt_function_t *f);
+void free_randlocal_context(rt_function_t *f);
+void exec_rand(rt_function_t *f);
 
 // Randint
 typedef struct {
@@ -825,12 +834,12 @@ typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;
   void *local_context;
-} RandintConfig;
-void initRandintConfig(RandintConfig *config, int32_t low, int32_t high,
-                       rt_list_t shape, int32_t seed);
-void initRandintLocalContext(rt_function_t *f);
-void freeRandintLocalContext(rt_function_t *f);
-void execRandint(rt_function_t *f);
+} randint_config_t;
+void init_randint_config(randint_config_t *config, int32_t low, int32_t high,
+                         rt_list_t shape, int32_t seed);
+void init_randint_local_context(rt_function_t *f);
+void free_randintlocal_context(rt_function_t *f);
+void exec_randint(rt_function_t *f);
 
 // Randn
 typedef struct {
@@ -839,12 +848,12 @@ typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;
   void *local_context;
-} RandnConfig;
-void initRandnConfig(RandnConfig *config, float mu, float sigma,
-                     rt_list_t shape, int32_t seed);
-void initRandnLocalContext(rt_function_t *f);
-void freeRandnLocalContext(rt_function_t *f);
-void execRandn(rt_function_t *f);
+} randn_config_t;
+void init_randn_config(randn_config_t *config, float mu, float sigma,
+                       rt_list_t shape, int32_t seed);
+void init_randn_local_context(rt_function_t *f);
+void free_randnlocal_context(rt_function_t *f);
+void exec_randn(rt_function_t *f);
 
 // RandomCrop
 typedef struct {
@@ -852,12 +861,12 @@ typedef struct {
   int32_t base_axis;
   int32_t seed;
   void *local_context;
-} RandomCropConfig;
-void initRandomCropConfig(RandomCropConfig *config, rt_list_t shape,
-                          int32_t base_axis, int32_t seed);
-void initRandomCropLocalContext(rt_function_t *f);
-void freeRandomCropLocalContext(rt_function_t *f);
-void execRandomCrop(rt_function_t *f);
+} random_crop_config_t;
+void init_random_crop_config(random_crop_config_t *config, rt_list_t shape,
+                             int32_t base_axis, int32_t seed);
+void init_random_crop_local_context(rt_function_t *f);
+void free_random_croplocal_context(rt_function_t *f);
+void exec_random_crop(rt_function_t *f);
 
 // RandomFlip
 typedef struct {
@@ -865,12 +874,12 @@ typedef struct {
   int32_t base_axis;
   int32_t seed;
   void *local_context;
-} RandomFlipConfig;
-void initRandomFlipConfig(RandomFlipConfig *config, rt_list_t axes,
-                          int32_t base_axis, int32_t seed);
-void initRandomFlipLocalContext(rt_function_t *f);
-void freeRandomFlipLocalContext(rt_function_t *f);
-void execRandomFlip(rt_function_t *f);
+} random_flip_config_t;
+void init_random_flip_config(random_flip_config_t *config, rt_list_t axes,
+                             int32_t base_axis, int32_t seed);
+void init_random_flip_local_context(rt_function_t *f);
+void free_random_fliplocal_context(rt_function_t *f);
+void exec_random_flip(rt_function_t *f);
 
 // RandomShift
 typedef struct {
@@ -879,13 +888,13 @@ typedef struct {
   int32_t base_axis;
   int32_t seed;
   void *local_context;
-} RandomShiftConfig;
-void initRandomShiftConfig(RandomShiftConfig *config, rt_list_t shifts,
-                           uint32_t border_mode, int32_t base_axis,
-                           int32_t seed);
-void initRandomShiftLocalContext(rt_function_t *f);
-void freeRandomShiftLocalContext(rt_function_t *f);
-void execRandomShift(rt_function_t *f);
+} random_shift_config_t;
+void init_random_shift_config(random_shift_config_t *config, rt_list_t shifts,
+                              uint32_t border_mode, int32_t base_axis,
+                              int32_t seed);
+void init_random_shift_local_context(rt_function_t *f);
+void free_random_shiftlocal_context(rt_function_t *f);
+void exec_random_shift(rt_function_t *f);
 
 // ImageAugmentation
 typedef struct {
@@ -906,106 +915,107 @@ typedef struct {
   float noise;
   int32_t seed;
   void *local_context;
-} ImageAugmentationConfig;
-void initImageAugmentationConfig(
-    ImageAugmentationConfig *config, rt_list_t shape, rt_list_t pad,
+} image_augmentation_config_t;
+void init_image_augmentation_config(
+    image_augmentation_config_t *config, rt_list_t shape, rt_list_t pad,
     float min_scale, float max_scale, float angle, float aspect_ratio,
     float distortion, uint8_t flip_lr, uint8_t flip_ud, float brightness,
     uint8_t brightness_each, float contrast, float contrast_center,
     uint8_t contrast_each, float noise, int32_t seed);
-void initImageAugmentationLocalContext(rt_function_t *f);
-void freeImageAugmentationLocalContext(rt_function_t *f);
-void execImageAugmentation(rt_function_t *f);
+void init_image_augmentation_local_context(rt_function_t *f);
+void free_image_augmentationlocal_context(rt_function_t *f);
+void exec_image_augmentation(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Loss Functions
 ////////////////////////////////////////////////////////////////////////////////
 
 // SigmoidCrossEntropy
-void execSigmoidCrossEntropy(rt_function_t *f);
+void exec_sigmoid_cross_entropy(rt_function_t *f);
 
 // BinaryCrossEntropy
-void execBinaryCrossEntropy(rt_function_t *f);
+void exec_binary_cross_entropy(rt_function_t *f);
 
 // SoftmaxCrossEntropy
 typedef struct {
   int32_t axis;
   void *local_context;
-} SoftmaxCrossEntropyConfig;
-void initSoftmaxCrossEntropyConfig(SoftmaxCrossEntropyConfig *config,
-                                   int32_t axis);
-void initSoftmaxCrossEntropyLocalContext(rt_function_t *f);
-void freeSoftmaxCrossEntropyLocalContext(rt_function_t *f);
-void execSoftmaxCrossEntropy(rt_function_t *f);
+} softmax_cross_entropy_config_t;
+void init_softmax_cross_entropy_config(softmax_cross_entropy_config_t *config,
+                                       int32_t axis);
+void init_softmax_cross_entropy_local_context(rt_function_t *f);
+void free_softmax_cross_entropylocal_context(rt_function_t *f);
+void exec_softmax_cross_entropy(rt_function_t *f);
 
 // CategoricalCrossEntropy
 typedef struct {
   int32_t axis;
   void *local_context;
-} CategoricalCrossEntropyConfig;
-void initCategoricalCrossEntropyConfig(CategoricalCrossEntropyConfig *config,
-                                       int32_t axis);
-void initCategoricalCrossEntropyLocalContext(rt_function_t *f);
-void freeCategoricalCrossEntropyLocalContext(rt_function_t *f);
-void execCategoricalCrossEntropy(rt_function_t *f);
+} categorical_cross_entropy_config_t;
+void init_categorical_cross_entropy_config(
+    categorical_cross_entropy_config_t *config, int32_t axis);
+void init_categorical_cross_entropy_local_context(rt_function_t *f);
+void free_categorical_cross_entropylocal_context(rt_function_t *f);
+void exec_categorical_cross_entropy(rt_function_t *f);
 
 // SquaredError
-void execSquaredError(rt_function_t *f);
+void exec_squared_error(rt_function_t *f);
 
 // AbsoluteError
-void execAbsoluteError(rt_function_t *f);
+void exec_absolute_error(rt_function_t *f);
 
 // HuberLoss
 typedef struct {
   float delta;
   void *local_context;
-} HuberLossConfig;
-void initHuberLossConfig(HuberLossConfig *config, float delta);
-void initHuberLossLocalContext(rt_function_t *f);
-void freeHuberLossLocalContext(rt_function_t *f);
-void execHuberLoss(rt_function_t *f);
+} huber_loss_config_t;
+void init_huber_loss_config(huber_loss_config_t *config, float delta);
+void init_huber_loss_local_context(rt_function_t *f);
+void free_huber_losslocal_context(rt_function_t *f);
+void exec_huber_loss(rt_function_t *f);
 
 // EpsilonInsensitiveLoss
 typedef struct {
   float epsilon;
   void *local_context;
-} EpsilonInsensitiveLossConfig;
-void initEpsilonInsensitiveLossConfig(EpsilonInsensitiveLossConfig *config,
-                                      float epsilon);
-void initEpsilonInsensitiveLossLocalContext(rt_function_t *f);
-void freeEpsilonInsensitiveLossLocalContext(rt_function_t *f);
-void execEpsilonInsensitiveLoss(rt_function_t *f);
+} epsilon_insensitive_loss_config_t;
+void init_epsilon_insensitive_loss_config(
+    epsilon_insensitive_loss_config_t *config, float epsilon);
+void init_epsilon_insensitive_loss_local_context(rt_function_t *f);
+void free_epsilon_insensitive_losslocal_context(rt_function_t *f);
+void exec_epsilon_insensitive_loss(rt_function_t *f);
 
 // KLMultinomial
 typedef struct {
   int32_t base_axis;
   void *local_context;
-} KLMultinomialConfig;
-void initKLMultinomialConfig(KLMultinomialConfig *config, int32_t base_axis);
-void initKLMultinomialLocalContext(rt_function_t *f);
-void freeKLMultinomialLocalContext(rt_function_t *f);
-void execKLMultinomial(rt_function_t *f);
+} kl_multinomial_config_t;
+void init_kl_multinomial_config(kl_multinomial_config_t *config,
+                                int32_t base_axis);
+void init_kl_multinomial_local_context(rt_function_t *f);
+void free_kl_multinomiallocal_context(rt_function_t *f);
+void exec_kl_multinomial(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
 
 // BinarySigmoid
-void execBinarySigmoid(rt_function_t *f);
+void exec_binary_sigmoid(rt_function_t *f);
 
 // BinaryTanh
-void execBinaryTanh(rt_function_t *f);
+void exec_binary_tanh(rt_function_t *f);
 
 // BinaryConnectAffine
 typedef struct {
   int32_t base_axis;
   void *local_context;
-} BinaryConnectAffineConfig;
-void initBinaryConnectAffineConfig(BinaryConnectAffineConfig *config,
-                                   int32_t base_axis);
-void initBinaryConnectAffineLocalContext(rt_function_t *f);
-void freeBinaryConnectAffineLocalContext(rt_function_t *f);
-void execBinaryConnectAffine(rt_function_t *f);
+} binary_connect_affine_config_t;
+void init_binary_connect_affine_config(binary_connect_affine_config_t *config,
+                                       int32_t base_axis);
+void init_binary_connect_affine_local_context(rt_function_t *f);
+void free_binary_connect_affinelocal_context(rt_function_t *f);
+void exec_binary_connect_affine(rt_function_t *f);
 
 // BinaryConnectConvolution
 typedef struct {
@@ -1015,25 +1025,24 @@ typedef struct {
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;
   void *local_context;
-} BinaryConnectConvolutionConfig;
-void initBinaryConnectConvolutionConfig(BinaryConnectConvolutionConfig *config,
-                                        int32_t base_axis, rt_list_t pad,
-                                        rt_list_t stride, rt_list_t dilation,
-                                        int32_t group);
-void initBinaryConnectConvolutionLocalContext(rt_function_t *f);
-void freeBinaryConnectConvolutionLocalContext(rt_function_t *f);
-void execBinaryConnectConvolution(rt_function_t *f);
+} binary_connect_convolution_config_t;
+void init_binary_connect_convolution_config(
+    binary_connect_convolution_config_t *config, int32_t base_axis,
+    rt_list_t pad, rt_list_t stride, rt_list_t dilation, int32_t group);
+void init_binary_connect_convolution_local_context(rt_function_t *f);
+void free_binary_connect_convolutionlocal_context(rt_function_t *f);
+void exec_binary_connect_convolution(rt_function_t *f);
 
 // BinaryWeightAffine
 typedef struct {
   int32_t base_axis;
   void *local_context;
-} BinaryWeightAffineConfig;
-void initBinaryWeightAffineConfig(BinaryWeightAffineConfig *config,
-                                  int32_t base_axis);
-void initBinaryWeightAffineLocalContext(rt_function_t *f);
-void freeBinaryWeightAffineLocalContext(rt_function_t *f);
-void execBinaryWeightAffine(rt_function_t *f);
+} binary_weight_affine_config_t;
+void init_binary_weight_affine_config(binary_weight_affine_config_t *config,
+                                      int32_t base_axis);
+void init_binary_weight_affine_local_context(rt_function_t *f);
+void free_binary_weight_affinelocal_context(rt_function_t *f);
+void exec_binary_weight_affine(rt_function_t *f);
 
 // BinaryWeightConvolution
 typedef struct {
@@ -1043,14 +1052,13 @@ typedef struct {
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;
   void *local_context;
-} BinaryWeightConvolutionConfig;
-void initBinaryWeightConvolutionConfig(BinaryWeightConvolutionConfig *config,
-                                       int32_t base_axis, rt_list_t pad,
-                                       rt_list_t stride, rt_list_t dilation,
-                                       int32_t group);
-void initBinaryWeightConvolutionLocalContext(rt_function_t *f);
-void freeBinaryWeightConvolutionLocalContext(rt_function_t *f);
-void execBinaryWeightConvolution(rt_function_t *f);
+} binary_weight_convolution_config_t;
+void init_binary_weight_convolution_config(
+    binary_weight_convolution_config_t *config, int32_t base_axis,
+    rt_list_t pad, rt_list_t stride, rt_list_t dilation, int32_t group);
+void init_binary_weight_convolution_local_context(rt_function_t *f);
+void free_binary_weight_convolutionlocal_context(rt_function_t *f);
+void exec_binary_weight_convolution(rt_function_t *f);
 
 // INQAffine
 typedef struct {
@@ -1060,13 +1068,13 @@ typedef struct {
   uint32_t selection_algorithm; ///< Original type is [string]
   int32_t seed;
   void *local_context;
-} INQAffineConfig;
-void initINQAffineConfig(INQAffineConfig *config, int32_t base_axis,
-                         int32_t num_bits, rt_list_t inq_iterations,
-                         uint32_t selection_algorithm, int32_t seed);
-void initINQAffineLocalContext(rt_function_t *f);
-void freeINQAffineLocalContext(rt_function_t *f);
-void execINQAffine(rt_function_t *f);
+} inq_affine_config_t;
+void init_inq_affine_config(inq_affine_config_t *config, int32_t base_axis,
+                            int32_t num_bits, rt_list_t inq_iterations,
+                            uint32_t selection_algorithm, int32_t seed);
+void init_inq_affine_local_context(rt_function_t *f);
+void free_inq_affinelocal_context(rt_function_t *f);
+void exec_inq_affine(rt_function_t *f);
 
 // INQConvolution
 typedef struct {
@@ -1080,15 +1088,16 @@ typedef struct {
   uint32_t selection_algorithm; ///< Original type is [string]
   int32_t seed;
   void *local_context;
-} INQConvolutionConfig;
-void initINQConvolutionConfig(INQConvolutionConfig *config, int32_t base_axis,
-                              rt_list_t pad, rt_list_t stride,
-                              rt_list_t dilation, int32_t group,
-                              int32_t num_bits, rt_list_t inq_iterations,
-                              uint32_t selection_algorithm, int32_t seed);
-void initINQConvolutionLocalContext(rt_function_t *f);
-void freeINQConvolutionLocalContext(rt_function_t *f);
-void execINQConvolution(rt_function_t *f);
+} inq_convolution_config_t;
+void init_inq_convolution_config(inq_convolution_config_t *config,
+                                 int32_t base_axis, rt_list_t pad,
+                                 rt_list_t stride, rt_list_t dilation,
+                                 int32_t group, int32_t num_bits,
+                                 rt_list_t inq_iterations,
+                                 uint32_t selection_algorithm, int32_t seed);
+void init_inq_convolution_local_context(rt_function_t *f);
+void free_inq_convolutionlocal_context(rt_function_t *f);
+void exec_inq_convolution(rt_function_t *f);
 
 // FixedPointQuantize
 typedef struct {
@@ -1097,13 +1106,13 @@ typedef struct {
   float delta;
   uint8_t ste_fine_grained;
   void *local_context;
-} FixedPointQuantizeConfig;
-void initFixedPointQuantizeConfig(FixedPointQuantizeConfig *config,
-                                  uint8_t sign, int32_t n, float delta,
-                                  uint8_t ste_fine_grained);
-void initFixedPointQuantizeLocalContext(rt_function_t *f);
-void freeFixedPointQuantizeLocalContext(rt_function_t *f);
-void execFixedPointQuantize(rt_function_t *f);
+} fixed_point_quantize_config_t;
+void init_fixed_point_quantize_config(fixed_point_quantize_config_t *config,
+                                      uint8_t sign, int32_t n, float delta,
+                                      uint8_t ste_fine_grained);
+void init_fixed_point_quantize_local_context(rt_function_t *f);
+void free_fixed_point_quantizelocal_context(rt_function_t *f);
+void exec_fixed_point_quantize(rt_function_t *f);
 
 // Pow2Quantize
 typedef struct {
@@ -1113,13 +1122,13 @@ typedef struct {
   int32_t m;
   uint8_t ste_fine_grained;
   void *local_context;
-} Pow2QuantizeConfig;
-void initPow2QuantizeConfig(Pow2QuantizeConfig *config, uint8_t sign,
-                            uint8_t with_zero, int32_t n, int32_t m,
-                            uint8_t ste_fine_grained);
-void initPow2QuantizeLocalContext(rt_function_t *f);
-void freePow2QuantizeLocalContext(rt_function_t *f);
-void execPow2Quantize(rt_function_t *f);
+} pow2_quantize_config_t;
+void init_pow2_quantize_config(pow2_quantize_config_t *config, uint8_t sign,
+                               uint8_t with_zero, int32_t n, int32_t m,
+                               uint8_t ste_fine_grained);
+void init_pow2_quantize_local_context(rt_function_t *f);
+void free_pow2_quantizelocal_context(rt_function_t *f);
+void exec_pow2_quantize(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Validation
@@ -1130,24 +1139,26 @@ typedef struct {
   int32_t axis;
   int32_t n;
   void *local_context;
-} TopNErrorConfig;
-void initTopNErrorConfig(TopNErrorConfig *config, int32_t axis, int32_t n);
-void initTopNErrorLocalContext(rt_function_t *f);
-void freeTopNErrorLocalContext(rt_function_t *f);
-void execTopNError(rt_function_t *f);
+} top_n_error_config_t;
+void init_top_n_error_config(top_n_error_config_t *config, int32_t axis,
+                             int32_t n);
+void init_top_n_error_local_context(rt_function_t *f);
+void free_top_n_errorlocal_context(rt_function_t *f);
+void exec_top_n_error(rt_function_t *f);
 
 // BinaryError
-void execBinaryError(rt_function_t *f);
+void exec_binary_error(rt_function_t *f);
 
 // ConfusionMatrix
 typedef struct {
   int32_t axis;
   void *local_context;
-} ConfusionMatrixConfig;
-void initConfusionMatrixConfig(ConfusionMatrixConfig *config, int32_t axis);
-void initConfusionMatrixLocalContext(rt_function_t *f);
-void freeConfusionMatrixLocalContext(rt_function_t *f);
-void execConfusionMatrix(rt_function_t *f);
+} confusion_matrix_config_t;
+void init_confusion_matrix_config(confusion_matrix_config_t *config,
+                                  int32_t axis);
+void init_confusion_matrix_local_context(rt_function_t *f);
+void free_confusion_matrixlocal_context(rt_function_t *f);
+void exec_confusion_matrix(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Unsupported, Special Use
@@ -1158,24 +1169,25 @@ typedef struct {
   int32_t base_axis;
   float eps;
   void *local_context;
-} VATNoiseConfig;
-void initVATNoiseConfig(VATNoiseConfig *config, int32_t base_axis, float eps);
-void initVATNoiseLocalContext(rt_function_t *f);
-void freeVATNoiseLocalContext(rt_function_t *f);
-void execVATNoise(rt_function_t *f);
+} vat_noise_config_t;
+void init_vat_noise_config(vat_noise_config_t *config, int32_t base_axis,
+                           float eps);
+void init_vat_noise_local_context(rt_function_t *f);
+void free_vat_noiselocal_context(rt_function_t *f);
+void exec_vat_noise(rt_function_t *f);
 
 // Unlink
-void execUnlink(rt_function_t *f);
+void exec_unlink(rt_function_t *f);
 
 // Sink
 typedef struct {
   uint8_t one_input_grad;
   void *local_context;
-} SinkConfig;
-void initSinkConfig(SinkConfig *config, uint8_t one_input_grad);
-void initSinkLocalContext(rt_function_t *f);
-void freeSinkLocalContext(rt_function_t *f);
-void execSink(rt_function_t *f);
+} sink_config_t;
+void init_sink_config(sink_config_t *config, uint8_t one_input_grad);
+void init_sink_local_context(rt_function_t *f);
+void free_sinklocal_context(rt_function_t *f);
+void exec_sink(rt_function_t *f);
 
 #ifdef __cplusplus
 }

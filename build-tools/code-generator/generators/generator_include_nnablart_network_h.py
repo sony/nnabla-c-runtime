@@ -9,7 +9,7 @@ def generate(string, info):
     enums = []
     for cn, cat in info.items():
         for fn, func in cat.items():
-            enums.append('  NN_FUNCTION_{},    ///< {}'.format(fn.upper(), fn))
+            enums.append('  NN_FUNCTION_{},    ///< {}'.format(func['snakecase_name'].upper(), fn))
 
             defines.append('/// @brief {} function.'.format(fn))
             defines.append('/// @{')

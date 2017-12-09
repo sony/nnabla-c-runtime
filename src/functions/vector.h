@@ -30,7 +30,8 @@ rt_variable_t get_values_from_param(rt_param_t param);
 /// Create rt_param_t from given rt_variable_t.
 ///
 /// All pointer in the created rt_param_t is reference to rt_variable_t.
-/// User should keep rt_variable_t.shape and rt_variable_t.buffer until vertex is needed.
+/// User should keep rt_variable_t.shape and rt_variable_t.buffer until vertex
+/// is needed.
 ///
 rt_param_t vertex_to_param(rt_variable_t v);
 

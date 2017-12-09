@@ -9,6 +9,7 @@ def generate(string, info):
         defines.append('')
         for fn, func in cat.items():
             defines.append('// {}'.format(fn))
+            name = func['snakecase_name']
             if 'argument' in func:
                 defines.append('typedef struct {')
                 argstrings = []
@@ -37,15 +38,15 @@ def generate(string, info):
                             '  uint32_t {};  ///< Original type is [{}]'.format(an, arg['Type']))
 
                 defines.append('  void* local_context;')
-                defines.append('}} {}Config;'.format(fn))
+                defines.append('}} {}_config_t;'.format(name))
                 defines.append(
-                    'void init{0}Config({0}Config* config, {1});'.format(fn, ','.join(argstrings)))
+                    'void init_{0}_config({0}_config_t* config, {1});'.format(name, ','.join(argstrings)))
                 defines.append(
-                    'void init{}LocalContext(rt_function_t* f);'.format(fn))
+                    'void init_{}_local_context(rt_function_t* f);'.format(name))
                 defines.append(
-                    'void free{}LocalContext(rt_function_t* f);'.format(fn))
+                    'void free_{}local_context(rt_function_t* f);'.format(name))
 
-            defines.append('void exec{}(rt_function_t* f);'.format(fn))
+            defines.append('void exec_{}(rt_function_t* f);'.format(name))
             defines.append('')
         defines.append('')
 
