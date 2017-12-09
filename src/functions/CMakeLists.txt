@@ -5,8 +5,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
 add_library(nnablart_functions STATIC
   # Utilities
-  utilities.c
-  vector.c
+  utilities/accessor.c
+  utilities/list.c
+  utilities/vector.c
 
   # Functions
   implements/affine.c

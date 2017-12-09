@@ -30,19 +30,20 @@ typedef struct {
   pointer_index_t list; ///< リストデータへのインデックス
 } nn_list_t;
 
-/// @brief Parameter types.
+/// @brief Data types.
 typedef enum {
-  NN_PARAM_TYPE_FLOAT, ///< 32bit float.
-  NN_PARAM_TYPE_INT16, ///< 16bit integer.
-  NN_PARAM_TYPE_INT8,  ///<  8bit integer.
-  NN_PARAM_TYPE_SIGN   ///< Binary.
-} nn_param_type_t;
+  NN_DATA_TYPE_FLOAT, ///< 32bit float.
+  NN_DATA_TYPE_INT16, ///< 16bit integer.
+  NN_DATA_TYPE_INT8,  ///<  8bit integer.
+  NN_DATA_TYPE_SIGN,  ///< Binary.
+  END_OF_NN_DATA_TYPE
+} nn_data_type_t;
 
 /// @brief Definition of Parameter.
 typedef struct {
   uint32_t variable_id; ///< Variable that uses this parameter.
   nn_list_t shape;      ///< Shape of param
-  nn_param_type_t type; ///< Type of param values
+  nn_data_type_t type;  ///< Type of param values
   nn_size_t scale;      ///< Scale of param values
   pointer_index_t data; ///< Location of param data
 } nn_param_t;

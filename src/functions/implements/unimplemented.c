@@ -70,9 +70,6 @@ void exec_embed(rt_function_t *f) {}
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sigmoid
-void exec_sigmoid(rt_function_t *f) {}
-
 // Swish
 void exec_swish(rt_function_t *f) {}
 
