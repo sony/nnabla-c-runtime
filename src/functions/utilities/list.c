@@ -27,12 +27,3 @@ rt_list_t clone_list(rt_list_t src) {
   return dst;
 }
 
-int calc_list_size(rt_list_t shape) {
-  int i;
-  int size = 1;
-  for (i = 0; i < shape.size; i++) {
-    size *= shape.data[i];
-  }
-  return size;
-}
-

@@ -22,6 +22,15 @@ int shape_to_pos(rt_list_t shape, rt_list_t pos) {
   return ret;
 }
 
+int calc_shape_size(rt_list_t shape) {
+  int i;
+  int size = 1;
+  for (i = 0; i < shape.size; i++) {
+    size *= shape.data[i];
+  }
+  return size;
+}
+
 int find_num_in_shape(rt_list_t shape, int num) {
   int i;
   for (i = 0; i < shape.size; i++) {
@@ -64,10 +73,10 @@ vector_calc_context_t init_vector_calc_context(int num_of_inputs,
   // prepare all shapes.
   c.input_shapes = calloc(sizeof(rt_list_t), c.num_of_inputs);
   for (i = 0; i < c.num_of_inputs; i++) {
-    c.input_shapes[i].size = calc_list_size(inputs[i].shape);
+    c.input_shapes[i].size = calc_shape_size(inputs[i].shape);
     c.input_shapes[i].data = inputs[i].data;
   }
-  c.output_shape.size = calc_list_size(output.shape);
+  c.output_shape.size = calc_shape_size(output.shape);
   c.output_shape.data = output.data;
 
   // prepare position variables.
@@ -104,7 +113,7 @@ void vector_calc(vector_calc_context_t c, int num_of_inputs, rt_variable_t *inpu
   int i, j; // loop counters;
 
   // main loop
-  int shape_length = calc_list_size(c.shape);
+  int shape_length = calc_shape_size(c.shape);
   for (i = 0; i < shape_length; i++) {
     pos_to_shape(c.position, c.shape, i);
 
@@ -148,8 +157,8 @@ vector_average_context_t init_vector_average_context(rt_list_t in_shape,
     w_pos += 1;
   }
 
-  c.calc_ipos_max = calc_list_size(c.calc_shape);
-  c.rest_ipos_max = calc_list_size(c.rest_shape);
+  c.calc_ipos_max = calc_shape_size(c.calc_shape);
+  c.rest_ipos_max = calc_shape_size(c.rest_shape);
 
   if (c.rest_shape.size > 0) {
     c.output.data = c.rest_shape.data;
@@ -160,7 +169,7 @@ vector_average_context_t init_vector_average_context(rt_list_t in_shape,
     c.output.data = output_shape;
     c.output.type = NN_DATA_TYPE_FLOAT;
     c.output.data = calloc(sizeof(float), 1);
-    c.calc_ipos_max = calc_list_size(c.in_shape);
+    c.calc_ipos_max = calc_shape_size(c.in_shape);
   }
   return c;
 }

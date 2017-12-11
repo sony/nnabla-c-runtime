@@ -10,9 +10,6 @@ rt_list_t allocate_list(int length);
 /// Free allocated shape.
 void free_list(rt_list_t s);
 
-/// Calclate size of list
-int calc_list_size(rt_list_t list);
-
 /// Clone shape
 ///
 /// list.shape will be allocated inside this function.
