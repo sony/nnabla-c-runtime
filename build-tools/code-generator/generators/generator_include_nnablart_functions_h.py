@@ -44,7 +44,7 @@ def generate(string, info):
                 defines.append(
                     'void init_{}_local_context(rt_function_t* f);'.format(name))
                 defines.append(
-                    'void free_{}local_context(rt_function_t* f);'.format(name))
+                    'void free_{}_local_context(rt_function_t* f);'.format(name))
 
             defines.append('void exec_{}(rt_function_t* f);'.format(name))
             defines.append('')
