@@ -1293,7 +1293,11 @@
                     "Type": "repeated int64"
                 },
                 "border_mode": {
-                    "Type": "string"
+                    "Type": "string",
+                    "TypeSelection": [
+                        "nearest",
+                        "reflect"
+                    ]
                 }
             },
             "output": {
@@ -1478,7 +1482,11 @@
                     "Type": "repeated int64"
                 },
                 "border_mode": {
-                    "Type": "string"
+                    "Type": "string",
+                    "TypeSelection": [
+                        "nearest",
+                        "reflect"
+                    ]
                 },
                 "base_axis": {
                     "Type": "int64"
@@ -1918,7 +1926,11 @@
                     "Type": "repeated int64"
                 },
                 "selection_algorithm": {
-                    "Type": "string"
+                    "Type": "string",
+                    "TypeSelection": [
+                        "largest_abs",
+                        "random"
+                    ]
                 },
                 "seed": {
                     "Type": "int64"
@@ -1974,7 +1986,11 @@
                     "Type": "repeated int64"
                 },
                 "selection_algorithm": {
-                    "Type": "string"
+                    "Type": "string",
+                    "TypeSelection": [
+                        "largest_abs",
+                        "random"
+                    ]
                 },
                 "seed": {
                     "Type": "int64"

@@ -11,4 +11,5 @@ add_library(nnablart_functions STATIC
 
   # Functions
   implements/affine.c
+  implements/sigmoid.c
   implements/unimplemented.c)

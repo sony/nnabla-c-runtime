@@ -11,8 +11,18 @@ def generate(string, info):
             defines.append('// {}'.format(fn))
             name = func['snakecase_name']
             if 'argument' in func:
+
+                for an, arg in func['argument'].items():
+                    if 'TypeSelection' in arg:
+                        defines.append('typedef enum {')
+                        for t in arg['TypeSelection']:
+                            defines.append('    {}_{}_{},'.format(name.upper(), an.upper(), t.upper()))
+                        defines.append('    END_OF_{}_{}'.format(name.upper(), an.upper()))
+                        defines.append('}} {}_{}_value_t;'.format(name, an))
+                        defines.append('')
                 defines.append('typedef struct {')
                 argstrings = []
+
                 for an, arg in func['argument'].items():
 
                     if arg['Type'] == 'bool':
@@ -33,9 +43,8 @@ def generate(string, info):
                             '  rt_list_t {}; ///< Original type is [{}]'.format(an, arg['Type']))
 
                     elif arg['Type'] == 'string':
-                        argstrings.append('uint32_t {}'.format(an))
-                        defines.append(
-                            '  uint32_t {};  ///< Original type is [{}]'.format(an, arg['Type']))
+                        argstrings.append('{0}_{1}_value_t {1}'.format(name, an))
+                        defines.append('{0}_{1}_value_t {1};'.format(name, an))
 
                 defines.append('  void* local_context;')
                 defines.append('}} {}_config_t;'.format(name))

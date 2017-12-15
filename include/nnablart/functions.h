@@ -1,4 +1,17 @@
-// -*- coding:utf-8 -*-
+// Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #ifndef H_FUNCTIONS_H__
 #define H_FUNCTIONS_H__
 
@@ -748,13 +761,19 @@ void free_flip_local_context(rt_function_t *f);
 void exec_flip(rt_function_t *f);
 
 // Shift
+typedef enum {
+  SHIFT_BORDER_MODE_NEAREST,
+  SHIFT_BORDER_MODE_REFLECT,
+  END_OF_SHIFT_BORDER_MODE
+} shift_border_mode_value_t;
+
 typedef struct {
-  rt_list_t shifts;     ///< Original type is [repeated int64]
-  uint32_t border_mode; ///< Original type is [string]
+  rt_list_t shifts; ///< Original type is [repeated int64]
+  shift_border_mode_value_t border_mode;
   void *local_context;
 } shift_config_t;
 void init_shift_config(shift_config_t *config, rt_list_t shifts,
-                       uint32_t border_mode);
+                       shift_border_mode_value_t border_mode);
 void init_shift_local_context(rt_function_t *f);
 void free_shift_local_context(rt_function_t *f);
 void exec_shift(rt_function_t *f);
@@ -859,16 +878,22 @@ void free_random_flip_local_context(rt_function_t *f);
 void exec_random_flip(rt_function_t *f);
 
 // RandomShift
+typedef enum {
+  RANDOM_SHIFT_BORDER_MODE_NEAREST,
+  RANDOM_SHIFT_BORDER_MODE_REFLECT,
+  END_OF_RANDOM_SHIFT_BORDER_MODE
+} random_shift_border_mode_value_t;
+
 typedef struct {
-  rt_list_t shifts;     ///< Original type is [repeated int64]
-  uint32_t border_mode; ///< Original type is [string]
+  rt_list_t shifts; ///< Original type is [repeated int64]
+  random_shift_border_mode_value_t border_mode;
   int32_t base_axis;
   int32_t seed;
   void *local_context;
 } random_shift_config_t;
 void init_random_shift_config(random_shift_config_t *config, rt_list_t shifts,
-                              uint32_t border_mode, int32_t base_axis,
-                              int32_t seed);
+                              random_shift_border_mode_value_t border_mode,
+                              int32_t base_axis, int32_t seed);
 void init_random_shift_local_context(rt_function_t *f);
 void free_random_shift_local_context(rt_function_t *f);
 void exec_random_shift(rt_function_t *f);
@@ -1038,22 +1063,35 @@ void free_binary_weight_convolution_local_context(rt_function_t *f);
 void exec_binary_weight_convolution(rt_function_t *f);
 
 // INQAffine
+typedef enum {
+  INQ_AFFINE_SELECTION_ALGORITHM_LARGEST_ABS,
+  INQ_AFFINE_SELECTION_ALGORITHM_RANDOM,
+  END_OF_INQ_AFFINE_SELECTION_ALGORITHM
+} inq_affine_selection_algorithm_value_t;
+
 typedef struct {
   int32_t base_axis;
   int32_t num_bits;
-  rt_list_t inq_iterations;     ///< Original type is [repeated int64]
-  uint32_t selection_algorithm; ///< Original type is [string]
+  rt_list_t inq_iterations; ///< Original type is [repeated int64]
+  inq_affine_selection_algorithm_value_t selection_algorithm;
   int32_t seed;
   void *local_context;
 } inq_affine_config_t;
-void init_inq_affine_config(inq_affine_config_t *config, int32_t base_axis,
-                            int32_t num_bits, rt_list_t inq_iterations,
-                            uint32_t selection_algorithm, int32_t seed);
+void init_inq_affine_config(
+    inq_affine_config_t *config, int32_t base_axis, int32_t num_bits,
+    rt_list_t inq_iterations,
+    inq_affine_selection_algorithm_value_t selection_algorithm, int32_t seed);
 void init_inq_affine_local_context(rt_function_t *f);
 void free_inq_affine_local_context(rt_function_t *f);
 void exec_inq_affine(rt_function_t *f);
 
 // INQConvolution
+typedef enum {
+  INQ_CONVOLUTION_SELECTION_ALGORITHM_LARGEST_ABS,
+  INQ_CONVOLUTION_SELECTION_ALGORITHM_RANDOM,
+  END_OF_INQ_CONVOLUTION_SELECTION_ALGORITHM
+} inq_convolution_selection_algorithm_value_t;
+
 typedef struct {
   int32_t base_axis;
   rt_list_t pad;      ///< Original type is [Shape]
@@ -1061,17 +1099,17 @@ typedef struct {
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;
   int32_t num_bits;
-  rt_list_t inq_iterations;     ///< Original type is [repeated int64]
-  uint32_t selection_algorithm; ///< Original type is [string]
+  rt_list_t inq_iterations; ///< Original type is [repeated int64]
+  inq_convolution_selection_algorithm_value_t selection_algorithm;
   int32_t seed;
   void *local_context;
 } inq_convolution_config_t;
-void init_inq_convolution_config(inq_convolution_config_t *config,
-                                 int32_t base_axis, rt_list_t pad,
-                                 rt_list_t stride, rt_list_t dilation,
-                                 int32_t group, int32_t num_bits,
-                                 rt_list_t inq_iterations,
-                                 uint32_t selection_algorithm, int32_t seed);
+void init_inq_convolution_config(
+    inq_convolution_config_t *config, int32_t base_axis, rt_list_t pad,
+    rt_list_t stride, rt_list_t dilation, int32_t group, int32_t num_bits,
+    rt_list_t inq_iterations,
+    inq_convolution_selection_algorithm_value_t selection_algorithm,
+    int32_t seed);
 void init_inq_convolution_local_context(rt_function_t *f);
 void free_inq_convolution_local_context(rt_function_t *f);
 void exec_inq_convolution(rt_function_t *f);
