@@ -411,10 +411,26 @@
             "snakecase_name": "batch_normalization",
             "input": {
                 "x": {},
-                "beta": {},
-                "gamma": {},
-                "mean": {},
-                "variance": {}
+                "beta": {
+                    "Options": [
+                        "Parameter"
+                    ]
+                },
+                "gamma": {
+                    "Options": [
+                        "Parameter"
+                    ]
+                },
+                "mean": {
+                    "Options": [
+                        "Parameter"
+                    ]
+                },
+                "variance": {
+                    "Options": [
+                        "Parameter"
+                    ]
+                }
             },
             "argument": {
                 "axes": {

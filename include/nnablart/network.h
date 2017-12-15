@@ -9,7 +9,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION 3d4ae1acb9d6eedc8ab53416ec16cbe7
+#define NN_BINARY_FORMAT_VERSION 091cc09b15b3b485b88c7159175ad6d2
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
@@ -1632,6 +1632,13 @@ typedef struct {
 
 /// @}
 /// @}
+/// @}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @defgroup ErrorCodes
+///
+/// @{
+#define NN_ERROR_CODE_NOERROR (0)
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
