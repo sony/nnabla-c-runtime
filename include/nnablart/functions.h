@@ -26,6 +26,7 @@ typedef struct {
 
 typedef enum {
   RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0,
+  RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,
   RT_BUFFER_ALLOCATE_TYPE_STINGY,
   RT_BUFFER_ALLOCATE_TYPE_INPUT,
   RT_BUFFER_ALLOCATE_TYPE_OUTPUT,
@@ -34,7 +35,6 @@ typedef enum {
 typedef struct rt_variable_t {
   rt_list_t shape;
   nn_data_type_t type : 4; ///< Type of param values
-  rt_buffer_allocate_type_t allocate_type : 4;
   unsigned int fp_pos : 4;
   float coefficient; ///< Coefficient value for convert int to float.
   void *data;
