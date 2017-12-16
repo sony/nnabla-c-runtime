@@ -33,5 +33,21 @@ void free_affinelocal_context(rt_function_t *f)
 void exec_affine(rt_function_t *f)
 {
   WHOAMI(" %s\n", __func__);
+  int i; // iterator
+
+  WHOAMI(" i:%d\n", f->num_of_inputs);
+  for(i = 0; i < f->num_of_inputs; i++ ){
+    WHOAMI("  i[%d]: %p %f\n", i, f->inputs[i], *((float*)(f->inputs[i])));
+  }
+
+  WHOAMI(" o:%d\n", f->num_of_outputs);
+  for(i = 0; i < f->num_of_outputs; i++ ){
+    WHOAMI("  o[%d]: %p %f\n", i, f->outputs[i], *((float*)(f->outputs[i])));
+  }
+  
+  
+  affine_config_t *config = (affine_config_t*)f->config;
+  WHOAMI(" base_axis %d\n", config->base_axis);
+  
 }
 
