@@ -30,4 +30,3 @@ void free_list(rt_list_t s);
 rt_list_t clone_list(rt_list_t src);
 
 #endif // H_LIST_H_171210064151_
-

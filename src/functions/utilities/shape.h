@@ -12,30 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <assert.h>
+#ifndef H_SHAPE_H_171218133433_
+#define H_SHAPE_H_171218133433_
 
-#include "list.h"
+/// @defgroup ShapeFunction
+/// @{
 
-rt_list_t allocate_list(int length) {
-  rt_list_t ret;
-  assert(length >= 0);
-  ret.size = length;
-  ret.data = (int *)calloc(sizeof(int), length);
-  return ret;
-}
+/// Calc vector axis at specified data pos.
+void pos_to_shape(rt_list_t out, rt_list_t shape, int pos);
 
-void free_list(rt_list_t s) {
-  if (s.data) {
-    free(s.data);
-  }
-  s.data = 0;
-}
+/// Calc data position at specified vector axis.
+int shape_to_pos(rt_list_t s, rt_list_t pos);
 
-rt_list_t clone_list(rt_list_t src) {
-  int i;
-  rt_list_t dst = allocate_list(src.size);
-  for (i = 0; i < src.size; i++) {
-    dst.data[i] = src.data[i];
-  }
-  return dst;
-}
+/// If s has specified num, return position. Otherwise return -1.
+int find_num_in_shape(rt_list_t s, int num);
+
+/// Calclate data size with shape
+int calc_shape_size(rt_list_t shape);
+
+/// @}
+
+#endif // H_SHAPE_H_171218133433_

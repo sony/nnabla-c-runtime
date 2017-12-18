@@ -39,27 +39,10 @@ tensordot_context_t init_tensordot_context(rt_list_t input1_shape,
                                            rt_list_t input2_shape,
                                            rt_list_t axes1, rt_list_t axes2);
 
-void tensordot(tensordot_context_t c, rt_variable_t input1, rt_variable_t input2,
-               rt_variable_t output);
+void tensordot(tensordot_context_t c, rt_variable_t input1,
+               rt_variable_t input2, rt_variable_t output);
 
 void free_tensordot_context(tensordot_context_t c);
-
-/// @}
-
-/// @defgroup ShapeFunction
-/// @{
-
-/// Calc vector axis at specified data pos.
-void pos_to_shape(rt_list_t out, rt_list_t shape, int pos);
-
-/// Calc data position at specified vector axis.
-int shape_to_pos(rt_list_t s, rt_list_t pos);
-
-/// If s has specified num, return position. Otherwise return -1.
-int find_num_in_shape(rt_list_t s, int num);
-
-/// Calclate data size with shape
-int calc_shape_size(rt_list_t shape);
 
 /// @}
 

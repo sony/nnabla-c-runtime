@@ -15,7 +15,4 @@
 #include <nnablart/functions.h>
 
 // Sigmoid
-void exec_sigmoid(rt_function_t *f)
-{
-  WHOAMI(" %s\n", __func__);
-}
+void exec_sigmoid(rt_function_t *f) { WHOAMI(" %s\n", __func__); }

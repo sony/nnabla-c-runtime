@@ -7,9 +7,11 @@ add_library(nnablart_functions STATIC
   # Utilities
   utilities/accessor.c
   utilities/list.c
+  utilities/shape.c
   utilities/vector.c
 
   # Functions
-  implements/affine.c
+  implements/affine/affine.c
+  implements/affine/affine_generic.c
   implements/sigmoid.c
   implements/unimplemented.c)

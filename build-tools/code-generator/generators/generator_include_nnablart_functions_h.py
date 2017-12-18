@@ -51,7 +51,7 @@ def generate(string, info):
                 defines.append(
                     'void init_{0}_config({0}_config_t* config, {1});'.format(name, ','.join(argstrings)))
                 defines.append(
-                    'void init_{}_local_context(rt_function_t* f);'.format(name))
+                    'void allocate_{}_local_context(rt_function_t* f);'.format(name))
                 defines.append(
                     'void free_{}_local_context(rt_function_t* f);'.format(name))
 

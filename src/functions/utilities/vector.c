@@ -12,46 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "list.h"
-#include "accessor.h"
 #include "vector.h"
-
-void pos_to_shape(rt_list_t out, rt_list_t shape, int pos) {
-  int i = 0, o = 1;
-  for (i = shape.size - 1; i >= 0; i--) {
-    out.data[i] = (pos / o) % shape.data[i];
-    o *= shape.data[i];
-  }
-}
-
-int shape_to_pos(rt_list_t shape, rt_list_t pos) {
-  int ret = 0;
-  int i, o = 1;
-  for (i = shape.size - 1; i >= 0; i--) {
-    ret += o * pos.data[i];
-    o *= shape.data[i];
-  }
-  return ret;
-}
-
-int calc_shape_size(rt_list_t shape) {
-  int i;
-  int size = 1;
-  for (i = 0; i < shape.size; i++) {
-    size *= shape.data[i];
-  }
-  return size;
-}
-
-int find_num_in_shape(rt_list_t shape, int num) {
-  int i;
-  for (i = 0; i < shape.size; i++) {
-    if (shape.data[i] == num) {
-      return i;
-    }
-  }
-  return -1;
-}
+#include "accessor.h"
+#include "list.h"
+#include "shape.h"
 
 static void calc_broadcast_position(rt_list_t broadcast_position,
                                     rt_list_t broadcast_shape,
@@ -118,8 +82,9 @@ void free_vector_calc_context(vector_calc_context_t c) {
   free(c.input_shapes);
 }
 
-void vector_calc(vector_calc_context_t c, int num_of_inputs, rt_variable_t *inputs,
-                 rt_variable_t output, float (*calc_func)(int, float *))
+void vector_calc(vector_calc_context_t c, int num_of_inputs,
+                 rt_variable_t *inputs, rt_variable_t output,
+                 float (*calc_func)(int, float *))
 
 {
   int i, j; // loop counters;
@@ -132,12 +97,13 @@ void vector_calc(vector_calc_context_t c, int num_of_inputs, rt_variable_t *inpu
     for (j = 0; j < c.num_of_inputs; j++) {
       calc_broadcast_position(c.input_positions[j], c.input_shapes[j],
                               c.position);
-      c.input_values[j] = select_getter(inputs[j].type)(
+      c.input_values[j] = select_getter(&inputs[j])(
           &(inputs[j]), shape_to_pos(c.input_shapes[j], c.input_positions[j]));
     }
     calc_broadcast_position(c.output_position, c.output_shape, c.position);
-    select_setter(output.type)(&output, shape_to_pos(c.output_shape, c.output_position),
-               calc_func(c.num_of_inputs, c.input_values));
+    select_setter (&output)(&output,
+                            shape_to_pos(c.output_shape, c.output_position),
+                            calc_func(c.num_of_inputs, c.input_values));
   }
 }
 
@@ -210,18 +176,19 @@ void vector_average_calc_mean(vector_average_context_t c, rt_variable_t input) {
             }
           }
         }
-        mean += select_getter(input.type)(&input, shape_to_pos(c.in_shape, c.in_pos));
+        mean +=
+            select_getter(&input)(&input, shape_to_pos(c.in_shape, c.in_pos));
         count += 1;
       }
-      select_setter(c.output.type)(&(c.output), rest_ipos, mean / count);
+      select_setter (&c.output)(&c.output, rest_ipos, mean / count);
     }
   } else {
     int i;
     float mean = 0;
     for (i = 0; i < c.calc_ipos_max; i++) {
-      mean += select_getter(input.type)(&input, i);
+      mean += select_getter(&input)(&input, i);
     }
-    select_setter(c.output.type)(&(c.output), 0, mean / c.calc_ipos_max);
+    select_setter (&c.output)(&(c.output), 0, mean / c.calc_ipos_max);
   }
 }
 

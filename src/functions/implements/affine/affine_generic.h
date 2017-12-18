@@ -12,30 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <assert.h>
+#ifndef H_AFFINE_GENERIC_H_171218134147_
+#define H_AFFINE_GENERIC_H_171218134147_
 
-#include "list.h"
+void exec_affine_generic(rt_function_t *f);
 
-rt_list_t allocate_list(int length) {
-  rt_list_t ret;
-  assert(length >= 0);
-  ret.size = length;
-  ret.data = (int *)calloc(sizeof(int), length);
-  return ret;
-}
-
-void free_list(rt_list_t s) {
-  if (s.data) {
-    free(s.data);
-  }
-  s.data = 0;
-}
-
-rt_list_t clone_list(rt_list_t src) {
-  int i;
-  rt_list_t dst = allocate_list(src.size);
-  for (i = 0; i < src.size; i++) {
-    dst.data[i] = src.data[i];
-  }
-  return dst;
-}
+#endif // H_AFFINE_GENERIC_H_171218134147_
