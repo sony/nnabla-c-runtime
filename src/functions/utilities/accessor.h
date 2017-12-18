@@ -15,6 +15,8 @@
 #ifndef H_ACCESOR_H_171210064532_
 #define H_ACCESOR_H_171210064532_
 
+#include <nnablart/functions.h>
+
 #define GET_FLOAT(xVariable, xPos) (*((float *)((xVariable)->data) + (xPos)))
 #define GET_INT16(xVariable, xPos)                                             \
   ((xVariable)->coefficient *                                                  \

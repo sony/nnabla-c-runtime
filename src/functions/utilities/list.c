@@ -20,7 +20,7 @@ rt_list_t allocate_list(int length) {
   rt_list_t ret;
   assert(length >= 0);
   ret.size = length;
-  ret.data = (int *)calloc(sizeof(int), length);
+  ret.data = (int *)malloc(sizeof(int) * length);
   return ret;
 }
 

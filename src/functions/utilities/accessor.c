@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
 #include "accessor.h"
 
 float get_float(rt_variable_t *variable, nn_size_t pos) {

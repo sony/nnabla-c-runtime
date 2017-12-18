@@ -47,7 +47,7 @@ vector_calc_context_t init_vector_calc_context(int num_of_inputs,
   c.shape = output.shape;
 
   // prepare all shapes.
-  c.input_shapes = calloc(sizeof(rt_list_t), c.num_of_inputs);
+  c.input_shapes = malloc(sizeof(rt_list_t) * c.num_of_inputs);
   for (i = 0; i < c.num_of_inputs; i++) {
     c.input_shapes[i].size = calc_shape_size(inputs[i].shape);
     c.input_shapes[i].data = inputs[i].data;
@@ -57,14 +57,14 @@ vector_calc_context_t init_vector_calc_context(int num_of_inputs,
 
   // prepare position variables.
   c.position = clone_list(c.shape);
-  c.input_positions = calloc(sizeof(rt_list_t), c.num_of_inputs);
+  c.input_positions = malloc(sizeof(rt_list_t) * c.num_of_inputs);
   for (i = 0; i < c.num_of_inputs; i++) {
     c.input_positions[i] = clone_list(c.input_shapes[i]);
   }
   c.output_position = clone_list(c.output_shape);
 
   // prepare input value buffer.
-  c.input_values = calloc(sizeof(float), c.num_of_inputs);
+  c.input_values = malloc(sizeof(float) * c.num_of_inputs);
 
   return c;
 }
@@ -141,12 +141,12 @@ vector_average_context_t init_vector_average_context(rt_list_t in_shape,
   if (c.rest_shape.size > 0) {
     c.output.data = c.rest_shape.data;
     c.output.type = NN_DATA_TYPE_FLOAT;
-    c.output.data = calloc(sizeof(float), c.rest_ipos_max);
+    c.output.data = malloc(sizeof(float) * c.rest_ipos_max);
   } else {
     static int output_shape[] = {1};
     c.output.data = output_shape;
     c.output.type = NN_DATA_TYPE_FLOAT;
-    c.output.data = calloc(sizeof(float), 1);
+    c.output.data = malloc(sizeof(float));
     c.calc_ipos_max = calc_shape_size(c.in_shape);
   }
   return c;

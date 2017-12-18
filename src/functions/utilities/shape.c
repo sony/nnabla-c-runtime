@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
 #include "shape.h"
-#include "list.h"
 
 void pos_to_shape(rt_list_t out, rt_list_t shape, int pos) {
   int i = 0, o = 1;

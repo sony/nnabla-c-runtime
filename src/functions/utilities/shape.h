@@ -15,6 +15,9 @@
 #ifndef H_SHAPE_H_171218133433_
 #define H_SHAPE_H_171218133433_
 
+#include "list.h"
+#include <nnablart/functions.h>
+
 /// @defgroup ShapeFunction
 /// @{
 

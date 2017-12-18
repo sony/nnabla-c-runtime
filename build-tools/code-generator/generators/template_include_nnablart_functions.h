@@ -24,10 +24,6 @@ extern "C" {{
 
 #include <nnablart/network.h>
 
-// Definitions.
-#define INT8_BIT_LENGTH (8)
-#define INT16_BIT_LENGTH (16)
-
 // version of cforwardprop library
 #define NNABLART_MAJOR_VERSION (1)
 #define NNABLART_MINOR_VERSION (0)
@@ -43,6 +39,7 @@ typedef enum {{
   RT_BUFFER_ALLOCATE_TYPE_STINGY,
   RT_BUFFER_ALLOCATE_TYPE_INPUT,
   RT_BUFFER_ALLOCATE_TYPE_OUTPUT,
+  END_OF_RT_BUFFER_ALLOCATE_TYPE
 }} rt_buffer_allocate_type_t;
 
 typedef struct rt_variable_t {{
