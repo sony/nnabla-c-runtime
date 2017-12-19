@@ -3,3 +3,4 @@ project(nnablart)
 
 add_subdirectory(src/runtime)
 add_subdirectory(src/functions)
+add_subdirectory(src/nnablart)

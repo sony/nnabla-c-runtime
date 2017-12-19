@@ -13,7 +13,9 @@ class CodeGenerator:
     def get_function_info(self):
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                'function_info.json'), 'r') as f:
-            self.info = json.loads(f.read(), object_pairs_hook=OrderedDict)
+            all_info = json.loads(f.read(), object_pairs_hook=OrderedDict)
+            self.info = all_info['categories']
+            self.version = all_info['version']
 
     def generate(self, name):
         output_filename = os.path.abspath(os.path.join(

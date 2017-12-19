@@ -52,14 +52,14 @@ typedef enum {{
   END_OF_NN_DATA_TYPE
 }} nn_data_type_t;
 
-/// @brief Definition of Parameter.
+/// @brief Definition of Variable.
 typedef struct {{
-  uint32_t variable_id; ///< Variable that uses this parameter.
-  nn_list_t shape;      ///< Shape of param
-  nn_data_type_t type; ///< Type of param values
-  nn_size_t scale;      ///< Scale of param values
-  pointer_index_t data; ///< Location of param data
-}} nn_param_t;
+  uint32_t id;             ///< Identifier
+  nn_list_t shape;         ///< Shape
+  nn_data_type_t type : 4; ///< Type of param values
+  unsigned int fp_pos : 4; ///< floating point position.
+  int32_t data_index;      ///< Location of data. If negative, it means data buffer index. Otherwize it means location of data in memory.
+}} nn_variable_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Functions エッジの定義
@@ -89,13 +89,6 @@ typedef struct {{
 /// @brief Definitions for network.
 /// @{{
 
-/// @brief Definition of Variable.
-typedef struct {{
-  uint32_t id;
-  nn_list_t shape;
-  int32_t buffer_index;
-}} nn_variable_t;
-
 typedef struct {{
   nn_size_t num_of_data;
   nn_size_t data_size;
@@ -105,11 +98,10 @@ typedef struct {{
 ///
 typedef struct {{
   uint32_t version;     ///< nnablart version.
-  nn_list_t inputs;     ///< list of nn_variable_t
-  nn_list_t outputs;    ///< list of nn_variable_t
-  nn_list_t functions;  ///< list of nn_function_t
-  nn_list_t parameters; ///< list of nn_param_t
   nn_list_t variables;  ///< list of nn_variable_t
+  nn_list_t functions;  ///< list of nn_function_t
+  nn_list_t inputs;     ///< list of input variable ids
+  nn_list_t outputs;    ///< list of output variable ids
   nn_memory_t memory;   ///< memory to store all data.
 }} nn_network_t;
 
@@ -130,7 +122,7 @@ typedef struct {{
 /// @{{
 #ifndef WHOAMI
 #define WHOAMI(...)                                                            \
-  {{                                                                            \
+  {{                                                                           \
     printf("%s:%d :", __FILE__, __LINE__);                                     \
     printf(__VA_ARGS__);                                                       \
     fflush(stdout);                                                            \
