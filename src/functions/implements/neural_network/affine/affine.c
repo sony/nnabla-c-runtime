@@ -18,8 +18,8 @@
 
 #include "affine_internal.h"
 
-#include "affine_generic.h"
 #include "affine_float.h"
+#include "affine_generic.h"
 
 // Affine
 void allocate_affine_local_context(rt_function_t *f) {
@@ -63,10 +63,10 @@ void allocate_affine_local_context(rt_function_t *f) {
     c->output_loop_size *= c->output->shape.data[i];
   }
 
-  if(c->input->type == NN_DATA_TYPE_FLOAT &&
-     c->output->type == NN_DATA_TYPE_FLOAT &&
-     c->weight->type == NN_DATA_TYPE_FLOAT &&
-     ((c->bias && c->bias->type == NN_DATA_TYPE_FLOAT) || !c->bias)) {
+  if (c->input->type == NN_DATA_TYPE_FLOAT &&
+      c->output->type == NN_DATA_TYPE_FLOAT &&
+      c->weight->type == NN_DATA_TYPE_FLOAT &&
+      ((c->bias && c->bias->type == NN_DATA_TYPE_FLOAT) || !c->bias)) {
     c->exec = exec_affine_float;
   } else {
     c->exec = exec_affine_generic;
@@ -81,7 +81,8 @@ void free_affine_local_context(rt_function_t *f) {
 
 void exec_affine(rt_function_t *f) {
   assert(((affine_local_context_t *)(((affine_config_t *)(f->config))
-                              ->local_context))->exec);
-  ((affine_local_context_t *)(((affine_config_t *)(f->config))
-                              ->local_context))->exec(f);
+                                         ->local_context))
+             ->exec);
+  ((affine_local_context_t *)(((affine_config_t *)(f->config))->local_context))
+      ->exec(f);
 }

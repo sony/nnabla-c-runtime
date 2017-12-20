@@ -18,4 +18,3 @@
 void exec_affine_generic(rt_function_t *f);
 
 #endif // H_AFFINE_GENERIC_H_171218202102_
-

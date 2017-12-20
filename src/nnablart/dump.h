@@ -15,7 +15,6 @@
 #ifndef H_DUMP_H_171220151119_
 #define H_DUMP_H_171220151119_
 
-int dump(nn_network_t* net, int argc, char* argv[]);
+int dump(nn_network_t *net, int argc, char *argv[]);
 
 #endif // H_DUMP_H_171220151119_
-

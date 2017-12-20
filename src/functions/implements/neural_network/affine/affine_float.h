@@ -19,4 +19,3 @@
 void exec_affine_float(rt_function_t *f);
 
 #endif // H_AFFINE_FLOAT_H_171218202120_
-

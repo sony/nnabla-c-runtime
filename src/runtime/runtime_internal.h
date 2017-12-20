@@ -16,27 +16,37 @@
 #define H_RUNTIME_INTERNAL_H_171220111925_
 
 /// @brief インデックス部分のサイズを計算します。
-/// @note マクロ内から利用するためのものであり、外部から利用することは想定していません。
-#define NN_NETWORK_INDEX_SIZE(xNetwork) ((xNetwork)->memory.num_of_data * sizeof( pointer_index_t ))
+/// @note
+/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+#define NN_NETWORK_INDEX_SIZE(xNetwork)                                        \
+  ((xNetwork)->memory.num_of_data * sizeof(pointer_index_t))
 
 /// @brief データ部分のサイズを計算します。
-/// @note マクロ内から利用するためのものであり、外部から利用することは想定していません。
-#define NN_NETWORK_DATA_SIZE(xNetwork) ((xNetwork)->memory.data_size )
+/// @note
+/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+#define NN_NETWORK_DATA_SIZE(xNetwork) ((xNetwork)->memory.data_size)
 
 /// @brief ネットワーク全体のデータサイズを計算します。
-#define NN_NETWORK_SIZE(xNetwork) (sizeof( nn_network_t ) + NN_NETWORK_INDEX_SIZE(xNetwork) + NN_NETWORK_DATA_SIZE(xNetwork) )
+#define NN_NETWORK_SIZE(xNetwork)                                              \
+  (sizeof(nn_network_t) + NN_NETWORK_INDEX_SIZE(xNetwork) +                    \
+   NN_NETWORK_DATA_SIZE(xNetwork))
 
 /// @brief インデックスエリアの先頭ポインタを返します。
-/// @note マクロ内から利用するためのものであり、外部から利用することは想定していません。
-#define NN_NETWORK_INDEX_POINTER(xNetwork) ((pointer_index_t*)( ((uint8_t*)xNetwork) + sizeof( nn_network_t ) ))
+/// @note
+/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+#define NN_NETWORK_INDEX_POINTER(xNetwork)                                     \
+  ((pointer_index_t *)(((uint8_t *)xNetwork) + sizeof(nn_network_t)))
 
 /// @brief データエリアの先頭ポインタを返します。
-/// @note マクロ内から利用するためのものであり、外部から利用することは想定していません。
-#define NN_NETWORK_DATA_POINTER(xNetwork) ( (uint8_t*)NN_NETWORK_INDEX_POINTER(xNetwork) + NN_NETWORK_INDEX_SIZE(xNetwork) )
+/// @note
+/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+#define NN_NETWORK_DATA_POINTER(xNetwork)                                      \
+  ((uint8_t *)NN_NETWORK_INDEX_POINTER(xNetwork) +                             \
+   NN_NETWORK_INDEX_SIZE(xNetwork))
 
 /// @brief インデックスからポインタを返します。
-#define NN_GET(xNetwork, xIndex) (NN_NETWORK_DATA_POINTER(xNetwork) + NN_NETWORK_INDEX_POINTER(xNetwork)[xIndex])
-
+#define NN_GET(xNetwork, xIndex)                                               \
+  (NN_NETWORK_DATA_POINTER(xNetwork) +                                         \
+   NN_NETWORK_INDEX_POINTER(xNetwork)[xIndex])
 
 #endif // H_RUNTIME_INTERNAL_H_171220111925_
-

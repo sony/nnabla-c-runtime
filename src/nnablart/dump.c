@@ -22,21 +22,20 @@
 #include "../runtime/runtime_internal.h"
 #include "dump_function.h"
 
-int dump(nn_network_t* net, int argc, char* argv[])
-{
+int dump(nn_network_t *net, int argc, char *argv[]) {
   int i, j;
   WHOAMI("%s\n", __func__);
 
   printf("NNB: Version: [%d]\n", net->version);
   printf("NNB: Has %d variables.\n", net->variables.size);
-  int* list = (int*)NN_GET(net, net->variables.list);
-  for(i = 0; i < net->variables.size; i++) {
-    nn_variable_t* var = (nn_variable_t*)(NN_GET(net, *(list + i)));
+  int *list = (int *)NN_GET(net, net->variables.list);
+  for (i = 0; i < net->variables.size; i++) {
+    nn_variable_t *var = (nn_variable_t *)(NN_GET(net, *(list + i)));
     printf("NNB: Variable id:         %d\n", var->id);
     printf("NNB: Variable shape:      (");
-    int* shape_list = (int*)NN_GET(net, var->shape.list);
-    for( j = 0; j < var->shape.size; j++) {
-      printf(" %d", *(shape_list+j));
+    int *shape_list = (int *)NN_GET(net, var->shape.list);
+    for (j = 0; j < var->shape.size; j++) {
+      printf(" %d", *(shape_list + j));
     }
     printf(" )\n");
     printf("NNB: Variable type:       %d\n", var->type);
@@ -45,24 +44,22 @@ int dump(nn_network_t* net, int argc, char* argv[])
   }
 
   printf("NNB: Has %d functions.\n", net->functions.size);
-  list = (int*)NN_GET(net, net->functions.list);
-  for(i = 0; i < net->functions.size; i++) {
-    dump_function(net, (nn_function_t*)(NN_GET(net, *(list + i))));
+  list = (int *)NN_GET(net, net->functions.list);
+  for (i = 0; i < net->functions.size; i++) {
+    dump_function(net, (nn_function_t *)(NN_GET(net, *(list + i))));
   }
 
   printf("NNB: Has %d inputs.\n", net->inputs.size);
-  list = (int*)NN_GET(net, net->inputs.list);
-  for(i = 0; i < net->inputs.size; i++) {
-    printf("NNB: Input[%d]   Variable id:%d\n", i, *(list+i));
+  list = (int *)NN_GET(net, net->inputs.list);
+  for (i = 0; i < net->inputs.size; i++) {
+    printf("NNB: Input[%d]   Variable id:%d\n", i, *(list + i));
   }
-  
+
   printf("NNB: Has %d outputs.\n", net->outputs.size);
-  list = (int*)NN_GET(net, net->outputs.list);
-  for(i = 0; i < net->outputs.size; i++) {
-    printf("NNB: Output[%d]  Variable id:%d\n", i, *(list+i));
+  list = (int *)NN_GET(net, net->outputs.list);
+  for (i = 0; i < net->outputs.size; i++) {
+    printf("NNB: Output[%d]  Variable id:%d\n", i, *(list + i));
   }
-  
-  
+
   return 0;
 }
-

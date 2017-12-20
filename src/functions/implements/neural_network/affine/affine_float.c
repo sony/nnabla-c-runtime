@@ -24,10 +24,10 @@ void exec_affine_float(rt_function_t *f) {
       (affine_local_context_t *)(((affine_config_t *)(f->config))
                                      ->local_context);
   int i, j, k; // Iterators.
-  float* input = (float*)(c->input->data);
-  float* weight = (float*)(c->weight->data);
-  float* output = (float*)(c->output->data);
-  
+  float *input = (float *)(c->input->data);
+  float *weight = (float *)(c->weight->data);
+  float *output = (float *)(c->output->data);
+
   // Clear output
   memset(output, 0, sizeof(float) * c->output_size);
 
@@ -53,7 +53,7 @@ void exec_affine_float(rt_function_t *f) {
 
     // Bias
     if (c->bias) {
-      float* bias = (float*)(c->bias->data);
+      float *bias = (float *)(c->bias->data);
       for (i = 0; i < c->output_loop_size; i++) {
         int opos = output_offset + i;
         int bpos = i;
