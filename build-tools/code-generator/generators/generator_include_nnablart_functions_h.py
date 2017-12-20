@@ -16,8 +16,10 @@ def generate(string, info):
                     if 'TypeSelection' in arg:
                         defines.append('typedef enum {')
                         for t in arg['TypeSelection']:
-                            defines.append('    {}_{}_{},'.format(name.upper(), an.upper(), t.upper()))
-                        defines.append('    END_OF_{}_{}'.format(name.upper(), an.upper()))
+                            defines.append('    {}_{}_{},'.format(
+                                name.upper(), an.upper(), t.upper()))
+                        defines.append('    END_OF_{}_{}'.format(
+                            name.upper(), an.upper()))
                         defines.append('}} {}_{}_value_t;'.format(name, an))
                         defines.append('')
                 defines.append('typedef struct {')
