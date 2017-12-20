@@ -40,5 +40,8 @@ class CodeGenerator:
         self.generate('include/nnablart/network.h')
         self.generate('include/nnablart/functions.h')
 
+        self.generate('src/nnablart/dump_function.h')
+        self.generate('src/nnablart/dump_function.c')
+
 
 CodeGenerator().generate_all()

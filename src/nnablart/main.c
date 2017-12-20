@@ -19,18 +19,11 @@
 #include <nnablart/network.h>
 #include <nnablart/runtime.h>
 
+#include "dump.h"
+
 static void usage(const char* err)
 {
   printf("Error [%s]\n", err);
-}
-
-static int dump(nn_network_t* net, int argc, char* argv[])
-{
-  WHOAMI("%s\n", __func__);
-
-  printf("NNB: Version: [%d]\n", net->version);
-
-  return 0;
 }
 
 static int infer(nn_network_t* net, int argc, char* argv[])
