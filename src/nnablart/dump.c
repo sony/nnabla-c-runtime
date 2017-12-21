@@ -27,8 +27,14 @@ int dump(nn_network_t *net, int argc, char *argv[]) {
   WHOAMI("%s\n", __func__);
 
   printf("NNB: Version: [%d]\n", net->version);
+  printf("NNB: Has %d buffers.\n", net->buffers.size);
+  int *list = (int *)NN_GET(net, net->buffers.list);
+  for (i = 0; i < net->buffers.size; i++) {
+    printf("NNB: Buffer id:%d size:%d\n", i, *(list + i));
+  }
+  
   printf("NNB: Has %d variables.\n", net->variables.size);
-  int *list = (int *)NN_GET(net, net->variables.list);
+  list = (int *)NN_GET(net, net->variables.list);
   for (i = 0; i < net->variables.size; i++) {
     nn_variable_t *var = (nn_variable_t *)(NN_GET(net, *(list + i)));
     printf("NNB: Variable id:         %d\n", var->id);
@@ -40,7 +46,11 @@ int dump(nn_network_t *net, int argc, char *argv[]) {
     printf(" )\n");
     printf("NNB: Variable type:       %d\n", var->type);
     printf("NNB: Variable fp_pos:     %d\n", var->fp_pos);
-    printf("NNB: Variable data_index: %d\n", var->data_index);
+    if(var->data_index < 0){
+      printf("NNB: Variable data_index: Buffer[%d]\n", (-1 * var->data_index) - 1 );
+    } else {
+      printf("NNB: Variable data_index: %d\n", var->data_index);
+    }
   }
 
   printf("NNB: Has %d functions.\n", net->functions.size);

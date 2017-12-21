@@ -57,13 +57,13 @@ void set_sign(rt_variable_t *variable, nn_size_t pos, float value) {
 static rt_variable_getter getter_list[END_OF_NN_DATA_TYPE] = {
     get_float, get_int16, get_int8, get_sign};
 
-rt_variable_getter select_getter(struct rt_variable_t *variable) {
+rt_variable_getter select_getter(rt_variable_t *variable) {
   return getter_list[variable->type];
 }
 
 static rt_variable_setter setter_list[END_OF_NN_DATA_TYPE] = {
     set_float, set_int16, set_int8, set_sign};
 
-rt_variable_setter select_setter(struct rt_variable_t *variable) {
+rt_variable_setter select_setter(rt_variable_t *variable) {
   return setter_list[variable->type];
 }

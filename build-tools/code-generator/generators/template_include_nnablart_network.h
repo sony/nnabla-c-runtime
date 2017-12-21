@@ -43,6 +43,12 @@ typedef struct {{
   pointer_index_t list; ///< リストデータへのインデックス
 }} nn_list_t;
 
+/// @brief Variable buffer information.
+typedef struct {{
+  int id;
+  int size;
+}} nn_variable_buffer_t;
+
 /// @brief Data types.
 typedef enum {{
   NN_DATA_TYPE_FLOAT, ///< 32bit float.
@@ -98,6 +104,7 @@ typedef struct {{
 ///
 typedef struct {{
   uint32_t version;     ///< nnablart version.
+  nn_list_t buffers;    ///< list of nn_variable_buffer_t
   nn_list_t variables;  ///< list of nn_variable_t
   nn_list_t functions;  ///< list of nn_function_t
   nn_list_t inputs;     ///< list of input variable ids

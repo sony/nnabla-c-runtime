@@ -20,13 +20,9 @@
 #include <nnablart/runtime.h>
 
 #include "dump.h"
+#include "infer.h"
 
 static void usage(const char *err) { printf("Error [%s]\n", err); }
-
-static int infer(nn_network_t *net, int argc, char *argv[]) {
-  WHOAMI("%s\n", __func__);
-  return 0;
-}
 
 int main(int argc, char *argv[]) {
   int ret = -1;
@@ -34,23 +30,22 @@ int main(int argc, char *argv[]) {
   if (argc < 3) {
     usage("No subcommand.");
   } else {
-    argc--;
-    char *subcmd = *++argv;
+    char *subcmd = argv[1];
+    char *nnb_filename = argv[2];
+    argv += 3;
+    argc -= 3;
 
-    argc--;
-    char *nnb_filename = *++argv;
-
-    FILE *input = fopen(nnb_filename, "rb");
-    assert(input);
-    fseek(input, 0L, SEEK_END);
-    size_t sdb_data_size = ftell(input);
-    fseek(input, 0L, SEEK_SET);
-    uint8_t *sdb_data = malloc(sdb_data_size);
-    assert(sdb_data);
-    int read_size = fread(sdb_data, sizeof(uint8_t), sdb_data_size, input);
-    assert(read_size == sdb_data_size);
-    fclose(input);
-    nn_network_t *net = (nn_network_t *)sdb_data;
+    FILE *nnb = fopen(nnb_filename, "rb");
+    assert(nnb);
+    fseek(nnb, 0L, SEEK_END);
+    size_t nnb_data_size = ftell(nnb);
+    fseek(nnb, 0L, SEEK_SET);
+    uint8_t *nnb_data = malloc(nnb_data_size);
+    assert(nnb_data);
+    int read_size = fread(nnb_data, sizeof(uint8_t), nnb_data_size, nnb);
+    assert(read_size == nnb_data_size);
+    fclose(nnb);
+    nn_network_t *net = (nn_network_t *)nnb_data;
 
     if (strncmp("dump", subcmd, 4) == 0) {
       ret = dump(net, argc, argv);
@@ -59,6 +54,8 @@ int main(int argc, char *argv[]) {
     } else {
       usage("Unknown subcommand");
     }
+    
+    free(nnb_data);
   }
   return ret;
 }

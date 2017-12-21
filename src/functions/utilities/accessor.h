@@ -36,10 +36,10 @@ void set_int16(rt_variable_t *variable, nn_size_t pos, float value);
 void set_int8(rt_variable_t *variable, nn_size_t pos, float value);
 void set_sign(rt_variable_t *variable, nn_size_t pos, float value);
 
-typedef float (*rt_variable_getter)(struct rt_variable_t *, nn_size_t);
-rt_variable_getter select_getter(struct rt_variable_t *variable);
+typedef float (*rt_variable_getter)(rt_variable_t *, nn_size_t);
+rt_variable_getter select_getter(rt_variable_t *variable);
 
-typedef void (*rt_variable_setter)(struct rt_variable_t *, nn_size_t, float);
-rt_variable_setter select_setter(struct rt_variable_t *variable);
+typedef void (*rt_variable_setter)(rt_variable_t *, nn_size_t, float);
+rt_variable_setter select_setter(rt_variable_t *variable);
 
 #endif // H_ACCESOR_H_171210064532_

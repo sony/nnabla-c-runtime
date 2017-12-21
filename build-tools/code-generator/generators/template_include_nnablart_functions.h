@@ -42,7 +42,7 @@ typedef enum {{
   END_OF_RT_BUFFER_ALLOCATE_TYPE
 }} rt_buffer_allocate_type_t;
 
-typedef struct rt_variable_t {{
+typedef struct {{
   rt_list_t shape;
   nn_data_type_t type:4; ///< Type of param values
   unsigned int fp_pos:4;

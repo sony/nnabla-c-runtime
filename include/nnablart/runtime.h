@@ -100,9 +100,11 @@ extern "C" {
 
 /// @brief Errors in @ref Runtime.
 typedef enum {
-  RT_ERROR_VERSION_UNMATCH = -899, ///< バージョン不整合(-899)
-  RT_ERROR_INITVERTEX,             ///< ノード初期化失敗(-898)
-  RT_ERROR_UNKNOWN_EDGE,           ///< エッジが未サポート (-897)
+  RT_ERROR_VERSION_UNMATCH = -899, ///< 899
+  RT_ERROR_ALLOCATE_CONTEXT,       ///< 
+  RT_ERROR_INVALID_BUFFER_INDEX,   ///< 
+  RT_ERROR_INIT_VARIABLE,          ///< 
+  RT_ERROR_UNKNOWN_FUNCTION,       ///< 
   RT_ERROR_NOERROR = 0             ///< 0
 } rt_error_enum_t;
 
@@ -131,12 +133,6 @@ rt_error_enum_t rt_free_context(rt_context_pointer *context);
 /// @param[in] context コンテキスト
 /// @return 入力データ数
 int rt_num_of_input_data(rt_context_pointer context);
-
-/// @brief index番目の入力データのノードナンバーを返します。
-/// @param[in] context コンテキスト
-/// @param[in] index 何番目のデータかを指定する
-/// @return ノードナンバー
-int rt_input_data_node(rt_context_pointer context, size_t index);
 
 /// @brief index番目の入力データのサイズを返します。
 /// ここで返す数値は全ての次元のデータ数を乗算したものと同じです。
@@ -171,12 +167,6 @@ float *rt_input_data_buffer(rt_context_pointer context, size_t data_index);
 /// @param[in] context コンテキスト
 /// @return 出力データ数
 int rt_num_of_output_data(rt_context_pointer context);
-
-/// @brief index番目の出力データのノードナンバーを返します。
-/// @param[in] context コンテキスト
-/// @param[in] index 何番目のデータかを指定する
-/// @return ノードナンバー
-int rt_output_data_node(rt_context_pointer context, size_t index);
 
 /// @brief index番目の出力データのサイズを返します。
 /// ここで返す数値は全ての次元のデータ数を乗算したものと同じです。
