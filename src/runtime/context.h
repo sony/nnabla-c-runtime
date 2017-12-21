@@ -15,39 +15,35 @@
 #ifndef H_CONTEXT_H_171220164849_
 #define H_CONTEXT_H_171220164849_
 
-#include <nnablart/network.h>
 #include <nnablart/functions.h>
+#include <nnablart/network.h>
 
-typedef struct
-{
+typedef struct {
   rt_buffer_allocate_type_t allocate_type;
-  void* buffer;
+  void *buffer;
 } rt_variable_buffer_context_t;
 
-typedef struct
-{
+typedef struct {
   nn_function_type_t type;
   rt_function_t func;
 } rt_function_context_t;
-  
-typedef struct 
-{
+
+typedef struct {
   int num_of_buffers;
-  rt_variable_buffer_context_t* buffers;
+  rt_variable_buffer_context_t *buffers;
 
   int num_of_variables;
-  rt_variable_t* variables;
+  rt_variable_t *variables;
 
   int num_of_functions;
   rt_function_context_t *functions;
 
   int num_of_inputs;
-  int* input_variable_ids;
+  int *input_variable_ids;
 
   int num_of_outputs;
-  int* output_variable_ids;
-  
+  int *output_variable_ids;
+
 } rt_context_t;
-  
 
 #endif // H_CONTEXT_H_171220164849_

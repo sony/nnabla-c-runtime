@@ -12,27 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-
 #include <nnablart/network.h>
 #include <nnablart/runtime.h>
 
-#include "dump_context.h" // For debug.
+#include "../runtime/context.h"
 
-int infer(nn_network_t *net, int argc, char *argv[]) {
-  WHOAMI("%s\n", __func__);
-  int i; // Iterator
-  for (i = 0; i < argc; i++) {
-    printf("     %d: %s\n", i, argv[i]);
+void dump_context(void *context) {
+  int i, j; // Iterator
+
+  rt_context_t *c = context;
+  printf("CONTEXT: Has %d variables\n", c->num_of_variables);
+  for (i = 0; i < c->num_of_variables; i++) {
+    printf("CONTEXT: Variable[%d]: Shape ( ", i);
+    for (j = 0; j < c->variables[i].shape.size; j++) {
+      printf(" %d", c->variables[i].shape.data[j]);
+    }
+    printf(" )\n");
   }
-
-  rt_context_pointer context;
-  rt_initialize_context(&context, net);
-
-  dump_context(context);
-
-  rt_free_context(&context);
-  return 0;
 }

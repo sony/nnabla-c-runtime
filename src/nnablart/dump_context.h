@@ -12,27 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
+#ifndef H_DUMP_CONTEXT_H_171221121521_
+#define H_DUMP_CONTEXT_H_171221121521_
 
-#include <nnablart/network.h>
-#include <nnablart/runtime.h>
+void dump_context(void *context);
 
-#include "dump_context.h" // For debug.
-
-int infer(nn_network_t *net, int argc, char *argv[]) {
-  WHOAMI("%s\n", __func__);
-  int i; // Iterator
-  for (i = 0; i < argc; i++) {
-    printf("     %d: %s\n", i, argv[i]);
-  }
-
-  rt_context_pointer context;
-  rt_initialize_context(&context, net);
-
-  dump_context(context);
-
-  rt_free_context(&context);
-  return 0;
-}
+#endif // H_DUMP_CONTEXT_H_171221121521_

@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     } else {
       usage("Unknown subcommand");
     }
-    
+
     free(nnb_data);
   }
   return ret;

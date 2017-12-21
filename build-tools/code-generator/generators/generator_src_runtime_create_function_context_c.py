@@ -3,10 +3,13 @@ def generate(string, info):
     for cn, cat in info.items():
         for fn, func in cat.items():
             if 'argument' in func:
-                l.append('    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
+                l.append(
+                    '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
                 l.append('      WHOAMI("{}\\n");'.format(fn))
-                l.append('      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snakecase_name']))
-                l.append('      {0}_config_t *conf = malloc(sizeof({0}_config_t));'.format(func['snakecase_name']))
+                l.append(
+                    '      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snakecase_name']))
+                l.append(
+                    '      {0}_config_t *conf = malloc(sizeof({0}_config_t));'.format(func['snakecase_name']))
 
                 for an, arg in func['argument'].items():
                     if arg['Type'] == 'bool':
@@ -16,7 +19,8 @@ def generate(string, info):
                     elif arg['Type'] == 'int64':
                         l.append('      conf->{0} = f->{0};'.format(an))
                     elif arg['Type'] == 'repeated int64' or arg['Type'] == 'Shape':
-                        l.append('      conf->{0} = create_rt_list_from_nn_list(n, f->{0});'.format(an))
+                        l.append(
+                            '      conf->{0} = create_rt_list_from_nn_list(n, f->{0});'.format(an))
                     elif arg['Type'] == 'string':
                         l.append('      conf->{0} = f->{0};'.format(an))
                 l.append('      func.func.config = conf;')

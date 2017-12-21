@@ -51,9 +51,8 @@
   (NN_NETWORK_DATA_POINTER(xNetwork) +                                         \
    NN_NETWORK_INDEX_POINTER(xNetwork)[xIndex])
 
-
-rt_list_t create_rt_list_from_nn_list(nn_network_t* n, nn_list_t list);
-rt_function_context_t create_function_context(nn_network_t* n, rt_context_t *c, nn_function_t* function);
-
+rt_list_t create_rt_list_from_nn_list(nn_network_t *n, nn_list_t list);
+rt_function_context_t create_function_context(nn_network_t *n, rt_context_t *c,
+                                              nn_function_t *function);
 
 #endif // H_RUNTIME_INTERNAL_H_171220111925_

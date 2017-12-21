@@ -17,8 +17,7 @@
 
 #include "runtime_internal.h"
 
-rt_list_t create_rt_list_from_nn_list(nn_network_t* n, nn_list_t list) 
-{
+rt_list_t create_rt_list_from_nn_list(nn_network_t *n, nn_list_t list) {
   rt_list_t l;
   l.size = list.size;
   l.data = (int *)NN_GET(n, list.list);

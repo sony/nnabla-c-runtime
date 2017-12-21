@@ -18,4 +18,3 @@
 int infer(nn_network_t *net, int argc, char *argv[]);
 
 #endif // H_INFER_H_171220180159_
-
