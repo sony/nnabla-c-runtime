@@ -22,14 +22,31 @@
 #include "dump_context.h" // For debug.
 
 int infer(nn_network_t *net, int argc, char *argv[]) {
-  WHOAMI("%s\n", __func__);
-  int i; // Iterator
+  int i, j; // Iterator
   for (i = 0; i < argc; i++) {
     printf("     %d: %s\n", i, argv[i]);
   }
 
   rt_context_pointer context;
   rt_initialize_context(&context, net);
+
+  for (i = 0; i < rt_num_of_input(context); i++) {
+    printf("Input[%d] size:%d\n", i, rt_input_size(context, i));
+    printf("Input[%d] Shape (", i);
+    for (j = 0; j < rt_input_dimension(context, i); j++) {
+      printf(" %d", rt_input_shape(context, i, j));
+    }
+    printf(" )\n");
+  }
+
+  for (i = 0; i < rt_num_of_output(context); i++) {
+    printf("Output[%d] size:%d\n", i, rt_output_size(context, i));
+    printf("Output[%d] Shape (", i);
+    for (j = 0; j < rt_output_dimension(context, i); j++) {
+      printf(" %d", rt_output_shape(context, i, j));
+    }
+    printf(" )\n");
+  }
 
   dump_context(context);
 

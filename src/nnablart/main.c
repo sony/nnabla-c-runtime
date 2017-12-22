@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
     int read_size = fread(nnb_data, sizeof(uint8_t), nnb_data_size, nnb);
     assert(read_size == nnb_data_size);
     fclose(nnb);
+
     nn_network_t *net = (nn_network_t *)nnb_data;
 
     if (strncmp("dump", subcmd, 4) == 0) {

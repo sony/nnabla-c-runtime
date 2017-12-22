@@ -23,7 +23,7 @@
 rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
                                       nn_network_t *n) {
   WHOAMI("%s\n", __func__);
-  int i, j;
+  int i; // Iterator
 
   rt_context_t *c = malloc(sizeof(rt_context_t));
   if (c == 0) {
@@ -31,8 +31,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
     return RT_ERROR_ALLOCATE_CONTEXT;
   }
 
-  // Count number of variable buffers.
-
+  // Buffers
   c->num_of_buffers = n->buffers.size;
   c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
 
@@ -52,6 +51,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
     }
   }
 
+  // Variables
   c->num_of_variables = n->variables.size;
   c->variables = malloc(sizeof(rt_variable_t) * c->num_of_variables);
   if (c->variables == 0) {
@@ -84,66 +84,125 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
     c->functions[i] = create_function_context(n, c, func);
   }
 
+  rt_list_t inputs = create_rt_list_from_nn_list(n, n->inputs);
+  c->num_of_inputs = inputs.size;
+  c->input_variable_ids = malloc(sizeof(int *) * c->num_of_inputs);
+  for (i = 0; i < c->num_of_inputs; i++) {
+    c->input_variable_ids[i] = inputs.data[i];
+  }
+
+  rt_list_t outputs = create_rt_list_from_nn_list(n, n->outputs);
+  c->num_of_outputs = outputs.size;
+  c->output_variable_ids = malloc(sizeof(int *) * c->num_of_outputs);
+  for (i = 0; i < c->num_of_outputs; i++) {
+    c->output_variable_ids[i] = outputs.data[i];
+  }
+
   *context = c;
   return RT_ERROR_NOERROR;
 }
 
 rt_error_enum_t rt_free_context(rt_context_pointer *context) {
   WHOAMI("%s\n", __func__);
+  rt_context_t *c = *context;
+
+  int i; // Iterator
+
+  // Buffers
+  for (i = 0; i < c->num_of_buffers; i++) {
+    if (c->buffers[i].allocate_type == RT_BUFFER_ALLOCATE_TYPE_MALLOC) {
+      free(c->buffers[i].buffer);
+    }
+  }
+  free(c->buffers);
+
+  // Variables
+  free(c->variables);
+
+  // Functions
+  for (i = 0; i < c->num_of_functions; i++) {
+    free(c->functions[i].func.inputs);
+    free(c->functions[i].func.outputs);
+
+    if (c->functions[i].func.config) {
+      free(c->functions[i].func.config);
+    }
+  }
+  free(c->functions);
+
+  free(c->input_variable_ids);
+  free(c->output_variable_ids);
+
   free(*context);
   return RT_ERROR_NOERROR;
 }
 
-int rt_num_of_input_data(rt_context_pointer context) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_num_of_input(rt_context_pointer context) {
+  return ((rt_context_t *)context)->num_of_inputs;
 }
 
-int rt_input_data_size(rt_context_pointer context, size_t index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_input_size(rt_context_pointer context, size_t index) {
+  int i; // Iterator
+
+  rt_context_t *c = context;
+  rt_variable_t v = c->variables[c->input_variable_ids[index]];
+
+  int size = 1;
+  for (i = 0; i < v.shape.size; i++) {
+    size *= v.shape.data[i];
+  }
+
+  return size;
 }
 
-int rt_input_data_dimension(rt_context_pointer context, size_t data_index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_input_dimension(rt_context_pointer context, size_t index) {
+  rt_context_t *c = context;
+  return c->variables[c->input_variable_ids[index]].shape.size;
 }
 
-int rt_input_data_shape(rt_context_pointer context, size_t data_index,
-                        size_t shape_index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_input_shape(rt_context_pointer context, size_t index,
+                   size_t shape_index) {
+  rt_context_t *c = context;
+  return c->variables[c->input_variable_ids[index]].shape.data[shape_index];
 }
 
-float *rt_input_data_buffer(rt_context_pointer context, size_t data_index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+float *rt_input_buffer(rt_context_pointer context, size_t index) {
+  rt_context_t *c = context;
+  return c->variables[c->input_variable_ids[index]].data;
 }
 
-int rt_num_of_output_data(rt_context_pointer context) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_num_of_output(rt_context_pointer context) {
+  return ((rt_context_t *)context)->num_of_outputs;
 }
 
-int rt_output_data_size(rt_context_pointer context, size_t index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_output_size(rt_context_pointer context, size_t index) {
+  int i; // Iterator
+
+  rt_context_t *c = context;
+  rt_variable_t v = c->variables[c->output_variable_ids[index]];
+
+  int size = 1;
+  for (i = 0; i < v.shape.size; i++) {
+    size *= v.shape.data[i];
+  }
+
+  return size;
 }
 
-int rt_output_data_dimension(rt_context_pointer context, size_t data_index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_output_dimension(rt_context_pointer context, size_t index) {
+  rt_context_t *c = context;
+  return c->variables[c->output_variable_ids[index]].shape.size;
 }
 
-int rt_output_data_shape(rt_context_pointer context, size_t data_index,
-                         size_t shape_index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+int rt_output_shape(rt_context_pointer context, size_t index,
+                    size_t shape_index) {
+  rt_context_t *c = context;
+  return c->variables[c->output_variable_ids[index]].shape.data[shape_index];
 }
 
-float *rt_output_data_buffer(rt_context_pointer context, size_t data_index) {
-  WHOAMI("%s\n", __func__);
-  return 0;
+float *rt_output_buffer(rt_context_pointer context, size_t index) {
+  rt_context_t *c = context;
+  return c->variables[c->output_variable_ids[index]].data;
 }
 
 rt_error_enum_t rt_forward(rt_context_pointer context, float **input,

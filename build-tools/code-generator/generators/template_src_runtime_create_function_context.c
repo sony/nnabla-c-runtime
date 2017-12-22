@@ -29,6 +29,7 @@ rt_function_context_t create_function_context(nn_network_t* n, rt_context_t *c, 
   func.type = function->type;
 
   rt_list_t inputs = create_rt_list_from_nn_list(n, function->inputs);
+  func.func.num_of_inputs = inputs.size;
   func.func.inputs = malloc(sizeof(rt_variable_t*) * inputs.size);
   if(func.func.inputs) {{
     for(i = 0; i < inputs.size; i++) {{
@@ -42,6 +43,7 @@ rt_function_context_t create_function_context(nn_network_t* n, rt_context_t *c, 
   }}
   
   rt_list_t outputs = create_rt_list_from_nn_list(n, function->outputs);
+  func.func.num_of_outputs = outputs.size;
   func.func.outputs = malloc(sizeof(rt_variable_t*) * outputs.size);
   if(func.func.outputs) {{
     for(i = 0; i < outputs.size; i++) {{
