@@ -307,6 +307,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
   } break;
+  case NN_FUNCTION_EMBED: { // Embed
+  } break;
+  case NN_FUNCTION_SIGMOID: { // Sigmoid
+  } break;
+  case NN_FUNCTION_SWISH: { // Swish
+  } break;
+  case NN_FUNCTION_TANH: { // Tanh
+  } break;
   case NN_FUNCTION_RELU: { // ReLU
     nn_function_relu_t *f = (nn_function_relu_t *)func;
     printf("NNB: Function argument inplace: %d\n", f->inplace);
@@ -410,9 +418,23 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf(" )\n");
     printf("NNB: Function argument keep_dims: %d\n", f->keep_dims);
   } break;
+  case NN_FUNCTION_REDUCE_SUM: { // ReduceSum
+  } break;
+  case NN_FUNCTION_REDUCE_MEAN: { // ReduceMean
+  } break;
   case NN_FUNCTION_ADD2: { // Add2
     nn_function_add2_t *f = (nn_function_add2_t *)func;
     printf("NNB: Function argument inplace: %d\n", f->inplace);
+  } break;
+  case NN_FUNCTION_BC_ADD2: { // BcAdd2
+  } break;
+  case NN_FUNCTION_SUB2: { // Sub2
+  } break;
+  case NN_FUNCTION_MUL2: { // Mul2
+  } break;
+  case NN_FUNCTION_DIV2: { // Div2
+  } break;
+  case NN_FUNCTION_POW2: { // Pow2
   } break;
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
     nn_function_add_scalar_t *f = (nn_function_add_scalar_t *)func;
@@ -442,6 +464,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_sign_t *f = (nn_function_sign_t *)func;
     printf("NNB: Function argument alpha: %f\n", f->alpha);
   } break;
+  case NN_FUNCTION_MINIMUM2: { // Minimum2
+  } break;
+  case NN_FUNCTION_MAXIMUM2: { // Maximum2
+  } break;
   case NN_FUNCTION_MINIMUM_SCALAR: { // MinimumScalar
     nn_function_minimum_scalar_t *f = (nn_function_minimum_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
@@ -449,6 +475,24 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_MAXIMUM_SCALAR: { // MaximumScalar
     nn_function_maximum_scalar_t *f = (nn_function_maximum_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+  } break;
+  case NN_FUNCTION_LOGICAL_AND: { // LogicalAnd
+  } break;
+  case NN_FUNCTION_LOGICAL_OR: { // LogicalOr
+  } break;
+  case NN_FUNCTION_LOGICAL_XOR: { // LogicalXor
+  } break;
+  case NN_FUNCTION_EQUAL: { // Equal
+  } break;
+  case NN_FUNCTION_NOT_EQUAL: { // NotEqual
+  } break;
+  case NN_FUNCTION_GREATER_EQUAL: { // GreaterEqual
+  } break;
+  case NN_FUNCTION_GREATER: { // Greater
+  } break;
+  case NN_FUNCTION_LESS_EQUAL: { // LessEqual
+  } break;
+  case NN_FUNCTION_LESS: { // Less
   } break;
   case NN_FUNCTION_LOGICAL_AND_SCALAR: { // LogicalAndScalar
     nn_function_logical_and_scalar_t *f =
@@ -491,6 +535,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_less_scalar_t *f = (nn_function_less_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
   } break;
+  case NN_FUNCTION_LOGICAL_NOT: { // LogicalNot
+  } break;
   case NN_FUNCTION_CONSTANT: { // Constant
     nn_function_constant_t *f = (nn_function_constant_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
@@ -500,6 +546,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+  } break;
+  case NN_FUNCTION_ABS: { // Abs
+  } break;
+  case NN_FUNCTION_EXP: { // Exp
+  } break;
+  case NN_FUNCTION_LOG: { // Log
+  } break;
+  case NN_FUNCTION_IDENTITY: { // Identity
   } break;
   case NN_FUNCTION_BATCH_MATMUL: { // BatchMatmul
     nn_function_batch_matmul_t *f = (nn_function_batch_matmul_t *)func;
@@ -593,6 +647,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+  } break;
+  case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
+  } break;
+  case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
   } break;
   case NN_FUNCTION_DROPOUT: { // Dropout
     nn_function_dropout_t *f = (nn_function_dropout_t *)func;
@@ -699,6 +757,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument noise: %f\n", f->noise);
     printf("NNB: Function argument seed: %d\n", f->seed);
   } break;
+  case NN_FUNCTION_SIGMOID_CROSS_ENTROPY: { // SigmoidCrossEntropy
+  } break;
+  case NN_FUNCTION_BINARY_CROSS_ENTROPY: { // BinaryCrossEntropy
+  } break;
   case NN_FUNCTION_SOFTMAX_CROSS_ENTROPY: { // SoftmaxCrossEntropy
     nn_function_softmax_cross_entropy_t *f =
         (nn_function_softmax_cross_entropy_t *)func;
@@ -708,6 +770,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_categorical_cross_entropy_t *f =
         (nn_function_categorical_cross_entropy_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
+  } break;
+  case NN_FUNCTION_SQUARED_ERROR: { // SquaredError
+  } break;
+  case NN_FUNCTION_ABSOLUTE_ERROR: { // AbsoluteError
   } break;
   case NN_FUNCTION_HUBER_LOSS: { // HuberLoss
     nn_function_huber_loss_t *f = (nn_function_huber_loss_t *)func;
@@ -721,6 +787,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_KL_MULTINOMIAL: { // KLMultinomial
     nn_function_kl_multinomial_t *f = (nn_function_kl_multinomial_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+  } break;
+  case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
+  } break;
+  case NN_FUNCTION_BINARY_TANH: { // BinaryTanh
   } break;
   case NN_FUNCTION_BINARY_CONNECT_AFFINE: { // BinaryConnectAffine
     nn_function_binary_connect_affine_t *f =
@@ -850,6 +920,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument axis: %d\n", f->axis);
     printf("NNB: Function argument n: %d\n", f->n);
   } break;
+  case NN_FUNCTION_BINARY_ERROR: { // BinaryError
+  } break;
   case NN_FUNCTION_CONFUSION_MATRIX: { // ConfusionMatrix
     nn_function_confusion_matrix_t *f = (nn_function_confusion_matrix_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
@@ -858,6 +930,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_vat_noise_t *f = (nn_function_vat_noise_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
     printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
+  case NN_FUNCTION_UNLINK: { // Unlink
   } break;
   case NN_FUNCTION_SINK: { // Sink
     nn_function_sink_t *f = (nn_function_sink_t *)func;

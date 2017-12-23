@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include <nnablart/network.h>
+#include <nnablart/functions.h>
 #include <nnablart/runtime.h>
 
 #include "runtime_internal.h"

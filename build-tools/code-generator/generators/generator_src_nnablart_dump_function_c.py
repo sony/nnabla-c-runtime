@@ -5,9 +5,9 @@ def generate(string, info):
     for cn, cat in info.items():
         for fn, func in cat.items():
             typenames.append('  "{}",'.format(fn))
+            dump.append(
+                '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
             if 'argument' in func:
-                dump.append(
-                    '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
                 dump.append(
                     '      nn_function_{0}_t *f = (nn_function_{0}_t*)func;'.format(func['snakecase_name']))
                 for an, arg in func['argument'].items():
@@ -34,6 +34,6 @@ def generate(string, info):
                         dump.append(
                             '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
 
-                dump.append('    } break;')
+            dump.append('    } break;')
             funcid += 1
     return string.format(typenames='\n'.join(typenames), dump='\n'.join(dump))

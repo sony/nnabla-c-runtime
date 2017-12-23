@@ -2,10 +2,11 @@ def generate(string, info):
     l = []
     for cn, cat in info.items():
         for fn, func in cat.items():
+            l.append(
+                '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
+            l.append('      WHOAMI("{}\\n");'.format(fn))
+            l.append('      func.exec_func = exec_{};'.format(func['snakecase_name']))
             if 'argument' in func:
-                l.append(
-                    '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
-                l.append('      WHOAMI("{}\\n");'.format(fn))
                 l.append(
                     '      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snakecase_name']))
                 l.append(
@@ -24,43 +25,5 @@ def generate(string, info):
                     elif arg['Type'] == 'string':
                         l.append('      conf->{0} = f->{0};'.format(an))
                 l.append('      func.func.config = conf;')
-                l.append('    } break;')
+            l.append('    } break;')
     return string.format('\n'.join(l))
-#    funcid = 0
-#    dump = []
-#    typenames = []
-#    for cn, cat in info.items():
-#        for fn, func in cat.items():
-#            typenames.append('  "{}",'.format(fn))
-#            if 'argument' in func:
-#                dump.append(
-#                    '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
-#                dump.append(
-#                    '      nn_function_{0}_t *f = (nn_function_{0}_t*)func;'.format(func['snakecase_name']))
-#                for an, arg in func['argument'].items():
-#                    if arg['Type'] == 'bool':
-#                        dump.append(
-#                            '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
-#                    elif arg['Type'] == 'double' or arg['Type'] == 'float':
-#                        dump.append(
-#                            '      printf("NNB: Function argument {0}: %f\\n", f->{0});'.format(an))
-#                    elif arg['Type'] == 'int64':
-#                        dump.append(
-#                            '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
-#                    elif arg['Type'] == 'repeated int64' or arg['Type'] == 'Shape':
-#                        dump.append(
-#                            '      printf("NNB: Function argument {}: (");'.format(an))
-#                        dump.append(
-#                            '      list = (int*)NN_GET(net, f->{}.list);'.format(an))
-#                        dump.append(
-#                            '      for(i = 0; i < f->{}.size; i++) {{'.format(an))
-#                        dump.append('        printf(" %d", *(list + i));')
-#                        dump.append('      }')
-#                        dump.append('      printf(" )\\n");')
-#                    elif arg['Type'] == 'string':
-#                        dump.append(
-#                            '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
-#
-#                dump.append('    } break;')
-#            funcid += 1
-#    return string.format(typenames='\n'.join(typenames), dump='\n'.join(dump))

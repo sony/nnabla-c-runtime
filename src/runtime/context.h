@@ -26,6 +26,7 @@ typedef struct {
 typedef struct {
   nn_function_type_t type;
   rt_function_t func;
+  void (*exec_func)(rt_function_t *f);
 } rt_function_context_t;
 
 typedef struct {
