@@ -41,7 +41,6 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
 
   int *list = (int *)NN_GET(n, n->buffers.list);
   for (i = 0; i < c->num_of_buffers; i++) {
-    WHOAMI("ALLOCATE BUFFER: %d %d\n", i, *(list + i));
     c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_MALLOC;
     c->buffers[i].buffer =
         malloc(*(list + i) * sizeof(float)); // TODO float only.
@@ -81,7 +80,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
   list = (int *)NN_GET(n, n->functions.list);
   for (i = 0; i < c->num_of_functions; i++) {
     nn_function_t *func = (nn_function_t *)(NN_GET(n, *(list + i)));
-    c->functions[i] = create_function_context(n, c, func);
+    c->functions[i] = allocate_function_context(n, c, func);
   }
 
   rt_list_t inputs = create_rt_list_from_nn_list(n, n->inputs);
@@ -103,6 +102,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
 }
 
 rt_error_enum_t rt_free_context(rt_context_pointer *context) {
+  WHOAMI("%s\n", __func__);
   rt_context_t *c = *context;
 
   int i; // Iterator
@@ -124,6 +124,8 @@ rt_error_enum_t rt_free_context(rt_context_pointer *context) {
     free(c->functions[i].func.outputs);
 
     if (c->functions[i].func.config) {
+      WHOAMI("%s\n", __func__);
+      free_function_context(c, c->functions[i]);
       free(c->functions[i].func.config);
     }
   }

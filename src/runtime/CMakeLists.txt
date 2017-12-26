@@ -11,7 +11,7 @@ add_library(nnablart_runtime STATIC
   runtime.c
   runtime_internal.c
 
-  create_function_context.c)
+  function_context.c)
 
 
 

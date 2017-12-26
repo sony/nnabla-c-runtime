@@ -43,12 +43,14 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     assert(input);
     fseek(input, 0L, SEEK_END);
     size_t input_data_size = ftell(input);
+
     assert(input_data_size ==
            rt_input_size(context, i) * sizeof(float)); // TODO float only.
     fseek(input, 0L, SEEK_SET);
     int read_size = fread(rt_input_buffer(context, i), sizeof(uint8_t),
                           input_data_size, input);
     assert(read_size == input_data_size);
+
     fclose(input);
 
     printf("Input[%d] Shape (", i);
@@ -71,13 +73,14 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
 
     FILE *output = fopen(output_filename, "wb");
     assert(output);
+
     int output_data_size =
         rt_output_size(context, i) * sizeof(float); // TODO float only.
     int output_write_size = fwrite(rt_output_buffer(context, i),
                                    sizeof(uint8_t), output_data_size, output);
     assert(output_write_size == output_data_size);
-    fclose(output);
 
+    fclose(output);
     free(output_filename);
 
     printf("Output[%d] Shape (", i);

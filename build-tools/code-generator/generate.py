@@ -43,7 +43,7 @@ class CodeGenerator:
         self.generate('src/nnablart/dump_function.h')
         self.generate('src/nnablart/dump_function.c')
 
-        self.generate('src/runtime/create_function_context.c')
+        self.generate('src/runtime/function_context.c')
 
 
 CodeGenerator().generate_all()

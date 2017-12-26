@@ -17,6 +17,8 @@
 #include "affine_internal.h"
 
 void exec_affine_generic(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
+
   affine_local_context_t *c =
       (affine_local_context_t *)(((affine_config_t *)(f->config))
                                      ->local_context);

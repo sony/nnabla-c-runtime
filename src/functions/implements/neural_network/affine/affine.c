@@ -23,6 +23,8 @@
 
 // Affine
 void allocate_affine_local_context(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
+  
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
   assert(f->num_of_outputs == 1);
   affine_local_context_t *c = malloc(sizeof(affine_local_context_t));
@@ -72,6 +74,7 @@ void allocate_affine_local_context(rt_function_t *f) {
     c->exec = exec_affine_generic;
   }
 
+  WHOAMI("%p\n", (affine_config_t *)(f->config));
   ((affine_config_t *)(f->config))->local_context = (void *)c;
 }
 
@@ -80,9 +83,6 @@ void free_affine_local_context(rt_function_t *f) {
 }
 
 void exec_affine(rt_function_t *f) {
-  assert(((affine_local_context_t *)(((affine_config_t *)(f->config))
-                                         ->local_context))
-             ->exec);
   ((affine_local_context_t *)(((affine_config_t *)(f->config))->local_context))
       ->exec(f);
 }
