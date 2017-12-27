@@ -123,11 +123,7 @@ rt_error_enum_t rt_free_context(rt_context_pointer *context) {
     free(c->functions[i].func.inputs);
     free(c->functions[i].func.outputs);
 
-    if (c->functions[i].func.config) {
-      WHOAMI("%s\n", __func__);
-      free_function_context(c, c->functions[i]);
-      free(c->functions[i].func.config);
-    }
+    free_function_context(c, c->functions[i]);
   }
   free(c->functions);
 

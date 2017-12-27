@@ -24,7 +24,7 @@
 // Affine
 void allocate_affine_local_context(rt_function_t *f) {
   WHOAMI("%s\n", __func__);
-  
+
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
   assert(f->num_of_outputs == 1);
   affine_local_context_t *c = malloc(sizeof(affine_local_context_t));

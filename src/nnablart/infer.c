@@ -20,8 +20,6 @@
 #include <nnablart/network.h>
 #include <nnablart/runtime.h>
 
-#include "dump_context.h" // For debug.
-
 int infer(nn_network_t *net, int argc, char *argv[]) {
   int i, j; // Iterator
   rt_error_enum_t ret;
@@ -33,8 +31,6 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   rt_context_pointer context;
   ret = rt_initialize_context(&context, net);
   assert(ret == RT_ERROR_NOERROR);
-
-  dump_context(context);
 
   for (i = 0; i < rt_num_of_input(context); i++) {
     printf("Input[%d] size:%d\n", i, rt_input_size(context, i));

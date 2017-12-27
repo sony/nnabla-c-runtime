@@ -17,7 +17,6 @@ add_executable(nnablart
   main.c
 
   infer.c
-  dump_context.c
 
   dump.c
   dump_function.c)

@@ -28,6 +28,7 @@ typedef struct {
 
 // Sigmoid
 void allocate_sigmoid_local_context(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
   sigmoid_local_context_t *c = malloc(sizeof(sigmoid_local_context_t));
   f->config = (void *)c;
   assert(f->num_of_inputs == 1);
@@ -41,9 +42,13 @@ void allocate_sigmoid_local_context(rt_function_t *f) {
   assert(c->input_size == c->output_size);
 }
 
-void free_sigmoid_local_context(rt_function_t *f) { free(f->config); }
+void free_sigmoid_local_context(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
+  free(f->config);
+}
 
 void exec_sigmoid(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
   sigmoid_local_context_t *c = (sigmoid_local_context_t *)(f->config);
 
   int i; // Iterator

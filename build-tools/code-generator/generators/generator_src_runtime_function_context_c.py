@@ -4,15 +4,13 @@ def generate(string, info):
         for fn, func in cat.items():
             l1.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
-            l1.append('      WHOAMI("{}\\n");'.format(fn))
-            l1.append('      func.exec_func = exec_{};'.format(func['snakecase_name']))
-            l1.append('      WHOAMI("%p\\n", func.exec_func);')
+            l1.append('      func.exec_func = exec_{};'.format(
+                func['snakecase_name']))
             if 'argument' in func:
                 l1.append(
                     '      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snakecase_name']))
                 l1.append(
                     '      {0}_config_t *conf = malloc(sizeof({0}_config_t));'.format(func['snakecase_name']))
-                l1.append('      WHOAMI("%p\\n", conf);')
 
                 for an, arg in func['argument'].items():
                     if arg['Type'] == 'bool':
@@ -27,17 +25,21 @@ def generate(string, info):
                     elif arg['Type'] == 'string':
                         l1.append('      conf->{0} = f->{0};'.format(an))
                 l1.append('      func.func.config = conf;')
-                l1.append('      allocate_{}_local_context(&func.func);'.format(func['snakecase_name']))
+            l1.append('      allocate_{}_local_context(&func.func);'.format(
+                func['snakecase_name']))
             l1.append('    } break;')
+            l1.append('')
 
     l2 = []
     for cn, cat in info.items():
         for fn, func in cat.items():
             l2.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
+            l2.append('      free_{}_local_context(&func.func);'.format(
+                func['snakecase_name']))
             if 'argument' in func:
-                l2.append('      free_{}_local_context(&func.func);'.format(func['snakecase_name']))
+                l2.append('      free(func.func.config);')
             l2.append('    } break;')
-    
-    
+            l2.append('')
+
     return string.format('\n'.join(l1), '\n'.join(l2))
