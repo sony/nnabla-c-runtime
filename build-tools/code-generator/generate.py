@@ -30,8 +30,8 @@ class CodeGenerator:
         generator_module = 'generators.generator_' + \
             name.replace('/', '_').replace('.', '_')
         generator = importlib.import_module(generator_module)
-        contents = generator.generate(open(template).read(), self.info)
-        with open(output_filename, 'w') as f:
+        contents = generator.generate(open(template, encoding='utf-8').read(), self.info)
+        with open(output_filename, 'w', encoding='utf-8') as f:
             f.write(contents)
         subprocess.run(['clang-format', '-i', '--style=llvm', output_filename])
         print('Generated [{}].'.format(os.path.basename(output_filename)))
