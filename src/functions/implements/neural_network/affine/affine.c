@@ -22,18 +22,10 @@ struct affine_impl {
   affine_config_t config;
 
   rt_variable_t *input;
-  rt_variable_getter get_input;
-
   rt_variable_t *weight;
-  rt_variable_getter get_weight;
-
   rt_variable_t *bias;
-  rt_variable_getter get_bias;
-
   rt_variable_t *output;
   int output_size;
-  rt_variable_setter set_output;
-  rt_variable_getter get_output;
 
   int base_loop_size;
   int input_loop_size;
@@ -57,18 +49,11 @@ void allocate_affine_config(rt_function_t *f) {
   affine_config_t *config = pimpl->config;
 
   pimpl->input = f->inputs[0];
-  pimpl->get_input = select_getter(pimpl->input);
-
   pimpl->weight = f->inputs[1];
-  pimpl->get_weight = select_getter(pimpl->weight);
-
   pimpl->output = f->outputs[0];
-  pimpl->get_output = select_getter(pimpl->output);
-  pimpl->set_output = select_setter(pimpl->output);
 
   if (f->num_of_inputs > 2) {
     pimpl->bias = f->inputs[2];
-    pimpl->get_bias = select_getter(pimpl->bias);
   } else {
     pimpl->bias = 0;
   }
@@ -144,9 +129,15 @@ void exec_affine(rt_function_t *f) {
       }
     }
   } else {
+    const rt_variable_getter get_input = select_getter(pimpl->input);
+    const rt_variable_getter get_weight = select_getter(pimpl->weight);
+    const rt_variable_getter get_bias = select_getter(pimpl->bias);
+    const rt_variable_getter get_output = select_getter(pimpl->output);;
+    const rt_variable_setter set_output = select_setter(pimpl->output);
+
     // Clear output
     for (i = 0; i < pimpl->output_size; i++) {
-      pimpl->set_output(pimpl->output, i, 0);
+      set_output(pimpl->output, i, 0);
     }
 
     for (k = 0; k < pimpl->base_loop_size; k++) {
@@ -158,14 +149,14 @@ void exec_affine(rt_function_t *f) {
         int ipos = input_offset + j;
         int weight_offset = j * pimpl->output_loop_size;
 
-        float u = pimpl->get_input(pimpl->input, ipos);
+        float u = get_input(pimpl->input, ipos);
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int wpos = weight_offset + i;
 
-          float w = pimpl->get_weight(pimpl->weight, wpos);
-          float value = pimpl->get_output(pimpl->output, opos);
-          pimpl->set_output(pimpl->output, opos, value + u * w);
+          float w = get_weight(pimpl->weight, wpos);
+          float value = get_output(pimpl->output, opos);
+          set_output(pimpl->output, opos, value + u * w);
         }
       }
 
@@ -174,8 +165,8 @@ void exec_affine(rt_function_t *f) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
-          pimpl->set_output(pimpl->output, opos, pimpl->get_output(pimpl->output, opos) +
-                                            pimpl->get_bias(pimpl->bias, bpos));
+          set_output(pimpl->output, opos, get_output(pimpl->output, opos) +
+                                            get_bias(pimpl->bias, bpos));
         }
       }
     }
