@@ -18,8 +18,6 @@
 
 #include "../../../utilities.h"
 
-typedef void (*exec_affine_func_t)(rt_function_t *f);
-
 typedef struct {
   rt_variable_t *input;
   rt_variable_getter get_input;
@@ -38,8 +36,6 @@ typedef struct {
   int base_loop_size;
   int input_loop_size;
   int output_loop_size;
-
-  exec_affine_func_t exec;
 } affine_local_context_t;
 
 static void exec_affine_float(rt_function_t *f);
@@ -90,15 +86,6 @@ void allocate_affine_config(rt_function_t *f) {
     c->output_loop_size *= c->output->shape.data[i];
   }
 
-  if (c->input->type == NN_DATA_TYPE_FLOAT &&
-      c->output->type == NN_DATA_TYPE_FLOAT &&
-      c->weight->type == NN_DATA_TYPE_FLOAT &&
-      ((c->bias && c->bias->type == NN_DATA_TYPE_FLOAT) || !c->bias)) {
-    c->exec = exec_affine_float;
-  } else {
-    c->exec = exec_affine_generic;
-  }
-
   WHOAMI("%p\n", config);
   config->local_context = (void *)c;
 }
@@ -108,8 +95,16 @@ void free_affine_config(rt_function_t *f) {
 }
 
 void exec_affine(rt_function_t *f) {
-  ((affine_local_context_t *)(((affine_config_t *)(f->config))->local_context))
-      ->exec(f);
+  affine_config_t *const config = f->config;
+  affine_local_context_t *const c = config->local_context;
+  if (c->input->type == NN_DATA_TYPE_FLOAT &&
+      c->output->type == NN_DATA_TYPE_FLOAT &&
+      c->weight->type == NN_DATA_TYPE_FLOAT &&
+      ((c->bias && c->bias->type == NN_DATA_TYPE_FLOAT) || !c->bias)) {
+    exec_affine_float(f);
+  } else {
+    exec_affine_generic(f);
+  }
 }
 
 void exec_affine_float(rt_function_t *f) {
