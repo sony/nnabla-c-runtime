@@ -45,7 +45,6 @@ void allocate_affine_config(rt_function_t *f) {
     f->config = buf;
   }
   affine_impl_t *const pimpl = buf;
-  affine_config_t *config = &pimpl->config;
 
   pimpl->input = f->inputs[0];
   pimpl->weight = f->inputs[1];
@@ -59,7 +58,7 @@ void allocate_affine_config(rt_function_t *f) {
 
   pimpl->output_size = calc_shape_size(pimpl->output->shape);
 
-  int base_axis = config->base_axis;
+  int base_axis = pimpl->config.base_axis;
   int i; // Iterator
 
   pimpl->base_loop_size = 1;
