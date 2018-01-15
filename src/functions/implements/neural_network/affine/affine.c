@@ -116,85 +116,57 @@ void exec_affine(rt_function_t *f) {
   affine_impl_t *const pimpl = f->config;
   int i, j, k; // Iterators.
 
+  rt_variable_getter get_input;
+  rt_variable_getter get_weight;
+  rt_variable_getter get_bias;
+  rt_variable_getter get_output;
+  rt_variable_setter set_output;
   if (pimpl->input->type == NN_DATA_TYPE_FLOAT &&
       pimpl->output->type == NN_DATA_TYPE_FLOAT &&
       pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
       (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT) {
-    const rt_variable_getter get_input = NULL;
-    const rt_variable_getter get_weight = NULL;
-    const rt_variable_getter get_bias = NULL;
-    const rt_variable_getter get_output = NULL;
-    const rt_variable_setter set_output = NULL;
+    get_input = NULL;
+    get_weight = NULL;
+    get_bias = NULL;
+    get_output = NULL;
+    set_output = NULL;
+  } else {
+    get_input = select_getter(pimpl->input);
+    get_weight = select_getter(pimpl->weight);
+    get_bias = select_getter(pimpl->bias);
+    get_output = select_getter(pimpl->output);;
+    set_output = select_setter(pimpl->output);
+  }
 
-    // Clear output
-    CLEAR(set_output, pimpl->output, pimpl->output_size);
+  // Clear output
+  CLEAR(set_output, pimpl->output, pimpl->output_size);
 
-    for (k = 0; k < pimpl->base_loop_size; k++) {
-      int output_offset = k * pimpl->output_loop_size;
-      int input_offset = k * pimpl->input_loop_size;
+  for (k = 0; k < pimpl->base_loop_size; k++) {
+    int output_offset = k * pimpl->output_loop_size;
+    int input_offset = k * pimpl->input_loop_size;
 
-      // Weight
-      for (j = 0; j < pimpl->input_loop_size; j++) {
-        int ipos = input_offset + j;
-        int weight_offset = j * pimpl->output_loop_size;
+    // Weight
+    for (j = 0; j < pimpl->input_loop_size; j++) {
+      int ipos = input_offset + j;
+      int weight_offset = j * pimpl->output_loop_size;
 
-        float u = peek(get_input, pimpl->input, ipos);
-        for (i = 0; i < pimpl->output_loop_size; i++) {
-          int opos = output_offset + i;
-          int wpos = weight_offset + i;
+      float u = peek(get_input, pimpl->input, ipos);
+      for (i = 0; i < pimpl->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int wpos = weight_offset + i;
 
-          float w = peek(get_weight, pimpl->weight, wpos);
-          float value = peek(get_output, pimpl->output, opos);
-          POKE(set_output, pimpl->output, opos, value + u * w);
-        }
-      }
-
-      // Bias
-      if (pimpl->bias) {
-        for (i = 0; i < pimpl->output_loop_size; i++) {
-          int opos = output_offset + i;
-          int bpos = i;
-          POKE(set_output, pimpl->output, opos, peek(get_output, pimpl->output, opos) + peek(get_bias, pimp->bias, bpos));
-        }
+        float w = peek(get_weight, pimpl->weight, wpos);
+        float value = peek(get_output, pimpl->output, opos);
+        POKE(set_output, pimpl->output, opos, value + u * w);
       }
     }
-  } else {
-    const rt_variable_getter get_input = select_getter(pimpl->input);
-    const rt_variable_getter get_weight = select_getter(pimpl->weight);
-    const rt_variable_getter get_bias = select_getter(pimpl->bias);
-    const rt_variable_getter get_output = select_getter(pimpl->output);;
-    const rt_variable_setter set_output = select_setter(pimpl->output);
 
-    // Clear output
-    CLEAR(set_output, pimpl->output, pimpl->output_size);
-
-    for (k = 0; k < pimpl->base_loop_size; k++) {
-      int output_offset = k * pimpl->output_loop_size;
-      int input_offset = k * pimpl->input_loop_size;
-
-      // Weight
-      for (j = 0; j < pimpl->input_loop_size; j++) {
-        int ipos = input_offset + j;
-        int weight_offset = j * pimpl->output_loop_size;
-
-        float u = peek(get_input, pimpl->input, ipos);
-        for (i = 0; i < pimpl->output_loop_size; i++) {
-          int opos = output_offset + i;
-          int wpos = weight_offset + i;
-
-          float w = peek(get_weight, pimpl->weight, wpos);
-          float value = peek(get_output, pimpl->output, opos);
-          POKE(set_output, pimpl->output, opos, value + u * w);
-        }
-      }
-
-      // Bias
-      if (pimpl->bias) {
-        for (i = 0; i < pimpl->output_loop_size; i++) {
-          int opos = output_offset + i;
-          int bpos = i;
-          POKE(set_output, pimpl->output, opos, peek(get_output, pimpl->output, opos) + peek(get_bias, pimpl->bias, bpos));
-        }
+    // Bias
+    if (pimpl->bias) {
+      for (i = 0; i < pimpl->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int bpos = i;
+        POKE(set_output, pimpl->output, opos, peek(get_output, pimpl->output, opos) + peek(get_bias, pimpl->bias, bpos));
       }
     }
   }
