@@ -25,7 +25,7 @@ def generate(string, info):
                     elif arg['Type'] == 'string':
                         l1.append('      conf->{0} = f->{0};'.format(an))
                 l1.append('      func.func.config = conf;')
-            l1.append('      allocate_{}_local_context(&func.func);'.format(
+            l1.append('      allocate_{}_config(&func.func);'.format(
                 func['snakecase_name']))
             l1.append('    } break;')
             l1.append('')
@@ -35,7 +35,7 @@ def generate(string, info):
         for fn, func in cat.items():
             l2.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
-            l2.append('      free_{}_local_context(&func.func);'.format(
+            l2.append('      free_{}_config(&func.func);'.format(
                 func['snakecase_name']))
             if 'argument' in func:
                 l2.append('      free(func.func.config);')

@@ -22,7 +22,7 @@
 #include "affine_generic.h"
 
 // Affine
-void allocate_affine_local_context(rt_function_t *f) {
+void allocate_affine_config(rt_function_t *f) {
   WHOAMI("%s\n", __func__);
 
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
@@ -78,7 +78,7 @@ void allocate_affine_local_context(rt_function_t *f) {
   ((affine_config_t *)(f->config))->local_context = (void *)c;
 }
 
-void free_affine_local_context(rt_function_t *f) {
+void free_affine_config(rt_function_t *f) {
   free((((affine_config_t *)(f->config))->local_context));
 }
 

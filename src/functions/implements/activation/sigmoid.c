@@ -27,7 +27,7 @@ typedef struct {
 } sigmoid_local_context_t;
 
 // Sigmoid
-void allocate_sigmoid_local_context(rt_function_t *f) {
+void allocate_sigmoid_config(rt_function_t *f) {
   WHOAMI("%s\n", __func__);
   sigmoid_local_context_t *c = malloc(sizeof(sigmoid_local_context_t));
   f->config = (void *)c;
@@ -42,7 +42,7 @@ void allocate_sigmoid_local_context(rt_function_t *f) {
   assert(c->input_size == c->output_size);
 }
 
-void free_sigmoid_local_context(rt_function_t *f) {
+void free_sigmoid_config(rt_function_t *f) {
   WHOAMI("%s\n", __func__);
   free(f->config);
 }
