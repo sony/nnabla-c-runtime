@@ -166,7 +166,10 @@ void exec_affine(rt_function_t *f) {
       for (i = 0; i < pimpl->output_loop_size; i++) {
         int opos = output_offset + i;
         int bpos = i;
-        POKE(set_output, pimpl->output, opos, peek(get_output, pimpl->output, opos) + peek(get_bias, pimpl->bias, bpos));
+
+        float b = peek(get_bias, pimpl->bias, bpos);
+        float value = peek(get_output, pimpl->output, opos);
+        POKE(set_output, pimpl->output, opos, value + b);
       }
     }
   }
