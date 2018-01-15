@@ -81,26 +81,24 @@ void free_affine_config(rt_function_t *f) {
   (void) realloc(f->config, sizeof(affine_config_t)); // can be omitted
 }
 
-#define CLEAR(setter, list, length) \
-do {\
-  if (!setter) {\
-    memset(list->data, 0, sizeof(float) * length);\
-  } else {\
-    int i;\
-    for (i = 0; i < length; ++i) {\
-      setter(list, i, 0);\
-    }\
-  }\
-} while(0)
+static inline void clear(rt_variable_setter setter, rt_variable_t *list, int length) {
+  if (!setter) {
+    memset(list->data, 0, sizeof(float) * length);
+  } else {
+    int i;
+    for (i = 0; i < length; ++i) {
+      setter(list, i, 0);
+    }
+  }
+}
 
-#define POKE(setter, list, position, value) \
-do {\
-  if (!setter) {\
-    ((float *)list->data)[position] = value;\
-  } else {\
-    setter(list, position, value);\
-  }\
-} while(0)
+static inline void poke(rt_variable_setter setter, rt_variable_t *list, int position, float value) {
+  if (!setter) {
+    ((float *)list->data)[position] = value;
+  } else {
+    setter(list, position, value);
+  }
+}
 
 static inline float peek(rt_variable_getter getter, rt_variable_t *list, int position) {
   if (!getter) {
@@ -124,7 +122,7 @@ void exec_affine(rt_function_t *f) {
   int i, j, k; // Iterators.
 
   // Clear output
-  CLEAR(set_output, pimpl->output, pimpl->output_size);
+  clear(set_output, pimpl->output, pimpl->output_size);
 
   for (k = 0; k < pimpl->base_loop_size; k++) {
     int output_offset = k * pimpl->output_loop_size;
@@ -142,7 +140,7 @@ void exec_affine(rt_function_t *f) {
 
         float w = peek(get_weight, pimpl->weight, wpos);
         float value = peek(get_output, pimpl->output, opos);
-        POKE(set_output, pimpl->output, opos, value + u * w);
+        poke(set_output, pimpl->output, opos, value + u * w);
       }
     }
 
@@ -154,7 +152,7 @@ void exec_affine(rt_function_t *f) {
 
         float b = peek(get_bias, pimpl->bias, bpos);
         float value = peek(get_output, pimpl->output, opos);
-        POKE(set_output, pimpl->output, opos, value + b);
+        poke(set_output, pimpl->output, opos, value + b);
       }
     }
   }
