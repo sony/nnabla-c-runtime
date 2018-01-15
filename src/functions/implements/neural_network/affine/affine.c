@@ -35,8 +35,6 @@ typedef struct affine_impl affine_impl_t;
 
 // Affine
 void allocate_affine_config(rt_function_t *f) {
-  WHOAMI("%s\n", __func__);
-
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
   assert(f->num_of_outputs == 1);
   void *buf = realloc(f->config, sizeof(affine_impl_t));
@@ -80,7 +78,7 @@ void allocate_affine_config(rt_function_t *f) {
 }
 
 void free_affine_config(rt_function_t *f) {
-  realloc(f->config, sizeof(affine_config_t)); // can be omitted
+  (void) realloc(f->config, sizeof(affine_config_t)); // can be omitted
 }
 
 #define CLEAR(setter, list, length) \
@@ -114,29 +112,16 @@ static inline float peek(rt_variable_getter getter, rt_variable_t *list, int pos
 
 void exec_affine(rt_function_t *f) {
   affine_impl_t *const pimpl = f->config;
-  int i, j, k; // Iterators.
-
-  rt_variable_getter get_input;
-  rt_variable_getter get_weight;
-  rt_variable_getter get_bias;
-  rt_variable_getter get_output;
-  rt_variable_setter set_output;
-  if (pimpl->input->type == NN_DATA_TYPE_FLOAT &&
+  const int allFloat = pimpl->input->type == NN_DATA_TYPE_FLOAT &&
       pimpl->output->type == NN_DATA_TYPE_FLOAT &&
       pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
-      (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT) {
-    get_input = NULL;
-    get_weight = NULL;
-    get_bias = NULL;
-    get_output = NULL;
-    set_output = NULL;
-  } else {
-    get_input = select_getter(pimpl->input);
-    get_weight = select_getter(pimpl->weight);
-    get_bias = select_getter(pimpl->bias);
-    get_output = select_getter(pimpl->output);;
-    set_output = select_setter(pimpl->output);
-  }
+      (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT;
+  const rt_variable_getter get_input = allFloat ? NULL : select_getter(pimpl->input);
+  const rt_variable_getter get_weight = allFloat ? NULL : select_getter(pimpl->weight);
+  const rt_variable_getter get_bias = allFloat ? NULL : select_getter(pimpl->bias);
+  const rt_variable_getter get_output = allFloat ? NULL : select_getter(pimpl->output);
+  const rt_variable_setter set_output = allFloat ? NULL :  select_setter(pimpl->output);
+  int i, j, k; // Iterators.
 
   // Clear output
   CLEAR(set_output, pimpl->output, pimpl->output_size);
