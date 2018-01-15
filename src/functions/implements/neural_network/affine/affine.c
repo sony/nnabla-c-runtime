@@ -15,6 +15,7 @@
 #include <nnablart/functions.h>
 
 #include <assert.h>
+#include <memory.h>
 
 #include "../../../utilities.h"
 
@@ -44,7 +45,7 @@ void allocate_affine_config(rt_function_t *f) {
     f->config = buf;
   }
   affine_impl_t *const pimpl = buf;
-  affine_config_t *config = pimpl->config;
+  affine_config_t *config = &pimpl->config;
 
   pimpl->input = f->inputs[0];
   pimpl->weight = f->inputs[1];
@@ -115,7 +116,7 @@ void exec_affine(rt_function_t *f) {
   const int allFloat = pimpl->input->type == NN_DATA_TYPE_FLOAT &&
       pimpl->output->type == NN_DATA_TYPE_FLOAT &&
       pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
-      (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT;
+      (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT);
   const rt_variable_getter get_input = allFloat ? NULL : select_getter(pimpl->input);
   const rt_variable_getter get_weight = allFloat ? NULL : select_getter(pimpl->weight);
   const rt_variable_getter get_bias = allFloat ? NULL : select_getter(pimpl->bias);
