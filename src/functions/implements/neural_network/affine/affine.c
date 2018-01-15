@@ -27,6 +27,7 @@ void allocate_affine_config(rt_function_t *f) {
 
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
   assert(f->num_of_outputs == 1);
+  affine_config_t *config = f->config;
   affine_local_context_t *c = malloc(sizeof(affine_local_context_t));
   c->input = f->inputs[0];
   c->get_input = select_getter(c->input);
@@ -47,7 +48,7 @@ void allocate_affine_config(rt_function_t *f) {
 
   c->output_size = calc_shape_size(c->output->shape);
 
-  int base_axis = ((affine_config_t *)(f->config))->base_axis;
+  int base_axis = config->base_axis;
   int i; // Iterator
 
   c->base_loop_size = 1;
@@ -74,8 +75,8 @@ void allocate_affine_config(rt_function_t *f) {
     c->exec = exec_affine_generic;
   }
 
-  WHOAMI("%p\n", (affine_config_t *)(f->config));
-  ((affine_config_t *)(f->config))->local_context = (void *)c;
+  WHOAMI("%p\n", config);
+  config->local_context = (void *)c;
 }
 
 void free_affine_config(rt_function_t *f) {
