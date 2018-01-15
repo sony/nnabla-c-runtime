@@ -83,6 +83,14 @@ void free_affine_config(rt_function_t *f) {
   realloc(f->config, sizeof(affine_config_t)); // can be omitted
 }
 
+#define CLEAR(setter, list, length) \
+do {\
+  if (!setter) {\
+    memset(list->data, 0, sizeof(float) * length);\
+  } else {\
+  }\
+} while(0)
+
 void exec_affine(rt_function_t *f) {
   affine_impl_t *const pimpl = f->config;
   int i, j, k; // Iterators.
@@ -96,7 +104,7 @@ void exec_affine(rt_function_t *f) {
     float *const bias = pimpl->bias ? pimpl->bias->data : 0;
 
     // Clear output
-    memset(pimpl->output->data, 0, sizeof(float) * pimpl->output_size);
+    CLEAR(NULL, pimpl->output, pimpl->output_size);
 
     for (k = 0; k < pimpl->base_loop_size; k++) {
       int output_offset = k * pimpl->output_loop_size;
