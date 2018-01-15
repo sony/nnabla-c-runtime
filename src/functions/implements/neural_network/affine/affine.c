@@ -94,10 +94,9 @@ void exec_affine(rt_function_t *f) {
     float *const input = pimpl->input->data;
     float *const weight = pimpl->weight->data;
     float *const bias = pimpl->bias ? pimpl->bias->data : 0;
-    float *const output = pimpl->output->data;
 
     // Clear output
-    memset(output, 0, sizeof(float) * pimpl->output_size);
+    memset(pimpl->output->data, 0, sizeof(float) * pimpl->output_size);
 
     for (k = 0; k < pimpl->base_loop_size; k++) {
       int output_offset = k * pimpl->output_loop_size;
@@ -114,8 +113,8 @@ void exec_affine(rt_function_t *f) {
           int wpos = weight_offset + i;
 
           float w = *(weight + wpos);
-          float value = *(output + opos);
-          *(output + opos) = value + u * w;
+          float value = *(((float *)pimpl->output->data) + opos);
+          *(((float *)pimpl->output->data) + opos) = value + u * w;
         }
       }
 
@@ -124,7 +123,7 @@ void exec_affine(rt_function_t *f) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
-          *(output + opos) = *(output + opos) + *(bias + bpos);
+          *(((float *)pimpl->output->data) + opos) = *(((float *)pimpl->output->data) + opos) + *(bias + bpos);
         }
       }
     }
