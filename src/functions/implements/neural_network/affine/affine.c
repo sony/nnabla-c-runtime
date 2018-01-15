@@ -100,8 +100,17 @@ do {\
   if (!setter) {\
     ((float *)list->data)[position] = value;\
   } else {\
+    setter(list, position, value);\
   }\
 } while(0)
+
+static inline float peek(rt_variable_getter getter, rt_variable_t *list, int position) {
+  if (!getter) {
+    return ((float *)list->data)[position];
+  } else {
+    return getter(list, position);
+  }
+}
 
 void exec_affine(rt_function_t *f) {
   affine_impl_t *const pimpl = f->config;
@@ -111,10 +120,6 @@ void exec_affine(rt_function_t *f) {
       pimpl->output->type == NN_DATA_TYPE_FLOAT &&
       pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
       (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT) {
-    float *const input = pimpl->input->data;
-    float *const weight = pimpl->weight->data;
-    float *const bias = pimpl->bias ? pimpl->bias->data : 0;
-
     // Clear output
     CLEAR(NULL, pimpl->output, pimpl->output_size);
 
@@ -127,23 +132,23 @@ void exec_affine(rt_function_t *f) {
         int ipos = input_offset + j;
         int weight_offset = j * pimpl->output_loop_size;
 
-        float u = *(input + ipos);
+        float u = peek(NULL, pimpl->input, ipos);
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int wpos = weight_offset + i;
 
-          float w = *(weight + wpos);
-          float value = *(((float *)pimpl->output->data) + opos);
+          float w = peek(NULL, pimpl->weight, wpos);
+          float value = peek(NULL, pimpl->output, opos);
           POKE(NULL, pimpl->output, opos, value + u * w);
         }
       }
 
       // Bias
-      if (bias) {
+      if (pimpl->bias) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
-          POKE(NULL, pimpl->output, opos, *(((float *)pimpl->output->data) + opos) + *(bias + bpos));
+          POKE(NULL, pimpl->output, opos, peek(NULL, pimpl->output, opos) + peek(NULL, pimp->bias, bpos));
         }
       }
     }
@@ -166,14 +171,14 @@ void exec_affine(rt_function_t *f) {
         int ipos = input_offset + j;
         int weight_offset = j * pimpl->output_loop_size;
 
-        float u = get_input(pimpl->input, ipos);
+        float u = peek(get_input, pimpl->input, ipos);
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int wpos = weight_offset + i;
 
-          float w = get_weight(pimpl->weight, wpos);
-          float value = get_output(pimpl->output, opos);
-          set_output(pimpl->output, opos, value + u * w);
+          float w = peek(get_weight, pimpl->weight, wpos);
+          float value = peek(get_output, pimpl->output, opos);
+          POKE(set_output, pimpl->output, opos, value + u * w);
         }
       }
 
@@ -182,8 +187,7 @@ void exec_affine(rt_function_t *f) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
-          set_output(pimpl->output, opos, get_output(pimpl->output, opos) +
-                                            get_bias(pimpl->bias, bpos));
+          POKE(set_output, pimpl->output, opos, peek(get_output, pimpl->output, opos) + peek(get_bias, pimpl->bias, bpos));
         }
       }
     }
