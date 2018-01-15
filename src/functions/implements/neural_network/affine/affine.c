@@ -16,10 +16,34 @@
 
 #include <assert.h>
 
-#include "affine_internal.h"
+#include "../../../utilities.h"
 
-#include "affine_float.h"
-#include "affine_generic.h"
+typedef void (*exec_affine_func_t)(rt_function_t *f);
+
+typedef struct {
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+
+  rt_variable_t *weight;
+  rt_variable_getter get_weight;
+
+  rt_variable_t *bias;
+  rt_variable_getter get_bias;
+
+  rt_variable_t *output;
+  int output_size;
+  rt_variable_setter set_output;
+  rt_variable_getter get_output;
+
+  int base_loop_size;
+  int input_loop_size;
+  int output_loop_size;
+
+  exec_affine_func_t exec;
+} affine_local_context_t;
+
+static void exec_affine_float(rt_function_t *f);
+static void exec_affine_generic(rt_function_t *f);
 
 // Affine
 void allocate_affine_config(rt_function_t *f) {
@@ -86,4 +110,95 @@ void free_affine_config(rt_function_t *f) {
 void exec_affine(rt_function_t *f) {
   ((affine_local_context_t *)(((affine_config_t *)(f->config))->local_context))
       ->exec(f);
+}
+
+void exec_affine_float(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
+
+  affine_local_context_t *c =
+      (affine_local_context_t *)(((affine_config_t *)(f->config))
+                                     ->local_context);
+  int i, j, k; // Iterators.
+  float *input = (float *)(c->input->data);
+  float *weight = (float *)(c->weight->data);
+  float *output = (float *)(c->output->data);
+
+  // Clear output
+  memset(output, 0, sizeof(float) * c->output_size);
+
+  for (k = 0; k < c->base_loop_size; k++) {
+    int output_offset = k * c->output_loop_size;
+    int input_offset = k * c->input_loop_size;
+
+    // Weight
+    for (j = 0; j < c->input_loop_size; j++) {
+      int ipos = input_offset + j;
+      int weight_offset = j * c->output_loop_size;
+
+      float u = *(input + ipos);
+      for (i = 0; i < c->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int wpos = weight_offset + i;
+
+        float w = *(weight + wpos);
+        float value = *(output + opos);
+        *(output + opos) = value + u * w;
+      }
+    }
+
+    // Bias
+    if (c->bias) {
+      float *bias = (float *)(c->bias->data);
+      for (i = 0; i < c->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int bpos = i;
+        *(output + opos) = *(output + opos) + *(bias + bpos);
+      }
+    }
+  }
+}
+
+void exec_affine_generic(rt_function_t *f) {
+  WHOAMI("%s\n", __func__);
+
+  affine_local_context_t *c =
+      (affine_local_context_t *)(((affine_config_t *)(f->config))
+                                     ->local_context);
+  int i, j, k; // Iterators.
+
+  // Clear output
+  for (i = 0; i < c->output_size; i++) {
+    c->set_output(c->output, i, 0);
+  }
+
+  for (k = 0; k < c->base_loop_size; k++) {
+    int output_offset = k * c->output_loop_size;
+    int input_offset = k * c->input_loop_size;
+
+    // Weight
+    for (j = 0; j < c->input_loop_size; j++) {
+      int ipos = input_offset + j;
+      int weight_offset = j * c->output_loop_size;
+
+      float u = c->get_input(c->input, ipos);
+      for (i = 0; i < c->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int wpos = weight_offset + i;
+
+        float w = c->get_weight(c->weight, wpos);
+        float value = c->get_output(c->output, opos);
+        c->set_output(c->output, opos, value + u * w);
+      }
+    }
+
+    // Bias
+    if (c->bias) {
+      for (i = 0; i < c->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int bpos = i;
+        c->set_output(c->output, opos, c->get_output(c->output, opos) +
+                                           c->get_bias(c->bias, bpos));
+      }
+    }
+  }
 }

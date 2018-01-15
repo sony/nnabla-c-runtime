@@ -16,7 +16,5 @@ add_library(nnablart_functions STATIC
 
   # Functions
   implements/neural_network/affine/affine.c
-  implements/neural_network/affine/affine_generic.c
-  implements/neural_network/affine/affine_float.c
   implements/activation/sigmoid.c
   implements/unimplemented.c)
