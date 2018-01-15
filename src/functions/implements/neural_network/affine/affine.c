@@ -91,9 +91,10 @@ void exec_affine(rt_function_t *f) {
       pimpl->output->type == NN_DATA_TYPE_FLOAT &&
       pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
       (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT) {
-    float *input = (float *)(pimpl->input->data);
-    float *weight = (float *)(pimpl->weight->data);
-    float *output = (float *)(pimpl->output->data);
+    float *const input = pimpl->input->data;
+    float *const weight = pimpl->weight->data;
+    float *const bias = pimpl->bias ? pimpl->bias->data : 0;
+    float *const output = pimpl->output->data;
 
     // Clear output
     memset(output, 0, sizeof(float) * pimpl->output_size);
@@ -119,8 +120,7 @@ void exec_affine(rt_function_t *f) {
       }
 
       // Bias
-      if (pimpl->bias) {
-        float *bias = (float *)(pimpl->bias->data);
+      if (bias) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
