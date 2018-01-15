@@ -95,6 +95,14 @@ do {\
   }\
 } while(0)
 
+#define POKE(setter, list, position, value) \
+do {\
+  if (!setter) {\
+    ((float *)list->data)[position] = value;\
+  } else {\
+  }\
+} while(0)
+
 void exec_affine(rt_function_t *f) {
   affine_impl_t *const pimpl = f->config;
   int i, j, k; // Iterators.
@@ -126,7 +134,7 @@ void exec_affine(rt_function_t *f) {
 
           float w = *(weight + wpos);
           float value = *(((float *)pimpl->output->data) + opos);
-          *(((float *)pimpl->output->data) + opos) = value + u * w;
+          POKE(NULL, pimpl->output, opos, value + u * w);
         }
       }
 
@@ -135,7 +143,7 @@ void exec_affine(rt_function_t *f) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
-          *(((float *)pimpl->output->data) + opos) = *(((float *)pimpl->output->data) + opos) + *(bias + bpos);
+          POKE(NULL, pimpl->output, opos, *(((float *)pimpl->output->data) + opos) + *(bias + bpos));
         }
       }
     }
