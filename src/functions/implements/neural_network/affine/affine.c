@@ -18,7 +18,9 @@
 
 #include "../../../utilities.h"
 
-typedef struct {
+struct affine_impl {
+  affine_config_t config;
+
   rt_variable_t *input;
   rt_variable_getter get_input;
 
@@ -36,7 +38,8 @@ typedef struct {
   int base_loop_size;
   int input_loop_size;
   int output_loop_size;
-} affine_local_context_t;
+};
+typedef struct affine_impl affine_impl_t;
 
 static void exec_affine_float(rt_function_t *f);
 static void exec_affine_generic(rt_function_t *f);
@@ -47,60 +50,63 @@ void allocate_affine_config(rt_function_t *f) {
 
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
   assert(f->num_of_outputs == 1);
-  affine_config_t *config = f->config;
-  affine_local_context_t *c = malloc(sizeof(affine_local_context_t));
-  c->input = f->inputs[0];
-  c->get_input = select_getter(c->input);
+  void *buf = realloc(f->config, sizeof(affine_impl_t));
+  if (!buf) {
+    buf = malloc(sizeof(affine_impl_t));
+    memcpy(buf, f->config, sizeof(affine_config_t));
+    f->config = buf;
+  }
+  affine_impl_t *const pimpl = buf;
+  affine_config_t *config = pimpl->config;
 
-  c->weight = f->inputs[1];
-  c->get_weight = select_getter(c->weight);
+  pimpl->input = f->inputs[0];
+  pimpl->get_input = select_getter(pimpl->input);
 
-  c->output = f->outputs[0];
-  c->get_output = select_getter(c->output);
-  c->set_output = select_setter(c->output);
+  pimpl->weight = f->inputs[1];
+  pimpl->get_weight = select_getter(pimpl->weight);
+
+  pimpl->output = f->outputs[0];
+  pimpl->get_output = select_getter(pimpl->output);
+  pimpl->set_output = select_setter(pimpl->output);
 
   if (f->num_of_inputs > 2) {
-    c->bias = f->inputs[2];
-    c->get_bias = select_getter(c->bias);
+    pimpl->bias = f->inputs[2];
+    pimpl->get_bias = select_getter(pimpl->bias);
   } else {
-    c->bias = 0;
+    pimpl->bias = 0;
   }
 
-  c->output_size = calc_shape_size(c->output->shape);
+  pimpl->output_size = calc_shape_size(pimpl->output->shape);
 
   int base_axis = config->base_axis;
   int i; // Iterator
 
-  c->base_loop_size = 1;
+  pimpl->base_loop_size = 1;
   for (i = 0; i < base_axis; i++) {
-    c->base_loop_size *= c->input->shape.data[i];
+    pimpl->base_loop_size *= pimpl->input->shape.data[i];
   }
 
-  c->input_loop_size = 1;
-  for (i = base_axis; i < c->input->shape.size; i++) {
-    c->input_loop_size *= c->input->shape.data[i];
+  pimpl->input_loop_size = 1;
+  for (i = base_axis; i < pimpl->input->shape.size; i++) {
+    pimpl->input_loop_size *= pimpl->input->shape.data[i];
   }
 
-  c->output_loop_size = 1;
-  for (i = base_axis; i < c->output->shape.size; i++) {
-    c->output_loop_size *= c->output->shape.data[i];
+  pimpl->output_loop_size = 1;
+  for (i = base_axis; i < pimpl->output->shape.size; i++) {
+    pimpl->output_loop_size *= pimpl->output->shape.data[i];
   }
-
-  WHOAMI("%p\n", config);
-  config->local_context = (void *)c;
 }
 
 void free_affine_config(rt_function_t *f) {
-  free((((affine_config_t *)(f->config))->local_context));
+  realloc(f->config, sizeof(affine_config_t)); // can be omitted
 }
 
 void exec_affine(rt_function_t *f) {
-  affine_config_t *const config = f->config;
-  affine_local_context_t *const c = config->local_context;
-  if (c->input->type == NN_DATA_TYPE_FLOAT &&
-      c->output->type == NN_DATA_TYPE_FLOAT &&
-      c->weight->type == NN_DATA_TYPE_FLOAT &&
-      (!c->bias || c->bias->type == NN_DATA_TYPE_FLOAT) {
+  affine_impl_t *const pimpl = f->config;
+  if (pimpl->input->type == NN_DATA_TYPE_FLOAT &&
+      pimpl->output->type == NN_DATA_TYPE_FLOAT &&
+      pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
+      (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT) {
     exec_affine_float(f);
   } else {
     exec_affine_generic(f);
@@ -110,28 +116,27 @@ void exec_affine(rt_function_t *f) {
 void exec_affine_float(rt_function_t *f) {
   WHOAMI("%s\n", __func__);
 
-  affine_local_context_t *c =
-      (affine_local_context_t *)(((affine_config_t *)(f->config))
-                                     ->local_context);
+  affine_impl_t *const pimpl = f->config;
+
   int i, j, k; // Iterators.
-  float *input = (float *)(c->input->data);
-  float *weight = (float *)(c->weight->data);
-  float *output = (float *)(c->output->data);
+  float *input = (float *)(pimpl->input->data);
+  float *weight = (float *)(pimpl->weight->data);
+  float *output = (float *)(pimpl->output->data);
 
   // Clear output
-  memset(output, 0, sizeof(float) * c->output_size);
+  memset(output, 0, sizeof(float) * pimpl->output_size);
 
-  for (k = 0; k < c->base_loop_size; k++) {
-    int output_offset = k * c->output_loop_size;
-    int input_offset = k * c->input_loop_size;
+  for (k = 0; k < pimpl->base_loop_size; k++) {
+    int output_offset = k * pimpl->output_loop_size;
+    int input_offset = k * pimpl->input_loop_size;
 
     // Weight
-    for (j = 0; j < c->input_loop_size; j++) {
+    for (j = 0; j < pimpl->input_loop_size; j++) {
       int ipos = input_offset + j;
-      int weight_offset = j * c->output_loop_size;
+      int weight_offset = j * pimpl->output_loop_size;
 
       float u = *(input + ipos);
-      for (i = 0; i < c->output_loop_size; i++) {
+      for (i = 0; i < pimpl->output_loop_size; i++) {
         int opos = output_offset + i;
         int wpos = weight_offset + i;
 
@@ -142,9 +147,9 @@ void exec_affine_float(rt_function_t *f) {
     }
 
     // Bias
-    if (c->bias) {
-      float *bias = (float *)(c->bias->data);
-      for (i = 0; i < c->output_loop_size; i++) {
+    if (pimpl->bias) {
+      float *bias = (float *)(pimpl->bias->data);
+      for (i = 0; i < pimpl->output_loop_size; i++) {
         int opos = output_offset + i;
         int bpos = i;
         *(output + opos) = *(output + opos) + *(bias + bpos);
@@ -156,43 +161,42 @@ void exec_affine_float(rt_function_t *f) {
 void exec_affine_generic(rt_function_t *f) {
   WHOAMI("%s\n", __func__);
 
-  affine_local_context_t *c =
-      (affine_local_context_t *)(((affine_config_t *)(f->config))
-                                     ->local_context);
+  affine_impl_t *const pimpl = f->config;
+
   int i, j, k; // Iterators.
 
   // Clear output
-  for (i = 0; i < c->output_size; i++) {
-    c->set_output(c->output, i, 0);
+  for (i = 0; i < pimpl->output_size; i++) {
+    pimpl->set_output(pimpl->output, i, 0);
   }
 
-  for (k = 0; k < c->base_loop_size; k++) {
-    int output_offset = k * c->output_loop_size;
-    int input_offset = k * c->input_loop_size;
+  for (k = 0; k < pimpl->base_loop_size; k++) {
+    int output_offset = k * pimpl->output_loop_size;
+    int input_offset = k * pimpl->input_loop_size;
 
     // Weight
-    for (j = 0; j < c->input_loop_size; j++) {
+    for (j = 0; j < pimpl->input_loop_size; j++) {
       int ipos = input_offset + j;
-      int weight_offset = j * c->output_loop_size;
+      int weight_offset = j * pimpl->output_loop_size;
 
-      float u = c->get_input(c->input, ipos);
-      for (i = 0; i < c->output_loop_size; i++) {
+      float u = pimpl->get_input(pimpl->input, ipos);
+      for (i = 0; i < pimpl->output_loop_size; i++) {
         int opos = output_offset + i;
         int wpos = weight_offset + i;
 
-        float w = c->get_weight(c->weight, wpos);
-        float value = c->get_output(c->output, opos);
-        c->set_output(c->output, opos, value + u * w);
+        float w = pimpl->get_weight(pimpl->weight, wpos);
+        float value = pimpl->get_output(pimpl->output, opos);
+        pimpl->set_output(pimpl->output, opos, value + u * w);
       }
     }
 
     // Bias
-    if (c->bias) {
-      for (i = 0; i < c->output_loop_size; i++) {
+    if (pimpl->bias) {
+      for (i = 0; i < pimpl->output_loop_size; i++) {
         int opos = output_offset + i;
         int bpos = i;
-        c->set_output(c->output, opos, c->get_output(c->output, opos) +
-                                           c->get_bias(c->bias, bpos));
+        pimpl->set_output(pimpl->output, opos, pimpl->get_output(pimpl->output, opos) +
+                                           pimpl->get_bias(pimpl->bias, bpos));
       }
     }
   }
