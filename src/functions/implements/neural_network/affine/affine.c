@@ -120,8 +120,14 @@ void exec_affine(rt_function_t *f) {
       pimpl->output->type == NN_DATA_TYPE_FLOAT &&
       pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
       (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT) {
+    const rt_variable_getter get_input = NULL;
+    const rt_variable_getter get_weight = NULL;
+    const rt_variable_getter get_bias = NULL;
+    const rt_variable_getter get_output = NULL;
+    const rt_variable_setter set_output = NULL;
+
     // Clear output
-    CLEAR(NULL, pimpl->output, pimpl->output_size);
+    CLEAR(set_output, pimpl->output, pimpl->output_size);
 
     for (k = 0; k < pimpl->base_loop_size; k++) {
       int output_offset = k * pimpl->output_loop_size;
@@ -132,14 +138,14 @@ void exec_affine(rt_function_t *f) {
         int ipos = input_offset + j;
         int weight_offset = j * pimpl->output_loop_size;
 
-        float u = peek(NULL, pimpl->input, ipos);
+        float u = peek(get_input, pimpl->input, ipos);
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int wpos = weight_offset + i;
 
-          float w = peek(NULL, pimpl->weight, wpos);
-          float value = peek(NULL, pimpl->output, opos);
-          POKE(NULL, pimpl->output, opos, value + u * w);
+          float w = peek(get_weight, pimpl->weight, wpos);
+          float value = peek(get_output, pimpl->output, opos);
+          POKE(set_output, pimpl->output, opos, value + u * w);
         }
       }
 
@@ -148,7 +154,7 @@ void exec_affine(rt_function_t *f) {
         for (i = 0; i < pimpl->output_loop_size; i++) {
           int opos = output_offset + i;
           int bpos = i;
-          POKE(NULL, pimpl->output, opos, peek(NULL, pimpl->output, opos) + peek(NULL, pimp->bias, bpos));
+          POKE(set_output, pimpl->output, opos, peek(get_output, pimpl->output, opos) + peek(get_bias, pimp->bias, bpos));
         }
       }
     }
