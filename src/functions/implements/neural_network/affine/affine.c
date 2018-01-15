@@ -100,7 +100,7 @@ void exec_affine(rt_function_t *f) {
   if (c->input->type == NN_DATA_TYPE_FLOAT &&
       c->output->type == NN_DATA_TYPE_FLOAT &&
       c->weight->type == NN_DATA_TYPE_FLOAT &&
-      ((c->bias && c->bias->type == NN_DATA_TYPE_FLOAT) || !c->bias)) {
+      (!c->bias || c->bias->type == NN_DATA_TYPE_FLOAT) {
     exec_affine_float(f);
   } else {
     exec_affine_generic(f);
