@@ -88,6 +88,10 @@ do {\
   if (!setter) {\
     memset(list->data, 0, sizeof(float) * length);\
   } else {\
+    int i;\
+    for (i = 0; i < length; ++i) {\
+      setter(list, i, 0);\
+    }\
   }\
 } while(0)
 
@@ -143,9 +147,7 @@ void exec_affine(rt_function_t *f) {
     const rt_variable_setter set_output = select_setter(pimpl->output);
 
     // Clear output
-    for (i = 0; i < pimpl->output_size; i++) {
-      set_output(pimpl->output, i, 0);
-    }
+    CLEAR(set_output, pimpl->output, pimpl->output_size);
 
     for (k = 0; k < pimpl->base_loop_size; k++) {
       int output_offset = k * pimpl->output_loop_size;
