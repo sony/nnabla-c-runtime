@@ -71,79 +71,97 @@ void free_affine_config(rt_function_t *f) {
   (void) realloc(f->config, sizeof(affine_config_t)); // can be omitted
 }
 
-static inline void clear(rt_variable_setter setter, rt_variable_t *list, int length) {
-  if (!setter) {
-    memset(list->data, 0, sizeof(float) * length);
-  } else {
-    int i;
-    for (i = 0; i < length; ++i) {
-      setter(list, i, 0);
+static inline void clear(rt_variable_t *variable, int length) {
+  if (variable) {
+    if (variable->type != NN_DATA_TYPE_FLOAT) {
+      const rt_variable_setter write = select_setter(variable);
+      int pos = 0;
+      while (pos != length) {
+        write(variable, pos++, 0);
+      }
+    } else {
+      memset(variable->data, 0, sizeof(float) * length);
     }
   }
 }
 
-static inline void poke(rt_variable_setter setter, rt_variable_t *list, int position, float value) {
-  if (!setter) {
-    ((float *)list->data)[position] = value;
+float* alloc_array(rt_variable_t* variable, int width) {
+  return variable && variable->type != NN_DATA_TYPE_FLOAT ? malloc(sizeof(float) * width) : NULL;
+}
+
+static inline float* fetch(float *head, rt_variable_t* variable, int width, int offset) {
+  if (variable) {
+    if (variable->type != NN_DATA_TYPE_FLOAT) {
+      const rt_variable_getter read = select_getter(variable);
+      float *const end = head + width;
+      for ( ; head != end; ++head) {
+        *head = read(variable, head - (end - width) + offset);
+      }
+      return end - width;
+    } else {
+      return (float *)variable->data + offset;
+    }
   } else {
-    setter(list, position, value);
+    return NULL;
   }
 }
 
-static inline float peek(rt_variable_getter getter, rt_variable_t *list, int position) {
-  if (!getter) {
-    return ((float *)list->data)[position];
-  } else {
-    return getter(list, position);
+static inline void store(rt_variable_t* variable, float* head, int width, int offset) {
+  if (variable) {
+    if (variable->type != NN_DATA_TYPE_FLOAT) {
+      const rt_variable_setter write = select_setter(variable);
+      float *const end = head + width;
+      for ( ; head != end; ++head) {
+        write(variable, head - (end - width) + offset, *head);
+      }
+    } else {
+      if ((float *)variable->data + offset != head) {
+        memmove((float *)variable->data + offset, head, sizeof(float) * width);
+      }
+    }
   }
 }
 
 void exec_affine(rt_function_t *f) {
   affine_impl_t *const pimpl = f->config;
-  const int allFloat = pimpl->input->type == NN_DATA_TYPE_FLOAT &&
-      pimpl->output->type == NN_DATA_TYPE_FLOAT &&
-      pimpl->weight->type == NN_DATA_TYPE_FLOAT &&
-      (!pimpl->bias || pimpl->bias->type == NN_DATA_TYPE_FLOAT);
-  const rt_variable_getter get_input = allFloat ? NULL : select_getter(pimpl->input);
-  const rt_variable_getter get_weight = allFloat ? NULL : select_getter(pimpl->weight);
-  const rt_variable_getter get_bias = allFloat ? NULL : select_getter(pimpl->bias);
-  const rt_variable_getter get_output = allFloat ? NULL : select_getter(pimpl->output);
-  const rt_variable_setter set_output = allFloat ? NULL :  select_setter(pimpl->output);
-  int i, j, k; // Iterators.
+  float *const inputs = alloc_array(pimpl->input, pimpl->input_width);
+  float *const outputs = alloc_array(pimpl->output, pimpl->output_width);
+  float *const weights = alloc_array(pimpl->weight, pimpl->output_width);
+  float *const biases = alloc_array(pimpl->bias, pimpl->output_width);
+  int loop = pimpl->count;
 
   // Clear output
-  clear(set_output, pimpl->output, pimpl->count * pimpl->output_width);
+  clear(pimpl->output, pimpl->count * pimpl->output_width);
 
-  for (k = 0; k < pimpl->count; k++) {
-    int output_offset = k * pimpl->output_width;
-    int input_offset = k * pimpl->input_width;
+  while (loop--) {
+    int i, j; // Iterators.
+    const int input_offset = loop * pimpl->input_width;
+    const int output_offset = loop * pimpl->output_width;
 
+    float *const is = fetch(inputs, pimpl->input,  pimpl->input_width, input_offset);
     // Weight
     for (j = 0; j < pimpl->input_width; j++) {
-      int ipos = input_offset + j;
-      int weight_offset = j * pimpl->output_width;
+      const int weight_offset = j * pimpl->output_width;
 
-      float u = peek(get_input, pimpl->input, ipos);
+      float *const ws = fetch(weights, pimpl->weight, pimpl->output_width, weight_offset);
+      float *const os = fetch(outputs, pimpl->output, pimpl->output_width, output_offset);
       for (i = 0; i < pimpl->output_width; i++) {
-        int opos = output_offset + i;
-        int wpos = weight_offset + i;
-
-        float w = peek(get_weight, pimpl->weight, wpos);
-        float value = peek(get_output, pimpl->output, opos);
-        poke(set_output, pimpl->output, opos, value + u * w);
+        os[i] += ws[i] * is[j];
       }
+      store(pimpl->output, os, pimpl->output_width, output_offset);
     }
 
     // Bias
-    if (pimpl->bias) {
-      for (i = 0; i < pimpl->output_width; i++) {
-        int opos = output_offset + i;
-        int bpos = i;
-
-        float b = peek(get_bias, pimpl->bias, bpos);
-        float value = peek(get_output, pimpl->output, opos);
-        poke(set_output, pimpl->output, opos, value + b);
-      }
+    float *const bs = fetch(biases, pimpl->bias, pimpl->output_width, 0);
+    float *const os = fetch(outputs, pimpl->output, pimpl->output_width, output_offset);
+    for (i = 0; bs && i < pimpl->output_width; i++) {
+      os[i] += bs[i];
     }
+    store(pimpl->output, os, pimpl->output_width, output_offset);
   }
+
+  free(inputs);
+  free(outputs);
+  free(weights);
+  free(biases);
 }
