@@ -34,6 +34,15 @@ struct affine_impl {
 };
 typedef struct affine_impl affine_impl_t;
 
+static inline int product(const int *array, int begin, int end) {
+  int product = 1;
+  const int *it = array + begin;
+  while (it != array + end) {
+    product *= *it++;
+  }
+  return product;
+}
+
 // Affine
 void allocate_affine_config(rt_function_t *f) {
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
@@ -42,39 +51,21 @@ void allocate_affine_config(rt_function_t *f) {
   if (!buf) {
     buf = malloc(sizeof(affine_impl_t));
     memcpy(buf, f->config, sizeof(affine_config_t));
+    free(f->config);
     f->config = buf;
   }
   affine_impl_t *const pimpl = buf;
 
   pimpl->input = f->inputs[0];
   pimpl->weight = f->inputs[1];
+  pimpl->bias = f->num_of_inputs == 3 ? f->inputs[2] : NULL;
   pimpl->output = f->outputs[0];
-
-  if (f->num_of_inputs > 2) {
-    pimpl->bias = f->inputs[2];
-  } else {
-    pimpl->bias = 0;
-  }
-
   pimpl->output_size = calc_shape_size(pimpl->output->shape);
 
-  int base_axis = pimpl->config.base_axis;
-  int i; // Iterator
-
-  pimpl->base_loop_size = 1;
-  for (i = 0; i < base_axis; i++) {
-    pimpl->base_loop_size *= pimpl->input->shape.data[i];
-  }
-
-  pimpl->input_loop_size = 1;
-  for (i = base_axis; i < pimpl->input->shape.size; i++) {
-    pimpl->input_loop_size *= pimpl->input->shape.data[i];
-  }
-
-  pimpl->output_loop_size = 1;
-  for (i = base_axis; i < pimpl->output->shape.size; i++) {
-    pimpl->output_loop_size *= pimpl->output->shape.data[i];
-  }
+  const int base_axis = pimpl->config.base_axis;
+  pimpl->base_loop_size = product(pimpl->input->shape.data, 0, base_axis);
+  pimpl->input_loop_size = product(pimpl->input->shape.data, base_axis, pimpl->input->shape.size);
+  pimpl->output_loop_size = product(pimpl->output->shape.data, base_axis, pimpl->output->shape.size);
 }
 
 void free_affine_config(rt_function_t *f) {
