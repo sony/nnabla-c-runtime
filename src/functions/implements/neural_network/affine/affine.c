@@ -26,11 +26,10 @@ struct affine_impl {
   rt_variable_t *weight;
   rt_variable_t *bias;
   rt_variable_t *output;
-  int output_size;
 
-  int base_loop_size;
-  int input_loop_size;
-  int output_loop_size;
+  int count;
+  int input_width;
+  int output_width;
 };
 typedef struct affine_impl affine_impl_t;
 
@@ -60,12 +59,12 @@ void allocate_affine_config(rt_function_t *f) {
   pimpl->weight = f->inputs[1];
   pimpl->bias = f->num_of_inputs == 3 ? f->inputs[2] : NULL;
   pimpl->output = f->outputs[0];
-  pimpl->output_size = calc_shape_size(pimpl->output->shape);
 
   const int base_axis = pimpl->config.base_axis;
-  pimpl->base_loop_size = product(pimpl->input->shape.data, 0, base_axis);
-  pimpl->input_loop_size = product(pimpl->input->shape.data, base_axis, pimpl->input->shape.size);
-  pimpl->output_loop_size = product(pimpl->output->shape.data, base_axis, pimpl->output->shape.size);
+  pimpl->count = product(pimpl->input->shape.data, 0, base_axis);
+  pimpl->input_width = product(pimpl->input->shape.data, base_axis, pimpl->input->shape.size);
+  pimpl->output_width = product(pimpl->output->shape.data, base_axis, pimpl->output->shape.size);
+  assert(calc_shape_size(f->outputs[0]->shape) == pimpl->count * pimpl->output_width);
 }
 
 void free_affine_config(rt_function_t *f) {
@@ -113,19 +112,19 @@ void exec_affine(rt_function_t *f) {
   int i, j, k; // Iterators.
 
   // Clear output
-  clear(set_output, pimpl->output, pimpl->output_size);
+  clear(set_output, pimpl->output, pimpl->count * pimpl->output_width);
 
-  for (k = 0; k < pimpl->base_loop_size; k++) {
-    int output_offset = k * pimpl->output_loop_size;
-    int input_offset = k * pimpl->input_loop_size;
+  for (k = 0; k < pimpl->count; k++) {
+    int output_offset = k * pimpl->output_width;
+    int input_offset = k * pimpl->input_width;
 
     // Weight
-    for (j = 0; j < pimpl->input_loop_size; j++) {
+    for (j = 0; j < pimpl->input_width; j++) {
       int ipos = input_offset + j;
-      int weight_offset = j * pimpl->output_loop_size;
+      int weight_offset = j * pimpl->output_width;
 
       float u = peek(get_input, pimpl->input, ipos);
-      for (i = 0; i < pimpl->output_loop_size; i++) {
+      for (i = 0; i < pimpl->output_width; i++) {
         int opos = output_offset + i;
         int wpos = weight_offset + i;
 
@@ -137,7 +136,7 @@ void exec_affine(rt_function_t *f) {
 
     // Bias
     if (pimpl->bias) {
-      for (i = 0; i < pimpl->output_loop_size; i++) {
+      for (i = 0; i < pimpl->output_width; i++) {
         int opos = output_offset + i;
         int bpos = i;
 
