@@ -139,22 +139,19 @@ void exec_affine(rt_function_t *f) {
     const int output_offset = loop * pimpl->output_width;
 
     float *const is = fetch(inputs, pimpl->input,  pimpl->input_width, input_offset);
+    float *const os = fetch(outputs, pimpl->output, pimpl->output_width, output_offset);
     // Weight
-    for (j = 0; j < pimpl->input_width; j++) {
+    for (j = 0; j != pimpl->input_width; j++) {
       const int weight_offset = j * pimpl->output_width;
-
       float *const ws = fetch(weights, pimpl->weight, pimpl->output_width, weight_offset);
-      float *const os = fetch(outputs, pimpl->output, pimpl->output_width, output_offset);
-      for (i = 0; i < pimpl->output_width; i++) {
+      for (i = 0; i != pimpl->output_width; i++) {
         os[i] += ws[i] * is[j];
       }
-      store(pimpl->output, os, pimpl->output_width, output_offset);
     }
 
     // Bias
     float *const bs = fetch(biases, pimpl->bias, pimpl->output_width, 0);
-    float *const os = fetch(outputs, pimpl->output, pimpl->output_width, output_offset);
-    for (i = 0; bs && i < pimpl->output_width; i++) {
+    for (i = 0; bs && i != pimpl->output_width; i++) { // NOTE: skipped entire loop if bs == NULL.
       os[i] += bs[i];
     }
     store(pimpl->output, os, pimpl->output_width, output_offset);
