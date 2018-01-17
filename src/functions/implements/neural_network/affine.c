@@ -64,16 +64,16 @@ void free_affine_config(rt_function_t *f) {
   free(((affine_config_t *)f->config)->local_context);
 }
 
-static inline void clear(rt_variable_t *variable, int length) {
+static inline void clear(rt_variable_t *variable, int width, int offset) {
   if (variable) {
     if (variable->type != NN_DATA_TYPE_FLOAT) {
       const rt_variable_setter write = select_setter(variable);
       int pos = 0;
-      while (pos != length) {
-        write(variable, pos++, 0);
+      while (pos != width) {
+        write(variable, pos++ + offset, 0);
       }
     } else {
-      memset(variable->data, 0, sizeof(float) * length);
+      memset((float *)variable->data + offset, 0, sizeof(float) * width);
     }
   }
 }
@@ -124,7 +124,7 @@ void exec_affine(rt_function_t *f) {
   int loop = pimpl->count;
 
   // Clear output
-  clear(pimpl->output, pimpl->count * pimpl->output_width);
+  clear(pimpl->output, pimpl->count * pimpl->output_width, 0);
 
   while (loop--) {
     int i, j; // Iterators.
