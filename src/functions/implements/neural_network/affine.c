@@ -31,14 +31,11 @@ struct affine_impl {
 };
 typedef struct affine_impl affine_impl_t;
 
-static inline int product(const int *array, int begin, int end) {
-  int product = 1;
-  const int *it = array + begin;
-  while (it != array + end) {
-    product *= *it++;
-  }
-  return product;
-}
+static inline int product(const int *array, int begin, int end);
+static inline float* alloc_array(rt_variable_t* variable, int width);
+static inline void clear(rt_variable_t *variable, int width, int offset);
+static inline float* fetch(float *head, rt_variable_t* variable, int width, int offset);
+static inline void store(rt_variable_t* variable, float* head, int width, int offset);
 
 // Affine
 void allocate_affine_config(rt_function_t *f) {
@@ -62,57 +59,6 @@ void allocate_affine_config(rt_function_t *f) {
 
 void free_affine_config(rt_function_t *f) {
   free(((affine_config_t *)f->config)->local_context);
-}
-
-static inline void clear(rt_variable_t *variable, int width, int offset) {
-  if (variable) {
-    if (variable->type != NN_DATA_TYPE_FLOAT) {
-      const rt_variable_setter write = select_setter(variable);
-      int pos = 0;
-      while (pos != width) {
-        write(variable, pos++ + offset, 0);
-      }
-    } else {
-      memset((float *)variable->data + offset, 0, sizeof(float) * width);
-    }
-  }
-}
-
-float* alloc_array(rt_variable_t* variable, int width) {
-  return variable && variable->type != NN_DATA_TYPE_FLOAT ? malloc(sizeof(float) * width) : NULL;
-}
-
-static inline float* fetch(float *head, rt_variable_t* variable, int width, int offset) {
-  if (variable) {
-    if (variable->type != NN_DATA_TYPE_FLOAT) {
-      const rt_variable_getter read = select_getter(variable);
-      float *const end = head + width;
-      for ( ; head != end; ++head) {
-        *head = read(variable, head - (end - width) + offset);
-      }
-      return end - width;
-    } else {
-      return (float *)variable->data + offset;
-    }
-  } else {
-    return NULL;
-  }
-}
-
-static inline void store(rt_variable_t* variable, float* head, int width, int offset) {
-  if (variable) {
-    if (variable->type != NN_DATA_TYPE_FLOAT) {
-      const rt_variable_setter write = select_setter(variable);
-      float *const end = head + width;
-      for ( ; head != end; ++head) {
-        write(variable, head - (end - width) + offset, *head);
-      }
-    } else {
-      if ((float *)variable->data + offset != head) {
-        memmove((float *)variable->data + offset, head, sizeof(float) * width);
-      }
-    }
-  }
 }
 
 void exec_affine(rt_function_t *f) {
@@ -154,4 +100,66 @@ void exec_affine(rt_function_t *f) {
   free(outputs);
   free(weights);
   free(biases);
+}
+
+// helper functions
+
+static inline int product(const int *array, int begin, int end) {
+  int product = 1;
+  const int *it = array + begin;
+  while (it != array + end) {
+    product *= *it++;
+  }
+  return product;
+}
+
+static inline float* alloc_array(rt_variable_t* variable, int width) {
+  return variable && variable->type != NN_DATA_TYPE_FLOAT ? malloc(sizeof(float) * width) : NULL;
+}
+
+static inline void clear(rt_variable_t *variable, int width, int offset) {
+  if (variable) {
+    if (variable->type != NN_DATA_TYPE_FLOAT) {
+      const rt_variable_setter write = select_setter(variable);
+      int pos = 0;
+      while (pos != width) {
+        write(variable, pos++ + offset, 0);
+      }
+    } else {
+      memset((float *)variable->data + offset, 0, sizeof(float) * width);
+    }
+  }
+}
+
+static inline float* fetch(float *head, rt_variable_t* variable, int width, int offset) {
+  if (variable) {
+    if (variable->type != NN_DATA_TYPE_FLOAT) {
+      const rt_variable_getter read = select_getter(variable);
+      float *const end = head + width;
+      for ( ; head != end; ++head) {
+        *head = read(variable, head - (end - width) + offset);
+      }
+      return end - width;
+    } else {
+      return (float *)variable->data + offset;
+    }
+  } else {
+    return NULL;
+  }
+}
+
+static inline void store(rt_variable_t* variable, float* head, int width, int offset) {
+  if (variable) {
+    if (variable->type != NN_DATA_TYPE_FLOAT) {
+      const rt_variable_setter write = select_setter(variable);
+      float *const end = head + width;
+      for ( ; head != end; ++head) {
+        write(variable, head - (end - width) + offset, *head);
+      }
+    } else {
+      if ((float *)variable->data + offset != head) {
+        memmove((float *)variable->data + offset, head, sizeof(float) * width);
+      }
+    }
+  }
 }
