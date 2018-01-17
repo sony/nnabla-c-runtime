@@ -33,7 +33,6 @@ typedef struct affine_impl affine_impl_t;
 
 static inline int product(const int *array, int begin, int end);
 static inline float* alloc_array(rt_variable_t* variable, int width);
-static inline void clear(rt_variable_t *variable, int width, int offset);
 static inline float* fetch(float *head, rt_variable_t* variable, int width, int offset);
 static inline void store(rt_variable_t* variable, float* head, int width, int offset);
 
@@ -69,17 +68,27 @@ void exec_affine(rt_function_t *f) {
   float *const biases = alloc_array(pimpl->bias, pimpl->output_width);
   int loop = pimpl->count;
 
-  // Clear output
-  clear(pimpl->output, pimpl->count * pimpl->output_width, 0);
+  // Load bias values.
+  float *const bs = fetch(biases, pimpl->bias, pimpl->output_width, 0);
 
   while (loop--) {
     int i, j; // Iterators.
     const int input_offset = loop * pimpl->input_width;
     const int output_offset = loop * pimpl->output_width;
 
+    // Load input values.
     float *const is = fetch(inputs, pimpl->input,  pimpl->input_width, input_offset);
-    float *const os = fetch(outputs, pimpl->output, pimpl->output_width, output_offset);
-    // Weight
+    // Select output buffer without reading stored values.
+    float *const os = outputs ? outputs : (float *)pimpl->output->data + output_offset;
+
+    // Initialize output buffer...
+    if (bs) {
+      memcpy(os, bs, sizeof(float) * pimpl->output_width); // with bias.
+    } else {
+      memset(os, 0, sizeof(float) * pimpl->output_width); // with zero.
+    }
+
+    // Accumulate weighted inputs into output buffer.
     for (j = 0; j != pimpl->input_width; j++) {
       const int weight_offset = j * pimpl->output_width;
       float *const ws = fetch(weights, pimpl->weight, pimpl->output_width, weight_offset);
@@ -88,11 +97,7 @@ void exec_affine(rt_function_t *f) {
       }
     }
 
-    // Bias
-    float *const bs = fetch(biases, pimpl->bias, pimpl->output_width, 0);
-    for (i = 0; bs && i != pimpl->output_width; i++) { // NOTE: skipped entire loop if bs == NULL.
-      os[i] += bs[i];
-    }
+    // Store back output values into variable.
     store(pimpl->output, os, pimpl->output_width, output_offset);
   }
 
@@ -115,20 +120,6 @@ static inline int product(const int *array, int begin, int end) {
 
 static inline float* alloc_array(rt_variable_t* variable, int width) {
   return variable && variable->type != NN_DATA_TYPE_FLOAT ? malloc(sizeof(float) * width) : NULL;
-}
-
-static inline void clear(rt_variable_t *variable, int width, int offset) {
-  if (variable) {
-    if (variable->type != NN_DATA_TYPE_FLOAT) {
-      const rt_variable_setter write = select_setter(variable);
-      int pos = 0;
-      while (pos != width) {
-        write(variable, pos++ + offset, 0);
-      }
-    } else {
-      memset((float *)variable->data + offset, 0, sizeof(float) * width);
-    }
-  }
 }
 
 static inline float* fetch(float *head, rt_variable_t* variable, int width, int offset) {
