@@ -20,8 +20,6 @@
 #include "../../../utilities.h"
 
 struct affine_impl {
-  affine_config_t config;
-
   rt_variable_t *input;
   rt_variable_t *weight;
   rt_variable_t *bias;
@@ -46,21 +44,16 @@ static inline int product(const int *array, int begin, int end) {
 void allocate_affine_config(rt_function_t *f) {
   assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
   assert(f->num_of_outputs == 1);
-  void *buf = realloc(f->config, sizeof(affine_impl_t));
-  if (!buf) {
-    buf = malloc(sizeof(affine_impl_t));
-    memcpy(buf, f->config, sizeof(affine_config_t));
-    free(f->config);
-    f->config = buf;
-  }
-  affine_impl_t *const pimpl = buf;
+  affine_impl_t *const pimpl = malloc(sizeof(affine_impl_t));
+  affine_config_t *const config = f->config;
+  config->local_context = pimpl;
 
   pimpl->input = f->inputs[0];
   pimpl->weight = f->inputs[1];
   pimpl->bias = f->num_of_inputs == 3 ? f->inputs[2] : NULL;
   pimpl->output = f->outputs[0];
 
-  const int base_axis = pimpl->config.base_axis;
+  const int base_axis = config->base_axis;
   pimpl->count = product(pimpl->input->shape.data, 0, base_axis);
   pimpl->input_width = product(pimpl->input->shape.data, base_axis, pimpl->input->shape.size);
   pimpl->output_width = product(pimpl->output->shape.data, base_axis, pimpl->output->shape.size);
@@ -68,7 +61,7 @@ void allocate_affine_config(rt_function_t *f) {
 }
 
 void free_affine_config(rt_function_t *f) {
-  (void) realloc(f->config, sizeof(affine_config_t)); // can be omitted
+  free(((affine_config_t *)f->config)->local_context);
 }
 
 static inline void clear(rt_variable_t *variable, int length) {
@@ -123,7 +116,7 @@ static inline void store(rt_variable_t* variable, float* head, int width, int of
 }
 
 void exec_affine(rt_function_t *f) {
-  affine_impl_t *const pimpl = f->config;
+  affine_impl_t *const pimpl = ((affine_config_t*)f->config)->local_context;
   float *const inputs = alloc_array(pimpl->input, pimpl->input_width);
   float *const outputs = alloc_array(pimpl->output, pimpl->output_width);
   float *const weights = alloc_array(pimpl->weight, pimpl->output_width);
