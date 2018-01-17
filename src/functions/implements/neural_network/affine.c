@@ -17,13 +17,13 @@
 #include <assert.h>
 #include <memory.h>
 
-#include "../../../utilities.h"
+#include "../../utilities.h"
 
 struct affine_impl {
+  rt_variable_t *output;
   rt_variable_t *input;
   rt_variable_t *weight;
   rt_variable_t *bias;
-  rt_variable_t *output;
 
   int count;
   int input_width;
