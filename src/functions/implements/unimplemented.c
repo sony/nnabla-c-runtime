@@ -85,13 +85,6 @@ void free_swish_config(rt_function_t *f) {}
 
 void exec_swish(rt_function_t *f) {}
 
-// Tanh
-void allocate_tanh_config(rt_function_t *f) {}
-
-void free_tanh_config(rt_function_t *f) {}
-
-void exec_tanh(rt_function_t *f) {}
-
 // ReLU
 void allocate_relu_config(rt_function_t *f) {}
 
