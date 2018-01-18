@@ -15,7 +15,9 @@ add_library(nnablart_functions STATIC
   utilities/vector.c
 
   # Functions
-  implements/neural_network/affine.c
+  implements/neural_network/affine/affine.c
+  implements/neural_network/affine/affine_generic.c
+  implements/neural_network/affine/affine_float.c
   implements/activation/sigmoid.c
   implements/activation/tanh.c
   implements/unimplemented.c)
