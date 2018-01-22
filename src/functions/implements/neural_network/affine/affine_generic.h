@@ -15,6 +15,6 @@
 #ifndef H_AFFINE_GENERIC_H_171218202102_
 #define H_AFFINE_GENERIC_H_171218202102_
 
-void exec_affine_generic(rt_function_t *f);
+rt_function_error_t exec_affine_generic(rt_function_t *f);
 
 #endif // H_AFFINE_GENERIC_H_171218202102_

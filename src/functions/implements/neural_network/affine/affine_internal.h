@@ -17,7 +17,7 @@
 
 #include "../../../utilities.h"
 
-typedef void (*exec_affine_func_t)(rt_function_t *f);
+typedef rt_function_error_t (*exec_affine_func_t)(rt_function_t *f);
 
 typedef struct {
   rt_variable_t *input;
@@ -39,6 +39,6 @@ typedef struct {
   int output_loop_size;
 
   exec_affine_func_t exec;
-} affine_local_context_t;
+} affine_private_t;
 
 #endif // H_AFFINE_INTERNAL_H_171218154530_

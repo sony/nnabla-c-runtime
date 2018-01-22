@@ -16,47 +16,46 @@
 
 #include "affine_internal.h"
 
-void exec_affine_generic(rt_function_t *f) {
-  WHOAMI("%s\n", __func__);
-
-  affine_local_context_t *c =
-      (affine_local_context_t *)(((affine_config_t *)(f->config))
-                                     ->local_context);
+rt_function_error_t exec_affine_generic(rt_function_t *f) {
+  affine_private_t *p =
+      (affine_private_t *)(((affine_local_context_t *)(f->local_context))
+                               ->private);
   int i, j, k; // Iterators.
 
   // Clear output
-  for (i = 0; i < c->output_size; i++) {
-    c->set_output(c->output, i, 0);
+  for (i = 0; i < p->output_size; i++) {
+    p->set_output(p->output, i, 0);
   }
 
-  for (k = 0; k < c->base_loop_size; k++) {
-    int output_offset = k * c->output_loop_size;
-    int input_offset = k * c->input_loop_size;
+  for (k = 0; k < p->base_loop_size; k++) {
+    int output_offset = k * p->output_loop_size;
+    int input_offset = k * p->input_loop_size;
 
     // Weight
-    for (j = 0; j < c->input_loop_size; j++) {
+    for (j = 0; j < p->input_loop_size; j++) {
       int ipos = input_offset + j;
-      int weight_offset = j * c->output_loop_size;
+      int weight_offset = j * p->output_loop_size;
 
-      float u = c->get_input(c->input, ipos);
-      for (i = 0; i < c->output_loop_size; i++) {
+      float u = p->get_input(p->input, ipos);
+      for (i = 0; i < p->output_loop_size; i++) {
         int opos = output_offset + i;
         int wpos = weight_offset + i;
 
-        float w = c->get_weight(c->weight, wpos);
-        float value = c->get_output(c->output, opos);
-        c->set_output(c->output, opos, value + u * w);
+        float w = p->get_weight(p->weight, wpos);
+        float value = p->get_output(p->output, opos);
+        p->set_output(p->output, opos, value + u * w);
       }
     }
 
     // Bias
-    if (c->bias) {
-      for (i = 0; i < c->output_loop_size; i++) {
+    if (p->bias) {
+      for (i = 0; i < p->output_loop_size; i++) {
         int opos = output_offset + i;
         int bpos = i;
-        c->set_output(c->output, opos, c->get_output(c->output, opos) +
-                                           c->get_bias(c->bias, bpos));
+        p->set_output(p->output, opos, p->get_output(p->output, opos) +
+                                           p->get_bias(p->bias, bpos));
       }
     }
   }
+  return RT_FUNCTION_ERROR_NOERROR;
 }

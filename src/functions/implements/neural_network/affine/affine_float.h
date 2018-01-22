@@ -16,6 +16,6 @@
 #ifndef H_AFFINE_FLOAT_H_171218202120_
 #define H_AFFINE_FLOAT_H_171218202120_
 
-void exec_affine_float(rt_function_t *f);
+rt_function_error_t exec_affine_float(rt_function_t *f);
 
 #endif // H_AFFINE_FLOAT_H_171218202120_

@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// *WARNING*
+// THIS FILE IS AUTO-GENERATED DUMMY CODE BY CODE GENERATOR.
 
 #ifndef H_NETWORK_H__
 #define H_NETWORK_H__
@@ -64,8 +66,9 @@ typedef struct {
   nn_list_t shape;         ///< Shape
   nn_data_type_t type : 4; ///< Type of param values
   unsigned int fp_pos : 4; ///< floating point position.
-  int32_t data_index; ///< Location of data. If negative, it means data buffer
-                      ///index. Otherwize it means location of data in memory.
+  int32_t data_index;      ///< Location of data. If negative, it means data
+                           /// buffer index. Otherwize it means location of data
+  /// in memory.
 } nn_variable_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

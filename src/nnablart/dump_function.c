@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// *WARNING*
+// THIS FILE IS AUTO-GENERATED DUMMY CODE BY CODE GENERATOR.
 
 #include <assert.h>
 #include <stdio.h>
@@ -156,6 +158,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   for (i = 0; i < func->outputs.size; i++) {
     printf("NNB: Function output[%d]:  Variable id:%d\n", i, *(list + i));
   }
+
   switch (func->type) {
   case NN_FUNCTION_AFFINE: { // Affine
     nn_function_affine_t *f = (nn_function_affine_t *)func;

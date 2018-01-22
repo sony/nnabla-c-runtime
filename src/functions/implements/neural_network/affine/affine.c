@@ -22,67 +22,76 @@
 #include "affine_generic.h"
 
 // Affine
-void allocate_affine_config(rt_function_t *f) {
-  WHOAMI("%s\n", __func__);
+rt_function_error_t allocate_affine_local_context(rt_function_t *f) {
+  if (f->num_of_inputs != 2 && f->num_of_inputs != 3) {
+    return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
+  }
 
-  assert(f->num_of_inputs == 2 || f->num_of_inputs == 3);
-  assert(f->num_of_outputs == 1);
-  affine_local_context_t *c = malloc(sizeof(affine_local_context_t));
-  c->input = f->inputs[0];
-  c->get_input = select_getter(c->input);
+  if (f->num_of_outputs != 1) {
+    return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
+  }
+  affine_private_t *p = malloc(sizeof(affine_private_t));
+  if (p == 0) {
+    return RT_FUNCTION_ERROR_MALLOC;
+  }
 
-  c->weight = f->inputs[1];
-  c->get_weight = select_getter(c->weight);
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
 
-  c->output = f->outputs[0];
-  c->get_output = select_getter(c->output);
-  c->set_output = select_setter(c->output);
+  p->weight = f->inputs[1];
+  p->get_weight = select_getter(p->weight);
+
+  p->output = f->outputs[0];
+  p->get_output = select_getter(p->output);
+  p->set_output = select_setter(p->output);
 
   if (f->num_of_inputs > 2) {
-    c->bias = f->inputs[2];
-    c->get_bias = select_getter(c->bias);
+    p->bias = f->inputs[2];
+    p->get_bias = select_getter(p->bias);
   } else {
-    c->bias = 0;
+    p->bias = 0;
   }
 
-  c->output_size = calc_shape_size(c->output->shape);
+  p->output_size = calc_shape_size(p->output->shape);
 
-  int base_axis = ((affine_config_t *)(f->config))->base_axis;
+  int base_axis = ((affine_local_context_t *)(f->local_context))->base_axis;
   int i; // Iterator
 
-  c->base_loop_size = 1;
+  p->base_loop_size = 1;
   for (i = 0; i < base_axis; i++) {
-    c->base_loop_size *= c->input->shape.data[i];
+    p->base_loop_size *= p->input->shape.data[i];
   }
 
-  c->input_loop_size = 1;
-  for (i = base_axis; i < c->input->shape.size; i++) {
-    c->input_loop_size *= c->input->shape.data[i];
+  p->input_loop_size = 1;
+  for (i = base_axis; i < p->input->shape.size; i++) {
+    p->input_loop_size *= p->input->shape.data[i];
   }
 
-  c->output_loop_size = 1;
-  for (i = base_axis; i < c->output->shape.size; i++) {
-    c->output_loop_size *= c->output->shape.data[i];
+  p->output_loop_size = 1;
+  for (i = base_axis; i < p->output->shape.size; i++) {
+    p->output_loop_size *= p->output->shape.data[i];
   }
 
-  if (c->input->type == NN_DATA_TYPE_FLOAT &&
-      c->output->type == NN_DATA_TYPE_FLOAT &&
-      c->weight->type == NN_DATA_TYPE_FLOAT &&
-      ((c->bias && c->bias->type == NN_DATA_TYPE_FLOAT) || !c->bias)) {
-    c->exec = exec_affine_float;
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT &&
+      p->weight->type == NN_DATA_TYPE_FLOAT &&
+      ((p->bias && p->bias->type == NN_DATA_TYPE_FLOAT) || !p->bias)) {
+    p->exec = exec_affine_float;
   } else {
-    c->exec = exec_affine_generic;
+    p->exec = exec_affine_generic;
   }
 
-  WHOAMI("%p\n", (affine_config_t *)(f->config));
-  ((affine_config_t *)(f->config))->local_context = (void *)c;
+  ((affine_local_context_t *)(f->local_context))->private = (void *)p;
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
-void free_affine_config(rt_function_t *f) {
-  free((((affine_config_t *)(f->config))->local_context));
+rt_function_error_t free_affine_local_context(rt_function_t *f) {
+  free((((affine_local_context_t *)(f->local_context))->private));
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
-void exec_affine(rt_function_t *f) {
-  ((affine_local_context_t *)(((affine_config_t *)(f->config))->local_context))
+rt_function_error_t exec_affine(rt_function_t *f) {
+  return ((affine_private_t *)(((affine_local_context_t *)(f->local_context))
+                                   ->private))
       ->exec(f);
 }

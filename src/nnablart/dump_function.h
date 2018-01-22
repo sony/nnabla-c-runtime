@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// *WARNING*
+// THIS FILE IS AUTO-GENERATED DUMMY CODE BY CODE GENERATOR.
 
 #ifndef H_TEMPLATE_SRC_NNABLART_DUMP_FUNCTION_H_171220144441_
 #define H_TEMPLATE_SRC_NNABLART_DUMP_FUNCTION_H_171220144441_
