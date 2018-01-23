@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// *WARNING*
+// THIS FILE IS AUTO-GENERATED DUMMY CODE BY CODE GENERATOR.
 
 #include <assert.h>
 #include <stdio.h>
@@ -23,29 +25,24 @@
 #include "dump.h"
 #include "dump_function.h"
 
-static const char* const typenames[] = {{
-{typenames}
-}};
-  
+static const char *const typenames[] = {{{typenames}}};
 
-void dump_function(nn_network_t *net, nn_function_t* func) 
-{{
-  int i;
-  int* list;
-  
-  printf("NNB: Function type:         %s(%d)\n", typenames[func->type], func->type);
-  list = (int*)NN_GET(net, func->inputs.list);
-  for(i = 0; i < func->inputs.size; i++ ) {{
-    printf("NNB: Function input[%d]:   Variable id:%d\n", i, *(list + i));
-  }}
-  list = (int*)NN_GET(net, func->outputs.list);
-  for(i = 0; i < func->outputs.size; i++ ) {{
-    printf("NNB: Function output[%d]:  Variable id:%d\n", i, *(list + i));
-  }}
-  switch(func->type) {{
-{dump}
-  }}
+void dump_function(nn_network_t *net, nn_function_t *func) {{
+    int i;
+    int *list;
+
+    printf("NNB: Function type:         %s(%d)\n", typenames[func->type],
+           func->type);
+    list = (int *)NN_GET(net, func->inputs.list);
+    for (i = 0; i < func->inputs.size; i++) {{
+      printf("NNB: Function input[%d]:   Variable id:%d\n", i, *(list + i)); 
+    }}
+    list = (int *)NN_GET(net, func->outputs.list);
+    for (i = 0; i < func->outputs.size; i++) {{
+      printf("NNB: Function output[%d]:  Variable id:%d\n", i, *(list + i)); 
+    }}
+
+    switch (func->type) {{
+        {dump}
+    }}
 }}
-
-  
-

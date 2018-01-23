@@ -27,26 +27,38 @@ typedef struct {
 } tanh_local_context_t;
 
 // Tanh
-void allocate_tanh_config(rt_function_t *f) {
+rt_function_error_t allocate_tanh_local_context(rt_function_t *f) {
+  if (f->num_of_inputs != 1) {
+    return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
+  }
+  if (f->num_of_outputs != 1) {
+    return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
+  }
   tanh_local_context_t *c = malloc(sizeof(tanh_local_context_t));
-  f->config = c;
-  assert(f->num_of_inputs == 1);
-  assert(f->num_of_outputs == 1);
+  if (c == 0) {
+    return RT_FUNCTION_ERROR_MALLOC;
+  }
+  f->local_context = c;
   c->input = f->inputs[0]->data;
   c->input_size = calc_shape_size(f->inputs[0]->shape);
   c->output = f->outputs[0]->data;
   c->output_size = calc_shape_size(f->outputs[0]->shape);
-  assert(c->input_size == c->output_size);
+  if (c->input_size != c->output_size) {
+    return RT_FUNCTION_ERROR_INVALID_SHAPE;
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
-void free_tanh_config(rt_function_t *f) {
-  free(f->config);
+rt_function_error_t free_tanh_local_context(rt_function_t *f) {
+  free(f->local_context);
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
-void exec_tanh(rt_function_t *f) {
-  tanh_local_context_t *c = (tanh_local_context_t *)(f->config);
+rt_function_error_t exec_tanh(rt_function_t *f) {
+  tanh_local_context_t *c = (tanh_local_context_t *)(f->local_context);
   int i; // Iterator
   for (i = 0; i < c->input_size; i++) {
     c->output[i] = tanhf(c->input[i]);
   }
+  return RT_FUNCTION_ERROR_NOERROR;
 }

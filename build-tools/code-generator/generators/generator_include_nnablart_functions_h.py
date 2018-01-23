@@ -42,14 +42,14 @@ def generate(string, info):
                     elif arg['Type'] == 'string':
                         defines.append('{0}_{1}_value_t {1};'.format(name, an))
 
-                defines.append('  void* local_context;')
-                defines.append('}} {}_config_t;'.format(name))
+                defines.append('  void* private;')
+                defines.append('}} {}_local_context_t;'.format(name))
             defines.append('')
             defines.append(
-                'void allocate_{}_config(rt_function_t* f);'.format(name))
+                'rt_function_error_t allocate_{}_local_context(rt_function_t* f);'.format(name))
             defines.append(
-                'void free_{}_config(rt_function_t* f);'.format(name))
-            defines.append('void exec_{}(rt_function_t* f);'.format(name))
+                'rt_function_error_t free_{}_local_context(rt_function_t* f);'.format(name))
+            defines.append('rt_function_error_t exec_{}(rt_function_t* f);'.format(name))
             defines.append('')
         defines.append('')
 
