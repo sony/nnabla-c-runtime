@@ -26,13 +26,22 @@ typedef struct {
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   const int axis = context_of(f)->axis;
   const int size = calc_shape_size(input_shape_of(f, 0));
-  const int size_axis = input_shape_of(f, 0).data[axis];
+  int size_axis;
   softmax_private_t *p = malloc(sizeof(softmax_private_t));
+  int i;
+  if (axis <= 0) {
+    size_axis = calc_shape_size(input_shape_of(f, 0));
+  } else {
+    size_axis = 1;
+    for (i = axis; i < input_shape_of(f, 0).size; ++i) {
+      size_axis *= input_shape_of(f, 0).data[i];
+    }
+  }
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
   p->batch_size = size / size_axis;
-  p->specified_axis_size = size_axis;
+  p->specified_axis_size = input_shape_of(f, 0).data[axis];
   p->rest_size = size / p->batch_size / p->specified_axis_size;
   context_of(f)->private = p;
   return RT_FUNCTION_ERROR_NOERROR;
@@ -49,27 +58,27 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
   softmax_private_t *const p = context_of(f)->private;
   const float *const input = input_data_of(f, 0);
   float *const output = output_data_of(f, 0);
-  int i0, i1, i2;
-  for (i0 = 0; i0 < p->batch_size ; ++i0) {
-    for (i2 = 0; i2 < p->rest_size ; ++i2) {
-      const int j = i0 * p->specified_axis_size * p->rest_size + i2;
+  int batch_index, specified_index, rest_index;
+  for (batch_index = 0; batch_index < p->batch_size ; ++batch_index) {
+    for (rest_index = 0; rest_index < p->rest_size ; ++rest_index) {
+      const int j = batch_index * p->specified_axis_size * p->rest_size + rest_index;
       // compute maximum
       float max_input = input[j];
-      for (i1 = 0; i1 < p->specified_axis_size ; ++i1) {
-        const int k = i1 * p->rest_size + j;
+      for (specified_index = 0; specified_index < p->specified_axis_size ; ++specified_index) {
+        const int k = specified_index * p->rest_size + j;
         max_input = max(max_input, input[k]);
       }
       // Compute exponential and sum
       float exp_sum = 0;
-      for (i1 = 0; i1 < p->specified_axis_size; ++i1) {
-        const int k = i1 * p->rest_size + j;
+      for (specified_index = 0; specified_index < p->specified_axis_size; ++specified_index) {
+        const int k = specified_index * p->rest_size + j;
         const float tmp = expf(input[k] - max_input);
         output[k] = tmp;
         exp_sum += tmp; 
       }
       // Compute softmax
-      for (i1 = 0; i1 < p->specified_axis_size; ++i1) {
-        const int k = i1 * p->rest_size + j;
+      for (specified_index = 0; specified_index < p->specified_axis_size; ++specified_index) {
+        const int k = specified_index * p->rest_size + j;
         output[k] = output[k] / exp_sum;
       }
     }
