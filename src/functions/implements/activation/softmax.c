@@ -28,6 +28,13 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   const int size = calc_shape_size(input_shape_of(f, 0));
   int size_axis;
   softmax_private_t *p = malloc(sizeof(softmax_private_t));
+  if (p == 0) {
+    return RT_FUNCTION_ERROR_MALLOC;
+  }
+  // axis must be less than ndim of inputs[0].
+  if (input_shape_of(f, 0).size <= axis) {
+    return RT_FUNCTION_ERROR_INVALID_SHAPE;
+  }
   int i;
   if (axis <= 0) {
     size_axis = calc_shape_size(input_shape_of(f, 0));
@@ -37,13 +44,13 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
       size_axis *= input_shape_of(f, 0).data[i];
     }
   }
-  if (p == 0) {
-    return RT_FUNCTION_ERROR_MALLOC;
-  }
   p->batch_size = size / size_axis;
   p->specified_axis_size = input_shape_of(f, 0).data[axis];
   p->rest_size = size / p->batch_size / p->specified_axis_size;
   context_of(f)->private = p;
+  if (p->batch_size * p->specified_axis_size * p->rest_size != size) {
+    return RT_FUNCTION_ERROR_INVALID_SHAPE;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
