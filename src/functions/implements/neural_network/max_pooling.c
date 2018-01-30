@@ -41,7 +41,7 @@ rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
   if(context->kernel.size != context->pad.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  for (i = 0; i < inshape.size; i++) {
+  for (i = 0; i < context->kernel.size; i++) {
     shape.data[i] = inshape.data[i + s];
   }
   for (i = 0; i < shape.size; i++) {
