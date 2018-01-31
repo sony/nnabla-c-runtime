@@ -24,7 +24,8 @@ typedef struct {
 } softmax_private_t;
 
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
-  const int axis = context_of(f)->axis;
+  softmax_local_context_t *context = (softmax_local_context_t *)(context_of(f));
+  const int axis = context->axis;
   const int size = calc_shape_size(input_shape_of(f, 0));
   int size_axis;
   softmax_private_t *p = malloc(sizeof(softmax_private_t));
@@ -47,7 +48,7 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   p->batch_size = size / size_axis;
   p->specified_axis_size = input_shape_of(f, 0).data[axis];
   p->rest_size = size / p->batch_size / p->specified_axis_size;
-  context_of(f)->private = p;
+  context->private = p;
   if (p->batch_size * p->specified_axis_size * p->rest_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
@@ -55,14 +56,14 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_softmax_local_context(rt_function_t *f) {
-  free(context_of(f)->private);
+  free(((softmax_local_context_t *)(context_of(f)))->private);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 static inline float max(float a, float b) { return a < b ? b : a; }
 
 rt_function_error_t exec_softmax(rt_function_t *f) {
-  softmax_private_t *const p = context_of(f)->private;
+  softmax_private_t *const p = ((softmax_local_context_t *)(context_of(f)))->private;
   const float *const input = input_data_of(f, 0);
   float *const output = output_data_of(f, 0);
   int batch_index, specified_index, rest_index;

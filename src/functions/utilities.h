@@ -7,7 +7,7 @@
 #include "utilities/shape.h"
 #include "utilities/vector.h"
 
-static inline softmax_local_context_t* context_of(const rt_function_t *f) {
+static inline void* context_of(const rt_function_t *f) {
   return f->local_context;
 }
 
