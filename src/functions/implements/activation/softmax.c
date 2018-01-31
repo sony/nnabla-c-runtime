@@ -17,21 +17,22 @@
 
 #include "../../utilities.h"
 
-typedef struct {
-  int batch_size;
-  int specified_axis_size;
-  int rest_size;
-} softmax_private_t;
-
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t free_softmax_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+static inline float max(float a, float b) { return a < b ? b : a; }
+
+rt_function_error_t exec_softmax(rt_function_t *f) {
+  // set up
   softmax_local_context_t *context = (softmax_local_context_t *)(context_of(f));
   const int axis = context->axis;
   const int size = calc_shape_size(input_shape_of(f, 0));
   int size_axis;
-  softmax_private_t *p = malloc(sizeof(softmax_private_t));
-  if (p == 0) {
-    return RT_FUNCTION_ERROR_MALLOC;
-  }
   // axis must be less than ndim of inputs[0].
   if (input_shape_of(f, 0).size <= axis) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
@@ -45,48 +46,36 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
       size_axis *= input_shape_of(f, 0).data[i];
     }
   }
-  p->batch_size = size / size_axis;
-  p->specified_axis_size = input_shape_of(f, 0).data[axis];
-  p->rest_size = size / p->batch_size / p->specified_axis_size;
-  context->private = p;
-  if (p->batch_size * p->specified_axis_size * p->rest_size != size) {
+  const int batch_size = size / size_axis;
+  const int specified_axis_size = input_shape_of(f, 0).data[axis];
+  const int rest_size = size / batch_size / specified_axis_size;
+  if (batch_size * specified_axis_size * rest_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  return RT_FUNCTION_ERROR_NOERROR;
-}
-
-rt_function_error_t free_softmax_local_context(rt_function_t *f) {
-  free(((softmax_local_context_t *)(context_of(f)))->private);
-  return RT_FUNCTION_ERROR_NOERROR;
-}
-
-static inline float max(float a, float b) { return a < b ? b : a; }
-
-rt_function_error_t exec_softmax(rt_function_t *f) {
-  softmax_private_t *const p = ((softmax_local_context_t *)(context_of(f)))->private;
+  // exec
   const float *const input = input_data_of(f, 0);
   float *const output = output_data_of(f, 0);
   int batch_index, specified_index, rest_index;
-  for (batch_index = 0; batch_index < p->batch_size ; ++batch_index) {
-    for (rest_index = 0; rest_index < p->rest_size ; ++rest_index) {
-      const int j = batch_index * p->specified_axis_size * p->rest_size + rest_index;
+  for (batch_index = 0; batch_index < batch_size ; ++batch_index) {
+    for (rest_index = 0; rest_index < rest_size ; ++rest_index) {
+      const int j = batch_index * specified_axis_size * rest_size + rest_index;
       // compute maximum
       float max_input = input[j];
-      for (specified_index = 0; specified_index < p->specified_axis_size ; ++specified_index) {
-        const int k = specified_index * p->rest_size + j;
+      for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
+        const int k = specified_index * rest_size + j;
         max_input = max(max_input, input[k]);
       }
       // Compute exponential and sum
       float exp_sum = 0;
-      for (specified_index = 0; specified_index < p->specified_axis_size; ++specified_index) {
-        const int k = specified_index * p->rest_size + j;
+      for (specified_index = 0; specified_index < specified_axis_size; ++specified_index) {
+        const int k = specified_index * rest_size + j;
         const float tmp = expf(input[k] - max_input);
         output[k] = tmp;
         exp_sum += tmp; 
       }
       // Compute softmax
-      for (specified_index = 0; specified_index < p->specified_axis_size; ++specified_index) {
-        const int k = specified_index * p->rest_size + j;
+      for (specified_index = 0; specified_index < specified_axis_size; ++specified_index) {
+        const int k = specified_index * rest_size + j;
         output[k] = output[k] / exp_sum;
       }
     }
