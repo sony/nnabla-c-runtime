@@ -38,7 +38,7 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   }
   int i;
   if (axis <= 0) {
-    size_axis = calc_shape_size(input_shape_of(f, 0));
+    size_axis = size;
   } else {
     size_axis = 1;
     for (i = axis; i < input_shape_of(f, 0).size; ++i) {
