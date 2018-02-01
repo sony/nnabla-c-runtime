@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <nnablart/functions.h>
-
 #include "../../utilities.h"
 
 #include <math.h>
@@ -69,21 +68,6 @@ rt_function_error_t free_max_pooling_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_list_t get_c_contiguous_strides(rt_list_t shape) {
-  if(!shape.size) {
-    return shape;
-  }
-  rt_list_t strides = allocate_list(shape.size);
-  int i;
-  for (i = 0; i< shape.size; ++i) {
-    strides.data[i] = 1;
-  }
-  for (i = strides.size - 2; i >= 0; --i) {
-    strides.data[i] *= strides.data[i + 1] * shape.data[i + 1];
-  }
-  return strides;
-}
-
 rt_function_error_t exec_max_pooling(rt_function_t *f) {
   max_pooling_local_context_t *context = (max_pooling_local_context_t *)(f->local_context);
   const float *x = (float *)(f->inputs[0]->data);
@@ -110,12 +94,12 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
   const int hpad = context->pad.data[0];
   const int wpad = context->pad.data[1];
   const int n_map = calc_shape_size(f->inputs[0]->shape) / x_stride;
-  int n, iy, jy, ix, jx;
+  int iy, jy, ix, jx;
   int hstart, wstart, hend, wend;
   int k, l;
   float max_val;
   float val;
-  for (n = 0; n < n_map; ++n) {
+  for (int n = 0; n < n_map; ++n) {
     for(iy = 0; iy < hy; ++iy) {
       for(jy = 0; jy < wy; ++jy) {
         hstart = iy * hstride - hpad;
