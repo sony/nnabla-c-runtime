@@ -91,9 +91,9 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   // exec
-  int batch_index;
-  for (batch_index = 0; batch_index < batch_size ; ++batch_index) {
-    softmax_impl(batch_size, specified_axis_size, rest_size, batch_index,
+  int sample_index;
+  for (sample_index = 0; sample_index < batch_size ; ++sample_index) {
+    softmax_impl(batch_size, specified_axis_size, rest_size, sample_index,
             input_data_of(f, 0), output_data_of(f, 0));
   }
   return RT_FUNCTION_ERROR_NOERROR;
