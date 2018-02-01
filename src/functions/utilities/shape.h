@@ -33,6 +33,7 @@ int find_num_in_shape(rt_list_t s, int num);
 /// Calclate data size with shape
 int calc_shape_size(rt_list_t shape);
 
+int shape_product_of(const rt_variable_t *v, unsigned shape_begin, unsigned shape_end);
 /// @}
 
 #endif // H_SHAPE_H_171218133433_

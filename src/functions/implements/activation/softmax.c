@@ -79,21 +79,12 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
   softmax_local_context_t *context = (softmax_local_context_t *)(context_of(f));
   const int axis = context->axis;
   const int size = calc_shape_size(input_shape_of(f, 0));
-  int size_axis;
   // axis must be less than ndim of inputs[0].
   if (input_shape_of(f, 0).size <= axis) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  int i;
-  if (axis <= 0) {
-    size_axis = size;
-  } else {
-    size_axis = 1;
-    for (i = axis; i < input_shape_of(f, 0).size; ++i) {
-      size_axis *= input_shape_value_of(f, 0, i);
-    }
-  }
-  const int batch_size = size / size_axis;
+  const rt_variable_t *const input = input_of(f, 0);
+  const int batch_size = shape_product_of(input, 0, axis);
   const int specified_axis_size = input_shape_value_of(f, 0, axis);
   const int rest_size = size / batch_size / specified_axis_size;
   if (batch_size * specified_axis_size * rest_size != size) {

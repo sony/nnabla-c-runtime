@@ -15,6 +15,10 @@ static inline rt_list_t shape_of(const rt_variable_t *variable) {
   return variable->shape;
 }
 
+static inline int shape_size(const rt_variable_t *variable) {
+  return shape_of(variable).size;
+}
+
 static inline void* data_of(const rt_variable_t *variable) {
   return variable->data;
 }

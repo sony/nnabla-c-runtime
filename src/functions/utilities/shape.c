@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "shape.h"
+#include "../utilities.h"
 
 void pos_to_shape(rt_list_t out, rt_list_t shape, int pos) {
   int i = 0, o = 1;
@@ -32,13 +33,19 @@ int shape_to_pos(rt_list_t shape, rt_list_t pos) {
   return ret;
 }
 
-int calc_shape_size(rt_list_t shape) {
-  int i;
-  int size = 1;
-  for (i = 0; i < shape.size; i++) {
-    size *= shape.data[i];
+static inline int int_product(const int *data, int begin, int end) {
+  int prod = 1;
+  const int *const END = data + end;
+  const int *it = data + begin;
+  while (it != END) {
+    prod *= *it;
+    it++;
   }
-  return size;
+  return prod;
+}
+
+int calc_shape_size(rt_list_t shape) {
+  return int_product(shape.data, 0, shape.size);
 }
 
 int find_num_in_shape(rt_list_t shape, int num) {
@@ -49,4 +56,13 @@ int find_num_in_shape(rt_list_t shape, int num) {
     }
   }
   return -1;
+}
+
+static inline int* shape_data(rt_list_t shape) {
+  return shape.data;
+}
+
+int shape_product_of(const rt_variable_t *v, unsigned shape_begin, unsigned shape_end) {
+  const rt_list_t shape = shape_of(v);
+  return int_product(shape_data(shape), shape_begin, shape_end);
 }
