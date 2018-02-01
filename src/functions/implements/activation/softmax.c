@@ -90,11 +90,11 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
   } else {
     size_axis = 1;
     for (i = axis; i < input_shape_of(f, 0).size; ++i) {
-      size_axis *= input_shape_of(f, 0).data[i];
+      size_axis *= input_shape_value_of(f, 0, i);
     }
   }
   const int batch_size = size / size_axis;
-  const int specified_axis_size = input_shape_of(f, 0).data[axis];
+  const int specified_axis_size = input_shape_value_of(f, 0, axis);
   const int rest_size = size / batch_size / specified_axis_size;
   if (batch_size * specified_axis_size * rest_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;

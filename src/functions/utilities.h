@@ -27,6 +27,10 @@ static inline rt_list_t input_shape_of(const rt_function_t *f, int index) {
   return shape_of(input_of(f, index));
 }
 
+static inline int input_shape_value_of(const rt_function_t *f, int index, int data_index) {
+  return input_shape_of(f, 0).data[data_index];
+}
+
 static inline void* input_data_of(const rt_function_t *f, int index) {
   return data_of(input_of(f, index));
 }
