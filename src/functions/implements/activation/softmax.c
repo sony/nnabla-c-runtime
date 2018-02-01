@@ -18,13 +18,9 @@
 #include "../../utilities.h"
 
 static inline float max(float a, float b);
-static inline float sum(float a, float b);
-static inline float devide(float a, float b);
-static inline float identify(float a);
-static inline void map(rt_list_t list, float (*func1)(float), float (*func2)(float, float), float arg);
-static inline float reduce(rt_list_t list, float (*func)(float, float));
-static inline void softmax_impl(const int batch_size, const int specified_axis_size, const int rest_size,
-              const int batch_index, const float *const input, float *const output);
+static inline void softmax(float *array, int array_size);
+static inline void exec_1d(const int batch_size, const int specified_axis_size, const int rest_size,
+              const float *const input, float *const output, void (*func)(float*, int));
 
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
@@ -51,62 +47,56 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   // exec
-  int sample_index;
-  for (sample_index = 0; sample_index < batch_size ; ++sample_index) {
-    softmax_impl(batch_size, specified_axis_size, rest_size, sample_index,
-            input_data_of(f, 0), output_data_of(f, 0));
-  }
+  exec_1d(batch_size, specified_axis_size, rest_size,
+          input_data_of(f, 0), output_data_of(f, 0), softmax);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 static inline float max(float a, float b) { return a < b ? b : a; }
 
-static inline float sum(float a, float b) { return a + b; }
-
-static inline float devide(float a, float b) { return a / b; }
-
-static inline float identify(float a) { return a; }
-
-static inline void map(rt_list_t list, float (*func1)(float), float (*func2)(float, float), float arg) {
-  int i;
-  for(i = 0; i < list.size; ++i) {
-    list.data[i] = func2(func1(list.data[i]), arg);
-  }
-}
-
-static inline float reduce(rt_list_t list, float (*func)(float, float)) {
-  int i;
-  float result = 0;
-  for(i = 0; i < list.size; ++i) {
-    result = func(result, list.data[i]);
-  }
-  return result;
-}
-
-static inline void softmax_impl(const int batch_size, const int specified_axis_size, const int rest_size,
-              const int batch_index, const float *const input, float *const output) {
-  rt_list_t array = allocate_list(specified_axis_size);
-  int specified_index, rest_index;
-  for (rest_index = 0; rest_index < rest_size ; ++rest_index) {
-    const int j = batch_index * specified_axis_size * rest_size + rest_index;
-    for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
-      const int k = specified_index * rest_size + j;
-      array.data[specified_index] = input[k];
-    }
+static inline void softmax(float *array, int array_size) {
+    int i;
 
     // compute maximum
-    float max_input = reduce(array, max);
-    map(array, identify, sum, max_input * -1.0);
+    float max_input = 0;
+    for (i = 0; i < array_size; ++i) {
+      max_input = max(max_input, array[i]);
+    }
     // Compute exponential and sum
-    map(array, expf, sum, 0);
-    float exp_sum = reduce(array, sum);
+    float exp_sum = 0;
+    for (i = 0; i < array_size; ++i) {
+      const float tmp = expf(array[i] - max_input);
+      array[i] = tmp;
+      exp_sum += tmp;
+    }
     // Compute softmax
-    map(array, identify, devide, exp_sum);
+    for (i = 0; i < array_size; ++i) {
+      array[i] = array[i] / exp_sum;
+    }
+}
 
-    for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
-      const int k = specified_index * rest_size + j;
-      output[k] = array.data[specified_index];
+static inline void exec_1d(const int batch_size, const int specified_axis_size, const int rest_size,
+              const float *const batch_input, float *const batch_output, void (*func)(float*, int)) {
+  float *array = malloc(sizeof(float) * specified_axis_size);
+  int sample_index, specified_index, rest_index;
+  for (sample_index = 0; sample_index < batch_size ; ++sample_index) {
+    for (rest_index = 0; rest_index < rest_size ; ++rest_index) {
+      const int j = sample_index * specified_axis_size * rest_size + rest_index;
+
+      // Get 1dim array from batch_input.
+      for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
+        const int k = specified_index * rest_size + j;
+        array[specified_index] = batch_input[k];
+      }
+
+      func(array, specified_axis_size);
+
+      // Rewrite batch_output from calculated 1dim array.
+      for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
+        const int k = specified_index * rest_size + j;
+        batch_output[k] = array[specified_index];
+      }
     }
   }
-  free_list(array);
+  free(array);
 }
