@@ -19,7 +19,7 @@
 
 static inline float max(float a, float b);
 static inline void softmax(float *array, int array_size);
-static inline void exec_1d(const int batch_size, const int specified_axis_size, const int rest_size,
+static inline void exec_1d(const int batch_size, const int specified_axis_size, const int output_size,
               const float *const input, float *const output, void (*func)(float*, int));
 
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
@@ -42,12 +42,12 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
   const rt_variable_t *const input = input_of(f, 0);
   const int batch_size = shape_product_of(input, 0, axis);
   const int specified_axis_size = input_shape_value_of(f, 0, axis);
-  const int rest_size = size / batch_size / specified_axis_size;
-  if (batch_size * specified_axis_size * rest_size != size) {
+  const int output_size = size / batch_size / specified_axis_size;
+  if (batch_size * specified_axis_size * output_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   // exec
-  exec_1d(batch_size, specified_axis_size, rest_size,
+  exec_1d(batch_size, specified_axis_size, output_size,
           input_data_of(f, 0), output_data_of(f, 0), softmax);
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -75,17 +75,17 @@ static inline void softmax(float *array, int array_size) {
     }
 }
 
-static inline void exec_1d(const int batch_size, const int specified_axis_size, const int rest_size,
+static inline void exec_1d(const int batch_size, const int specified_axis_size, const int output_size,
               const float *const batch_input, float *const batch_output, void (*func)(float*, int)) {
   float *array = malloc(sizeof(float) * specified_axis_size);
-  int sample_index, specified_index, rest_index;
+  int sample_index, specified_index, output_index;
   for (sample_index = 0; sample_index < batch_size ; ++sample_index) {
-    for (rest_index = 0; rest_index < rest_size ; ++rest_index) {
-      const int j = sample_index * specified_axis_size * rest_size + rest_index;
+    for (output_index = 0; output_index < output_size ; ++output_index) {
+      const int j = sample_index * specified_axis_size * output_size + output_index;
 
       // Get 1dim array from batch_input.
       for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
-        const int k = specified_index * rest_size + j;
+        const int k = specified_index * output_size + j;
         array[specified_index] = batch_input[k];
       }
 
@@ -93,7 +93,7 @@ static inline void exec_1d(const int batch_size, const int specified_axis_size, 
 
       // Rewrite batch_output from calculated 1dim array.
       for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
-        const int k = specified_index * rest_size + j;
+        const int k = specified_index * output_size + j;
         batch_output[k] = array[specified_index];
       }
     }
