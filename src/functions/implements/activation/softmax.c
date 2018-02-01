@@ -46,6 +46,34 @@ static inline float reduce(rt_list_t list, float (*func)(float, float)) {
   return result;
 }
 
+static inline void softmax_impl(const int batch_size, const int specified_axis_size, const int rest_size,
+              const int batch_index, const float *const input, float *const output) {
+  rt_list_t array = allocate_list(specified_axis_size);
+  int specified_index, rest_index;
+  for (rest_index = 0; rest_index < rest_size ; ++rest_index) {
+    const int j = batch_index * specified_axis_size * rest_size + rest_index;
+    for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
+      const int k = specified_index * rest_size + j;
+      array.data[specified_index] = input[k];
+    }
+
+    // compute maximum
+    float max_input = reduce(array, max);
+    map(array, identify, sum, max_input * -1.0);
+    // Compute exponential and sum
+    map(array, expf, sum, 0);
+    float exp_sum = reduce(array, sum);
+    // Compute softmax
+    map(array, identify, devide, exp_sum);
+
+    for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
+      const int k = specified_index * rest_size + j;
+      output[k] = array.data[specified_index];
+    }
+  }
+  free_list(array);
+}
+
 rt_function_error_t exec_softmax(rt_function_t *f) {
   // set up
   softmax_local_context_t *context = (softmax_local_context_t *)(context_of(f));
@@ -72,33 +100,10 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   // exec
-  const float *const input = input_data_of(f, 0);
-  float *const output = output_data_of(f, 0);
-  int batch_index, specified_index, rest_index;
-  rt_list_t array = allocate_list(specified_axis_size);
+  int batch_index;
   for (batch_index = 0; batch_index < batch_size ; ++batch_index) {
-    for (rest_index = 0; rest_index < rest_size ; ++rest_index) {
-      const int j = batch_index * specified_axis_size * rest_size + rest_index;
-      for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
-        const int k = specified_index * rest_size + j;
-        array.data[specified_index] = input[k];
-      }
-
-      // compute maximum
-      float max_input = reduce(array, max);
-      map(array, identify, sum, max_input * -1.0);
-      // Compute exponential and sum
-      map(array, expf, sum, 0);
-      float exp_sum = reduce(array, sum);
-      // Compute softmax
-      map(array, identify, devide, exp_sum);
-
-      for (specified_index = 0; specified_index < specified_axis_size ; ++specified_index) {
-        const int k = specified_index * rest_size + j;
-        output[k] = array.data[specified_index];
-      }
-    }
+    softmax_impl(batch_size, specified_axis_size, rest_size, batch_index,
+            input_data_of(f, 0), output_data_of(f, 0));
   }
-  free_list(array);
   return RT_FUNCTION_ERROR_NOERROR;
 }
