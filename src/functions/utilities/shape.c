@@ -51,7 +51,7 @@ int find_num_in_shape(rt_list_t shape, int num) {
   return -1;
 }
 
-rt_list_t get_c_contiguous_strides(rt_list_t shape) {
+rt_list_t calc_contiguous_strides(rt_list_t shape) {
   if(!shape.size) {
     return allocate_list(0);
   }

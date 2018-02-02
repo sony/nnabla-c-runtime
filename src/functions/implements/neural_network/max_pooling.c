@@ -90,8 +90,8 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
                                ->private);
   const float *x = (float *)(f->inputs[0]->data);
   float *y = (float *)(f->outputs[0]->data);
-  const rt_list_t input_strides = get_c_contiguous_strides(f->inputs[0]->shape);
-  const rt_list_t output_strides = get_c_contiguous_strides(f->outputs[0]->shape);
+  const rt_list_t input_strides = calc_contiguous_strides(f->inputs[0]->shape);
+  const rt_list_t output_strides = calc_contiguous_strides(f->outputs[0]->shape);
   const int x_stride =
     (private->input_n_kernel_size_diff == 0) ? calc_shape_size(f->inputs[0]->shape) : input_strides.data[private->input_n_kernel_size_diff - 1];
   const int y_stride =
