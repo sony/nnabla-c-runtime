@@ -32,7 +32,6 @@ rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
   private->input_shape = clone_list(f->inputs[0]->shape);
   private->output_shape = clone_list(f->outputs[0]->shape);
   private->input_n_kernel_size_diff = private->input_shape.size - context->kernel.size;
-  int i;
   if(context->stride.size == 0) {
     context->stride = clone_list(context->kernel);
   } else {
@@ -50,6 +49,7 @@ rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   rt_list_t shape = allocate_list(context->kernel.size);
+  int i;
   for (i = 0; i < context->kernel.size; i++) {
     shape.data[i] = private->input_shape.data[i + private->input_n_kernel_size_diff];
   }
@@ -109,28 +109,27 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
   const int hpad = context->pad.data[0];
   const int wpad = context->pad.data[1];
   const int n_map = calc_shape_size(f->inputs[0]->shape) / x_stride;
-  int n, iy, jy, ix, jx;
-  int hstart, wstart, hend, wend;
-  int k, l;
-  float max_val;
-  float val;
   for (n = 0; n < n_map; ++n) {
+    int iy;
     for(iy = 0; iy < hy; ++iy) {
+      int jy;
       for(jy = 0; jy < wy; ++jy) {
-        hstart = iy * hstride - hpad;
-        wstart = jy * wstride - wpad;
-        hend = fminf(hstart + hkernel, hx + hpad);
-        wend = fminf(wstart + wkernel, wx + wpad);
+        int hstart = iy * hstride - hpad;
+        int wstart = jy * wstride - wpad;
+        int hend = fminf(hstart + hkernel, hx + hpad);
+        int wend = fminf(wstart + wkernel, wx + wpad);
         hstart = fmaxf(hstart, 0);
         wstart = fmax(wstart, 0);
         hend = fminf(hend, hx);
         wend = fminf(wend, wx);
-        k = iy * wy + jy;
-        l = hstart * wx + wstart;
-        max_val = x[l];
+        int k = iy * wy + jy;
+        int l = hstart * wx + wstart;
+        float max_val = x[l];
+        int ix;
         for (ix = hstart; ix < hend; ++ix) {
+          int jx;
           for (jx = ix * wx + wstart; jx < ix * wx + wend; ++jx) {
-            val = x[jx];
+            float val = x[jx];
             if (max_val < val) {
               max_val = val;
             }
