@@ -21,6 +21,8 @@ typedef struct {
   rt_list_t input_shape;
   rt_list_t output_shape;
   int input_n_kernel_size_diff;
+  int x_stride;
+  int y_stride;
  } max_pooling_private_t;
 
 rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
@@ -48,6 +50,8 @@ rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
   if(context->kernel.size != context->pad.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+
+  // Calc and set output shape.
   rt_list_t shape = allocate_list(context->kernel.size);
   int i;
   for (i = 0; i < context->kernel.size; i++) {
@@ -69,6 +73,17 @@ rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
     }
   }
   free_list(shape);
+
+  // Calc x_stride and y_stride.
+  const rt_list_t input_strides = calc_contiguous_strides(f->inputs[0]->shape);
+  const rt_list_t output_strides = calc_contiguous_strides(f->outputs[0]->shape);
+  private->x_stride =
+    (private->input_n_kernel_size_diff == 0) ? calc_shape_size(f->inputs[0]->shape) : input_strides.data[private->input_n_kernel_size_diff - 1];
+  private->y_stride =
+    (private->input_n_kernel_size_diff == 0) ? calc_shape_size(f->outputs[0]->shape) : output_strides.data[private->input_n_kernel_size_diff - 1];
+  free_list(input_strides);
+  free_list(output_strides);
+
   ((max_pooling_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -90,14 +105,6 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
                                ->private);
   const float *x = (float *)(f->inputs[0]->data);
   float *y = (float *)(f->outputs[0]->data);
-  const rt_list_t input_strides = calc_contiguous_strides(f->inputs[0]->shape);
-  const rt_list_t output_strides = calc_contiguous_strides(f->outputs[0]->shape);
-  const int x_stride =
-    (private->input_n_kernel_size_diff == 0) ? calc_shape_size(f->inputs[0]->shape) : input_strides.data[private->input_n_kernel_size_diff - 1];
-  const int y_stride =
-    (private->input_n_kernel_size_diff == 0) ? calc_shape_size(f->outputs[0]->shape) : output_strides.data[private->input_n_kernel_size_diff - 1];
-  free_list(input_strides);
-  free_list(output_strides);
   const int hx = private->input_shape.data[private->input_n_kernel_size_diff + 0];
   const int wx = private->input_shape.data[private->input_n_kernel_size_diff + 1];
   const int hy = private->output_shape.data[private->input_n_kernel_size_diff + 0];
@@ -108,7 +115,8 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
   const int wstride = context->stride.data[1];
   const int hpad = context->pad.data[0];
   const int wpad = context->pad.data[1];
-  const int n_map = calc_shape_size(f->inputs[0]->shape) / x_stride;
+  const int n_map = calc_shape_size(f->inputs[0]->shape) / private->x_stride;
+  int n;
   for (n = 0; n < n_map; ++n) {
     int iy;
     for(iy = 0; iy < hy; ++iy) {
@@ -138,8 +146,8 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
         y[k] = max_val;
       }
     }
-    x += x_stride;
-    y += y_stride;
+    x += private->x_stride;
+    y += private->y_stride;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
