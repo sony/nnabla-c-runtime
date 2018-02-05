@@ -50,3 +50,18 @@ int find_num_in_shape(rt_list_t shape, int num) {
   }
   return -1;
 }
+
+rt_list_t calc_contiguous_strides(rt_list_t shape) {
+  if(!shape.size) {
+    return allocate_list(0);
+  }
+  rt_list_t strides = allocate_list(shape.size);
+  int i;
+  for (i = 0; i < shape.size; ++i) {
+    strides.data[i] = 1;
+  }
+  for (i = strides.size - 2; i >= 0; --i) {
+    strides.data[i] *= strides.data[i + 1] * shape.data[i + 1];
+  }
+  return strides;
+}
