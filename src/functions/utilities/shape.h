@@ -34,6 +34,10 @@ int find_num_in_shape(rt_list_t s, int num);
 int calc_shape_size(rt_list_t shape);
 
 int shape_product_of(const rt_variable_t *v, unsigned shape_begin, unsigned shape_end);
+
+/// Helper for getting strides of C contiguous memory arrangement.
+rt_list_t calc_contiguous_strides(rt_list_t shape);
+
 /// @}
 
 #endif // H_SHAPE_H_171218133433_
