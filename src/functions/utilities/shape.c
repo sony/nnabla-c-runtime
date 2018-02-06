@@ -58,13 +58,8 @@ int find_num_in_shape(rt_list_t shape, int num) {
   return -1;
 }
 
-static inline int* shape_data_of(rt_list_t shape) {
-  return shape.data;
-}
-
 int shape_product_of(const rt_variable_t *v, unsigned shape_begin, unsigned shape_end) {
-  const rt_list_t shape = v->shape;
-  return int_product(shape_data_of(shape), shape_begin, shape_end);
+  return int_product(v->shape.data, shape_begin, shape_end);
 }
 
 rt_list_t calc_contiguous_strides(rt_list_t shape) {
