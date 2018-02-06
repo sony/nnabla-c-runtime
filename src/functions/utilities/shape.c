@@ -63,6 +63,6 @@ static inline int* shape_data_of(rt_list_t shape) {
 }
 
 int shape_product_of(const rt_variable_t *v, unsigned shape_begin, unsigned shape_end) {
-  const rt_list_t shape = shape_of(v);
+  const rt_list_t shape = v->shape;
   return int_product(shape_data_of(shape), shape_begin, shape_end);
 }
