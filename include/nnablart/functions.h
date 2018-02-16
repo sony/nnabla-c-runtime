@@ -740,6 +740,12 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f);
 rt_function_error_t free_batch_matmul_local_context(rt_function_t *f);
 rt_function_error_t exec_batch_matmul(rt_function_t *f);
 
+// Round
+
+rt_function_error_t allocate_round_local_context(rt_function_t *f);
+rt_function_error_t free_round_local_context(rt_function_t *f);
+rt_function_error_t exec_round(rt_function_t *f);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
 ////////////////////////////////////////////////////////////////////////////////

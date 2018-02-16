@@ -21,7 +21,7 @@ def generate(string, info):
                 '  nn_list_t inputs;        ///< Common: List of input variables.')
             defines.append(
                 '  nn_list_t outputs;       ///< Common: List of output variables.')
-            if 'argument' in func:
+            if 'argument' in func and len(func['argument']) > 0:
                 defines.append('  // End of common part.')
                 for an, arg in func['argument'].items():
                     if arg['Type'] == 'bool':

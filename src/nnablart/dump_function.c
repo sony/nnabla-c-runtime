@@ -97,6 +97,7 @@ static const char *const typenames[] = {
     "Log",
     "Identity",
     "BatchMatmul",
+    "Round",
     "Concatenate",
     "Split",
     "Stack",
@@ -562,6 +563,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_batch_matmul_t *f = (nn_function_batch_matmul_t *)func;
     printf("NNB: Function argument transpose_a: %d\n", f->transpose_a);
     printf("NNB: Function argument transpose_b: %d\n", f->transpose_b);
+  } break;
+  case NN_FUNCTION_ROUND: { // Round
   } break;
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     nn_function_concatenate_t *f = (nn_function_concatenate_t *)func;

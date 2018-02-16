@@ -10,7 +10,7 @@ def generate(string, info):
         for fn, func in cat.items():
             defines.append('// {}'.format(fn))
             name = func['snakecase_name']
-            if 'argument' in func:
+            if 'argument' in func and len(func['argument']) > 0:
 
                 for an, arg in func['argument'].items():
                     if 'TypeSelection' in arg:

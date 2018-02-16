@@ -1135,6 +1135,17 @@
                 "output": {
                     "y": {}
                 }
+            },
+            "Round": {
+                "name": "Round",
+                "snakecase_name": "round",
+                "input": {
+                    "x": {}
+                },
+                "argument": {},
+                "output": {
+                    "y": {}
+                }
             }
         },
         "Array Manipulation": {
@@ -2160,5 +2171,5 @@
             }
         }
     },
-    "version": 22185117
+    "version": 106994275
 }

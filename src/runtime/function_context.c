@@ -664,6 +664,11 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
     allocate_batch_matmul_local_context(&func.func);
   } break;
 
+  case NN_FUNCTION_ROUND: { // Round
+    func.exec_func = exec_round;
+    allocate_round_local_context(&func.func);
+  } break;
+
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     func.exec_func = exec_concatenate;
     nn_function_concatenate_t *f = (nn_function_concatenate_t *)function;
@@ -1458,6 +1463,11 @@ void free_function_context(rt_context_t *c, rt_function_context_t func) {
 
   case NN_FUNCTION_BATCH_MATMUL: { // BatchMatmul
     free_batch_matmul_local_context(&func.func);
+    free(func.func.local_context);
+  } break;
+
+  case NN_FUNCTION_ROUND: { // Round
+    free_round_local_context(&func.func);
     free(func.func.local_context);
   } break;
 

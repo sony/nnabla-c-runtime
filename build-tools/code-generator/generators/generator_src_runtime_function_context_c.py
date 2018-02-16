@@ -6,7 +6,7 @@ def generate(string, info):
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
             l1.append('      func.exec_func = exec_{};'.format(
                 func['snakecase_name']))
-            if 'argument' in func:
+            if 'argument' in func and len(func['argument']) > 0:
                 l1.append(
                     '      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snakecase_name']))
                 l1.append(

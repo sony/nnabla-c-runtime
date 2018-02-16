@@ -24,7 +24,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION 7c15b7731310f99e9a71eb5f3c4bb794
+#define NN_BINARY_FORMAT_VERSION 5cb098ef5d0346b2f3d0d894da1da1c5
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
@@ -149,6 +149,7 @@ typedef enum {
   NN_FUNCTION_LOG,                        ///< Log
   NN_FUNCTION_IDENTITY,                   ///< Identity
   NN_FUNCTION_BATCH_MATMUL,               ///< BatchMatmul
+  NN_FUNCTION_ROUND,                      ///< Round
   NN_FUNCTION_CONCATENATE,                ///< Concatenate
   NN_FUNCTION_SPLIT,                      ///< Split
   NN_FUNCTION_STACK,                      ///< Stack
@@ -1037,6 +1038,16 @@ typedef struct {
   uint8_t transpose_a;
   uint8_t transpose_b;
 } nn_function_batch_matmul_t;
+
+/// @}
+
+/// @brief Round function.
+/// @{
+typedef struct {
+  nn_function_type_t type; ///< Common: type of function.
+  nn_list_t inputs;        ///< Common: List of input variables.
+  nn_list_t outputs;       ///< Common: List of output variables.
+} nn_function_round_t;
 
 /// @}
 
