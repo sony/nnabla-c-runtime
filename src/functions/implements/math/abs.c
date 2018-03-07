@@ -62,7 +62,7 @@ rt_function_error_t exec_abs(rt_function_t *f) {
 
   int i; // Iterator
   for (i = 0; i < c->output_size; i++) {
-    *(c->output + i) = fabs(*(c->input + i));
+    c->output[i] = fabs(c->input[i]); 
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
