@@ -16,7 +16,6 @@
 
 #include "../../utilities.h"
 
-#include <assert.h>
 #include <math.h>
 
 typedef struct {
@@ -64,7 +63,7 @@ rt_function_error_t exec_relu(rt_function_t *f) {
   int i; // Iterator
   for (i = 0; i < c->output_size; i++) {
     float x = *(c->input + i);
-    *(c->output + i) = (x > 0.0f) ? x : 0.0f;
+    c->output[i] = (x > 0.0f) ? x : 0.0f;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
