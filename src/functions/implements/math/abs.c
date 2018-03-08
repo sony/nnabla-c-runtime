@@ -23,7 +23,7 @@ typedef struct {
   float *output;
   int input_size;
   int output_size;
-} abs_local_context_t;
+} abs_private_t;
 
 // Abs
 rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
@@ -34,19 +34,19 @@ rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  abs_local_context_t *c = malloc(sizeof(abs_local_context_t));
-  if (c == 0) {
+  abs_private_t *private = malloc(sizeof(abs_private_t));
+  if (private == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  f->local_context = (void *)c;
-  c->input = f->inputs[0]->data;
-  c->input_size = calc_shape_size(f->inputs[0]->shape);
+  f->local_context = (void *)private;
+  private->input = f->inputs[0]->data;
+  private->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  c->output = f->outputs[0]->data;
-  c->output_size = calc_shape_size(f->outputs[0]->shape);
+  private->output = f->outputs[0]->data;
+  private->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (c->input_size != c->output_size) {
+  if (private->input_size != private->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   return RT_FUNCTION_ERROR_NOERROR;
@@ -58,11 +58,11 @@ rt_function_error_t free_abs_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_abs(rt_function_t *f) {
-  abs_local_context_t *c = (abs_local_context_t *)(f->local_context);
+  abs_private_t *private = (abs_private_t *)(f->local_context);
 
   int i; // Iterator
-  for (i = 0; i < c->output_size; i++) {
-    c->output[i] = fabs(c->input[i]); 
+  for (i = 0; i < private->output_size; i++) {
+    private->output[i] = fabs(private->input[i]); 
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
