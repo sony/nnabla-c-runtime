@@ -39,7 +39,6 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  f->local_context = (void *)private;
   private->input = f->inputs[0]->data;
   private->input_size = calc_shape_size(f->inputs[0]->shape);
 
@@ -49,16 +48,18 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
   if (private->input_size != private->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+  ((relu_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_relu_local_context(rt_function_t *f) {
-  free(f->local_context);
+  free(((relu_local_context_t *)(f->local_context))->private);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_relu(rt_function_t *f) {
-  relu_private_t *private = (relu_private_t *)(f->local_context);
+  relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
+  relu_private_t *private = (relu_private_t *)(context->private);
 
   int i; // Iterator
   for (i = 0; i < private->output_size; i++) {
