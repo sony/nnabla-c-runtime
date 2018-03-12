@@ -23,31 +23,31 @@ typedef struct {
   int input_n_kernel_size_diff;
   int x_stride;
   int y_stride;
- } max_pooling_private_t;
+ } sum_pooling_private_t;
 
-rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
-  max_pooling_local_context_t *context = (max_pooling_local_context_t *)(f->local_context);
-  max_pooling_private_t *private = malloc(sizeof(max_pooling_private_t));
+rt_function_error_t allocate_sum_pooling_local_context(rt_function_t *f) {
+  sum_pooling_local_context_t *context = (sum_pooling_local_context_t *)(f->local_context);
+  sum_pooling_private_t *private = malloc(sizeof(sum_pooling_private_t));
   if (private == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
   private->input_shape = clone_list(f->inputs[0]->shape);
   private->output_shape = clone_list(f->outputs[0]->shape);
   private->input_n_kernel_size_diff = private->input_shape.size - context->kernel.size;
-  if(context->stride.size == 0) {
+  if (context->stride.size == 0) {
     context->stride = clone_list(context->kernel);
   } else {
-    if(context->kernel.size != context->stride.size) {
+    if (context->kernel.size != context->stride.size) {
       return RT_FUNCTION_ERROR_INVALID_SHAPE;
     }
-    if(context->kernel.size > private->input_shape.size) {
+    if (context->kernel.size > private->input_shape.size) {
       return RT_FUNCTION_ERROR_INVALID_SHAPE;
     }
   }
-  if(context->kernel.size != 2) {
+  if (context->kernel.size != 2) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  if(context->kernel.size != context->pad.size) {
+  if (context->kernel.size != context->pad.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
 
@@ -84,13 +84,13 @@ rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
   free_list(input_strides);
   free_list(output_strides);
 
-  ((max_pooling_local_context_t *)(f->local_context))->private = (void *)private;
+  ((sum_pooling_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t free_max_pooling_local_context(rt_function_t *f) {
-  max_pooling_private_t *private =
-      (max_pooling_private_t *)(((max_pooling_local_context_t *)(f->local_context))
+rt_function_error_t free_sum_pooling_local_context(rt_function_t *f) {
+  sum_pooling_private_t *private =
+      (sum_pooling_private_t *)(((sum_pooling_local_context_t *)(f->local_context))
                                ->private);
   free_list(private->input_shape);
   free_list(private->output_shape);
@@ -98,10 +98,10 @@ rt_function_error_t free_max_pooling_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t exec_max_pooling(rt_function_t *f) {
-  max_pooling_local_context_t *context = (max_pooling_local_context_t *)(f->local_context);
-  max_pooling_private_t *private =
-      (max_pooling_private_t *)(((max_pooling_local_context_t *)(f->local_context))
+rt_function_error_t exec_sum_pooling(rt_function_t *f) {
+  sum_pooling_local_context_t *context = (sum_pooling_local_context_t *)(f->local_context);
+  sum_pooling_private_t *private =
+      (sum_pooling_private_t *)(((sum_pooling_local_context_t *)(f->local_context))
                                ->private);
   const float *x = (float *)(f->inputs[0]->data);
   float *y = (float *)(f->outputs[0]->data);
@@ -117,11 +117,11 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
   const int wpad = context->pad.data[1];
   const int n_map = calc_shape_size(f->inputs[0]->shape) / private->x_stride;
   int n;
-  for (n = 0; n < n_map; ++n) {
+  for (n = 0; n < n_map; n++) {
     int iy;
-    for(iy = 0; iy < hy; ++iy) {
+    for (iy = 0; iy < hy; iy++) {
       int jy;
-      for(jy = 0; jy < wy; ++jy) {
+      for (jy = 0; jy < wy; jy++) {
         int hstart = calc_start_value(iy, hstride, hpad);
         int wstart = calc_start_value(jy, wstride, wpad);
         int hend = calc_end_value(hstart, hkernel, hx, hpad);
@@ -129,19 +129,15 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
         hstart = fmaxf(hstart, 0);
         wstart = fmaxf(wstart, 0);
         int k = iy * wy + jy;
-        int l = hstart * wx + wstart;
-        float max_val = x[l];
+        float sum_val = 0.0f;
         int ix;
-        for (ix = hstart; ix < hend; ++ix) {
+        for (ix = hstart; ix < hend; ix++) {
           int jx;
-          for (jx = ix * wx + wstart; jx < ix * wx + wend; ++jx) {
-            float val = x[jx];
-            if (max_val < val) {
-              max_val = val;
-            }
+          for (jx = ix * wx + wstart; jx < ix * wx + wend; jx++) {
+            sum_val += x[jx];
           }
         }
-        y[k] = max_val;
+        y[k] = sum_val;
       }
     }
     x += private->x_stride;
