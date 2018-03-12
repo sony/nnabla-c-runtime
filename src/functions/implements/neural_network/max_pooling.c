@@ -127,7 +127,7 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
         int hend = fminf(hstart + hkernel, hx + hpad);
         int wend = fminf(wstart + wkernel, wx + wpad);
         hstart = fmaxf(hstart, 0);
-        wstart = fmax(wstart, 0);
+        wstart = fmaxf(wstart, 0);
         hend = fminf(hend, hx);
         wend = fminf(wend, wx);
         int k = iy * wy + jy;
