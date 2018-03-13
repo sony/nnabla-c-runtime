@@ -22,6 +22,7 @@ typedef struct {
   rt_list_t stride; ///< Original type is [Shape]
   uint8_t ignore_border;
   rt_list_t pad; ///< Original type is [Shape]
+  uint8_t including_pad;
   void *private;
 } pooling_context_t;
 
@@ -35,6 +36,8 @@ typedef struct {
 
 typedef float (*exec_pooling_func_t)(int, int, int, int, int, const float*);
 
+rt_function_error_t allocate_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private);
+rt_function_error_t free_pooling(pooling_private_t *private);
 rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private, exec_pooling_func_t exec);
 
 /// Calculate max value.
