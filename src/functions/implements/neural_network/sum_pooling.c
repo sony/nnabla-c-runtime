@@ -17,17 +17,9 @@
 
 #include <math.h>
 
-typedef struct {
-  rt_list_t input_shape;
-  rt_list_t output_shape;
-  int input_n_kernel_size_diff;
-  int x_stride;
-  int y_stride;
- } sum_pooling_private_t;
-
 rt_function_error_t allocate_sum_pooling_local_context(rt_function_t *f) {
   sum_pooling_local_context_t *context = (sum_pooling_local_context_t *)(f->local_context);
-  sum_pooling_private_t *private = malloc(sizeof(sum_pooling_private_t));
+  pooling_private_t *private = malloc(sizeof(pooling_private_t));
   if (private == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -89,8 +81,8 @@ rt_function_error_t allocate_sum_pooling_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_sum_pooling_local_context(rt_function_t *f) {
-  sum_pooling_private_t *private =
-      (sum_pooling_private_t *)(((sum_pooling_local_context_t *)(f->local_context))
+  pooling_private_t *private =
+      (pooling_private_t *)(((sum_pooling_local_context_t *)(f->local_context))
                                ->private);
   free_list(private->input_shape);
   free_list(private->output_shape);
@@ -100,48 +92,8 @@ rt_function_error_t free_sum_pooling_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_sum_pooling(rt_function_t *f) {
   sum_pooling_local_context_t *context = (sum_pooling_local_context_t *)(f->local_context);
-  sum_pooling_private_t *private =
-      (sum_pooling_private_t *)(((sum_pooling_local_context_t *)(f->local_context))
+  pooling_private_t *private =
+      (pooling_private_t *)(((sum_pooling_local_context_t *)(f->local_context))
                                ->private);
-  const float *x = (float *)(f->inputs[0]->data);
-  float *y = (float *)(f->outputs[0]->data);
-  const int hx = private->input_shape.data[private->input_n_kernel_size_diff + 0];
-  const int wx = private->input_shape.data[private->input_n_kernel_size_diff + 1];
-  const int hy = private->output_shape.data[private->input_n_kernel_size_diff + 0];
-  const int wy = private->output_shape.data[private->input_n_kernel_size_diff + 1];
-  const int hkernel = context->kernel.data[0];
-  const int wkernel = context->kernel.data[1];
-  const int hstride = context->stride.data[0];
-  const int wstride = context->stride.data[1];
-  const int hpad = context->pad.data[0];
-  const int wpad = context->pad.data[1];
-  const int n_map = calc_shape_size(f->inputs[0]->shape) / private->x_stride;
-  int n;
-  for (n = 0; n < n_map; n++) {
-    int iy;
-    for (iy = 0; iy < hy; iy++) {
-      int jy;
-      for (jy = 0; jy < wy; jy++) {
-        int hstart = calc_start_value(iy, hstride, hpad);
-        int wstart = calc_start_value(jy, wstride, wpad);
-        int hend = calc_end_value(hstart, hkernel, hx, hpad);
-        int wend = calc_end_value(wstart, wkernel, wx, wpad);
-        hstart = fmaxf(hstart, 0);
-        wstart = fmaxf(wstart, 0);
-        int k = iy * wy + jy;
-        float sum_val = 0.0f;
-        int ix;
-        for (ix = hstart; ix < hend; ix++) {
-          int jx;
-          for (jx = ix * wx + wstart; jx < ix * wx + wend; jx++) {
-            sum_val += x[jx];
-          }
-        }
-        y[k] = sum_val;
-      }
-    }
-    x += private->x_stride;
-    y += private->y_stride;
-  }
-  return RT_FUNCTION_ERROR_NOERROR;
+  return exec_pooling(f, (pooling_context_t*)context, private, calc_sum);
 }

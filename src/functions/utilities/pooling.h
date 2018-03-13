@@ -17,10 +17,30 @@
 
 #include <nnablart/functions.h>
 
-/// Calculate start value.
-int calc_start_value(int iy, int stride, int pad);
+typedef struct {
+  rt_list_t kernel; ///< Original type is [Shape]
+  rt_list_t stride; ///< Original type is [Shape]
+  uint8_t ignore_border;
+  rt_list_t pad; ///< Original type is [Shape]
+  void *private;
+} pooling_context_t;
 
-/// Calculate end value.
-int calc_end_value(int start, int kernel, int x, int pad);
+typedef struct {
+  rt_list_t input_shape;
+  rt_list_t output_shape;
+  int input_n_kernel_size_diff;
+  int x_stride;
+  int y_stride;
+} pooling_private_t;
+
+typedef float (*exec_pooling_func_t)(int, int, int, int, int, const float*);
+
+rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private, exec_pooling_func_t exec);
+
+/// Calculate max value.
+float calc_max(int hstart, int hend, int wstart, int wend, int wx, const float *x);
+
+/// Calculate sum value.
+float calc_sum(int hstart, int hend, int wstart, int wend, int wx, const float *x);
 
 #endif // H_POOLING_H_
