@@ -24,6 +24,6 @@ add_library(nnablart_functions STATIC
   implements/activation/sigmoid.c
   implements/activation/tanh.c
   implements/activation/softmax.c
-  implements/activation/binary_tanh.c
+  implements/quantization/binary_tanh.c
   implements/math/abs.c
   implements/unimplemented.c)
