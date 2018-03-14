@@ -43,7 +43,7 @@ rt_function_error_t allocate_prelu_local_context(rt_function_t *f)
   rt_variable_t output = *(f->outputs[0]);
   
   rt_variable_t inputs[] = {input, private->weight_param};
-  private->calc_context = init_vector_calc_context(2, inputs, output);
+  private->calc_context = init_vector_calc_context(f->num_of_inputs, inputs, output);
   ((prelu_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -60,7 +60,6 @@ rt_function_error_t free_prelu_local_context(rt_function_t *f)
 
 static float calc_prelu(int num_of_inputs, float* inputs)
 {
-  assert(num_of_inputs == 2);
   if(inputs[0] > 0) {
     return inputs[0];
   }
@@ -76,6 +75,6 @@ rt_function_error_t exec_prelu(rt_function_t *f)
   rt_variable_t output = *(f->outputs[0]);
   
   rt_variable_t inputs[] = {input, private->weight_param};
-  vector_calc(private->calc_context, 2, inputs, output, calc_prelu);
+  vector_calc(private->calc_context, f->num_of_inputs, inputs, output, calc_prelu);
   return RT_FUNCTION_ERROR_NOERROR;
 }
