@@ -24,8 +24,7 @@ typedef struct {
 } binary_tanh_private_context_t;
 
 // BinaryTanh
-rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f)
-{
+rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }
@@ -47,21 +46,18 @@ rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f)
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t free_binary_tanh_local_context(rt_function_t *f)
-{
+rt_function_error_t free_binary_tanh_local_context(rt_function_t *f) {
   free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t exec_binary_tanh(rt_function_t *f)
-{
+rt_function_error_t exec_binary_tanh(rt_function_t *f) {
   binary_tanh_private_context_t *private = (binary_tanh_private_context_t *)(f->local_context);
-  
-  int i;
-  for(i = 0; i < private->input_size; i++) {
+  int i; // Iterator
+  for (i = 0; i < private->input_size; i++) {
     float x = (private->input[i] + 1) / 2;
-    if(x < 0) { x = 0; }
-    if(x > 1) { x = 1; }
+    if (x < 0) { x = 0; }
+    if (x > 1) { x = 1; }
     private->output[i] = roundf(x) * 2 - 1;
   }
   return RT_FUNCTION_ERROR_NOERROR;
