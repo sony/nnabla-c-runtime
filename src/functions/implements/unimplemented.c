@@ -1337,20 +1337,6 @@ rt_function_error_t exec_binary_sigmoid(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// BinaryTanh
-
-rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_binary_tanh_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_binary_tanh(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // BinaryConnectAffine
 rt_function_error_t
 allocate_binary_connect_affine_local_context(rt_function_t *f) {
