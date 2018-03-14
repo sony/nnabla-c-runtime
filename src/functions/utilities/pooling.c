@@ -98,6 +98,7 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, p
   const int hpad = context->pad.data[0];
   const int wpad = context->pad.data[1];
   const int n_map = calc_shape_size(f->inputs[0]->shape) / private->x_stride;
+  const uint8_t including_pad = context->including_pad;
   int n;
   for (n = 0; n < n_map; n++) {
     int iy;
@@ -108,12 +109,13 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, p
         int wstart = jy * wstride - wpad;
         int hend = fminf(hstart + hkernel, hx + hpad);
         int wend = fminf(wstart + wkernel, wx + wpad);
+        int pool_size = (hend - hstart) * (wend - wstart);
         hstart = fmaxf(hstart, 0);
         wstart = fmaxf(wstart, 0);
         hend = fminf(hend, hx);
         wend = fminf(wend, wx);
         int k = iy * wy + jy;
-        float val = exec(hstart, hend, wstart, wend, wx, x);
+        float val = exec(hstart, hend, wstart, wend, wx, x, pool_size, including_pad);
         y[k] = val;
       }
     }
@@ -123,7 +125,7 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, p
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-float calc_max(int hstart, int hend, int wstart, int wend, int wx, const float *x){
+float calc_max(int hstart, int hend, int wstart, int wend, int wx, const float *x, int pool_size, uint8_t including_pad){
   int l = hstart * wx + wstart;
   float max_val = x[l];
   int ix;
@@ -139,7 +141,7 @@ float calc_max(int hstart, int hend, int wstart, int wend, int wx, const float *
   return max_val;
 }
 
-float calc_sum(int hstart, int hend, int wstart, int wend, int wx, const float *x){
+float calc_sum(int hstart, int hend, int wstart, int wend, int wx, const float *x, int pool_size, uint8_t including_pad){
   float sum_val = 0.0f;
   int ix;
   for (ix = hstart; ix < hend; ix++) {
@@ -149,4 +151,21 @@ float calc_sum(int hstart, int hend, int wstart, int wend, int wx, const float *
     }
   }
   return sum_val;
+}
+
+float calc_average(int hstart, int hend, int wstart, int wend, int wx, const float *x, int pool_size, uint8_t including_pad){
+  float val = 0.0f;
+  float average_val = 0.0f;
+  if (!including_pad) {
+    pool_size = (hend - hstart) * (wend - wstart);
+  }
+  int ix;
+  for (ix = hstart; ix < hend; ix++) {
+    int jx;
+    for (jx = ix * wx + wstart; jx < ix * wx + wend; jx++) {
+      val += x[jx];
+    }
+  }
+  average_val = val / pool_size;
+  return average_val;
 }
