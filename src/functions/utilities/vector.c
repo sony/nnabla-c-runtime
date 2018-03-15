@@ -49,11 +49,9 @@ vector_calc_context_t init_vector_calc_context(int num_of_inputs,
   // prepare all shapes.
   c.input_shapes = malloc(sizeof(rt_list_t) * c.num_of_inputs);
   for (i = 0; i < c.num_of_inputs; i++) {
-    c.input_shapes[i].size = calc_shape_size(inputs[i].shape);
-    c.input_shapes[i].data = inputs[i].data;
+    c.input_shapes[i] = inputs[i].shape;
   }
-  c.output_shape.size = calc_shape_size(output.shape);
-  c.output_shape.data = output.data;
+  c.output_shape = output.shape;
 
   // prepare position variables.
   c.position = clone_list(c.shape);
