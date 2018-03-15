@@ -14,6 +14,7 @@ add_library(nnablart_functions STATIC
   utilities/shape.c
   utilities/vector.c
   utilities/pooling.c
+  utilities/arithmetic.c
 
   # Functions
   implements/neural_network/affine/affine.c
@@ -25,4 +26,5 @@ add_library(nnablart_functions STATIC
   implements/activation/tanh.c
   implements/activation/softmax.c
   implements/math/abs.c
+  implements/arithmetic/add_scalar.c
   implements/unimplemented.c)
