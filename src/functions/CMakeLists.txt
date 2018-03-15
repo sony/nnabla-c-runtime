@@ -25,4 +25,5 @@ add_library(nnablart_functions STATIC
   implements/activation/tanh.c
   implements/activation/softmax.c
   implements/math/abs.c
+  implements/math/identity.c
   implements/unimplemented.c)
