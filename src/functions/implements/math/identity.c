@@ -14,7 +14,6 @@
 
 #include <nnablart/functions.h>
 #include "../../utilities.h"
-#include <math.h>
 
 typedef struct {
   float *input;
