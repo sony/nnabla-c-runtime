@@ -1296,17 +1296,16 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
 
-// BinaryTanh
-
-rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f) {
+// BinarySigmoid
+rt_function_error_t allocate_binary_sigmoid_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t free_binary_tanh_local_context(rt_function_t *f) {
+rt_function_error_t free_binary_sigmoid_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t exec_binary_tanh(rt_function_t *f) {
+rt_function_error_t exec_binary_sigmoid(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
