@@ -14,6 +14,7 @@ add_library(nnablart_functions STATIC
   utilities/shape.c
   utilities/vector.c
   utilities/pooling.c
+  utilities/arithmetic.c
 
   # Functions
   implements/neural_network/affine/affine.c
@@ -29,4 +30,5 @@ add_library(nnablart_functions STATIC
   implements/math/abs.c
   implements/math/identity.c
   implements/quantization/binary_sigmoid.c
+  implements/arithmetic/pow_scalar.c
   implements/unimplemented.c)
