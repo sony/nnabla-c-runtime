@@ -15,10 +15,6 @@
 #include "arithmetic.h"
 #include "shape.h"
 
-float calc_add(float v1, float v2) {
-  return v1 + v2;
-}
-
 // Common algorism for arithmetic calculation between vector and scalar value.
 void calc_scalar(rt_function_t *f, float value, float(*calc_func)(float, float)) {
   int out_size = calc_shape_size(f->outputs[0]->shape);

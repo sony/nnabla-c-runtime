@@ -15,12 +15,9 @@
 #include <nnablart/functions.h>
 #include "../../utilities.h"
 
-typedef struct {
-  float *input;
-  int input_size;
-  float *output;
-  int output_size;
-} add_scalar_private_t;
+static float calc_add(float v1, float v2) {
+  return v1 + v2;
+}
 
 rt_function_error_t allocate_add_scalar_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
@@ -29,23 +26,15 @@ rt_function_error_t allocate_add_scalar_local_context(rt_function_t *f) {
   if (f->num_of_outputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
-  add_scalar_private_t *private = malloc(sizeof(add_scalar_private_t));
-  if (private == 0) {
-    return RT_FUNCTION_ERROR_MALLOC;
-  }
-  private->input = f->inputs[0]->data;
-  private->input_size = calc_shape_size(f->inputs[0]->shape);
-  private->output = f->outputs[0]->data;
-  private->output_size = calc_shape_size(f->outputs[0]->shape);
-  if (private->input_size != private->output_size) {
+  int input_size = calc_shape_size(f->inputs[0]->shape);
+  int output_size = calc_shape_size(f->outputs[0]->shape);
+  if (input_size != output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((add_scalar_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_add_scalar_local_context(rt_function_t *f) {
-  free(((add_scalar_local_context_t *)(f->local_context))->private);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

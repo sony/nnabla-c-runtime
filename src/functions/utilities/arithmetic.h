@@ -17,7 +17,6 @@
 
 #include <nnablart/functions.h>
 
-float calc_add(float v1, float v2);
 void calc_scalar(rt_function_t *f, float value, float(*calc_func)(float, float));
 
 #endif // H_ARITHMETIC_H_
