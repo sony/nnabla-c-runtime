@@ -15,8 +15,6 @@
 #include <nnablart/functions.h>
 #include "../../utilities.h"
 
-#include <math.h>
-
 rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f) {
   average_pooling_local_context_t *context = (average_pooling_local_context_t *)(f->local_context);
   pooling_private_t *private = malloc(sizeof(pooling_private_t));
