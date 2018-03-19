@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <assert.h>
 #include <math.h>
 #include "pooling.h"
 #include "shape.h"
