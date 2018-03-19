@@ -472,19 +472,6 @@ rt_function_error_t exec_r_div_scalar(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// RPowScalar
-rt_function_error_t allocate_r_pow_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_r_pow_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_r_pow_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
 ////////////////////////////////////////////////////////////////////////////////
