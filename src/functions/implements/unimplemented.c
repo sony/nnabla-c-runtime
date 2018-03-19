@@ -58,21 +58,7 @@ rt_function_error_t exec_deconvolution(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// AveragePooling
-rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_average_pooling_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_average_pooling(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // GlobalAveragePooling
-
 rt_function_error_t
 allocate_global_average_pooling_local_context(rt_function_t *f)
 {
@@ -88,7 +74,6 @@ rt_function_error_t exec_global_average_pooling(rt_function_t *f)
 {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-
 
 // Unpooling
 rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
