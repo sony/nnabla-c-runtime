@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <math.h>
 #include <nnablart/functions.h>
 #include "../../utilities.h"
 
-static float calc_pow(float v1, float v2) {
-    return pow(v1, v2);
-}
-
+// PowScalar
 rt_function_error_t allocate_pow_scalar_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
