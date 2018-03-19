@@ -27,23 +27,38 @@ typedef struct {
 } pooling_context_t;
 
 typedef struct {
+  int hstart;
+  int hend;
+  int wstart;
+  int wend;
+  int wx;
+  int pool_size;
+  const float *x;
+  uint8_t including_pad;
+} pooling_calc_context_t;
+
+typedef struct {
   rt_list_t input_shape;
   rt_list_t output_shape;
   int input_n_kernel_size_diff;
   int x_stride;
   int y_stride;
+  pooling_calc_context_t calc_context;
 } pooling_private_t;
 
-typedef float (*exec_pooling_func_t)(int, int, int, int, int, const float*);
+typedef float (*exec_pooling_func_t)(pooling_calc_context_t);
 
 rt_function_error_t allocate_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private);
 rt_function_error_t free_pooling(pooling_private_t *private);
 rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private, exec_pooling_func_t exec);
 
 /// Calculate max value.
-float calc_max(int hstart, int hend, int wstart, int wend, int wx, const float *x);
+float calc_max(pooling_calc_context_t calc);
 
 /// Calculate sum value.
-float calc_sum(int hstart, int hend, int wstart, int wend, int wx, const float *x);
+float calc_sum(pooling_calc_context_t calc);
+
+/// Calculate average value.
+float calc_average(pooling_calc_context_t calc);
 
 #endif // H_POOLING_H_
