@@ -7,7 +7,7 @@ def generate(string, info):
             typenames.append('  "{}",'.format(fn))
             dump.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
-            if 'argument' in func:
+            if 'argument' in func and len(func['argument']) > 0:
                 dump.append(
                     '      nn_function_{0}_t *f = (nn_function_{0}_t*)func;'.format(func['snakecase_name']))
                 for an, arg in func['argument'].items():

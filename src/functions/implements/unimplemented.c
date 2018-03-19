@@ -90,19 +90,6 @@ rt_function_error_t exec_global_average_pooling(rt_function_t *f)
 }
 
 
-// SumPooling
-rt_function_error_t allocate_sum_pooling_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_sum_pooling_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_sum_pooling(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // Unpooling
 rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
@@ -221,19 +208,6 @@ rt_function_error_t free_celu_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_celu(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// PReLU
-rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_prelu_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_prelu(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
@@ -878,20 +852,6 @@ rt_function_error_t exec_constant(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// Abs
-
-rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_abs_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_abs(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // Exp
 
 rt_function_error_t allocate_exp_local_context(rt_function_t *f) {
@@ -917,20 +877,6 @@ rt_function_error_t free_log_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_log(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// Identity
-
-rt_function_error_t allocate_identity_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_identity_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_identity(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
@@ -960,7 +906,6 @@ rt_function_error_t free_round_local_context(rt_function_t *f) {
 rt_function_error_t exec_round(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
@@ -1368,34 +1313,6 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
-
-// BinarySigmoid
-
-rt_function_error_t allocate_binary_sigmoid_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_binary_sigmoid_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_binary_sigmoid(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// BinaryTanh
-
-rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_binary_tanh_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_binary_tanh(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 // BinaryConnectAffine
 rt_function_error_t
