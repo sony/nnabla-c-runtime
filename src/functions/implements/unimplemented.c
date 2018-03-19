@@ -58,16 +58,20 @@ rt_function_error_t exec_deconvolution(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// AveragePooling
-rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f) {
+// GlobalAveragePooling
+rt_function_error_t
+allocate_global_average_pooling_local_context(rt_function_t *f)
+{
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t free_average_pooling_local_context(rt_function_t *f) {
+rt_function_error_t free_global_average_pooling_local_context(rt_function_t *f)
+{
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t exec_average_pooling(rt_function_t *f) {
+rt_function_error_t exec_global_average_pooling(rt_function_t *f)
+{
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
@@ -518,6 +522,7 @@ rt_function_error_t exec_maximum2(rt_function_t *f) {
 }
 
 // MinimumScalar
+
 rt_function_error_t allocate_minimum_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
@@ -527,10 +532,9 @@ rt_function_error_t free_minimum_scalar_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_minimum_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 // MaximumScalar
+
 rt_function_error_t allocate_maximum_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
@@ -862,6 +866,7 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
 }
 
 // Round
+
 rt_function_error_t allocate_round_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
@@ -873,8 +878,6 @@ rt_function_error_t free_round_local_context(rt_function_t *f) {
 rt_function_error_t exec_round(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
