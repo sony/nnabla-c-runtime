@@ -543,19 +543,6 @@ rt_function_error_t exec_minimum_scalar(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// MaximumScalar
-rt_function_error_t allocate_maximum_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_maximum_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_maximum_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // LogicalAnd
 
 rt_function_error_t allocate_logical_and_local_context(rt_function_t *f) {
