@@ -15,10 +15,7 @@
 #include <nnablart/functions.h>
 #include "../../utilities.h"
 
-static float select_min(float v1, float v2) {
-  return (v1 < v2) ? v1 : v2;
-}
-
+// MinimumScalar
 rt_function_error_t allocate_minimum_scalar_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
