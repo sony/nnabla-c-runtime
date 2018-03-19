@@ -156,6 +156,13 @@ rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f);
 rt_function_error_t free_average_pooling_local_context(rt_function_t *f);
 rt_function_error_t exec_average_pooling(rt_function_t *f);
 
+// GlobalAveragePooling
+
+rt_function_error_t
+allocate_global_average_pooling_local_context(rt_function_t *f);
+rt_function_error_t free_global_average_pooling_local_context(rt_function_t *f);
+rt_function_error_t exec_global_average_pooling(rt_function_t *f);
+
 // SumPooling
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]
@@ -739,6 +746,12 @@ typedef struct {
 rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f);
 rt_function_error_t free_batch_matmul_local_context(rt_function_t *f);
 rt_function_error_t exec_batch_matmul(rt_function_t *f);
+
+// Round
+
+rt_function_error_t allocate_round_local_context(rt_function_t *f);
+rt_function_error_t free_round_local_context(rt_function_t *f);
+rt_function_error_t exec_round(rt_function_t *f);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation

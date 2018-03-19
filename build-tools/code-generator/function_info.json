@@ -192,6 +192,16 @@
                     "y": {}
                 }
             },
+            "GlobalAveragePooling": {
+                "name": "GlobalAveragePooling",
+                "snakecase_name": "global_average_pooling",
+                "input": {
+                    "x": {}
+                },
+                "output": {
+                    "y": {}
+                }
+            },
             "SumPooling": {
                 "name": "SumPooling",
                 "snakecase_name": "sum_pooling",
@@ -1131,6 +1141,16 @@
                     "transpose_b": {
                         "Type": "bool"
                     }
+                },
+                "output": {
+                    "y": {}
+                }
+            },
+            "Round": {
+                "name": "Round",
+                "snakecase_name": "round",
+                "input": {
+                    "x": {}
                 },
                 "output": {
                     "y": {}
@@ -2160,5 +2180,5 @@
             }
         }
     },
-    "version": 22185117
+    "version": 10434730
 }

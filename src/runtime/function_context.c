@@ -141,6 +141,11 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
     allocate_average_pooling_local_context(&func.func);
   } break;
 
+  case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
+    func.exec_func = exec_global_average_pooling;
+    allocate_global_average_pooling_local_context(&func.func);
+  } break;
+
   case NN_FUNCTION_SUM_POOLING: { // SumPooling
     func.exec_func = exec_sum_pooling;
     nn_function_sum_pooling_t *f = (nn_function_sum_pooling_t *)function;
@@ -664,6 +669,11 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
     allocate_batch_matmul_local_context(&func.func);
   } break;
 
+  case NN_FUNCTION_ROUND: { // Round
+    func.exec_func = exec_round;
+    allocate_round_local_context(&func.func);
+  } break;
+
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     func.exec_func = exec_concatenate;
     nn_function_concatenate_t *f = (nn_function_concatenate_t *)function;
@@ -1163,6 +1173,10 @@ void free_function_context(rt_context_t *c, rt_function_context_t func) {
     free(func.func.local_context);
   } break;
 
+  case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
+    free_global_average_pooling_local_context(&func.func);
+  } break;
+
   case NN_FUNCTION_SUM_POOLING: { // SumPooling
     free_sum_pooling_local_context(&func.func);
     free(func.func.local_context);
@@ -1459,6 +1473,10 @@ void free_function_context(rt_context_t *c, rt_function_context_t func) {
   case NN_FUNCTION_BATCH_MATMUL: { // BatchMatmul
     free_batch_matmul_local_context(&func.func);
     free(func.func.local_context);
+  } break;
+
+  case NN_FUNCTION_ROUND: { // Round
+    free_round_local_context(&func.func);
   } break;
 
   case NN_FUNCTION_CONCATENATE: { // Concatenate
