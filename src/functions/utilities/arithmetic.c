@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <math.h>
 #include "arithmetic.h"
 #include "shape.h"
 
@@ -24,4 +25,38 @@ void calc_scalar(rt_function_t *f, float value, float(*calc_func)(float, float))
   for (i = 0; i < out_size; i++) {
     output[i] = calc_func(input[i], value);
   }
+}
+
+// calc callbacks.
+
+float calc_rsub(float v1, float v2) {
+  return v2 - v1;
+}
+
+float calc_rpow(float v1, float v2) {
+  return pow(v2, v1);
+}
+
+float calc_rdiv(float v1, float v2) {
+  return v2 / v1;
+}
+
+float calc_pow(float v1, float v2) {
+  return pow(v1, v2);
+}
+
+float calc_mul(float v1, float v2) {
+  return v1 * v2;
+}
+
+float select_min(float v1, float v2) {
+  return (v1 < v2) ? v1 : v2;
+}
+
+float select_max(float v1, float v2) {
+  return (v1 > v2) ? v1 : v2;
+}
+
+float calc_add(float v1, float v2) {
+  return v1 + v2;
 }
