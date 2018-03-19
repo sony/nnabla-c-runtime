@@ -192,6 +192,16 @@
                     "y": {}
                 }
             },
+            "GlobalAveragePooling": {
+                "name": "GlobalAveragePooling",
+                "snakecase_name": "global_average_pooling",
+                "input": {
+                    "x": {}
+                },
+                "output": {
+                    "y": {}
+                }
+            },
             "SumPooling": {
                 "name": "SumPooling",
                 "snakecase_name": "sum_pooling",
@@ -1142,7 +1152,6 @@
                 "input": {
                     "x": {}
                 },
-                "argument": {},
                 "output": {
                     "y": {}
                 }
@@ -2171,5 +2180,5 @@
             }
         }
     },
-    "version": 106994275
+    "version": 10434730
 }

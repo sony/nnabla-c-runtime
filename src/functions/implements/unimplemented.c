@@ -58,16 +58,20 @@ rt_function_error_t exec_deconvolution(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// AveragePooling
-rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f) {
+// GlobalAveragePooling
+rt_function_error_t
+allocate_global_average_pooling_local_context(rt_function_t *f)
+{
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t free_average_pooling_local_context(rt_function_t *f) {
+rt_function_error_t free_global_average_pooling_local_context(rt_function_t *f)
+{
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t exec_average_pooling(rt_function_t *f) {
+rt_function_error_t exec_global_average_pooling(rt_function_t *f)
+{
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
@@ -407,6 +411,7 @@ rt_function_error_t exec_pow2(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
+<<<<<<< src/functions/implements/unimplemented.c
 // MulScalar
 rt_function_error_t allocate_mul_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
@@ -433,32 +438,6 @@ rt_function_error_t exec_pow_scalar(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// RSubScalar
-rt_function_error_t allocate_r_sub_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_r_sub_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_r_sub_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// RDivScalar
-rt_function_error_t allocate_r_div_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_r_div_scalar_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_r_div_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // RPowScalar
 rt_function_error_t allocate_r_pow_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
@@ -469,8 +448,6 @@ rt_function_error_t free_r_pow_scalar_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_r_pow_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
@@ -518,6 +495,7 @@ rt_function_error_t exec_maximum2(rt_function_t *f) {
 }
 
 // MinimumScalar
+
 rt_function_error_t allocate_minimum_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
@@ -527,10 +505,9 @@ rt_function_error_t free_minimum_scalar_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_minimum_scalar(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 // MaximumScalar
+
 rt_function_error_t allocate_maximum_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
@@ -862,6 +839,7 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
 }
 
 // Round
+
 rt_function_error_t allocate_round_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
@@ -873,8 +851,6 @@ rt_function_error_t free_round_local_context(rt_function_t *f) {
 rt_function_error_t exec_round(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
