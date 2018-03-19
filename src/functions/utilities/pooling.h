@@ -34,16 +34,20 @@ typedef struct {
   int y_stride;
 } pooling_private_t;
 
+typedef float (*exec_average_pooling_func_t)(int, int, int, int, int, const float*, int, uint8_t);
 typedef float (*exec_pooling_func_t)(int, int, int, int, int, const float*);
 
 rt_function_error_t allocate_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private);
 rt_function_error_t free_pooling(pooling_private_t *private);
-rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private, exec_pooling_func_t exec);
+rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private, void *exec);
 
 /// Calculate max value.
 float calc_max(int hstart, int hend, int wstart, int wend, int wx, const float *x);
 
 /// Calculate sum value.
 float calc_sum(int hstart, int hend, int wstart, int wend, int wx, const float *x);
+
+/// Calculate average value.
+float calc_average(int hstart, int hend, int wstart, int wend, int wx, const float *x, int pool_size, uint8_t including_pad);
 
 #endif // H_POOLING_H_
