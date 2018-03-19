@@ -15,13 +15,8 @@
 #include <nnablart/functions.h>
 #include "../../utilities.h"
 
-/*
-static float calc_mul(float v1, float v2) {
-  return v1 * v2;
-}
-*/
-static float calc_max2(float v1, float v2) {
-    return (v1 > v2) ? v1 : v2;
+static float select_max(float v1, float v2) {
+  return (v1 > v2) ? v1 : v2;
 }
 
 rt_function_error_t allocate_maximum_scalar_local_context(rt_function_t *f) {
@@ -45,8 +40,6 @@ rt_function_error_t free_maximum_scalar_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_maximum_scalar(rt_function_t *f) {
   maximum_scalar_local_context_t *context = (maximum_scalar_local_context_t *)(f->local_context);
-  //calc_scalar(f, context->val, calc_mul);
-  calc_scalar(f, context->val, calc_max2);
-  //calc_scalar(edge, ((MaximumScalarConfig*)edge->config)->value, calc_max);
+  calc_scalar(f, context->val, select_max);
   return RT_FUNCTION_ERROR_NOERROR;
 }
