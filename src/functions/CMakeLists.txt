@@ -31,6 +31,7 @@ add_library(nnablart_functions STATIC
   implements/math/abs.c
   implements/math/identity.c
   implements/quantization/binary_sigmoid.c
+  implements/arithmetic/pow_scalar.c
   implements/arithmetic/r_pow_scalar.c
   implements/logical/maximum_scalar.c
   implements/logical/minimum_scalar.c
