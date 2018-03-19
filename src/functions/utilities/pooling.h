@@ -48,9 +48,13 @@ typedef struct {
 
 typedef float (*exec_pooling_func_t)(pooling_calc_context_t);
 
-rt_function_error_t allocate_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private);
+rt_function_error_t allocate_pooling(rt_function_t *f,
+                                     pooling_context_t *context,
+                                     pooling_private_t *private);
 rt_function_error_t free_pooling(pooling_private_t *private);
-rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context, pooling_private_t *private, exec_pooling_func_t exec);
+rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
+                                 pooling_private_t *private,
+                                 exec_pooling_func_t exec);
 
 /// Calculate max value.
 float calc_max(pooling_calc_context_t calc);

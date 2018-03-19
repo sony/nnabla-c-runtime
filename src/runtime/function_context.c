@@ -113,6 +113,21 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
     allocate_deconvolution_local_context(&func.func);
   } break;
 
+  case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
+    func.exec_func = exec_depthwise_deconvolution;
+    nn_function_depthwise_deconvolution_t *f =
+        (nn_function_depthwise_deconvolution_t *)function;
+    depthwise_deconvolution_local_context_t *ctx =
+        malloc(sizeof(depthwise_deconvolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->divisor = f->divisor;
+    func.func.local_context = ctx;
+    allocate_depthwise_deconvolution_local_context(&func.func);
+  } break;
+
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
     func.exec_func = exec_max_pooling;
     nn_function_max_pooling_t *f = (nn_function_max_pooling_t *)function;
@@ -1160,6 +1175,11 @@ void free_function_context(rt_context_t *c, rt_function_context_t func) {
 
   case NN_FUNCTION_DECONVOLUTION: { // Deconvolution
     free_deconvolution_local_context(&func.func);
+    free(func.func.local_context);
+  } break;
+
+  case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
+    free_depthwise_deconvolution_local_context(&func.func);
     free(func.func.local_context);
   } break;
 

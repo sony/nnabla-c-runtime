@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
 #include "../../utilities.h"
+#include <nnablart/functions.h>
 
 // MinimumScalar
 rt_function_error_t allocate_minimum_scalar_local_context(rt_function_t *f) {
@@ -36,7 +36,8 @@ rt_function_error_t free_minimum_scalar_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_minimum_scalar(rt_function_t *f) {
-  minimum_scalar_local_context_t *context = (minimum_scalar_local_context_t *)(f->local_context);
+  minimum_scalar_local_context_t *context =
+      (minimum_scalar_local_context_t *)(f->local_context);
   calc_scalar(f, context->val, select_min);
   return RT_FUNCTION_ERROR_NOERROR;
 }
