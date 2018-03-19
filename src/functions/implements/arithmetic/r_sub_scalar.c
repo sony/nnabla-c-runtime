@@ -15,10 +15,7 @@
 #include <nnablart/functions.h>
 #include "../../utilities.h"
 
-static float calc_rsub(float v1, float v2) {
-  return v2 - v1;
-}
-
+// RSubScalar
 rt_function_error_t allocate_r_sub_scalar_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
