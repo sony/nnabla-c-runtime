@@ -12,30 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
 #include "../../utilities.h"
+#include <nnablart/functions.h>
 
 #include <math.h>
 
 rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
-  max_pooling_local_context_t *context = (max_pooling_local_context_t *)(f->local_context);
+  max_pooling_local_context_t *context =
+      (max_pooling_local_context_t *)(f->local_context);
   pooling_private_t *private = malloc(sizeof(pooling_private_t));
-  rt_function_error_t ret = allocate_pooling(f, (pooling_context_t *)context, private);
-  ((max_pooling_local_context_t *)(f->local_context))->private = (void *)private;
+  rt_function_error_t ret =
+      allocate_pooling(f, (pooling_context_t *)context, private);
+  ((max_pooling_local_context_t *)(f->local_context))->private =
+      (void *)private;
   return ret;
 }
 
 rt_function_error_t free_max_pooling_local_context(rt_function_t *f) {
   pooling_private_t *private =
       (pooling_private_t *)(((max_pooling_local_context_t *)(f->local_context))
-                               ->private);
+                                ->private);
   return free_pooling(private);
 }
 
 rt_function_error_t exec_max_pooling(rt_function_t *f) {
-  max_pooling_local_context_t *context = (max_pooling_local_context_t *)(f->local_context);
+  max_pooling_local_context_t *context =
+      (max_pooling_local_context_t *)(f->local_context);
   pooling_private_t *private =
       (pooling_private_t *)(((max_pooling_local_context_t *)(f->local_context))
-                               ->private);
+                                ->private);
   return exec_pooling(f, (pooling_context_t *)context, private, calc_max);
 }

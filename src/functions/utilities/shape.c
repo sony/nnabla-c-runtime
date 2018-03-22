@@ -58,12 +58,13 @@ int find_num_in_shape(rt_list_t shape, int num) {
   return -1;
 }
 
-int shape_product_of(const rt_variable_t *v, unsigned shape_begin, unsigned shape_end) {
+int shape_product_of(const rt_variable_t *v, unsigned shape_begin,
+                     unsigned shape_end) {
   return int_product(v->shape.data, shape_begin, shape_end);
 }
 
 rt_list_t calc_contiguous_strides(rt_list_t shape) {
-  if(!shape.size) {
+  if (!shape.size) {
     return allocate_list(0);
   }
   rt_list_t strides = allocate_list(shape.size);

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <math.h>
 #include "arithmetic.h"
 #include "shape.h"
+#include <math.h>
 
 // Common algorism for arithmetic calculation between two vectors has same dimension.
 void calc_dim_arithmetic(rt_variable_t* output, rt_variable_t* input1, rt_variable_t* input2, int dim_index, int y_out, int y_in1, int y_in2, float(*calc_func)(float, float)) {
@@ -45,7 +45,8 @@ void calc_arithmetic(rt_function_t *f, float(*calc_func)(float, float)) {
 }
 
 // Common algorism for arithmetic calculation between vector and scalar value.
-void calc_scalar(rt_function_t *f, float value, float(*calc_func)(float, float)) {
+void calc_scalar(rt_function_t *f, float value,
+                 float (*calc_func)(float, float)) {
   int out_size = calc_shape_size(f->outputs[0]->shape);
   float *input = f->inputs[0]->data;
   float *output = f->outputs[0]->data;
@@ -57,39 +58,20 @@ void calc_scalar(rt_function_t *f, float value, float(*calc_func)(float, float))
 
 // calc callbacks.
 
-float calc_sub(float v1, float v2)
-{
-  return v1 - v2;
-}
+float calc_sub(float v1, float v2) { return v1 - v2; }
 
-float calc_rsub(float v1, float v2) {
-  return v2 - v1;
-}
+float calc_rsub(float v1, float v2) { return v2 - v1; }
 
-float calc_rpow(float v1, float v2) {
-  return pow(v2, v1);
-}
+float calc_rpow(float v1, float v2) { return pow(v2, v1); }
 
-float calc_rdiv(float v1, float v2) {
-  return v2 / v1;
-}
+float calc_rdiv(float v1, float v2) { return v2 / v1; }
 
-float calc_pow(float v1, float v2) {
-  return pow(v1, v2);
-}
+float calc_pow(float v1, float v2) { return pow(v1, v2); }
 
-float calc_mul(float v1, float v2) {
-  return v1 * v2;
-}
+float calc_mul(float v1, float v2) { return v1 * v2; }
 
-float select_min(float v1, float v2) {
-  return (v1 < v2) ? v1 : v2;
-}
+float select_min(float v1, float v2) { return (v1 < v2) ? v1 : v2; }
 
-float select_max(float v1, float v2) {
-  return (v1 > v2) ? v1 : v2;
-}
+float select_max(float v1, float v2) { return (v1 > v2) ? v1 : v2; }
 
-float calc_add(float v1, float v2) {
-  return v1 + v2;
-}
+float calc_add(float v1, float v2) { return v1 + v2; }
