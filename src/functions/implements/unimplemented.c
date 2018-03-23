@@ -447,19 +447,6 @@ rt_function_error_t exec_minimum2(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// Maximum2
-rt_function_error_t allocate_maximum2_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_maximum2_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_maximum2(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // LogicalAnd
 rt_function_error_t allocate_logical_and_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
