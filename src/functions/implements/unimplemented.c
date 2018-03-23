@@ -901,19 +901,6 @@ rt_function_error_t exec_shift(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// Reshape
-rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_reshape_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_reshape(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // MatrixDiag
 
 rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
