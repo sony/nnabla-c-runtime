@@ -17,8 +17,11 @@
 
 #include <nnablart/functions.h>
 
+void calc_arithmetic(rt_function_t *f, float(*calc_func)(float, float));
+void calc_scalar(rt_function_t *f, float value, float(*calc_func)(float, float));
 void calc_scalar(rt_function_t *f, float value,
                  float (*calc_func)(float, float));
+float calc_sub(float v1, float v2);
 float calc_rsub(float v1, float v2);
 float calc_rpow(float v1, float v2);
 float calc_rdiv(float v1, float v2);
