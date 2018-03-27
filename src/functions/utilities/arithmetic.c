@@ -74,4 +74,6 @@ float select_min(float v1, float v2) { return (v1 < v2) ? v1 : v2; }
 
 float select_max(float v1, float v2) { return (v1 > v2) ? v1 : v2; }
 
+float calc_div(float v1, float v2) { return v1 / v2; }
+
 float calc_add(float v1, float v2) { return v1 + v2; }
