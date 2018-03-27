@@ -32,6 +32,7 @@ add_library(nnablart_functions STATIC
   implements/arithmetic/add_scalar.c
   implements/math/identity.c
   implements/quantization/binary_sigmoid.c
+  implements/quantization/binary_connect_affine.c
   implements/arithmetic/mul_scalar.c
   implements/arithmetic/r_sub_scalar.c
   implements/arithmetic/r_div_scalar.c
@@ -40,4 +41,7 @@ add_library(nnablart_functions STATIC
   implements/logical/maximum_scalar.c
   implements/logical/minimum_scalar.c
   implements/logical/maximum2.c
+  implements/logical/minimum2.c  
+  implements/array/reshape.c
+  implements/normalization/batch_normalization.c
   implements/unimplemented.c)
