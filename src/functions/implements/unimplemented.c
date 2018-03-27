@@ -213,20 +213,6 @@ rt_function_error_t exec_celu(rt_function_t *f) {
 // Normalization
 ////////////////////////////////////////////////////////////////////////////////
 
-// BatchNormalization
-rt_function_error_t
-allocate_batch_normalization_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_batch_normalization_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_batch_normalization(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // MeanSubtraction
 rt_function_error_t allocate_mean_subtraction_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
@@ -1173,20 +1159,6 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
-
-// BinaryConnectAffine
-rt_function_error_t
-allocate_binary_connect_affine_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_binary_connect_affine(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 // BinaryConnectConvolution
 rt_function_error_t
