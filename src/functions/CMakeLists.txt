@@ -25,6 +25,7 @@ add_library(nnablart_functions STATIC
   implements/neural_network/average_pooling.c
   implements/neural_network/unpooling.c
   implements/activation/sigmoid.c
+  implements/activation/relu.c
   implements/activation/tanh.c
   implements/activation/softmax.c
   implements/quantization/binary_tanh.c
