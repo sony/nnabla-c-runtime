@@ -29,6 +29,7 @@ float calc_pow(float v1, float v2);
 float calc_mul(float v1, float v2);
 float select_min(float v1, float v2);
 float select_max(float v1, float v2);
+float calc_div(float v1, float v2);
 float calc_add(float v1, float v2);
 
 #endif // H_ARITHMETIC_H_
