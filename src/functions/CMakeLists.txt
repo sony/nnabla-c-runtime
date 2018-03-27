@@ -40,5 +40,6 @@ add_library(nnablart_functions STATIC
   implements/arithmetic/r_pow_scalar.c
   implements/logical/maximum_scalar.c
   implements/logical/minimum_scalar.c
+  implements/array/reshape.c
   implements/normalization/batch_normalization.c
   implements/unimplemented.c)
