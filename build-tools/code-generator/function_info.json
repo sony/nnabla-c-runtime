@@ -141,44 +141,6 @@
                     "y": {}
                 }
             },
-            "DepthwiseDeconvolution": {
-                "name": "DepthwiseDeconvolution",
-                "snakecase_name": "depthwise_deconvolution",
-                "input": {
-                    "x": {},
-                    "weight": {
-                        "Options": [
-                            "Parameter"
-                        ]
-                    },
-                    "bias": {
-                        "Options": [
-                            "Optional",
-                            "Parameter"
-                        ]
-                    }
-                },
-                "argument": {
-                    "base_axis": {
-                        "Type": "int64"
-                    },
-                    "pad": {
-                        "Type": "Shape"
-                    },
-                    "stride": {
-                        "Type": "Shape"
-                    },
-                    "dilation": {
-                        "Type": "Shape"
-                    },
-                    "divisor": {
-                        "Type": "int64"
-                    }
-                },
-                "output": {
-                    "y": {}
-                }
-            },
             "MaxPooling": {
                 "name": "MaxPooling",
                 "snakecase_name": "max_pooling",
@@ -225,16 +187,6 @@
                     "including_pad": {
                         "Type": "bool"
                     }
-                },
-                "output": {
-                    "y": {}
-                }
-            },
-            "GlobalAveragePooling": {
-                "name": "GlobalAveragePooling",
-                "snakecase_name": "global_average_pooling",
-                "input": {
-                    "x": {}
                 },
                 "output": {
                     "y": {}
@@ -1190,6 +1142,7 @@
                 "input": {
                     "x": {}
                 },
+                "argument": {},
                 "output": {
                     "y": {}
                 }
@@ -2218,5 +2171,5 @@
             }
         }
     },
-    "version": 66536473
+    "version": 106994275
 }

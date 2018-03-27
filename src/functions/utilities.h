@@ -8,5 +8,7 @@
 #include "utilities/pooling.h"
 #include "utilities/shape.h"
 #include "utilities/vector.h"
+#include "utilities/pooling.h"
+#include "utilities/arithmetic.h"
 
 #endif // H_UTILITIES_H_171218134406_
