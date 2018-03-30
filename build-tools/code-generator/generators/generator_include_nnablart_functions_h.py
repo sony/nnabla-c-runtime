@@ -1,4 +1,4 @@
-def generate(string, info):
+def generate(filename, info):
     defines = []
     for cn, cat in info.items():
         defines.append(
@@ -13,9 +13,7 @@ def generate(string, info):
             if 'arguments' in func and len(func['arguments']) > 0:
 
                 for an, arg in func['arguments'].items():
-                    print("XXXXXXXXXXXXX")
                     if 'available_values' in arg:
-                        print("XXXXXXXXXXXXXZZZZZZZZZZZZZXS")
                         defines.append('typedef enum {')
                         for t in arg['available_values']:
                             defines.append('    {}_{}_{},'.format(
@@ -55,4 +53,12 @@ def generate(string, info):
             defines.append('')
         defines.append('')
 
-    return string.format(FUNCTION_DEFINES='\n'.join(defines))
+    from mako.template import Template
+    from mako import exceptions
+    try:
+        tmpl = Template(filename=filename)
+        output = tmpl.render(FUNCTION_DEFINES='\n'.join(defines))
+        return output
+    except:
+        print(exceptions.text_error_template().render())
+    return None

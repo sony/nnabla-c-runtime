@@ -1,4 +1,4 @@
-def generate(string, info):
+def generate(filename, info):
     l1 = []
     for cn, cat in info.items():
         for fn, func in cat.items():
@@ -42,4 +42,12 @@ def generate(string, info):
             l2.append('    } break;')
             l2.append('')
 
-    return string.format('\n'.join(l1), '\n'.join(l2))
+    from mako.template import Template
+    from mako import exceptions
+    try:
+        tmpl = Template(filename=filename)
+        output = tmpl.render(code1='\n'.join(l1), code2='\n'.join(l2))
+        return output
+    except:
+        print(exceptions.text_error_template().render())
+    return None

@@ -1,4 +1,4 @@
-def generate(string, info):
+def generate(filename, info):
     funcid = 0
     dump = []
     typenames = []
@@ -36,4 +36,13 @@ def generate(string, info):
 
             dump.append('    } break;')
             funcid += 1
-    return string.format(typenames='\n'.join(typenames), dump='\n'.join(dump))
+
+    from mako.template import Template
+    from mako import exceptions
+    try:
+        tmpl = Template(filename=filename)
+        output = tmpl.render(typenames='\n'.join(typenames), dump='\n'.join(dump))
+        return output
+    except:
+        print(exceptions.text_error_template().render())
+    return None

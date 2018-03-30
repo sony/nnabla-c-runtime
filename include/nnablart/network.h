@@ -28,21 +28,15 @@ extern "C" {
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
-/// ネットワークの構造をメモリ上に格納するための構造体と、データにアク
-/// セスするためのマクロ群から構成されています。ネットワークデータを保
-/// 存する際にシリアライズを不要にするため、データへのアクセスは全てポ
-/// インタではなく、データバッファ内のインデックスを用いて行います。
-///
-///
 /// @{
 
-typedef int32_t pointer_index_t; ///< データの場所を示すインデックス
-typedef uint32_t nn_size_t; ///< データの場所を示すインデックス
+typedef int32_t pointer_index_t; ///< Index of data.
+typedef uint32_t nn_size_t;      ///< Size of data.
 
-/// @brief 整数のリスト
+/// @brief List of integer
 typedef struct {
-  nn_size_t size;       ///< リストのサイズ
-  pointer_index_t list; ///< リストデータへのインデックス
+  nn_size_t size;       ///< Size of list.
+  pointer_index_t list; ///< Index of list data.
 } nn_list_t;
 
 /// @brief Variable buffer information.
@@ -72,7 +66,7 @@ typedef struct {
 } nn_variable_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Functions エッジの定義
+/// @defgroup Functions
 /// @brief Definitions for functions.
 /// @{
 
@@ -1653,7 +1647,7 @@ typedef struct {
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Network ネットワーク定義
+/// @defgroup Network
 /// @brief Definitions for network.
 /// @{
 
@@ -1686,7 +1680,7 @@ typedef struct {
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup DebugFunctions デバッグ用
+/// @defgroup DebugFunctions
 ///
 /// @{
 #ifndef WHOAMI

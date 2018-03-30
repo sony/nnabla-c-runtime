@@ -26,7 +26,7 @@
 
 rt_function_context_t allocate_function_context(nn_network_t *n,
                                                 rt_context_t *c,
-                                                nn_function_t *function) {{
+                                                nn_function_t *function) {
     int i; // Iterator
 
     rt_function_context_t func;
@@ -35,44 +35,44 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
     rt_list_t inputs = create_rt_list_from_nn_list(n, function->inputs);
     func.func.num_of_inputs = inputs.size;
     func.func.inputs = malloc(sizeof(rt_variable_t *) * inputs.size);
-    if (func.func.inputs) {{
-        for (i = 0; i < inputs.size; i++) {{
+    if (func.func.inputs) {
+        for (i = 0; i < inputs.size; i++) {
             int index = *(inputs.data + i);
-            if (index < c->num_of_variables) {{
+            if (index < c->num_of_variables) {
                 func.func.inputs[i] = &(c->variables[index]);
-            }} else {{
+            } else {
                 func.func.inputs[i] = 0;
-            }}
-        }}
-    }}
+            }
+        }
+    }
 
     rt_list_t outputs = create_rt_list_from_nn_list(n, function->outputs);
     func.func.num_of_outputs = outputs.size;
     func.func.outputs = malloc(sizeof(rt_variable_t *) * outputs.size);
-    if (func.func.outputs) {{
-        for (i = 0; i < outputs.size; i++) {{
+    if (func.func.outputs) {
+        for (i = 0; i < outputs.size; i++) {
             int index = *(outputs.data + i);
-            if (index < c->num_of_variables) {{
+            if (index < c->num_of_variables) {
                 func.func.outputs[i] = &(c->variables[index]);
-            }} else {{
+            } else {
                 func.func.outputs[i] = 0;
-            }}
-        }}
-    }}
+            }
+        }
+    }
 
-    switch (function->type) {{
-      {}
+    switch (function->type) {
+      ${code1}
       default:
         func.func.local_context = 0;
-    }}
+    }
 
     return func;
-}}
+}
 
-void free_function_context(rt_context_t *c, rt_function_context_t func) {{
-    switch (func.type) {{
-        {}
+void free_function_context(rt_context_t *c, rt_function_context_t func) {
+    switch (func.type) {
+        ${code2}
         default:
           break;
-    }}
-}}
+    }
+}

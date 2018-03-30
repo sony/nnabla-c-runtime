@@ -2,7 +2,7 @@ import json
 import hashlib
 
 
-def generate(string, info):
+def generate(filename, info):
     m = hashlib.md5()
     m.update(json.dumps(info).encode('utf-8'))
     defines = []
@@ -41,6 +41,15 @@ def generate(string, info):
             defines.append('')
             defines.append('/// @}')
             defines.append('')
-    return string.format(BINARY_VERSION=m.hexdigest(),
+
+    from mako.template import Template
+    from mako import exceptions
+    try:
+        tmpl = Template(filename=filename)
+        output = tmpl.render(BINARY_VERSION=m.hexdigest(),
                          FUNCTION_ENUMS='\n'.join(enums),
                          FUNCTION_DEFINES='\n'.join(defines))
+        return output
+    except:
+        print(exceptions.text_error_template().render())
+    return None

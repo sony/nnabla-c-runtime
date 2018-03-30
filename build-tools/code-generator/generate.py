@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from collections import OrderedDict
+from os.path import basename, abspath, dirname, join
 import importlib
 import json
 import os
@@ -49,30 +50,26 @@ class CodeGenerator:
         self.get_function_info()
 
     def get_function_info(self):
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+        with open(join(dirname(abspath(__file__)),
                                'functions.yaml'), 'r') as f:
             functions_yaml = f.read()
             self.info = load_yaml_ordered(functions_yaml)
             self.version = zlib.crc32(functions_yaml.encode('utf-8')) & 0x7ffffff
 
     def generate(self, name):
-        output_filename = os.path.abspath(os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), '..', '..', name))
-
-        template = os.path.abspath(
-            os.path.join(os.path.dirname(
-                os.path.abspath(__file__)),
-                'generators',
-                'template_' + name.replace('/', '_')))
+        output_filename = abspath(join(
+            dirname(abspath(__file__)), '..', '..', name))
 
         generator_module = 'generators.generator_' + \
             name.replace('/', '_').replace('.', '_')
         generator = importlib.import_module(generator_module)
-        contents = generator.generate(open(template, encoding='utf-8').read(), self.info)
+        contents = generator.generate(abspath(join(dirname(abspath(__file__)), '..', '..', name + '.tmpl')), self.info)
+
         with open(output_filename, 'w', encoding='utf-8') as f:
             f.write(contents)
+
         subprocess.run(['clang-format', '-i', '--style=llvm', output_filename])
-        print('Generated [{}].'.format(os.path.basename(output_filename)))
+        print('Generated [{}].'.format(basename(output_filename)))
 
     def generate_all(self):
         self.generate('include/nnablart/network.h')
