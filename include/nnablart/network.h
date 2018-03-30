@@ -24,7 +24,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION 5cb098ef5d0346b2f3d0d894da1da1c5
+#define NN_BINARY_FORMAT_VERSION 7d1c17425a595e212a8e1c165a78095d
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
@@ -82,6 +82,7 @@ typedef enum {
   NN_FUNCTION_CONVOLUTION,                ///< Convolution
   NN_FUNCTION_DEPTHWISE_CONVOLUTION,      ///< DepthwiseConvolution
   NN_FUNCTION_DECONVOLUTION,              ///< Deconvolution
+  NN_FUNCTION_DEPTHWISE_DECONVOLUTION,    ///< DepthwiseDeconvolution
   NN_FUNCTION_MAX_POOLING,                ///< MaxPooling
   NN_FUNCTION_AVERAGE_POOLING,            ///< AveragePooling
   NN_FUNCTION_SUM_POOLING,                ///< SumPooling
@@ -265,6 +266,22 @@ typedef struct {
   nn_list_t dilation; ///< Original type is [Shape]
   int32_t group;
 } nn_function_deconvolution_t;
+
+/// @}
+
+/// @brief DepthwiseDeconvolution function.
+/// @{
+typedef struct {
+  nn_function_type_t type; ///< Common: type of function.
+  nn_list_t inputs;        ///< Common: List of input variables.
+  nn_list_t outputs;       ///< Common: List of output variables.
+  // End of common part.
+  int32_t base_axis;
+  nn_list_t pad;      ///< Original type is [Shape]
+  nn_list_t stride;   ///< Original type is [Shape]
+  nn_list_t dilation; ///< Original type is [Shape]
+  int32_t divisor;
+} nn_function_depthwise_deconvolution_t;
 
 /// @}
 

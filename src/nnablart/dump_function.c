@@ -30,6 +30,7 @@ static const char *const typenames[] = {
     "Convolution",
     "DepthwiseConvolution",
     "Deconvolution",
+    "DepthwiseDeconvolution",
     "MaxPooling",
     "AveragePooling",
     "SumPooling",
@@ -234,6 +235,30 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
+  } break;
+  case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
+    nn_function_depthwise_deconvolution_t *f =
+        (nn_function_depthwise_deconvolution_t *)func;
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument pad: (");
+    list = (int *)NN_GET(net, f->pad.list);
+    for (i = 0; i < f->pad.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument stride: (");
+    list = (int *)NN_GET(net, f->stride.list);
+    for (i = 0; i < f->stride.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument dilation: (");
+    list = (int *)NN_GET(net, f->dilation.list);
+    for (i = 0; i < f->dilation.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument divisor: %d\n", f->divisor);
   } break;
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
     nn_function_max_pooling_t *f = (nn_function_max_pooling_t *)func;

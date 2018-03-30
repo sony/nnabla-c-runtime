@@ -9,13 +9,15 @@ def generate(string, info):
         defines.append('')
         for fn, func in cat.items():
             defines.append('// {}'.format(fn))
-            name = func['snakecase_name']
-            if 'argument' in func and len(func['argument']) > 0:
+            name = func['snake_name']
+            if 'arguments' in func and len(func['arguments']) > 0:
 
-                for an, arg in func['argument'].items():
-                    if 'TypeSelection' in arg:
+                for an, arg in func['arguments'].items():
+                    print("XXXXXXXXXXXXX")
+                    if 'available_values' in arg:
+                        print("XXXXXXXXXXXXXZZZZZZZZZZZZZXS")
                         defines.append('typedef enum {')
-                        for t in arg['TypeSelection']:
+                        for t in arg['available_values']:
                             defines.append('    {}_{}_{},'.format(
                                 name.upper(), an.upper(), t.upper()))
                         defines.append('    END_OF_{}_{}'.format(
@@ -24,22 +26,22 @@ def generate(string, info):
                         defines.append('')
                 defines.append('typedef struct {')
 
-                for an, arg in func['argument'].items():
+                for an, arg in func['arguments'].items():
 
-                    if arg['Type'] == 'bool':
+                    if arg['type'] == 'bool':
                         defines.append('  uint8_t {};'.format(an))
 
-                    elif arg['Type'] == 'double' or arg['Type'] == 'float':
+                    elif arg['type'] == 'double' or arg['type'] == 'float':
                         defines.append('  float {};'.format(an))
 
-                    elif arg['Type'] == 'int64':
+                    elif arg['type'] == 'int64':
                         defines.append('  int32_t {};'.format(an))
 
-                    elif arg['Type'] == 'repeated int64' or arg['Type'] == 'Shape':
+                    elif arg['type'] == 'repeated int64' or arg['type'] == 'Shape':
                         defines.append(
-                            '  rt_list_t {}; ///< Original type is [{}]'.format(an, arg['Type']))
+                            '  rt_list_t {}; ///< Original type is [{}]'.format(an, arg['type']))
 
-                    elif arg['Type'] == 'string':
+                    elif arg['type'] == 'string':
                         defines.append('{0}_{1}_value_t {1};'.format(name, an))
 
                 defines.append('  void* private;')

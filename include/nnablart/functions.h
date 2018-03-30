@@ -129,6 +129,22 @@ rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f);
 rt_function_error_t free_deconvolution_local_context(rt_function_t *f);
 rt_function_error_t exec_deconvolution(rt_function_t *f);
 
+// DepthwiseDeconvolution
+typedef struct {
+  int32_t base_axis;
+  rt_list_t pad;      ///< Original type is [Shape]
+  rt_list_t stride;   ///< Original type is [Shape]
+  rt_list_t dilation; ///< Original type is [Shape]
+  int32_t divisor;
+  void *private;
+} depthwise_deconvolution_local_context_t;
+
+rt_function_error_t
+allocate_depthwise_deconvolution_local_context(rt_function_t *f);
+rt_function_error_t
+free_depthwise_deconvolution_local_context(rt_function_t *f);
+rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f);
+
 // MaxPooling
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]

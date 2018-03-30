@@ -6,21 +6,21 @@ def generate(string, info):
         for fn, func in cat.items():
             typenames.append('  "{}",'.format(fn))
             dump.append(
-                '    case NN_FUNCTION_{}: {{ // {}'.format(func['snakecase_name'].upper(), fn))
-            if 'argument' in func and len(func['argument']) > 0:
+                '    case NN_FUNCTION_{}: {{ // {}'.format(func['snake_name'].upper(), fn))
+            if 'arguments' in func and len(func['arguments']) > 0:
                 dump.append(
-                    '      nn_function_{0}_t *f = (nn_function_{0}_t*)func;'.format(func['snakecase_name']))
-                for an, arg in func['argument'].items():
-                    if arg['Type'] == 'bool':
+                    '      nn_function_{0}_t *f = (nn_function_{0}_t*)func;'.format(func['snake_name']))
+                for an, arg in func['arguments'].items():
+                    if arg['type'] == 'bool':
                         dump.append(
                             '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
-                    elif arg['Type'] == 'double' or arg['Type'] == 'float':
+                    elif arg['type'] == 'double' or arg['type'] == 'float':
                         dump.append(
                             '      printf("NNB: Function argument {0}: %f\\n", f->{0});'.format(an))
-                    elif arg['Type'] == 'int64':
+                    elif arg['type'] == 'int64':
                         dump.append(
                             '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
-                    elif arg['Type'] == 'repeated int64' or arg['Type'] == 'Shape':
+                    elif arg['type'] == 'repeated int64' or arg['type'] == 'Shape':
                         dump.append(
                             '      printf("NNB: Function argument {}: (");'.format(an))
                         dump.append(
@@ -30,7 +30,7 @@ def generate(string, info):
                         dump.append('        printf(" %d", *(list + i));')
                         dump.append('      }')
                         dump.append('      printf(" )\\n");')
-                    elif arg['Type'] == 'string':
+                    elif arg['type'] == 'string':
                         dump.append(
                             '      printf("NNB: Function argument {0}: %d\\n", f->{0});'.format(an))
 
