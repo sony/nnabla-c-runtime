@@ -172,6 +172,13 @@ rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f);
 rt_function_error_t free_average_pooling_local_context(rt_function_t *f);
 rt_function_error_t exec_average_pooling(rt_function_t *f);
 
+// GlobalAveragePooling
+
+rt_function_error_t
+allocate_global_average_pooling_local_context(rt_function_t *f);
+rt_function_error_t free_global_average_pooling_local_context(rt_function_t *f);
+rt_function_error_t exec_global_average_pooling(rt_function_t *f);
+
 // SumPooling
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]

@@ -24,7 +24,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION 7d1c17425a595e212a8e1c165a78095d
+#define NN_BINARY_FORMAT_VERSION 262b6285397ba445e3c682946c77e926
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
@@ -79,6 +79,7 @@ typedef enum {
   NN_FUNCTION_DEPTHWISE_DECONVOLUTION,    ///< DepthwiseDeconvolution
   NN_FUNCTION_MAX_POOLING,                ///< MaxPooling
   NN_FUNCTION_AVERAGE_POOLING,            ///< AveragePooling
+  NN_FUNCTION_GLOBAL_AVERAGE_POOLING,     ///< GlobalAveragePooling
   NN_FUNCTION_SUM_POOLING,                ///< SumPooling
   NN_FUNCTION_UNPOOLING,                  ///< Unpooling
   NN_FUNCTION_EMBED,                      ///< Embed
@@ -307,6 +308,16 @@ typedef struct {
   nn_list_t pad; ///< Original type is [Shape]
   uint8_t including_pad;
 } nn_function_average_pooling_t;
+
+/// @}
+
+/// @brief GlobalAveragePooling function.
+/// @{
+typedef struct {
+  nn_function_type_t type; ///< Common: type of function.
+  nn_list_t inputs;        ///< Common: List of input variables.
+  nn_list_t outputs;       ///< Common: List of output variables.
+} nn_function_global_average_pooling_t;
 
 /// @}
 

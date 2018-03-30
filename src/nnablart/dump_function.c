@@ -33,6 +33,7 @@ static const char *const typenames[] = {
     "DepthwiseDeconvolution",
     "MaxPooling",
     "AveragePooling",
+    "GlobalAveragePooling",
     "SumPooling",
     "Unpooling",
     "Embed",
@@ -304,6 +305,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument including_pad: %d\n", f->including_pad);
+  } break;
+  case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
   } break;
   case NN_FUNCTION_SUM_POOLING: { // SumPooling
     nn_function_sum_pooling_t *f = (nn_function_sum_pooling_t *)func;
