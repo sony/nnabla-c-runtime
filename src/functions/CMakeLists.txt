@@ -29,6 +29,7 @@ add_library(nnablart_functions STATIC
   implements/activation/tanh.c
   implements/activation/softmax.c
   implements/activation/selu.c
+  implements/activation/elu.c
   implements/quantization/binary_tanh.c
   implements/activation/prelu.c
   implements/math/abs.c
