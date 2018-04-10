@@ -46,6 +46,7 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
   private->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (private->input_size != private->output_size) {
+    free(private);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   ((relu_local_context_t *)(f->local_context))->private = (void *)private;
