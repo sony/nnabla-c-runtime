@@ -20,9 +20,6 @@ add_library(nnablart_functions STATIC
   implements/neural_network/affine/affine.c
   implements/neural_network/affine/affine_generic.c
   implements/neural_network/affine/affine_float.c
-  implements/neural_network/convolution/convolution.c
-  implements/neural_network/convolution/convolution_generic.c
-  implements/neural_network/convolution/convolution_internal.h
   implements/neural_network/max_pooling.c
   implements/neural_network/sum_pooling.c
   implements/neural_network/average_pooling.c
@@ -31,6 +28,8 @@ add_library(nnablart_functions STATIC
   implements/activation/relu.c
   implements/activation/tanh.c
   implements/activation/softmax.c
+  implements/activation/selu.c
+  implements/activation/elu.c
   implements/quantization/binary_tanh.c
   implements/activation/prelu.c
   implements/activation/leakyrelu.c
