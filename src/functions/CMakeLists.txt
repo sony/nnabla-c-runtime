@@ -33,6 +33,7 @@ add_library(nnablart_functions STATIC
   implements/quantization/binary_tanh.c
   implements/activation/prelu.c
   implements/math/abs.c
+  implements/math/batch_matmul.c
   implements/arithmetic/add_scalar.c
   implements/math/identity.c
   implements/quantization/binary_sigmoid.c
