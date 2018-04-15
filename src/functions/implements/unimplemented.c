@@ -17,20 +17,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Layer
 ////////////////////////////////////////////////////////////////////////////////
-
-// Convolution
-rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_convolution(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // DepthwiseConvolution
 rt_function_error_t
 allocate_depthwise_convolution_local_context(rt_function_t *f) {
