@@ -87,25 +87,25 @@ rt_function_error_t free_batch_matmul_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-static int getNext(int i, int m, int n)
+static int get_next(int i, int m, int n)
 {
   return (i%n)*m + i / n;
 }
 
-static int getPre(int i, int m, int n)
+static int get_pre(int i, int m, int n)
 {
   return (i%m)*n + i / m;
 }
 
-static void movedata(float *mtx, int i, int m, int n)
+static void move_data(float *mtx, int i, int m, int n)
 {
   float temp = mtx[i];
   int cur = i;
-  int pre = getPre(cur, m, n);
+  int pre = get_pre(cur, m, n);
   while (pre != i) {
     mtx[cur] = mtx[pre];
     cur = pre;
-    pre = getPre(cur, m, n);
+    pre = get_pre(cur, m, n);
   }
   mtx[cur] = temp;
 }
@@ -113,24 +113,11 @@ static void movedata(float *mtx, int i, int m, int n)
 static void transpose(float *mtx, int m, int n)
 {
   for (int i = 0; i < m * n; i++) {
-    int next = getNext(i, m, n);
+    int next = get_next(i, m, n);
     while (next > i)
-      next = getNext(next, m, n);
+      next = get_next(next, m, n);
     if (next == i)
-      movedata(mtx, i, m, n);
-  }
-}
-
-static void matrix_multiply(float *mtx_y, float *mtx_a, float *mtx_b, int row_a, int col_b, int col_a)
-{
-  for (int i = 0; i < row_a; i++) {
-    for (int j = 0; j < col_b; j++) {
-      for (int k = 0; k < col_a; k++) {
-        float a = *(mtx_a + col_a * i + k);
-        float b = *(mtx_b + col_b * k + j);
-        *(mtx_y + col_b * i + j) += a * b;
-      }
-    }
+      move_data(mtx, i, m, n);
   }
 }
 
@@ -156,8 +143,21 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
     private->row_b = private->row_b ^ private->col_b;
   }
   for (i = 0; i < private->samples; i++) {
-    matrix_multiply(private->output + private->offset_y * i, private->input_a + private->offset_a * i,
-                    private->input_b + private->offset_b * i, private->row_a, private->col_b, private->col_a);
+    float *mtx_y = private->output + private->offset_y * i;
+    float *mtx_a = private->input_a + private->offset_a * i;
+    float *mtx_b = private->input_b + private->offset_b * i;
+    int row_a = private->row_a;
+    int col_b = private->col_b;
+    int col_a = private->col_a;
+    for (int j = 0; j < row_a; j++) {
+      for (int k = 0; k < col_b; k++) {
+        for (int l = 0; l < col_a; l++) {
+          float a = *(mtx_a + col_a * j + l);
+          float b = *(mtx_b + col_b * l + k);
+          *(mtx_y + col_b * j + k) += a * b;
+        }
+      }
+    }
   }
 
   return RT_FUNCTION_ERROR_NOERROR;
