@@ -24,6 +24,9 @@ add_library(nnablart_functions STATIC
   implements/neural_network/sum_pooling.c
   implements/neural_network/average_pooling.c
   implements/neural_network/unpooling.c
+  implements/neural_network/convolution/convolution.c
+  implements/neural_network/convolution/convolution_generic.c
+  implements/neural_network/convolution/convolution_internal.h
   implements/activation/sigmoid.c
   implements/activation/relu.c
   implements/activation/tanh.c
