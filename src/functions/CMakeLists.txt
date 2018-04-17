@@ -32,7 +32,16 @@ add_library(nnablart_functions STATIC
   implements/activation/elu.c
   implements/quantization/binary_tanh.c
   implements/activation/prelu.c
+  implements/activation/leakyrelu.c
+  implements/activation/elu.c
+  implements/activation/selu.c
+  implements/activation/crelu.c
+  implements/activation/celu.c
+  implements/activation/swish.c
   implements/math/abs.c
+  implements/math/exp.c
+  implements/math/log.c
+  implements/math/round.c
   implements/arithmetic/add_scalar.c
   implements/math/identity.c
   implements/quantization/binary_sigmoid.c
@@ -52,4 +61,5 @@ add_library(nnablart_functions STATIC
   implements/logical/minimum2.c  
   implements/array/reshape.c
   implements/normalization/batch_normalization.c
+  implements/normalization/mean_subtraction.c
   implements/unimplemented.c)
