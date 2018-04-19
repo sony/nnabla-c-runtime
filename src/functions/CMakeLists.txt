@@ -62,6 +62,7 @@ add_library(nnablart_functions STATIC
   implements/logical/minimum_scalar.c
   implements/logical/maximum2.c
   implements/logical/minimum2.c  
+  implements/logical/sign.c
   implements/array/reshape.c
   implements/normalization/batch_normalization.c
   implements/normalization/mean_subtraction.c
