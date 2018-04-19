@@ -562,19 +562,6 @@ rt_function_error_t exec_stack(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// Slice
-rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_slice_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_slice(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // Transpose
 rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
@@ -624,47 +611,6 @@ rt_function_error_t free_flip_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_flip(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// Shift
-rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_shift_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_shift(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// MatrixDiag
-
-rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_matrix_diag_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_matrix_diag(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// MatrixDiagPart
-
-rt_function_error_t allocate_matrix_diag_part_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_matrix_diag_part(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
