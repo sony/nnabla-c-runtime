@@ -685,6 +685,28 @@ rt_function_error_t exec_dropout(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
+// TopKData
+rt_function_error_t allocate_top_k_data_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t free_top_k_data_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t exec_top_k_data(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+// TopKGrad
+rt_function_error_t allocate_top_k_grad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t free_top_k_grad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t exec_top_k_grad(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
 // Rand
 rt_function_error_t allocate_rand_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
@@ -912,18 +934,6 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
-rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_convolution(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // BinaryConnectConvolution
 rt_function_error_t
 allocate_binary_connect_convolution_local_context(rt_function_t *f) {

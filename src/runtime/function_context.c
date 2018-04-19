@@ -803,6 +803,31 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
     allocate_dropout_local_context(&func.func);
   } break;
 
+  case NN_FUNCTION_TOP_K_DATA: { // TopKData
+    func.exec_func = exec_top_k_data;
+    nn_function_top_k_data_t *f = (nn_function_top_k_data_t *)function;
+    top_k_data_local_context_t *ctx =
+        malloc(sizeof(top_k_data_local_context_t));
+    ctx->k = f->k;
+    ctx->abs = f->abs;
+    ctx->reduce = f->reduce;
+    ctx->base_axis = f->base_axis;
+    func.func.local_context = ctx;
+    allocate_top_k_data_local_context(&func.func);
+  } break;
+
+  case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
+    func.exec_func = exec_top_k_grad;
+    nn_function_top_k_grad_t *f = (nn_function_top_k_grad_t *)function;
+    top_k_grad_local_context_t *ctx =
+        malloc(sizeof(top_k_grad_local_context_t));
+    ctx->k = f->k;
+    ctx->abs = f->abs;
+    ctx->base_axis = f->base_axis;
+    func.func.local_context = ctx;
+    allocate_top_k_grad_local_context(&func.func);
+  } break;
+
   case NN_FUNCTION_RAND: { // Rand
     func.exec_func = exec_rand;
     nn_function_rand_t *f = (nn_function_rand_t *)function;
@@ -1560,6 +1585,16 @@ void free_function_context(rt_context_t *c, rt_function_context_t func) {
 
   case NN_FUNCTION_DROPOUT: { // Dropout
     free_dropout_local_context(&func.func);
+    free(func.func.local_context);
+  } break;
+
+  case NN_FUNCTION_TOP_K_DATA: { // TopKData
+    free_top_k_data_local_context(&func.func);
+    free(func.func.local_context);
+  } break;
+
+  case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
+    free_top_k_grad_local_context(&func.func);
     free(func.func.local_context);
   } break;
 

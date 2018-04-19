@@ -113,6 +113,8 @@ static const char *const typenames[] = {
     "MatrixDiag",
     "MatrixDiagPart",
     "Dropout",
+    "TopKData",
+    "TopKGrad",
     "Rand",
     "Randint",
     "Randn",
@@ -690,6 +692,19 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_dropout_t *f = (nn_function_dropout_t *)func;
     printf("NNB: Function argument p: %f\n", f->p);
     printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
+  case NN_FUNCTION_TOP_K_DATA: { // TopKData
+    nn_function_top_k_data_t *f = (nn_function_top_k_data_t *)func;
+    printf("NNB: Function argument k: %d\n", f->k);
+    printf("NNB: Function argument abs: %d\n", f->abs);
+    printf("NNB: Function argument reduce: %d\n", f->reduce);
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+  } break;
+  case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
+    nn_function_top_k_grad_t *f = (nn_function_top_k_grad_t *)func;
+    printf("NNB: Function argument k: %d\n", f->k);
+    printf("NNB: Function argument abs: %d\n", f->abs);
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
   } break;
   case NN_FUNCTION_RAND: { // Rand
     nn_function_rand_t *f = (nn_function_rand_t *)func;

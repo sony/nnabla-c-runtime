@@ -24,7 +24,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION 262b6285397ba445e3c682946c77e926
+#define NN_BINARY_FORMAT_VERSION 2afe4740579bd215c84e4f945676dca4
 
 /// @defgroup NetworkDefinitions Internal network representation
 ///
@@ -159,6 +159,8 @@ typedef enum {
   NN_FUNCTION_MATRIX_DIAG,                ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART,           ///< MatrixDiagPart
   NN_FUNCTION_DROPOUT,                    ///< Dropout
+  NN_FUNCTION_TOP_K_DATA,                 ///< TopKData
+  NN_FUNCTION_TOP_K_GRAD,                 ///< TopKGrad
   NN_FUNCTION_RAND,                       ///< Rand
   NN_FUNCTION_RANDINT,                    ///< Randint
   NN_FUNCTION_RANDN,                      ///< Randn
@@ -1226,6 +1228,35 @@ typedef struct {
   float p;
   int32_t seed;
 } nn_function_dropout_t;
+
+/// @}
+
+/// @brief TopKData function.
+/// @{
+typedef struct {
+  nn_function_type_t type; ///< Common: type of function.
+  nn_list_t inputs;        ///< Common: List of input variables.
+  nn_list_t outputs;       ///< Common: List of output variables.
+  // End of common part.
+  int32_t k;
+  uint8_t abs;
+  uint8_t reduce;
+  int32_t base_axis;
+} nn_function_top_k_data_t;
+
+/// @}
+
+/// @brief TopKGrad function.
+/// @{
+typedef struct {
+  nn_function_type_t type; ///< Common: type of function.
+  nn_list_t inputs;        ///< Common: List of input variables.
+  nn_list_t outputs;       ///< Common: List of output variables.
+  // End of common part.
+  int32_t k;
+  uint8_t abs;
+  int32_t base_axis;
+} nn_function_top_k_grad_t;
 
 /// @}
 

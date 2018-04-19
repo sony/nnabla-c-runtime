@@ -909,6 +909,31 @@ rt_function_error_t allocate_dropout_local_context(rt_function_t *f);
 rt_function_error_t free_dropout_local_context(rt_function_t *f);
 rt_function_error_t exec_dropout(rt_function_t *f);
 
+// TopKData
+typedef struct {
+  int32_t k;
+  uint8_t abs;
+  uint8_t reduce;
+  int32_t base_axis;
+  void *private;
+} top_k_data_local_context_t;
+
+rt_function_error_t allocate_top_k_data_local_context(rt_function_t *f);
+rt_function_error_t free_top_k_data_local_context(rt_function_t *f);
+rt_function_error_t exec_top_k_data(rt_function_t *f);
+
+// TopKGrad
+typedef struct {
+  int32_t k;
+  uint8_t abs;
+  int32_t base_axis;
+  void *private;
+} top_k_grad_local_context_t;
+
+rt_function_error_t allocate_top_k_grad_local_context(rt_function_t *f);
+rt_function_error_t free_top_k_grad_local_context(rt_function_t *f);
+rt_function_error_t exec_top_k_grad(rt_function_t *f);
+
 // Rand
 typedef struct {
   float low;
