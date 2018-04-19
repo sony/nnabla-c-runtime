@@ -20,13 +20,13 @@
 
 typedef struct {
   float *input;
-  int input_size;
   float *output;
+  int input_size;
   int output_size;
-} relu_private_t;
+} round_private_t;
 
-// Relu
-rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
+// Round
+rt_function_error_t allocate_round_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }
@@ -34,38 +34,35 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  relu_private_t *private = malloc(sizeof(relu_private_t));
+  round_private_t *private = malloc(sizeof(round_private_t));
   if (private == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  private->input = f->inputs[0]->data;
+  f->local_context = (void *)private;
+  private->input = (float *)f->inputs[0]->data;
   private->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  private->output = f->outputs[0]->data;
+  private->output = (float *)f->outputs[0]->data;
   private->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (private->input_size != private->output_size) {
-    free(private);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((relu_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t free_relu_local_context(rt_function_t *f) {
-  free(((relu_local_context_t *)(f->local_context))->private);
+rt_function_error_t free_round_local_context(rt_function_t *f) {
+  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t exec_relu(rt_function_t *f) {
-  relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
-  relu_private_t *private = (relu_private_t *)(context->private);
+rt_function_error_t exec_round(rt_function_t *f) {
+  round_private_t *private = (round_private_t *)(f->local_context);
 
   int i; // Iterator
   for (i = 0; i < private->output_size; i++) {
-    float x = private->input[i];
-    private->output[i] = (x > 0.0f) ? x : 0.0f;
+    private->output[i] = round(private->input[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

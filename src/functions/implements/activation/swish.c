@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+// Copyright (c) 2018 Sony Corporation. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #include "../../utilities.h"
 
+#include <assert.h>
 #include <math.h>
 
 typedef struct {
@@ -23,10 +24,10 @@ typedef struct {
   int input_size;
   float *output;
   int output_size;
-} relu_private_t;
+} swish_local_context_t;
 
-// Relu
-rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
+// Swish
+rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }
@@ -34,38 +35,37 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  relu_private_t *private = malloc(sizeof(relu_private_t));
-  if (private == 0) {
+  swish_local_context_t *c = malloc(sizeof(swish_local_context_t));
+  if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  private->input = f->inputs[0]->data;
-  private->input_size = calc_shape_size(f->inputs[0]->shape);
+  f->local_context = (void *)c;
+  c->input = f->inputs[0]->data;
+  c->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  private->output = f->outputs[0]->data;
-  private->output_size = calc_shape_size(f->outputs[0]->shape);
+  c->output = f->outputs[0]->data;
+  c->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (private->input_size != private->output_size) {
-    free(private);
+  if (c->input_size != c->output_size) {
+    free(c);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((relu_local_context_t *)(f->local_context))->private = (void *)private;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t free_relu_local_context(rt_function_t *f) {
-  free(((relu_local_context_t *)(f->local_context))->private);
+rt_function_error_t free_swish_local_context(rt_function_t *f) {
+  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t exec_relu(rt_function_t *f) {
-  relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
-  relu_private_t *private = (relu_private_t *)(context->private);
+rt_function_error_t exec_swish(rt_function_t *f) {
+  swish_local_context_t *c = (swish_local_context_t *)(f->local_context);
 
   int i; // Iterator
-  for (i = 0; i < private->output_size; i++) {
-    float x = private->input[i];
-    private->output[i] = (x > 0.0f) ? x : 0.0f;
+  for (i = 0; i < c->output_size; i++) {
+    float x = *(c->input + i);
+    *(c->output + i) = x * (1.0f / (1.0f + expf(-x)));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
