@@ -225,19 +225,6 @@ rt_function_error_t exec_bc_add2(rt_function_t *f) {
 // Logical
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sign
-rt_function_error_t allocate_sign_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_sign_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_sign(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // LogicalAnd
 rt_function_error_t allocate_logical_and_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
