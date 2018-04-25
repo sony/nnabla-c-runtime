@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+#include <assert.h>
 #include "convolution_internal.h"
 
 #define X             (0)            //x input
@@ -22,6 +22,8 @@
 // BinaryConnectConvolution
 rt_function_error_t
 allocate_binary_connect_convolution_local_context(rt_function_t *f) {
+  assert(sizeof(convolution_local_context_t)
+    == sizeof(binary_weight_convolution_local_context_t));
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, Y0);
 }
 
