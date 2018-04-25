@@ -74,10 +74,7 @@ class CodeGenerator:
     def generate_all(self):
         self.generate('include/nnablart/network.h')
         self.generate('include/nnablart/functions.h')
-
-        self.generate('src/nnablart/dump_function.h')
         self.generate('src/nnablart/dump_function.c')
-
         self.generate('src/runtime/function_context.c')
 
 

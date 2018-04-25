@@ -35,40 +35,35 @@ typedef enum {
   RT_FUNCTION_ERROR_NOERROR = 0             ///< No error. (0)
 } rt_function_error_t;
 
-// version of cforwardprop library
-#define NNABLART_MAJOR_VERSION (1)
-#define NNABLART_MINOR_VERSION (0)
+typedef struct {
+    int size;
+    int *data;
+} rt_list_t;
 
-  typedef struct {
-      int size;
-      int *data;
-  } rt_list_t;
+typedef enum {
+  RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0, RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,
+  RT_BUFFER_ALLOCATE_TYPE_STINGY, RT_BUFFER_ALLOCATE_TYPE_INPUT,
+  RT_BUFFER_ALLOCATE_TYPE_OUTPUT, END_OF_RT_BUFFER_ALLOCATE_TYPE
+} rt_buffer_allocate_type_t;
 
-  typedef enum {
-    RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0, RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,
-    RT_BUFFER_ALLOCATE_TYPE_STINGY, RT_BUFFER_ALLOCATE_TYPE_INPUT,
-    RT_BUFFER_ALLOCATE_TYPE_OUTPUT, END_OF_RT_BUFFER_ALLOCATE_TYPE
-  } rt_buffer_allocate_type_t;
+typedef struct {
+  rt_list_t shape;
+  nn_data_type_t type : 4; ///< Type of param values
+  unsigned int fp_pos : 4;
+  float coefficient; ///< Coefficient value for convert int to float.
+  void *data;
+} rt_variable_t;
 
-  typedef struct {
-    rt_list_t shape;
-    nn_data_type_t type : 4; ///< Type of param values
-    unsigned int fp_pos : 4;
-    float coefficient; ///< Coefficient value for convert int to float.
-    void *data;
-  } rt_variable_t;
+typedef struct {
+  int num_of_inputs;
+  rt_variable_t **inputs;
+  int num_of_outputs;
+  rt_variable_t **outputs;
 
-  typedef struct {
-    int num_of_inputs;
-    rt_variable_t **inputs;
+  void *local_context;
+} rt_function_t;
 
-    int num_of_outputs;
-    rt_variable_t **outputs;
-
-    void *local_context;
-  } rt_function_t;
-
-  ${FUNCTION_DEFINES}
+${FUNCTION_DEFINES}
 
 #ifdef __cplusplus
 }

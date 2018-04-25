@@ -11,14 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-cmake_minimum_required(VERSION 2.8)
+Affine:
+  - GENERIC
+  - FLOAT
 
-set(project_root "${CMAKE_CURRENT_SOURCE_DIR}")
-include(${project_root}/build-tools/cmake/common.cmake)
-
-project(nnablart)
-
-add_subdirectory(src/runtime)
-add_subdirectory(src/functions)
-add_subdirectory(src/nnablart)
+Convolution:
+  - GENERIC

@@ -36,10 +36,6 @@ typedef enum {
   RT_FUNCTION_ERROR_NOERROR = 0             ///< No error. (0)
 } rt_function_error_t;
 
-// version of cforwardprop library
-#define NNABLART_MAJOR_VERSION (1)
-#define NNABLART_MINOR_VERSION (0)
-
 typedef struct {
   int size;
   int *data;
@@ -65,7 +61,6 @@ typedef struct {
 typedef struct {
   int num_of_inputs;
   rt_variable_t **inputs;
-
   int num_of_outputs;
   rt_variable_t **outputs;
 

@@ -1,3 +1,17 @@
+# Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import json
 import hashlib
 
@@ -10,13 +24,15 @@ def generate(filename, info):
     for cn, cat in info.items():
         for fn, func in cat.items():
             enums.append(
-                '  NN_FUNCTION_{},    ///< {}'.format(func['snake_name'].upper(), fn))
+                '  NN_FUNCTION_{} = {},    ///< {}'.format(func['snake_name'].upper(), func['id'], fn))
 
             defines.append('/// @brief {} function.'.format(fn))
             defines.append('/// @{')
             defines.append('typedef struct {')
             defines.append(
                 '  nn_function_type_t type; ///< Common: type of function.')
+            defines.append(
+                '  nn_function_implement_t impl; ///< Common: function implementation.')
             defines.append(
                 '  nn_list_t inputs;        ///< Common: List of input variables.')
             defines.append(
