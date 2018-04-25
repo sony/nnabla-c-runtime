@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Sony Corporation. All Rights Reserved.
+// Copyright (c) 2017 Sony Corporation. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../../utilities.h"
-#include <assert.h>
-#include <math.h>
-#include <nnablart/functions.h>
 #include "convolution_internal.h"
 
 #define X             (0)            //x input
-#define WEIGHT        (1)            //weight
-#define BIAS          (2)            //bias
+#define WEIGHT        (2)            //weight
+#define BIAS          (3)            //bias
 #define Y0            (0)            //y0 output
 
-// Convolution
-rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
+// BinaryConnectConvolution
+rt_function_error_t
+allocate_binary_connect_convolution_local_context(rt_function_t *f) {
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, Y0);
 }
 
-rt_function_error_t free_convolution_local_context(rt_function_t *f) {
+rt_function_error_t
+free_binary_connect_convolution_local_context(rt_function_t *f) {
   return free_convolution_local_context_common(f);
 }
 
-rt_function_error_t exec_convolution(rt_function_t *f) {
+rt_function_error_t exec_binary_connect_convolution(rt_function_t *f) {
   return ((convolution_private_t *)(((convolution_local_context_t*)(f->local_context))
                                    ->private))
       ->exec(f);
 }
+
+

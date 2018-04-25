@@ -54,5 +54,9 @@ typedef struct {
 #define SPW  (1)  //width of stride/pad
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f);
+rt_function_error_t allocate_convolution_local_context_common(rt_function_t *f,
+                                            int x, int weight, int bias, int y0);
+rt_function_error_t free_convolution_local_context_common(rt_function_t *f);
+
 
 #endif // H_CONVOLUTION_INTERNAL_H_171218154530_
