@@ -45,6 +45,7 @@ add_library(nnablart_functions STATIC
   implements/math/exp.c
   implements/math/log.c
   implements/math/round.c
+  implements/math/batch_matmul.c
   implements/arithmetic/add_scalar.c
   implements/math/identity.c
   implements/quantization/binary_sigmoid.c
