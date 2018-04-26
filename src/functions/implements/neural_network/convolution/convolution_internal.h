@@ -35,6 +35,7 @@ typedef struct {
   var_t in_var;
   var_t w_var;
   var_t b_var;
+  var_t a_var;
   exec_conv_func_t exec;
 } convolution_private_t;
 
@@ -55,7 +56,7 @@ typedef struct {
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f);
 rt_function_error_t allocate_convolution_local_context_common(rt_function_t *f,
-                                            int x, int weight, int bias, int y0);
+                              int x, int weight, int bias, int alpha, int y0);
 rt_function_error_t free_convolution_local_context_common(rt_function_t *f);
 
 

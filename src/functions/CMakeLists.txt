@@ -28,6 +28,7 @@ add_library(nnablart_functions STATIC
   implements/neural_network/convolution/convolution_generic.c
   implements/neural_network/convolution/convolution_common.c
   implements/neural_network/convolution/binary_connect_convolution.c
+  implements/neural_network/convolution/binary_weight_convolution.c
   implements/activation/sigmoid.c
   implements/activation/relu.c
   implements/activation/tanh.c

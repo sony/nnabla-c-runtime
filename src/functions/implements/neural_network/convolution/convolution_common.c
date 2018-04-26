@@ -19,11 +19,11 @@
 
 rt_function_error_t
 allocate_convolution_local_context_common(rt_function_t *f,
-  int x, int weight, int bias, int y0) {
+  int x, int weight, int bias, int alpha, int y0) {
   convolution_local_context_t* c = (convolution_local_context_t*)(f->local_context);
   int i;
 
-  if (f->num_of_inputs != weight + 1 && f->num_of_inputs != weight + 2) {
+  if (f->num_of_inputs != bias && f->num_of_inputs != bias + 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }
 
@@ -104,6 +104,19 @@ allocate_convolution_local_context_common(rt_function_t *f,
     p->b_var.v = 0;
   }
 
+  if (alpha >= 0) {
+    p->a_var.v = f->inputs[alpha];
+    p->a_var.get = select_getter(f->inputs[alpha]);
+    p->a_var.offset = 0;
+    p->a_var.shape = allocate_list(2);
+    p->a_var.shape.data[KG] = c->group;
+    p->a_var.shape.data[KO] = f->inputs[alpha]->shape.data[0] / c->group;
+    p->a_var.stride = calc_contiguous_strides(p->a_var.shape);
+  }
+  else {
+    p->a_var.v = 0;
+  }
+
   p->exec = exec_convolution_generic; //currently, we only implement a generic one
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -117,6 +130,8 @@ rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
   var_free(&p->w_var);
   if (p->b_var.v != 0)
     var_free(&p->b_var);
+  if (p->a_var.v != 0)
+    var_free(&p->a_var);
   free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }

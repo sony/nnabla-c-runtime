@@ -18,13 +18,14 @@
 #define WEIGHT        (2)            //weight
 #define BIAS          (3)            //bias
 #define Y0            (0)            //y0 output
+#define ALPHA         (-1)           //alpha
 
 // BinaryConnectConvolution
 rt_function_error_t
 allocate_binary_connect_convolution_local_context(rt_function_t *f) {
   assert(sizeof(convolution_local_context_t)
-    == sizeof(binary_weight_convolution_local_context_t));
-  return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, Y0);
+    == sizeof(binary_connect_convolution_local_context_t));
+  return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
 }
 
 rt_function_error_t

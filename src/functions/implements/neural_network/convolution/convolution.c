@@ -22,10 +22,11 @@
 #define WEIGHT        (1)            //weight
 #define BIAS          (2)            //bias
 #define Y0            (0)            //y0 output
+#define ALPHA         (-1)           //ALPHA
 
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
-  return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, Y0);
+  return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
 }
 
 rt_function_error_t free_convolution_local_context(rt_function_t *f) {

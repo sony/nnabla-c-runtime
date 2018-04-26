@@ -103,6 +103,17 @@ static inline void add_bias(var_t* out, var_t* b) {
   }
 }
 
+static inline void mul_alpha(var_t* out, var_t* a) {
+  int size = out->stride.data[I];
+  int i;
+  float alpha = var_get(a, a->offset);
+  for (i = 0; i < size; ++i) {
+    float x = var_get(out, out->offset + i);
+    x *= alpha;
+    var_set(out, out->offset + i, x);
+  }
+}
+
 rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   convolution_local_context_t* c = (convolution_local_context_t*)f->local_context;
   convolution_private_t *p = (convolution_private_t *)(c->private);
@@ -116,6 +127,7 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   var_t* in_var = &p->in_var;
   var_t* w_var = &p->w_var;
   var_t* b_var = &p->b_var;
+  var_t* a_var = &p->a_var;
 
   batch_size = p->in_var.shape.data[0];
   for (b= 0; b < batch_size; ++b) {
@@ -130,10 +142,16 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
           var_setpos(w_var, w_pos, _S(w_pos));
           conv2d(out_var, in_var, w_var, b_var, c->pad, c->stride, c->dilation);
         }
-        if (p->b_var.v) {
+        {
           int b_pos[] = {g, om};
-          var_setpos(b_var, b_pos, _S(b_pos));
-          add_bias(out_var, b_var);
+          if (p->a_var.v) {
+            var_setpos(a_var, b_pos, _S(b_pos));
+            mul_alpha(out_var, a_var);
+          }
+          if (p->b_var.v) {
+            var_setpos(b_var, b_pos, _S(b_pos));
+            add_bias(out_var, b_var);
+          }
         }
       }
     }
