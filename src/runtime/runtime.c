@@ -60,21 +60,46 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
   int i; // Iterator
 
   //////////////////////////////////////////////////////////////////////////////
-  // Buffers
+  // Buffer list
   c->num_of_buffers = n->buffers.size;
   c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
 
   if (c->buffers == 0) {
     return RT_ERROR_ALLOCATE_CONTEXT;
   }
+  for (i = 0; i < c->num_of_buffers; i++) {
+    c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_INITIAL;
+  }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Inputs
+  rt_list_t inputs = create_rt_list_from_nn_list(n, n->inputs);
+  c->num_of_inputs = inputs.size;
+  c->input_variable_ids = malloc(sizeof(int *) * c->num_of_inputs);
+  for (i = 0; i < c->num_of_inputs; i++) {
+    c->input_variable_ids[i] = inputs.data[i];
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Outputs
+  rt_list_t outputs = create_rt_list_from_nn_list(n, n->outputs);
+  c->num_of_outputs = outputs.size;
+  c->output_variable_ids = malloc(sizeof(int *) * c->num_of_outputs);
+  for (i = 0; i < c->num_of_outputs; i++) {
+    c->output_variable_ids[i] = outputs.data[i];
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Allocate buffers
   int *list = (int *)NN_GET(n, n->buffers.list);
   for (i = 0; i < c->num_of_buffers; i++) {
-    c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_MALLOC;
-    c->buffers[i].buffer =
-        malloc(*(list + i) * sizeof(float)); // TODO float only.
-    if (c->buffers[i].buffer == 0) {
-      return RT_ERROR_ALLOCATE_CONTEXT;
+    if (c->buffers[i].allocate_type == RT_BUFFER_ALLOCATE_TYPE_INITIAL) {
+      c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_MALLOC;
+      c->buffers[i].buffer =
+          malloc(*(list + i) * sizeof(float)); // TODO float only.
+      if (c->buffers[i].buffer == 0) {
+        return RT_ERROR_ALLOCATE_CONTEXT;
+      }
     }
   }
 
@@ -111,20 +136,6 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
   for (i = 0; i < c->num_of_functions; i++) {
     nn_function_t *func = (nn_function_t *)(NN_GET(n, *(list + i)));
     c->functions[i] = allocate_function_context(n, c, func);
-  }
-
-  rt_list_t inputs = create_rt_list_from_nn_list(n, n->inputs);
-  c->num_of_inputs = inputs.size;
-  c->input_variable_ids = malloc(sizeof(int *) * c->num_of_inputs);
-  for (i = 0; i < c->num_of_inputs; i++) {
-    c->input_variable_ids[i] = inputs.data[i];
-  }
-
-  rt_list_t outputs = create_rt_list_from_nn_list(n, n->outputs);
-  c->num_of_outputs = outputs.size;
-  c->output_variable_ids = malloc(sizeof(int *) * c->num_of_outputs);
-  for (i = 0; i < c->num_of_outputs; i++) {
-    c->output_variable_ids[i] = outputs.data[i];
   }
 
   return RT_ERROR_NOERROR;
@@ -230,10 +241,10 @@ float *rt_output_buffer(rt_context_pointer context, size_t index) {
   return c->variables[c->output_variable_ids[index]].data;
 }
 
-rt_error_enum_t rt_forward(rt_context_pointer context, void **input,
-                           void **output) {
+rt_error_enum_t rt_forward(rt_context_pointer context) {
   int i; // Iterator
   rt_context_t *c = context;
+
   for (i = 0; i < c->num_of_functions; i++) {
     c->functions[i].exec_func(&(c->functions[i].func));
   }

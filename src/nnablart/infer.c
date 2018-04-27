@@ -60,7 +60,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     printf(" )\n");
   }
 
-  ret = rt_forward(context, 0, 0);
+  ret = rt_forward(context);
   assert(ret == RT_ERROR_NOERROR);
 
   for (i = 0; i < rt_num_of_output(context); i++) {

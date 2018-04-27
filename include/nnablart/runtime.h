@@ -208,11 +208,8 @@ float *rt_output_buffer(rt_context_pointer context, size_t index);
 /// @brief Execute feed forward calculation.
 /// Get data from @ref input and store result to @output.
 /// @param[in] context
-/// @param[in] input
-/// @param[in] output
 /// @return @ref rt_error_enum_t
-rt_error_enum_t rt_forward(rt_context_pointer context, void **input,
-                           void **output);
+rt_error_enum_t rt_forward(rt_context_pointer context);
 
 /// @}
 

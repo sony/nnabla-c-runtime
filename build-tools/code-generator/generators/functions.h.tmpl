@@ -51,7 +51,7 @@ typedef struct {
 typedef enum {
   RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0, ///< Allocated by runtime
   RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,  ///< User allocated
-  RT_BUFFER_ALLOCATE_TYPE_STINGY,     ///< Shared buffers
+  RT_BUFFER_ALLOCATE_TYPE_INITIAL,    ///< Shared buffers
   END_OF_RT_BUFFER_ALLOCATE_TYPE      ///< Max num of rt_buffer_allocate_type_t
 } rt_buffer_allocate_type_t;
 
