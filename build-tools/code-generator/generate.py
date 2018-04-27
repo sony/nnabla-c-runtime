@@ -63,7 +63,7 @@ class CodeGenerator:
         generator_module = 'generators.generator_' + \
             name.replace('/', '_').replace('.', '_')
         generator = importlib.import_module(generator_module)
-        contents = generator.generate(abspath(join(dirname(abspath(__file__)), '..', '..', name + '.tmpl')), self.info)
+        contents = generator.generate(abspath(join(dirname(abspath(__file__)), 'generators', basename(name) + '.tmpl')), self.info)
 
         with open(output_filename, 'w', encoding='utf-8') as f:
             f.write(contents)
