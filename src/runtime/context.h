@@ -30,6 +30,13 @@ typedef struct {
 } rt_function_context_t;
 
 typedef struct {
+  nn_function_type_t type;
+  rt_function_error_t (*allocate_local_context)(rt_function_t *f);
+  rt_function_error_t (*free_local_context)(rt_function_t *f);
+  rt_function_error_t (*exec)(rt_function_t *f);
+} rt_function_callback_t;
+
+typedef struct {
   int num_of_buffers;
   rt_variable_buffer_context_t *buffers;
 
@@ -44,6 +51,9 @@ typedef struct {
 
   int num_of_outputs;
   int *output_variable_ids;
+
+  int num_of_callbacks;
+  rt_function_callback_t *callbacks;
 
 } rt_context_t;
 

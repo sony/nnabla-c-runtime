@@ -26,44 +26,57 @@ extern "C" {
 
 #include <nnablart/network.h>
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Functions Functions
+/// @brief Feed forward function implementations.
+/// @{
+
+/// @brief Error definitions
 typedef enum {
-  RT_FUNCTION_ERROR_UNIMPLEMENTED = -999, ///< Invalid shape. (-999)
-  RT_FUNCTION_ERROR_MALLOC, ///< Memory allocation error. (-998)
+  RT_FUNCTION_ERROR_UNIMPLEMENTED = -999,   ///< Invalid shape. (-999)
+  RT_FUNCTION_ERROR_MALLOC,                 ///< Memory allocation error. (-998)
   RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS,  ///< Invalid number of inputs.(-997)
   RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS, ///< Invalid number of outputs. (-996)
   RT_FUNCTION_ERROR_INVALID_SHAPE,          ///< Invalid shape. (-995)
   RT_FUNCTION_ERROR_NOERROR = 0             ///< No error. (0)
 } rt_function_error_t;
 
+/// @brief List
 typedef struct {
-    int size;
-    int *data;
+  int size;  ///< Size of list
+  int *data; ///< Data
 } rt_list_t;
 
+/// @brief Allocation type
 typedef enum {
-  RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0, RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,
-  RT_BUFFER_ALLOCATE_TYPE_STINGY, RT_BUFFER_ALLOCATE_TYPE_INPUT,
-  RT_BUFFER_ALLOCATE_TYPE_OUTPUT, END_OF_RT_BUFFER_ALLOCATE_TYPE
+  RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0, ///< Allocated by runtime
+  RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,  ///< User allocated
+  RT_BUFFER_ALLOCATE_TYPE_STINGY,     ///< Shared buffers
+  END_OF_RT_BUFFER_ALLOCATE_TYPE      ///< Max num of rt_buffer_allocate_type_t
 } rt_buffer_allocate_type_t;
 
+/// @brief Variable
 typedef struct {
-  rt_list_t shape;
+  rt_list_t shape;         ///< Shape of variable
   nn_data_type_t type : 4; ///< Type of param values
-  unsigned int fp_pos : 4;
-  float coefficient; ///< Coefficient value for convert int to float.
-  void *data;
+  unsigned int fp_pos : 4; ///< Fixed point position
+  float coefficient;       ///< Coefficient value for convert int to float.
+  void *data;              ///< Pointer to real data of variable
 } rt_variable_t;
 
+/// @brief Function
 typedef struct {
-  int num_of_inputs;
-  rt_variable_t **inputs;
-  int num_of_outputs;
-  rt_variable_t **outputs;
+  int num_of_inputs;       ///< Number of inputs
+  rt_variable_t **inputs;  ///< List of input variable
+  int num_of_outputs;      ///< Number of outputs
+  rt_variable_t **outputs; ///< List of output variable
 
-  void *local_context;
+  void *local_context;     ///< General perpose context
 } rt_function_t;
 
 ${FUNCTION_DEFINES}
+
+/// @}
 
 #ifdef __cplusplus
 }

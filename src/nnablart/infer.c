@@ -28,7 +28,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     printf("     %d: %s\n", i, argv[i]);
   }
 
-  rt_context_pointer context;
+  rt_context_pointer context = 0;
   ret = rt_initialize_context(&context, net);
   assert(ret == RT_ERROR_NOERROR);
 

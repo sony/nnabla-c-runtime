@@ -26,6 +26,12 @@ extern "C" {
 
 #include <nnablart/network.h>
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Functions Functions
+/// @brief Feed forward function implementations.
+/// @{
+
+/// @brief Error definitions
 typedef enum {
   RT_FUNCTION_ERROR_UNIMPLEMENTED = -999,   ///< Invalid shape. (-999)
   RT_FUNCTION_ERROR_MALLOC,                 ///< Memory allocation error. (-998)
@@ -36,1294 +42,2340 @@ typedef enum {
   RT_FUNCTION_ERROR_NOERROR = 0             ///< No error. (0)
 } rt_function_error_t;
 
+/// @brief List
 typedef struct {
-  int size;
-  int *data;
+  int size;  ///< Size of list
+  int *data; ///< Data
 } rt_list_t;
 
+/// @brief Allocation type
 typedef enum {
-  RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0,
-  RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,
-  RT_BUFFER_ALLOCATE_TYPE_STINGY,
-  RT_BUFFER_ALLOCATE_TYPE_INPUT,
-  RT_BUFFER_ALLOCATE_TYPE_OUTPUT,
-  END_OF_RT_BUFFER_ALLOCATE_TYPE
+  RT_BUFFER_ALLOCATE_TYPE_MALLOC = 0, ///< Allocated by runtime
+  RT_BUFFER_ALLOCATE_TYPE_ALLOCATED,  ///< User allocated
+  RT_BUFFER_ALLOCATE_TYPE_STINGY,     ///< Shared buffers
+  END_OF_RT_BUFFER_ALLOCATE_TYPE      ///< Max num of rt_buffer_allocate_type_t
 } rt_buffer_allocate_type_t;
 
+/// @brief Variable
 typedef struct {
-  rt_list_t shape;
+  rt_list_t shape;         ///< Shape of variable
   nn_data_type_t type : 4; ///< Type of param values
-  unsigned int fp_pos : 4;
-  float coefficient; ///< Coefficient value for convert int to float.
-  void *data;
+  unsigned int fp_pos : 4; ///< Fixed point position
+  float coefficient;       ///< Coefficient value for convert int to float.
+  void *data;              ///< Pointer to real data of variable
 } rt_variable_t;
 
+/// @brief Function
 typedef struct {
-  int num_of_inputs;
-  rt_variable_t **inputs;
-  int num_of_outputs;
-  rt_variable_t **outputs;
+  int num_of_inputs;       ///< Number of inputs
+  rt_variable_t **inputs;  ///< List of input variable
+  int num_of_outputs;      ///< Number of outputs
+  rt_variable_t **outputs; ///< List of output variable
 
-  void *local_context;
+  void *local_context; ///< General perpose context
 } rt_function_t;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Neural Network Layer
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup NeuralNetworkLayer Neural Network Layer
+/// @{
 
-// Affine
+/// @defgroup Affine Affine
+/// @{
+
+/// Local context for Affine
 typedef struct {
-  int32_t base_axis;
-  void *private;
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } affine_local_context_t;
 
+/// Allocate Affine local context
 rt_function_error_t allocate_affine_local_context(rt_function_t *f);
-rt_function_error_t free_affine_local_context(rt_function_t *f);
-rt_function_error_t exec_affine(rt_function_t *f);
 
-// Convolution
+/// Free Affine local context
+rt_function_error_t free_affine_local_context(rt_function_t *f);
+
+/// Exec Affine
+rt_function_error_t exec_affine(rt_function_t *f);
+/// @}
+
+/// @defgroup Convolution Convolution
+/// @{
+
+/// Local context for Convolution
 typedef struct {
-  int32_t base_axis;
+  int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;
-  void *private;
+  int32_t group;      ///< int64
+  void *private;      ///< Private area
 } convolution_local_context_t;
 
+/// Allocate Convolution local context
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f);
-rt_function_error_t free_convolution_local_context(rt_function_t *f);
-rt_function_error_t exec_convolution(rt_function_t *f);
 
-// DepthwiseConvolution
+/// Free Convolution local context
+rt_function_error_t free_convolution_local_context(rt_function_t *f);
+
+/// Exec Convolution
+rt_function_error_t exec_convolution(rt_function_t *f);
+/// @}
+
+/// @defgroup DepthwiseConvolution DepthwiseConvolution
+/// @{
+
+/// Local context for DepthwiseConvolution
 typedef struct {
-  int32_t base_axis;
+  int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
-  int32_t multiplier;
-  void *private;
+  int32_t multiplier; ///< int64
+  void *private;      ///< Private area
 } depthwise_convolution_local_context_t;
 
+/// Allocate DepthwiseConvolution local context
 rt_function_error_t
 allocate_depthwise_convolution_local_context(rt_function_t *f);
-rt_function_error_t free_depthwise_convolution_local_context(rt_function_t *f);
-rt_function_error_t exec_depthwise_convolution(rt_function_t *f);
 
-// Deconvolution
+/// Free DepthwiseConvolution local context
+rt_function_error_t free_depthwise_convolution_local_context(rt_function_t *f);
+
+/// Exec DepthwiseConvolution
+rt_function_error_t exec_depthwise_convolution(rt_function_t *f);
+/// @}
+
+/// @defgroup Deconvolution Deconvolution
+/// @{
+
+/// Local context for Deconvolution
 typedef struct {
-  int32_t base_axis;
+  int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;
-  void *private;
+  int32_t group;      ///< int64
+  void *private;      ///< Private area
 } deconvolution_local_context_t;
 
+/// Allocate Deconvolution local context
 rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f);
-rt_function_error_t free_deconvolution_local_context(rt_function_t *f);
-rt_function_error_t exec_deconvolution(rt_function_t *f);
 
-// DepthwiseDeconvolution
+/// Free Deconvolution local context
+rt_function_error_t free_deconvolution_local_context(rt_function_t *f);
+
+/// Exec Deconvolution
+rt_function_error_t exec_deconvolution(rt_function_t *f);
+/// @}
+
+/// @defgroup DepthwiseDeconvolution DepthwiseDeconvolution
+/// @{
+
+/// Local context for DepthwiseDeconvolution
 typedef struct {
-  int32_t base_axis;
+  int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
-  int32_t divisor;
-  void *private;
+  int32_t divisor;    ///< int64
+  void *private;      ///< Private area
 } depthwise_deconvolution_local_context_t;
 
+/// Allocate DepthwiseDeconvolution local context
 rt_function_error_t
 allocate_depthwise_deconvolution_local_context(rt_function_t *f);
+
+/// Free DepthwiseDeconvolution local context
 rt_function_error_t
 free_depthwise_deconvolution_local_context(rt_function_t *f);
-rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f);
 
-// MaxPooling
+/// Exec DepthwiseDeconvolution
+rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f);
+/// @}
+
+/// @defgroup MaxPooling MaxPooling
+/// @{
+
+/// Local context for MaxPooling
 typedef struct {
-  rt_list_t kernel; ///< Original type is [Shape]
-  rt_list_t stride; ///< Original type is [Shape]
-  uint8_t ignore_border;
-  rt_list_t pad; ///< Original type is [Shape]
-  void *private;
+  rt_list_t kernel;      ///< Original type is [Shape]
+  rt_list_t stride;      ///< Original type is [Shape]
+  uint8_t ignore_border; ///< bool
+  rt_list_t pad;         ///< Original type is [Shape]
+  void *private;         ///< Private area
 } max_pooling_local_context_t;
 
+/// Allocate MaxPooling local context
 rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f);
-rt_function_error_t free_max_pooling_local_context(rt_function_t *f);
-rt_function_error_t exec_max_pooling(rt_function_t *f);
 
-// AveragePooling
+/// Free MaxPooling local context
+rt_function_error_t free_max_pooling_local_context(rt_function_t *f);
+
+/// Exec MaxPooling
+rt_function_error_t exec_max_pooling(rt_function_t *f);
+/// @}
+
+/// @defgroup AveragePooling AveragePooling
+/// @{
+
+/// Local context for AveragePooling
 typedef struct {
-  rt_list_t kernel; ///< Original type is [Shape]
-  rt_list_t stride; ///< Original type is [Shape]
-  uint8_t ignore_border;
-  rt_list_t pad; ///< Original type is [Shape]
-  uint8_t including_pad;
-  void *private;
+  rt_list_t kernel;      ///< Original type is [Shape]
+  rt_list_t stride;      ///< Original type is [Shape]
+  uint8_t ignore_border; ///< bool
+  rt_list_t pad;         ///< Original type is [Shape]
+  uint8_t including_pad; ///< bool
+  void *private;         ///< Private area
 } average_pooling_local_context_t;
 
+/// Allocate AveragePooling local context
 rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f);
+
+/// Free AveragePooling local context
 rt_function_error_t free_average_pooling_local_context(rt_function_t *f);
+
+/// Exec AveragePooling
 rt_function_error_t exec_average_pooling(rt_function_t *f);
+/// @}
 
-// GlobalAveragePooling
+/// @defgroup GlobalAveragePooling GlobalAveragePooling
+/// @{
 
+/// Allocate GlobalAveragePooling local context
 rt_function_error_t
 allocate_global_average_pooling_local_context(rt_function_t *f);
-rt_function_error_t free_global_average_pooling_local_context(rt_function_t *f);
-rt_function_error_t exec_global_average_pooling(rt_function_t *f);
 
-// SumPooling
+/// Free GlobalAveragePooling local context
+rt_function_error_t free_global_average_pooling_local_context(rt_function_t *f);
+
+/// Exec GlobalAveragePooling
+rt_function_error_t exec_global_average_pooling(rt_function_t *f);
+/// @}
+
+/// @defgroup SumPooling SumPooling
+/// @{
+
+/// Local context for SumPooling
 typedef struct {
-  rt_list_t kernel; ///< Original type is [Shape]
-  rt_list_t stride; ///< Original type is [Shape]
-  uint8_t ignore_border;
-  rt_list_t pad; ///< Original type is [Shape]
-  void *private;
+  rt_list_t kernel;      ///< Original type is [Shape]
+  rt_list_t stride;      ///< Original type is [Shape]
+  uint8_t ignore_border; ///< bool
+  rt_list_t pad;         ///< Original type is [Shape]
+  void *private;         ///< Private area
 } sum_pooling_local_context_t;
 
+/// Allocate SumPooling local context
 rt_function_error_t allocate_sum_pooling_local_context(rt_function_t *f);
-rt_function_error_t free_sum_pooling_local_context(rt_function_t *f);
-rt_function_error_t exec_sum_pooling(rt_function_t *f);
 
-// Unpooling
+/// Free SumPooling local context
+rt_function_error_t free_sum_pooling_local_context(rt_function_t *f);
+
+/// Exec SumPooling
+rt_function_error_t exec_sum_pooling(rt_function_t *f);
+/// @}
+
+/// @defgroup Unpooling Unpooling
+/// @{
+
+/// Local context for Unpooling
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]
-  void *private;
+  void *private;    ///< Private area
 } unpooling_local_context_t;
 
+/// Allocate Unpooling local context
 rt_function_error_t allocate_unpooling_local_context(rt_function_t *f);
+
+/// Free Unpooling local context
 rt_function_error_t free_unpooling_local_context(rt_function_t *f);
+
+/// Exec Unpooling
 rt_function_error_t exec_unpooling(rt_function_t *f);
+/// @}
 
-// Embed
+/// @defgroup Embed Embed
+/// @{
 
+/// Allocate Embed local context
 rt_function_error_t allocate_embed_local_context(rt_function_t *f);
+
+/// Free Embed local context
 rt_function_error_t free_embed_local_context(rt_function_t *f);
+
+/// Exec Embed
 rt_function_error_t exec_embed(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Neural Network Activation Functions
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup NeuralNetworkActivationFunctions Neural Network Activation
+/// Functions
+/// @{
 
-// Sigmoid
+/// @defgroup Sigmoid Sigmoid
+/// @{
 
+/// Allocate Sigmoid local context
 rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f);
+
+/// Free Sigmoid local context
 rt_function_error_t free_sigmoid_local_context(rt_function_t *f);
+
+/// Exec Sigmoid
 rt_function_error_t exec_sigmoid(rt_function_t *f);
+/// @}
 
-// Swish
+/// @defgroup Swish Swish
+/// @{
 
+/// Allocate Swish local context
 rt_function_error_t allocate_swish_local_context(rt_function_t *f);
+
+/// Free Swish local context
 rt_function_error_t free_swish_local_context(rt_function_t *f);
+
+/// Exec Swish
 rt_function_error_t exec_swish(rt_function_t *f);
+/// @}
 
-// Tanh
+/// @defgroup Tanh Tanh
+/// @{
 
+/// Allocate Tanh local context
 rt_function_error_t allocate_tanh_local_context(rt_function_t *f);
-rt_function_error_t free_tanh_local_context(rt_function_t *f);
-rt_function_error_t exec_tanh(rt_function_t *f);
 
-// ReLU
+/// Free Tanh local context
+rt_function_error_t free_tanh_local_context(rt_function_t *f);
+
+/// Exec Tanh
+rt_function_error_t exec_tanh(rt_function_t *f);
+/// @}
+
+/// @defgroup ReLU ReLU
+/// @{
+
+/// Local context for ReLU
 typedef struct {
-  uint8_t inplace;
-  void *private;
+  uint8_t inplace; ///< bool
+  void *private;   ///< Private area
 } relu_local_context_t;
 
+/// Allocate ReLU local context
 rt_function_error_t allocate_relu_local_context(rt_function_t *f);
-rt_function_error_t free_relu_local_context(rt_function_t *f);
-rt_function_error_t exec_relu(rt_function_t *f);
 
-// LeakyReLU
+/// Free ReLU local context
+rt_function_error_t free_relu_local_context(rt_function_t *f);
+
+/// Exec ReLU
+rt_function_error_t exec_relu(rt_function_t *f);
+/// @}
+
+/// @defgroup LeakyReLU LeakyReLU
+/// @{
+
+/// Local context for LeakyReLU
 typedef struct {
-  float alpha;
-  void *private;
+  float alpha;   ///< float
+  void *private; ///< Private area
 } leaky_relu_local_context_t;
 
+/// Allocate LeakyReLU local context
 rt_function_error_t allocate_leaky_relu_local_context(rt_function_t *f);
-rt_function_error_t free_leaky_relu_local_context(rt_function_t *f);
-rt_function_error_t exec_leaky_relu(rt_function_t *f);
 
-// Softmax
+/// Free LeakyReLU local context
+rt_function_error_t free_leaky_relu_local_context(rt_function_t *f);
+
+/// Exec LeakyReLU
+rt_function_error_t exec_leaky_relu(rt_function_t *f);
+/// @}
+
+/// @defgroup Softmax Softmax
+/// @{
+
+/// Local context for Softmax
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } softmax_local_context_t;
 
+/// Allocate Softmax local context
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f);
-rt_function_error_t free_softmax_local_context(rt_function_t *f);
-rt_function_error_t exec_softmax(rt_function_t *f);
 
-// ELU
+/// Free Softmax local context
+rt_function_error_t free_softmax_local_context(rt_function_t *f);
+
+/// Exec Softmax
+rt_function_error_t exec_softmax(rt_function_t *f);
+/// @}
+
+/// @defgroup ELU ELU
+/// @{
+
+/// Local context for ELU
 typedef struct {
-  float alpha;
-  void *private;
+  float alpha;   ///< double
+  void *private; ///< Private area
 } elu_local_context_t;
 
+/// Allocate ELU local context
 rt_function_error_t allocate_elu_local_context(rt_function_t *f);
-rt_function_error_t free_elu_local_context(rt_function_t *f);
-rt_function_error_t exec_elu(rt_function_t *f);
 
-// SELU
+/// Free ELU local context
+rt_function_error_t free_elu_local_context(rt_function_t *f);
+
+/// Exec ELU
+rt_function_error_t exec_elu(rt_function_t *f);
+/// @}
+
+/// @defgroup SELU SELU
+/// @{
+
+/// Local context for SELU
 typedef struct {
-  float scale;
-  float alpha;
-  void *private;
+  float scale;   ///< double
+  float alpha;   ///< double
+  void *private; ///< Private area
 } selu_local_context_t;
 
+/// Allocate SELU local context
 rt_function_error_t allocate_selu_local_context(rt_function_t *f);
-rt_function_error_t free_selu_local_context(rt_function_t *f);
-rt_function_error_t exec_selu(rt_function_t *f);
 
-// CReLU
+/// Free SELU local context
+rt_function_error_t free_selu_local_context(rt_function_t *f);
+
+/// Exec SELU
+rt_function_error_t exec_selu(rt_function_t *f);
+/// @}
+
+/// @defgroup CReLU CReLU
+/// @{
+
+/// Local context for CReLU
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } crelu_local_context_t;
 
+/// Allocate CReLU local context
 rt_function_error_t allocate_crelu_local_context(rt_function_t *f);
-rt_function_error_t free_crelu_local_context(rt_function_t *f);
-rt_function_error_t exec_crelu(rt_function_t *f);
 
-// CELU
+/// Free CReLU local context
+rt_function_error_t free_crelu_local_context(rt_function_t *f);
+
+/// Exec CReLU
+rt_function_error_t exec_crelu(rt_function_t *f);
+/// @}
+
+/// @defgroup CELU CELU
+/// @{
+
+/// Local context for CELU
 typedef struct {
-  float alpha;
-  int32_t axis;
-  void *private;
+  float alpha;   ///< double
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } celu_local_context_t;
 
+/// Allocate CELU local context
 rt_function_error_t allocate_celu_local_context(rt_function_t *f);
-rt_function_error_t free_celu_local_context(rt_function_t *f);
-rt_function_error_t exec_celu(rt_function_t *f);
 
-// PReLU
+/// Free CELU local context
+rt_function_error_t free_celu_local_context(rt_function_t *f);
+
+/// Exec CELU
+rt_function_error_t exec_celu(rt_function_t *f);
+/// @}
+
+/// @defgroup PReLU PReLU
+/// @{
+
+/// Local context for PReLU
 typedef struct {
-  int32_t base_axis;
-  void *private;
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } prelu_local_context_t;
 
+/// Allocate PReLU local context
 rt_function_error_t allocate_prelu_local_context(rt_function_t *f);
+
+/// Free PReLU local context
 rt_function_error_t free_prelu_local_context(rt_function_t *f);
+
+/// Exec PReLU
 rt_function_error_t exec_prelu(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Normalization
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Normalization Normalization
+/// @{
 
-// BatchNormalization
+/// @defgroup BatchNormalization BatchNormalization
+/// @{
+
+/// Local context for BatchNormalization
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  float decay_rate;
-  float eps;
-  uint8_t batch_stat;
-  void *private;
+  rt_list_t axes;     ///< Original type is [repeated int64]
+  float decay_rate;   ///< float
+  float eps;          ///< float
+  uint8_t batch_stat; ///< bool
+  void *private;      ///< Private area
 } batch_normalization_local_context_t;
 
+/// Allocate BatchNormalization local context
 rt_function_error_t
 allocate_batch_normalization_local_context(rt_function_t *f);
-rt_function_error_t free_batch_normalization_local_context(rt_function_t *f);
-rt_function_error_t exec_batch_normalization(rt_function_t *f);
 
-// MeanSubtraction
+/// Free BatchNormalization local context
+rt_function_error_t free_batch_normalization_local_context(rt_function_t *f);
+
+/// Exec BatchNormalization
+rt_function_error_t exec_batch_normalization(rt_function_t *f);
+/// @}
+
+/// @defgroup MeanSubtraction MeanSubtraction
+/// @{
+
+/// Local context for MeanSubtraction
 typedef struct {
-  int32_t base_axis;
-  uint8_t update_running_mean;
-  void *private;
+  int32_t base_axis;           ///< int64
+  uint8_t update_running_mean; ///< bool
+  void *private;               ///< Private area
 } mean_subtraction_local_context_t;
 
+/// Allocate MeanSubtraction local context
 rt_function_error_t allocate_mean_subtraction_local_context(rt_function_t *f);
+
+/// Free MeanSubtraction local context
 rt_function_error_t free_mean_subtraction_local_context(rt_function_t *f);
+
+/// Exec MeanSubtraction
 rt_function_error_t exec_mean_subtraction(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Reduction
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Reduction Reduction
+/// @{
 
-// Sum
+/// @defgroup Sum Sum
+/// @{
+
+/// Local context for Sum
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  uint8_t keep_dims;
-  void *private;
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< bool
+  void *private;     ///< Private area
 } sum_local_context_t;
 
+/// Allocate Sum local context
 rt_function_error_t allocate_sum_local_context(rt_function_t *f);
-rt_function_error_t free_sum_local_context(rt_function_t *f);
-rt_function_error_t exec_sum(rt_function_t *f);
 
-// Mean
+/// Free Sum local context
+rt_function_error_t free_sum_local_context(rt_function_t *f);
+
+/// Exec Sum
+rt_function_error_t exec_sum(rt_function_t *f);
+/// @}
+
+/// @defgroup Mean Mean
+/// @{
+
+/// Local context for Mean
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  uint8_t keep_dims;
-  void *private;
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< bool
+  void *private;     ///< Private area
 } mean_local_context_t;
 
+/// Allocate Mean local context
 rt_function_error_t allocate_mean_local_context(rt_function_t *f);
-rt_function_error_t free_mean_local_context(rt_function_t *f);
-rt_function_error_t exec_mean(rt_function_t *f);
 
-// Max
+/// Free Mean local context
+rt_function_error_t free_mean_local_context(rt_function_t *f);
+
+/// Exec Mean
+rt_function_error_t exec_mean(rt_function_t *f);
+/// @}
+
+/// @defgroup Max Max
+/// @{
+
+/// Local context for Max
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  uint8_t keep_dims;
-  void *private;
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< bool
+  void *private;     ///< Private area
 } max_local_context_t;
 
+/// Allocate Max local context
 rt_function_error_t allocate_max_local_context(rt_function_t *f);
-rt_function_error_t free_max_local_context(rt_function_t *f);
-rt_function_error_t exec_max(rt_function_t *f);
 
-// Min
+/// Free Max local context
+rt_function_error_t free_max_local_context(rt_function_t *f);
+
+/// Exec Max
+rt_function_error_t exec_max(rt_function_t *f);
+/// @}
+
+/// @defgroup Min Min
+/// @{
+
+/// Local context for Min
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  uint8_t keep_dims;
-  void *private;
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< bool
+  void *private;     ///< Private area
 } min_local_context_t;
 
+/// Allocate Min local context
 rt_function_error_t allocate_min_local_context(rt_function_t *f);
-rt_function_error_t free_min_local_context(rt_function_t *f);
-rt_function_error_t exec_min(rt_function_t *f);
 
-// Prod
+/// Free Min local context
+rt_function_error_t free_min_local_context(rt_function_t *f);
+
+/// Exec Min
+rt_function_error_t exec_min(rt_function_t *f);
+/// @}
+
+/// @defgroup Prod Prod
+/// @{
+
+/// Local context for Prod
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  uint8_t keep_dims;
-  void *private;
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< bool
+  void *private;     ///< Private area
 } prod_local_context_t;
 
+/// Allocate Prod local context
 rt_function_error_t allocate_prod_local_context(rt_function_t *f);
+
+/// Free Prod local context
 rt_function_error_t free_prod_local_context(rt_function_t *f);
+
+/// Exec Prod
 rt_function_error_t exec_prod(rt_function_t *f);
+/// @}
 
-// ReduceSum
+/// @defgroup ReduceSum ReduceSum
+/// @{
 
+/// Allocate ReduceSum local context
 rt_function_error_t allocate_reduce_sum_local_context(rt_function_t *f);
+
+/// Free ReduceSum local context
 rt_function_error_t free_reduce_sum_local_context(rt_function_t *f);
+
+/// Exec ReduceSum
 rt_function_error_t exec_reduce_sum(rt_function_t *f);
+/// @}
 
-// ReduceMean
+/// @defgroup ReduceMean ReduceMean
+/// @{
 
+/// Allocate ReduceMean local context
 rt_function_error_t allocate_reduce_mean_local_context(rt_function_t *f);
+
+/// Free ReduceMean local context
 rt_function_error_t free_reduce_mean_local_context(rt_function_t *f);
+
+/// Exec ReduceMean
 rt_function_error_t exec_reduce_mean(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Arithmetic
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Arithmetic Arithmetic
+/// @{
 
-// Add2
+/// @defgroup Add2 Add2
+/// @{
+
+/// Local context for Add2
 typedef struct {
-  uint8_t inplace;
-  void *private;
+  uint8_t inplace; ///< bool
+  void *private;   ///< Private area
 } add2_local_context_t;
 
+/// Allocate Add2 local context
 rt_function_error_t allocate_add2_local_context(rt_function_t *f);
+
+/// Free Add2 local context
 rt_function_error_t free_add2_local_context(rt_function_t *f);
+
+/// Exec Add2
 rt_function_error_t exec_add2(rt_function_t *f);
+/// @}
 
-// BcAdd2
+/// @defgroup BcAdd2 BcAdd2
+/// @{
 
+/// Allocate BcAdd2 local context
 rt_function_error_t allocate_bc_add2_local_context(rt_function_t *f);
+
+/// Free BcAdd2 local context
 rt_function_error_t free_bc_add2_local_context(rt_function_t *f);
+
+/// Exec BcAdd2
 rt_function_error_t exec_bc_add2(rt_function_t *f);
+/// @}
 
-// Sub2
+/// @defgroup Sub2 Sub2
+/// @{
 
+/// Allocate Sub2 local context
 rt_function_error_t allocate_sub2_local_context(rt_function_t *f);
+
+/// Free Sub2 local context
 rt_function_error_t free_sub2_local_context(rt_function_t *f);
+
+/// Exec Sub2
 rt_function_error_t exec_sub2(rt_function_t *f);
+/// @}
 
-// Mul2
+/// @defgroup Mul2 Mul2
+/// @{
 
+/// Allocate Mul2 local context
 rt_function_error_t allocate_mul2_local_context(rt_function_t *f);
+
+/// Free Mul2 local context
 rt_function_error_t free_mul2_local_context(rt_function_t *f);
+
+/// Exec Mul2
 rt_function_error_t exec_mul2(rt_function_t *f);
+/// @}
 
-// Div2
+/// @defgroup Div2 Div2
+/// @{
 
+/// Allocate Div2 local context
 rt_function_error_t allocate_div2_local_context(rt_function_t *f);
+
+/// Free Div2 local context
 rt_function_error_t free_div2_local_context(rt_function_t *f);
+
+/// Exec Div2
 rt_function_error_t exec_div2(rt_function_t *f);
+/// @}
 
-// Pow2
+/// @defgroup Pow2 Pow2
+/// @{
 
+/// Allocate Pow2 local context
 rt_function_error_t allocate_pow2_local_context(rt_function_t *f);
-rt_function_error_t free_pow2_local_context(rt_function_t *f);
-rt_function_error_t exec_pow2(rt_function_t *f);
 
-// AddScalar
+/// Free Pow2 local context
+rt_function_error_t free_pow2_local_context(rt_function_t *f);
+
+/// Exec Pow2
+rt_function_error_t exec_pow2(rt_function_t *f);
+/// @}
+
+/// @defgroup AddScalar AddScalar
+/// @{
+
+/// Local context for AddScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } add_scalar_local_context_t;
 
+/// Allocate AddScalar local context
 rt_function_error_t allocate_add_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_add_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_add_scalar(rt_function_t *f);
 
-// MulScalar
+/// Free AddScalar local context
+rt_function_error_t free_add_scalar_local_context(rt_function_t *f);
+
+/// Exec AddScalar
+rt_function_error_t exec_add_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup MulScalar MulScalar
+/// @{
+
+/// Local context for MulScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } mul_scalar_local_context_t;
 
+/// Allocate MulScalar local context
 rt_function_error_t allocate_mul_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_mul_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_mul_scalar(rt_function_t *f);
 
-// PowScalar
+/// Free MulScalar local context
+rt_function_error_t free_mul_scalar_local_context(rt_function_t *f);
+
+/// Exec MulScalar
+rt_function_error_t exec_mul_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup PowScalar PowScalar
+/// @{
+
+/// Local context for PowScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } pow_scalar_local_context_t;
 
+/// Allocate PowScalar local context
 rt_function_error_t allocate_pow_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_pow_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_pow_scalar(rt_function_t *f);
 
-// RSubScalar
+/// Free PowScalar local context
+rt_function_error_t free_pow_scalar_local_context(rt_function_t *f);
+
+/// Exec PowScalar
+rt_function_error_t exec_pow_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup RSubScalar RSubScalar
+/// @{
+
+/// Local context for RSubScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } r_sub_scalar_local_context_t;
 
+/// Allocate RSubScalar local context
 rt_function_error_t allocate_r_sub_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_r_sub_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_r_sub_scalar(rt_function_t *f);
 
-// RDivScalar
+/// Free RSubScalar local context
+rt_function_error_t free_r_sub_scalar_local_context(rt_function_t *f);
+
+/// Exec RSubScalar
+rt_function_error_t exec_r_sub_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup RDivScalar RDivScalar
+/// @{
+
+/// Local context for RDivScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } r_div_scalar_local_context_t;
 
+/// Allocate RDivScalar local context
 rt_function_error_t allocate_r_div_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_r_div_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_r_div_scalar(rt_function_t *f);
 
-// RPowScalar
+/// Free RDivScalar local context
+rt_function_error_t free_r_div_scalar_local_context(rt_function_t *f);
+
+/// Exec RDivScalar
+rt_function_error_t exec_r_div_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup RPowScalar RPowScalar
+/// @{
+
+/// Local context for RPowScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } r_pow_scalar_local_context_t;
 
+/// Allocate RPowScalar local context
 rt_function_error_t allocate_r_pow_scalar_local_context(rt_function_t *f);
+
+/// Free RPowScalar local context
 rt_function_error_t free_r_pow_scalar_local_context(rt_function_t *f);
+
+/// Exec RPowScalar
 rt_function_error_t exec_r_pow_scalar(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Logical
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Logical Logical
+/// @{
 
-// Sign
+/// @defgroup Sign Sign
+/// @{
+
+/// Local context for Sign
 typedef struct {
-  float alpha;
-  void *private;
+  float alpha;   ///< float
+  void *private; ///< Private area
 } sign_local_context_t;
 
+/// Allocate Sign local context
 rt_function_error_t allocate_sign_local_context(rt_function_t *f);
+
+/// Free Sign local context
 rt_function_error_t free_sign_local_context(rt_function_t *f);
+
+/// Exec Sign
 rt_function_error_t exec_sign(rt_function_t *f);
+/// @}
 
-// Minimum2
+/// @defgroup Minimum2 Minimum2
+/// @{
 
+/// Allocate Minimum2 local context
 rt_function_error_t allocate_minimum2_local_context(rt_function_t *f);
+
+/// Free Minimum2 local context
 rt_function_error_t free_minimum2_local_context(rt_function_t *f);
+
+/// Exec Minimum2
 rt_function_error_t exec_minimum2(rt_function_t *f);
+/// @}
 
-// Maximum2
+/// @defgroup Maximum2 Maximum2
+/// @{
 
+/// Allocate Maximum2 local context
 rt_function_error_t allocate_maximum2_local_context(rt_function_t *f);
-rt_function_error_t free_maximum2_local_context(rt_function_t *f);
-rt_function_error_t exec_maximum2(rt_function_t *f);
 
-// MinimumScalar
+/// Free Maximum2 local context
+rt_function_error_t free_maximum2_local_context(rt_function_t *f);
+
+/// Exec Maximum2
+rt_function_error_t exec_maximum2(rt_function_t *f);
+/// @}
+
+/// @defgroup MinimumScalar MinimumScalar
+/// @{
+
+/// Local context for MinimumScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } minimum_scalar_local_context_t;
 
+/// Allocate MinimumScalar local context
 rt_function_error_t allocate_minimum_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_minimum_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_minimum_scalar(rt_function_t *f);
 
-// MaximumScalar
+/// Free MinimumScalar local context
+rt_function_error_t free_minimum_scalar_local_context(rt_function_t *f);
+
+/// Exec MinimumScalar
+rt_function_error_t exec_minimum_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup MaximumScalar MaximumScalar
+/// @{
+
+/// Local context for MaximumScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } maximum_scalar_local_context_t;
 
+/// Allocate MaximumScalar local context
 rt_function_error_t allocate_maximum_scalar_local_context(rt_function_t *f);
+
+/// Free MaximumScalar local context
 rt_function_error_t free_maximum_scalar_local_context(rt_function_t *f);
+
+/// Exec MaximumScalar
 rt_function_error_t exec_maximum_scalar(rt_function_t *f);
+/// @}
 
-// LogicalAnd
+/// @defgroup LogicalAnd LogicalAnd
+/// @{
 
+/// Allocate LogicalAnd local context
 rt_function_error_t allocate_logical_and_local_context(rt_function_t *f);
+
+/// Free LogicalAnd local context
 rt_function_error_t free_logical_and_local_context(rt_function_t *f);
+
+/// Exec LogicalAnd
 rt_function_error_t exec_logical_and(rt_function_t *f);
+/// @}
 
-// LogicalOr
+/// @defgroup LogicalOr LogicalOr
+/// @{
 
+/// Allocate LogicalOr local context
 rt_function_error_t allocate_logical_or_local_context(rt_function_t *f);
+
+/// Free LogicalOr local context
 rt_function_error_t free_logical_or_local_context(rt_function_t *f);
+
+/// Exec LogicalOr
 rt_function_error_t exec_logical_or(rt_function_t *f);
+/// @}
 
-// LogicalXor
+/// @defgroup LogicalXor LogicalXor
+/// @{
 
+/// Allocate LogicalXor local context
 rt_function_error_t allocate_logical_xor_local_context(rt_function_t *f);
+
+/// Free LogicalXor local context
 rt_function_error_t free_logical_xor_local_context(rt_function_t *f);
+
+/// Exec LogicalXor
 rt_function_error_t exec_logical_xor(rt_function_t *f);
+/// @}
 
-// Equal
+/// @defgroup Equal Equal
+/// @{
 
+/// Allocate Equal local context
 rt_function_error_t allocate_equal_local_context(rt_function_t *f);
+
+/// Free Equal local context
 rt_function_error_t free_equal_local_context(rt_function_t *f);
+
+/// Exec Equal
 rt_function_error_t exec_equal(rt_function_t *f);
+/// @}
 
-// NotEqual
+/// @defgroup NotEqual NotEqual
+/// @{
 
+/// Allocate NotEqual local context
 rt_function_error_t allocate_not_equal_local_context(rt_function_t *f);
+
+/// Free NotEqual local context
 rt_function_error_t free_not_equal_local_context(rt_function_t *f);
+
+/// Exec NotEqual
 rt_function_error_t exec_not_equal(rt_function_t *f);
+/// @}
 
-// GreaterEqual
+/// @defgroup GreaterEqual GreaterEqual
+/// @{
 
+/// Allocate GreaterEqual local context
 rt_function_error_t allocate_greater_equal_local_context(rt_function_t *f);
+
+/// Free GreaterEqual local context
 rt_function_error_t free_greater_equal_local_context(rt_function_t *f);
+
+/// Exec GreaterEqual
 rt_function_error_t exec_greater_equal(rt_function_t *f);
+/// @}
 
-// Greater
+/// @defgroup Greater Greater
+/// @{
 
+/// Allocate Greater local context
 rt_function_error_t allocate_greater_local_context(rt_function_t *f);
+
+/// Free Greater local context
 rt_function_error_t free_greater_local_context(rt_function_t *f);
+
+/// Exec Greater
 rt_function_error_t exec_greater(rt_function_t *f);
+/// @}
 
-// LessEqual
+/// @defgroup LessEqual LessEqual
+/// @{
 
+/// Allocate LessEqual local context
 rt_function_error_t allocate_less_equal_local_context(rt_function_t *f);
+
+/// Free LessEqual local context
 rt_function_error_t free_less_equal_local_context(rt_function_t *f);
+
+/// Exec LessEqual
 rt_function_error_t exec_less_equal(rt_function_t *f);
+/// @}
 
-// Less
+/// @defgroup Less Less
+/// @{
 
+/// Allocate Less local context
 rt_function_error_t allocate_less_local_context(rt_function_t *f);
-rt_function_error_t free_less_local_context(rt_function_t *f);
-rt_function_error_t exec_less(rt_function_t *f);
 
-// LogicalAndScalar
+/// Free Less local context
+rt_function_error_t free_less_local_context(rt_function_t *f);
+
+/// Exec Less
+rt_function_error_t exec_less(rt_function_t *f);
+/// @}
+
+/// @defgroup LogicalAndScalar LogicalAndScalar
+/// @{
+
+/// Local context for LogicalAndScalar
 typedef struct {
-  uint8_t val;
-  void *private;
+  uint8_t val;   ///< bool
+  void *private; ///< Private area
 } logical_and_scalar_local_context_t;
 
+/// Allocate LogicalAndScalar local context
 rt_function_error_t allocate_logical_and_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_logical_and_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_logical_and_scalar(rt_function_t *f);
 
-// LogicalOrScalar
+/// Free LogicalAndScalar local context
+rt_function_error_t free_logical_and_scalar_local_context(rt_function_t *f);
+
+/// Exec LogicalAndScalar
+rt_function_error_t exec_logical_and_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup LogicalOrScalar LogicalOrScalar
+/// @{
+
+/// Local context for LogicalOrScalar
 typedef struct {
-  uint8_t val;
-  void *private;
+  uint8_t val;   ///< bool
+  void *private; ///< Private area
 } logical_or_scalar_local_context_t;
 
+/// Allocate LogicalOrScalar local context
 rt_function_error_t allocate_logical_or_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_logical_or_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_logical_or_scalar(rt_function_t *f);
 
-// LogicalXorScalar
+/// Free LogicalOrScalar local context
+rt_function_error_t free_logical_or_scalar_local_context(rt_function_t *f);
+
+/// Exec LogicalOrScalar
+rt_function_error_t exec_logical_or_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup LogicalXorScalar LogicalXorScalar
+/// @{
+
+/// Local context for LogicalXorScalar
 typedef struct {
-  uint8_t val;
-  void *private;
+  uint8_t val;   ///< bool
+  void *private; ///< Private area
 } logical_xor_scalar_local_context_t;
 
+/// Allocate LogicalXorScalar local context
 rt_function_error_t allocate_logical_xor_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_logical_xor_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_logical_xor_scalar(rt_function_t *f);
 
-// EqualScalar
+/// Free LogicalXorScalar local context
+rt_function_error_t free_logical_xor_scalar_local_context(rt_function_t *f);
+
+/// Exec LogicalXorScalar
+rt_function_error_t exec_logical_xor_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup EqualScalar EqualScalar
+/// @{
+
+/// Local context for EqualScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } equal_scalar_local_context_t;
 
+/// Allocate EqualScalar local context
 rt_function_error_t allocate_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_equal_scalar(rt_function_t *f);
 
-// NotEqualScalar
+/// Free EqualScalar local context
+rt_function_error_t free_equal_scalar_local_context(rt_function_t *f);
+
+/// Exec EqualScalar
+rt_function_error_t exec_equal_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup NotEqualScalar NotEqualScalar
+/// @{
+
+/// Local context for NotEqualScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } not_equal_scalar_local_context_t;
 
+/// Allocate NotEqualScalar local context
 rt_function_error_t allocate_not_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_not_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_not_equal_scalar(rt_function_t *f);
 
-// GreaterEqualScalar
+/// Free NotEqualScalar local context
+rt_function_error_t free_not_equal_scalar_local_context(rt_function_t *f);
+
+/// Exec NotEqualScalar
+rt_function_error_t exec_not_equal_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup GreaterEqualScalar GreaterEqualScalar
+/// @{
+
+/// Local context for GreaterEqualScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } greater_equal_scalar_local_context_t;
 
+/// Allocate GreaterEqualScalar local context
 rt_function_error_t
 allocate_greater_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_greater_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_greater_equal_scalar(rt_function_t *f);
 
-// GreaterScalar
+/// Free GreaterEqualScalar local context
+rt_function_error_t free_greater_equal_scalar_local_context(rt_function_t *f);
+
+/// Exec GreaterEqualScalar
+rt_function_error_t exec_greater_equal_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup GreaterScalar GreaterScalar
+/// @{
+
+/// Local context for GreaterScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } greater_scalar_local_context_t;
 
+/// Allocate GreaterScalar local context
 rt_function_error_t allocate_greater_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_greater_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_greater_scalar(rt_function_t *f);
 
-// LessEqualScalar
+/// Free GreaterScalar local context
+rt_function_error_t free_greater_scalar_local_context(rt_function_t *f);
+
+/// Exec GreaterScalar
+rt_function_error_t exec_greater_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup LessEqualScalar LessEqualScalar
+/// @{
+
+/// Local context for LessEqualScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } less_equal_scalar_local_context_t;
 
+/// Allocate LessEqualScalar local context
 rt_function_error_t allocate_less_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t free_less_equal_scalar_local_context(rt_function_t *f);
-rt_function_error_t exec_less_equal_scalar(rt_function_t *f);
 
-// LessScalar
+/// Free LessEqualScalar local context
+rt_function_error_t free_less_equal_scalar_local_context(rt_function_t *f);
+
+/// Exec LessEqualScalar
+rt_function_error_t exec_less_equal_scalar(rt_function_t *f);
+/// @}
+
+/// @defgroup LessScalar LessScalar
+/// @{
+
+/// Local context for LessScalar
 typedef struct {
-  float val;
-  void *private;
+  float val;     ///< double
+  void *private; ///< Private area
 } less_scalar_local_context_t;
 
+/// Allocate LessScalar local context
 rt_function_error_t allocate_less_scalar_local_context(rt_function_t *f);
+
+/// Free LessScalar local context
 rt_function_error_t free_less_scalar_local_context(rt_function_t *f);
+
+/// Exec LessScalar
 rt_function_error_t exec_less_scalar(rt_function_t *f);
+/// @}
 
-// LogicalNot
+/// @defgroup LogicalNot LogicalNot
+/// @{
 
+/// Allocate LogicalNot local context
 rt_function_error_t allocate_logical_not_local_context(rt_function_t *f);
+
+/// Free LogicalNot local context
 rt_function_error_t free_logical_not_local_context(rt_function_t *f);
+
+/// Exec LogicalNot
 rt_function_error_t exec_logical_not(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Math
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Math Math
+/// @{
 
-// Constant
+/// @defgroup Constant Constant
+/// @{
+
+/// Local context for Constant
 typedef struct {
-  float val;
+  float val;       ///< float
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;
+  void *private;   ///< Private area
 } constant_local_context_t;
 
+/// Allocate Constant local context
 rt_function_error_t allocate_constant_local_context(rt_function_t *f);
+
+/// Free Constant local context
 rt_function_error_t free_constant_local_context(rt_function_t *f);
+
+/// Exec Constant
 rt_function_error_t exec_constant(rt_function_t *f);
+/// @}
 
-// Abs
+/// @defgroup Abs Abs
+/// @{
 
+/// Allocate Abs local context
 rt_function_error_t allocate_abs_local_context(rt_function_t *f);
+
+/// Free Abs local context
 rt_function_error_t free_abs_local_context(rt_function_t *f);
+
+/// Exec Abs
 rt_function_error_t exec_abs(rt_function_t *f);
+/// @}
 
-// Exp
+/// @defgroup Exp Exp
+/// @{
 
+/// Allocate Exp local context
 rt_function_error_t allocate_exp_local_context(rt_function_t *f);
+
+/// Free Exp local context
 rt_function_error_t free_exp_local_context(rt_function_t *f);
+
+/// Exec Exp
 rt_function_error_t exec_exp(rt_function_t *f);
+/// @}
 
-// Log
+/// @defgroup Log Log
+/// @{
 
+/// Allocate Log local context
 rt_function_error_t allocate_log_local_context(rt_function_t *f);
+
+/// Free Log local context
 rt_function_error_t free_log_local_context(rt_function_t *f);
+
+/// Exec Log
 rt_function_error_t exec_log(rt_function_t *f);
+/// @}
 
-// Identity
+/// @defgroup Identity Identity
+/// @{
 
+/// Allocate Identity local context
 rt_function_error_t allocate_identity_local_context(rt_function_t *f);
-rt_function_error_t free_identity_local_context(rt_function_t *f);
-rt_function_error_t exec_identity(rt_function_t *f);
 
-// BatchMatmul
+/// Free Identity local context
+rt_function_error_t free_identity_local_context(rt_function_t *f);
+
+/// Exec Identity
+rt_function_error_t exec_identity(rt_function_t *f);
+/// @}
+
+/// @defgroup BatchMatmul BatchMatmul
+/// @{
+
+/// Local context for BatchMatmul
 typedef struct {
-  uint8_t transpose_a;
-  uint8_t transpose_b;
-  void *private;
+  uint8_t transpose_a; ///< bool
+  uint8_t transpose_b; ///< bool
+  void *private;       ///< Private area
 } batch_matmul_local_context_t;
 
+/// Allocate BatchMatmul local context
 rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f);
+
+/// Free BatchMatmul local context
 rt_function_error_t free_batch_matmul_local_context(rt_function_t *f);
+
+/// Exec BatchMatmul
 rt_function_error_t exec_batch_matmul(rt_function_t *f);
+/// @}
 
-// Round
+/// @defgroup Round Round
+/// @{
 
+/// Allocate Round local context
 rt_function_error_t allocate_round_local_context(rt_function_t *f);
+
+/// Free Round local context
 rt_function_error_t free_round_local_context(rt_function_t *f);
+
+/// Exec Round
 rt_function_error_t exec_round(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Array Manipulation
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup ArrayManipulation Array Manipulation
+/// @{
 
-// Concatenate
+/// @defgroup Concatenate Concatenate
+/// @{
+
+/// Local context for Concatenate
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } concatenate_local_context_t;
 
+/// Allocate Concatenate local context
 rt_function_error_t allocate_concatenate_local_context(rt_function_t *f);
-rt_function_error_t free_concatenate_local_context(rt_function_t *f);
-rt_function_error_t exec_concatenate(rt_function_t *f);
 
-// Split
+/// Free Concatenate local context
+rt_function_error_t free_concatenate_local_context(rt_function_t *f);
+
+/// Exec Concatenate
+rt_function_error_t exec_concatenate(rt_function_t *f);
+/// @}
+
+/// @defgroup Split Split
+/// @{
+
+/// Local context for Split
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } split_local_context_t;
 
+/// Allocate Split local context
 rt_function_error_t allocate_split_local_context(rt_function_t *f);
-rt_function_error_t free_split_local_context(rt_function_t *f);
-rt_function_error_t exec_split(rt_function_t *f);
 
-// Stack
+/// Free Split local context
+rt_function_error_t free_split_local_context(rt_function_t *f);
+
+/// Exec Split
+rt_function_error_t exec_split(rt_function_t *f);
+/// @}
+
+/// @defgroup Stack Stack
+/// @{
+
+/// Local context for Stack
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } stack_local_context_t;
 
+/// Allocate Stack local context
 rt_function_error_t allocate_stack_local_context(rt_function_t *f);
-rt_function_error_t free_stack_local_context(rt_function_t *f);
-rt_function_error_t exec_stack(rt_function_t *f);
 
-// Slice
+/// Free Stack local context
+rt_function_error_t free_stack_local_context(rt_function_t *f);
+
+/// Exec Stack
+rt_function_error_t exec_stack(rt_function_t *f);
+/// @}
+
+/// @defgroup Slice Slice
+/// @{
+
+/// Local context for Slice
 typedef struct {
   rt_list_t start; ///< Original type is [repeated int64]
   rt_list_t stop;  ///< Original type is [repeated int64]
   rt_list_t step;  ///< Original type is [repeated int64]
-  void *private;
+  void *private;   ///< Private area
 } slice_local_context_t;
 
+/// Allocate Slice local context
 rt_function_error_t allocate_slice_local_context(rt_function_t *f);
-rt_function_error_t free_slice_local_context(rt_function_t *f);
-rt_function_error_t exec_slice(rt_function_t *f);
 
-// Transpose
+/// Free Slice local context
+rt_function_error_t free_slice_local_context(rt_function_t *f);
+
+/// Exec Slice
+rt_function_error_t exec_slice(rt_function_t *f);
+/// @}
+
+/// @defgroup Transpose Transpose
+/// @{
+
+/// Local context for Transpose
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
-  void *private;
+  void *private;  ///< Private area
 } transpose_local_context_t;
 
+/// Allocate Transpose local context
 rt_function_error_t allocate_transpose_local_context(rt_function_t *f);
-rt_function_error_t free_transpose_local_context(rt_function_t *f);
-rt_function_error_t exec_transpose(rt_function_t *f);
 
-// Broadcast
+/// Free Transpose local context
+rt_function_error_t free_transpose_local_context(rt_function_t *f);
+
+/// Exec Transpose
+rt_function_error_t exec_transpose(rt_function_t *f);
+/// @}
+
+/// @defgroup Broadcast Broadcast
+/// @{
+
+/// Local context for Broadcast
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;
+  void *private;   ///< Private area
 } broadcast_local_context_t;
 
+/// Allocate Broadcast local context
 rt_function_error_t allocate_broadcast_local_context(rt_function_t *f);
-rt_function_error_t free_broadcast_local_context(rt_function_t *f);
-rt_function_error_t exec_broadcast(rt_function_t *f);
 
-// OneHot
+/// Free Broadcast local context
+rt_function_error_t free_broadcast_local_context(rt_function_t *f);
+
+/// Exec Broadcast
+rt_function_error_t exec_broadcast(rt_function_t *f);
+/// @}
+
+/// @defgroup OneHot OneHot
+/// @{
+
+/// Local context for OneHot
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;
+  void *private;   ///< Private area
 } one_hot_local_context_t;
 
+/// Allocate OneHot local context
 rt_function_error_t allocate_one_hot_local_context(rt_function_t *f);
-rt_function_error_t free_one_hot_local_context(rt_function_t *f);
-rt_function_error_t exec_one_hot(rt_function_t *f);
 
-// Flip
+/// Free OneHot local context
+rt_function_error_t free_one_hot_local_context(rt_function_t *f);
+
+/// Exec OneHot
+rt_function_error_t exec_one_hot(rt_function_t *f);
+/// @}
+
+/// @defgroup Flip Flip
+/// @{
+
+/// Local context for Flip
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
-  void *private;
+  void *private;  ///< Private area
 } flip_local_context_t;
 
+/// Allocate Flip local context
 rt_function_error_t allocate_flip_local_context(rt_function_t *f);
-rt_function_error_t free_flip_local_context(rt_function_t *f);
-rt_function_error_t exec_flip(rt_function_t *f);
 
-// Shift
+/// Free Flip local context
+rt_function_error_t free_flip_local_context(rt_function_t *f);
+
+/// Exec Flip
+rt_function_error_t exec_flip(rt_function_t *f);
+/// @}
+
+/// @defgroup Shift Shift
+/// @{
+
+/// Named values for Shift.border_mode
 typedef enum {
   SHIFT_BORDER_MODE_NEAREST,
   SHIFT_BORDER_MODE_REFLECT,
   END_OF_SHIFT_BORDER_MODE
 } shift_border_mode_value_t;
 
+/// Local context for Shift
 typedef struct {
-  rt_list_t shifts; ///< Original type is [repeated int64]
-  shift_border_mode_value_t border_mode;
-  void *private;
+  rt_list_t shifts;                      ///< Original type is [repeated int64]
+  shift_border_mode_value_t border_mode; ///< string
+  void *private;                         ///< Private area
 } shift_local_context_t;
 
+/// Allocate Shift local context
 rt_function_error_t allocate_shift_local_context(rt_function_t *f);
-rt_function_error_t free_shift_local_context(rt_function_t *f);
-rt_function_error_t exec_shift(rt_function_t *f);
 
-// Reshape
+/// Free Shift local context
+rt_function_error_t free_shift_local_context(rt_function_t *f);
+
+/// Exec Shift
+rt_function_error_t exec_shift(rt_function_t *f);
+/// @}
+
+/// @defgroup Reshape Reshape
+/// @{
+
+/// Local context for Reshape
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;
+  void *private;   ///< Private area
 } reshape_local_context_t;
 
+/// Allocate Reshape local context
 rt_function_error_t allocate_reshape_local_context(rt_function_t *f);
+
+/// Free Reshape local context
 rt_function_error_t free_reshape_local_context(rt_function_t *f);
+
+/// Exec Reshape
 rt_function_error_t exec_reshape(rt_function_t *f);
+/// @}
 
-// MatrixDiag
+/// @defgroup MatrixDiag MatrixDiag
+/// @{
 
+/// Allocate MatrixDiag local context
 rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f);
+
+/// Free MatrixDiag local context
 rt_function_error_t free_matrix_diag_local_context(rt_function_t *f);
+
+/// Exec MatrixDiag
 rt_function_error_t exec_matrix_diag(rt_function_t *f);
+/// @}
 
-// MatrixDiagPart
+/// @defgroup MatrixDiagPart MatrixDiagPart
+/// @{
 
+/// Allocate MatrixDiagPart local context
 rt_function_error_t allocate_matrix_diag_part_local_context(rt_function_t *f);
+
+/// Free MatrixDiagPart local context
 rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f);
+
+/// Exec MatrixDiagPart
 rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Stochasticity
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Stochasticity Stochasticity
+/// @{
 
-// Dropout
+/// @defgroup Dropout Dropout
+/// @{
+
+/// Local context for Dropout
 typedef struct {
-  float p;
-  int32_t seed;
-  void *private;
+  float p;       ///< double
+  int32_t seed;  ///< int64
+  void *private; ///< Private area
 } dropout_local_context_t;
 
+/// Allocate Dropout local context
 rt_function_error_t allocate_dropout_local_context(rt_function_t *f);
-rt_function_error_t free_dropout_local_context(rt_function_t *f);
-rt_function_error_t exec_dropout(rt_function_t *f);
 
-// TopKData
+/// Free Dropout local context
+rt_function_error_t free_dropout_local_context(rt_function_t *f);
+
+/// Exec Dropout
+rt_function_error_t exec_dropout(rt_function_t *f);
+/// @}
+
+/// @defgroup TopKData TopKData
+/// @{
+
+/// Local context for TopKData
 typedef struct {
-  int32_t k;
-  uint8_t abs;
-  uint8_t reduce;
-  int32_t base_axis;
-  void *private;
+  int32_t k;         ///< int64
+  uint8_t abs;       ///< bool
+  uint8_t reduce;    ///< bool
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } top_k_data_local_context_t;
 
+/// Allocate TopKData local context
 rt_function_error_t allocate_top_k_data_local_context(rt_function_t *f);
-rt_function_error_t free_top_k_data_local_context(rt_function_t *f);
-rt_function_error_t exec_top_k_data(rt_function_t *f);
 
-// TopKGrad
+/// Free TopKData local context
+rt_function_error_t free_top_k_data_local_context(rt_function_t *f);
+
+/// Exec TopKData
+rt_function_error_t exec_top_k_data(rt_function_t *f);
+/// @}
+
+/// @defgroup TopKGrad TopKGrad
+/// @{
+
+/// Local context for TopKGrad
 typedef struct {
-  int32_t k;
-  uint8_t abs;
-  int32_t base_axis;
-  void *private;
+  int32_t k;         ///< int64
+  uint8_t abs;       ///< bool
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } top_k_grad_local_context_t;
 
+/// Allocate TopKGrad local context
 rt_function_error_t allocate_top_k_grad_local_context(rt_function_t *f);
-rt_function_error_t free_top_k_grad_local_context(rt_function_t *f);
-rt_function_error_t exec_top_k_grad(rt_function_t *f);
 
-// Rand
+/// Free TopKGrad local context
+rt_function_error_t free_top_k_grad_local_context(rt_function_t *f);
+
+/// Exec TopKGrad
+rt_function_error_t exec_top_k_grad(rt_function_t *f);
+/// @}
+
+/// @defgroup Rand Rand
+/// @{
+
+/// Local context for Rand
 typedef struct {
-  float low;
-  float high;
+  float low;       ///< float
+  float high;      ///< float
   rt_list_t shape; ///< Original type is [Shape]
-  int32_t seed;
-  void *private;
+  int32_t seed;    ///< int64
+  void *private;   ///< Private area
 } rand_local_context_t;
 
+/// Allocate Rand local context
 rt_function_error_t allocate_rand_local_context(rt_function_t *f);
-rt_function_error_t free_rand_local_context(rt_function_t *f);
-rt_function_error_t exec_rand(rt_function_t *f);
 
-// Randint
+/// Free Rand local context
+rt_function_error_t free_rand_local_context(rt_function_t *f);
+
+/// Exec Rand
+rt_function_error_t exec_rand(rt_function_t *f);
+/// @}
+
+/// @defgroup Randint Randint
+/// @{
+
+/// Local context for Randint
 typedef struct {
-  int32_t low;
-  int32_t high;
+  int32_t low;     ///< int64
+  int32_t high;    ///< int64
   rt_list_t shape; ///< Original type is [Shape]
-  int32_t seed;
-  void *private;
+  int32_t seed;    ///< int64
+  void *private;   ///< Private area
 } randint_local_context_t;
 
+/// Allocate Randint local context
 rt_function_error_t allocate_randint_local_context(rt_function_t *f);
-rt_function_error_t free_randint_local_context(rt_function_t *f);
-rt_function_error_t exec_randint(rt_function_t *f);
 
-// Randn
+/// Free Randint local context
+rt_function_error_t free_randint_local_context(rt_function_t *f);
+
+/// Exec Randint
+rt_function_error_t exec_randint(rt_function_t *f);
+/// @}
+
+/// @defgroup Randn Randn
+/// @{
+
+/// Local context for Randn
 typedef struct {
-  float mu;
-  float sigma;
+  float mu;        ///< float
+  float sigma;     ///< float
   rt_list_t shape; ///< Original type is [Shape]
-  int32_t seed;
-  void *private;
+  int32_t seed;    ///< int64
+  void *private;   ///< Private area
 } randn_local_context_t;
 
+/// Allocate Randn local context
 rt_function_error_t allocate_randn_local_context(rt_function_t *f);
-rt_function_error_t free_randn_local_context(rt_function_t *f);
-rt_function_error_t exec_randn(rt_function_t *f);
 
-// RandomCrop
+/// Free Randn local context
+rt_function_error_t free_randn_local_context(rt_function_t *f);
+
+/// Exec Randn
+rt_function_error_t exec_randn(rt_function_t *f);
+/// @}
+
+/// @defgroup RandomCrop RandomCrop
+/// @{
+
+/// Local context for RandomCrop
 typedef struct {
-  rt_list_t shape; ///< Original type is [Shape]
-  int32_t base_axis;
-  int32_t seed;
-  void *private;
+  rt_list_t shape;   ///< Original type is [Shape]
+  int32_t base_axis; ///< int64
+  int32_t seed;      ///< int64
+  void *private;     ///< Private area
 } random_crop_local_context_t;
 
+/// Allocate RandomCrop local context
 rt_function_error_t allocate_random_crop_local_context(rt_function_t *f);
-rt_function_error_t free_random_crop_local_context(rt_function_t *f);
-rt_function_error_t exec_random_crop(rt_function_t *f);
 
-// RandomFlip
+/// Free RandomCrop local context
+rt_function_error_t free_random_crop_local_context(rt_function_t *f);
+
+/// Exec RandomCrop
+rt_function_error_t exec_random_crop(rt_function_t *f);
+/// @}
+
+/// @defgroup RandomFlip RandomFlip
+/// @{
+
+/// Local context for RandomFlip
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
-  int32_t base_axis;
-  int32_t seed;
-  void *private;
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  int32_t base_axis; ///< int64
+  int32_t seed;      ///< int64
+  void *private;     ///< Private area
 } random_flip_local_context_t;
 
+/// Allocate RandomFlip local context
 rt_function_error_t allocate_random_flip_local_context(rt_function_t *f);
-rt_function_error_t free_random_flip_local_context(rt_function_t *f);
-rt_function_error_t exec_random_flip(rt_function_t *f);
 
-// RandomShift
+/// Free RandomFlip local context
+rt_function_error_t free_random_flip_local_context(rt_function_t *f);
+
+/// Exec RandomFlip
+rt_function_error_t exec_random_flip(rt_function_t *f);
+/// @}
+
+/// @defgroup RandomShift RandomShift
+/// @{
+
+/// Named values for RandomShift.border_mode
 typedef enum {
   RANDOM_SHIFT_BORDER_MODE_NEAREST,
   RANDOM_SHIFT_BORDER_MODE_REFLECT,
   END_OF_RANDOM_SHIFT_BORDER_MODE
 } random_shift_border_mode_value_t;
 
+/// Local context for RandomShift
 typedef struct {
   rt_list_t shifts; ///< Original type is [repeated int64]
-  random_shift_border_mode_value_t border_mode;
-  int32_t base_axis;
-  int32_t seed;
-  void *private;
+  random_shift_border_mode_value_t border_mode; ///< string
+  int32_t base_axis;                            ///< int64
+  int32_t seed;                                 ///< int64
+  void *private;                                ///< Private area
 } random_shift_local_context_t;
 
+/// Allocate RandomShift local context
 rt_function_error_t allocate_random_shift_local_context(rt_function_t *f);
-rt_function_error_t free_random_shift_local_context(rt_function_t *f);
-rt_function_error_t exec_random_shift(rt_function_t *f);
 
-// ImageAugmentation
+/// Free RandomShift local context
+rt_function_error_t free_random_shift_local_context(rt_function_t *f);
+
+/// Exec RandomShift
+rt_function_error_t exec_random_shift(rt_function_t *f);
+/// @}
+
+/// @defgroup ImageAugmentation ImageAugmentation
+/// @{
+
+/// Local context for ImageAugmentation
 typedef struct {
-  rt_list_t shape; ///< Original type is [Shape]
-  rt_list_t pad;   ///< Original type is [Shape]
-  float min_scale;
-  float max_scale;
-  float angle;
-  float aspect_ratio;
-  float distortion;
-  uint8_t flip_lr;
-  uint8_t flip_ud;
-  float brightness;
-  uint8_t brightness_each;
-  float contrast;
-  float contrast_center;
-  uint8_t contrast_each;
-  float noise;
-  int32_t seed;
-  void *private;
+  rt_list_t shape;         ///< Original type is [Shape]
+  rt_list_t pad;           ///< Original type is [Shape]
+  float min_scale;         ///< float
+  float max_scale;         ///< float
+  float angle;             ///< float
+  float aspect_ratio;      ///< float
+  float distortion;        ///< float
+  uint8_t flip_lr;         ///< bool
+  uint8_t flip_ud;         ///< bool
+  float brightness;        ///< float
+  uint8_t brightness_each; ///< bool
+  float contrast;          ///< float
+  float contrast_center;   ///< float
+  uint8_t contrast_each;   ///< bool
+  float noise;             ///< float
+  int32_t seed;            ///< int64
+  void *private;           ///< Private area
 } image_augmentation_local_context_t;
 
+/// Allocate ImageAugmentation local context
 rt_function_error_t allocate_image_augmentation_local_context(rt_function_t *f);
+
+/// Free ImageAugmentation local context
 rt_function_error_t free_image_augmentation_local_context(rt_function_t *f);
+
+/// Exec ImageAugmentation
 rt_function_error_t exec_image_augmentation(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Loss Functions
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup LossFunctions Loss Functions
+/// @{
 
-// SigmoidCrossEntropy
+/// @defgroup SigmoidCrossEntropy SigmoidCrossEntropy
+/// @{
 
+/// Allocate SigmoidCrossEntropy local context
 rt_function_error_t
 allocate_sigmoid_cross_entropy_local_context(rt_function_t *f);
+
+/// Free SigmoidCrossEntropy local context
 rt_function_error_t free_sigmoid_cross_entropy_local_context(rt_function_t *f);
+
+/// Exec SigmoidCrossEntropy
 rt_function_error_t exec_sigmoid_cross_entropy(rt_function_t *f);
+/// @}
 
-// BinaryCrossEntropy
+/// @defgroup BinaryCrossEntropy BinaryCrossEntropy
+/// @{
 
+/// Allocate BinaryCrossEntropy local context
 rt_function_error_t
 allocate_binary_cross_entropy_local_context(rt_function_t *f);
-rt_function_error_t free_binary_cross_entropy_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_cross_entropy(rt_function_t *f);
 
-// SoftmaxCrossEntropy
+/// Free BinaryCrossEntropy local context
+rt_function_error_t free_binary_cross_entropy_local_context(rt_function_t *f);
+
+/// Exec BinaryCrossEntropy
+rt_function_error_t exec_binary_cross_entropy(rt_function_t *f);
+/// @}
+
+/// @defgroup SoftmaxCrossEntropy SoftmaxCrossEntropy
+/// @{
+
+/// Local context for SoftmaxCrossEntropy
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } softmax_cross_entropy_local_context_t;
 
+/// Allocate SoftmaxCrossEntropy local context
 rt_function_error_t
 allocate_softmax_cross_entropy_local_context(rt_function_t *f);
-rt_function_error_t free_softmax_cross_entropy_local_context(rt_function_t *f);
-rt_function_error_t exec_softmax_cross_entropy(rt_function_t *f);
 
-// CategoricalCrossEntropy
+/// Free SoftmaxCrossEntropy local context
+rt_function_error_t free_softmax_cross_entropy_local_context(rt_function_t *f);
+
+/// Exec SoftmaxCrossEntropy
+rt_function_error_t exec_softmax_cross_entropy(rt_function_t *f);
+/// @}
+
+/// @defgroup CategoricalCrossEntropy CategoricalCrossEntropy
+/// @{
+
+/// Local context for CategoricalCrossEntropy
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } categorical_cross_entropy_local_context_t;
 
+/// Allocate CategoricalCrossEntropy local context
 rt_function_error_t
 allocate_categorical_cross_entropy_local_context(rt_function_t *f);
+
+/// Free CategoricalCrossEntropy local context
 rt_function_error_t
 free_categorical_cross_entropy_local_context(rt_function_t *f);
+
+/// Exec CategoricalCrossEntropy
 rt_function_error_t exec_categorical_cross_entropy(rt_function_t *f);
+/// @}
 
-// SquaredError
+/// @defgroup SquaredError SquaredError
+/// @{
 
+/// Allocate SquaredError local context
 rt_function_error_t allocate_squared_error_local_context(rt_function_t *f);
+
+/// Free SquaredError local context
 rt_function_error_t free_squared_error_local_context(rt_function_t *f);
+
+/// Exec SquaredError
 rt_function_error_t exec_squared_error(rt_function_t *f);
+/// @}
 
-// AbsoluteError
+/// @defgroup AbsoluteError AbsoluteError
+/// @{
 
+/// Allocate AbsoluteError local context
 rt_function_error_t allocate_absolute_error_local_context(rt_function_t *f);
-rt_function_error_t free_absolute_error_local_context(rt_function_t *f);
-rt_function_error_t exec_absolute_error(rt_function_t *f);
 
-// HuberLoss
+/// Free AbsoluteError local context
+rt_function_error_t free_absolute_error_local_context(rt_function_t *f);
+
+/// Exec AbsoluteError
+rt_function_error_t exec_absolute_error(rt_function_t *f);
+/// @}
+
+/// @defgroup HuberLoss HuberLoss
+/// @{
+
+/// Local context for HuberLoss
 typedef struct {
-  float delta;
-  void *private;
+  float delta;   ///< float
+  void *private; ///< Private area
 } huber_loss_local_context_t;
 
+/// Allocate HuberLoss local context
 rt_function_error_t allocate_huber_loss_local_context(rt_function_t *f);
-rt_function_error_t free_huber_loss_local_context(rt_function_t *f);
-rt_function_error_t exec_huber_loss(rt_function_t *f);
 
-// EpsilonInsensitiveLoss
+/// Free HuberLoss local context
+rt_function_error_t free_huber_loss_local_context(rt_function_t *f);
+
+/// Exec HuberLoss
+rt_function_error_t exec_huber_loss(rt_function_t *f);
+/// @}
+
+/// @defgroup EpsilonInsensitiveLoss EpsilonInsensitiveLoss
+/// @{
+
+/// Local context for EpsilonInsensitiveLoss
 typedef struct {
-  float epsilon;
-  void *private;
+  float epsilon; ///< float
+  void *private; ///< Private area
 } epsilon_insensitive_loss_local_context_t;
 
+/// Allocate EpsilonInsensitiveLoss local context
 rt_function_error_t
 allocate_epsilon_insensitive_loss_local_context(rt_function_t *f);
+
+/// Free EpsilonInsensitiveLoss local context
 rt_function_error_t
 free_epsilon_insensitive_loss_local_context(rt_function_t *f);
-rt_function_error_t exec_epsilon_insensitive_loss(rt_function_t *f);
 
-// KLMultinomial
+/// Exec EpsilonInsensitiveLoss
+rt_function_error_t exec_epsilon_insensitive_loss(rt_function_t *f);
+/// @}
+
+/// @defgroup KLMultinomial KLMultinomial
+/// @{
+
+/// Local context for KLMultinomial
 typedef struct {
-  int32_t base_axis;
-  void *private;
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } kl_multinomial_local_context_t;
 
+/// Allocate KLMultinomial local context
 rt_function_error_t allocate_kl_multinomial_local_context(rt_function_t *f);
+
+/// Free KLMultinomial local context
 rt_function_error_t free_kl_multinomial_local_context(rt_function_t *f);
+
+/// Exec KLMultinomial
 rt_function_error_t exec_kl_multinomial(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Quantization Neural Network Layers
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup QuantizationNeuralNetworkLayers Quantization Neural Network Layers
+/// @{
 
-// BinarySigmoid
+/// @defgroup BinarySigmoid BinarySigmoid
+/// @{
 
+/// Allocate BinarySigmoid local context
 rt_function_error_t allocate_binary_sigmoid_local_context(rt_function_t *f);
+
+/// Free BinarySigmoid local context
 rt_function_error_t free_binary_sigmoid_local_context(rt_function_t *f);
+
+/// Exec BinarySigmoid
 rt_function_error_t exec_binary_sigmoid(rt_function_t *f);
+/// @}
 
-// BinaryTanh
+/// @defgroup BinaryTanh BinaryTanh
+/// @{
 
+/// Allocate BinaryTanh local context
 rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f);
-rt_function_error_t free_binary_tanh_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_tanh(rt_function_t *f);
 
-// BinaryConnectAffine
+/// Free BinaryTanh local context
+rt_function_error_t free_binary_tanh_local_context(rt_function_t *f);
+
+/// Exec BinaryTanh
+rt_function_error_t exec_binary_tanh(rt_function_t *f);
+/// @}
+
+/// @defgroup BinaryConnectAffine BinaryConnectAffine
+/// @{
+
+/// Local context for BinaryConnectAffine
 typedef struct {
-  int32_t base_axis;
-  void *private;
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } binary_connect_affine_local_context_t;
 
+/// Allocate BinaryConnectAffine local context
 rt_function_error_t
 allocate_binary_connect_affine_local_context(rt_function_t *f);
-rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_connect_affine(rt_function_t *f);
 
-// BinaryConnectConvolution
+/// Free BinaryConnectAffine local context
+rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f);
+
+/// Exec BinaryConnectAffine
+rt_function_error_t exec_binary_connect_affine(rt_function_t *f);
+/// @}
+
+/// @defgroup BinaryConnectConvolution BinaryConnectConvolution
+/// @{
+
+/// Local context for BinaryConnectConvolution
 typedef struct {
-  int32_t base_axis;
+  int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;
-  void *private;
+  int32_t group;      ///< int64
+  void *private;      ///< Private area
 } binary_connect_convolution_local_context_t;
 
+/// Allocate BinaryConnectConvolution local context
 rt_function_error_t
 allocate_binary_connect_convolution_local_context(rt_function_t *f);
+
+/// Free BinaryConnectConvolution local context
 rt_function_error_t
 free_binary_connect_convolution_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_connect_convolution(rt_function_t *f);
 
-// BinaryWeightAffine
+/// Exec BinaryConnectConvolution
+rt_function_error_t exec_binary_connect_convolution(rt_function_t *f);
+/// @}
+
+/// @defgroup BinaryWeightAffine BinaryWeightAffine
+/// @{
+
+/// Local context for BinaryWeightAffine
 typedef struct {
-  int32_t base_axis;
-  void *private;
+  int32_t base_axis; ///< int64
+  void *private;     ///< Private area
 } binary_weight_affine_local_context_t;
 
+/// Allocate BinaryWeightAffine local context
 rt_function_error_t
 allocate_binary_weight_affine_local_context(rt_function_t *f);
-rt_function_error_t free_binary_weight_affine_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_weight_affine(rt_function_t *f);
 
-// BinaryWeightConvolution
+/// Free BinaryWeightAffine local context
+rt_function_error_t free_binary_weight_affine_local_context(rt_function_t *f);
+
+/// Exec BinaryWeightAffine
+rt_function_error_t exec_binary_weight_affine(rt_function_t *f);
+/// @}
+
+/// @defgroup BinaryWeightConvolution BinaryWeightConvolution
+/// @{
+
+/// Local context for BinaryWeightConvolution
 typedef struct {
-  int32_t base_axis;
+  int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;
-  void *private;
+  int32_t group;      ///< int64
+  void *private;      ///< Private area
 } binary_weight_convolution_local_context_t;
 
+/// Allocate BinaryWeightConvolution local context
 rt_function_error_t
 allocate_binary_weight_convolution_local_context(rt_function_t *f);
+
+/// Free BinaryWeightConvolution local context
 rt_function_error_t
 free_binary_weight_convolution_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_weight_convolution(rt_function_t *f);
 
-// INQAffine
+/// Exec BinaryWeightConvolution
+rt_function_error_t exec_binary_weight_convolution(rt_function_t *f);
+/// @}
+
+/// @defgroup INQAffine INQAffine
+/// @{
+
+/// Named values for INQAffine.selection_algorithm
 typedef enum {
   INQ_AFFINE_SELECTION_ALGORITHM_LARGEST_ABS,
   INQ_AFFINE_SELECTION_ALGORITHM_RANDOM,
   END_OF_INQ_AFFINE_SELECTION_ALGORITHM
 } inq_affine_selection_algorithm_value_t;
 
+/// Local context for INQAffine
 typedef struct {
-  int32_t base_axis;
-  int32_t num_bits;
+  int32_t base_axis;        ///< int64
+  int32_t num_bits;         ///< int64
   rt_list_t inq_iterations; ///< Original type is [repeated int64]
-  inq_affine_selection_algorithm_value_t selection_algorithm;
-  int32_t seed;
-  void *private;
+  inq_affine_selection_algorithm_value_t selection_algorithm; ///< string
+  int32_t seed;                                               ///< int64
+  void *private;                                              ///< Private area
 } inq_affine_local_context_t;
 
+/// Allocate INQAffine local context
 rt_function_error_t allocate_inq_affine_local_context(rt_function_t *f);
-rt_function_error_t free_inq_affine_local_context(rt_function_t *f);
-rt_function_error_t exec_inq_affine(rt_function_t *f);
 
-// INQConvolution
+/// Free INQAffine local context
+rt_function_error_t free_inq_affine_local_context(rt_function_t *f);
+
+/// Exec INQAffine
+rt_function_error_t exec_inq_affine(rt_function_t *f);
+/// @}
+
+/// @defgroup INQConvolution INQConvolution
+/// @{
+
+/// Named values for INQConvolution.selection_algorithm
 typedef enum {
   INQ_CONVOLUTION_SELECTION_ALGORITHM_LARGEST_ABS,
   INQ_CONVOLUTION_SELECTION_ALGORITHM_RANDOM,
   END_OF_INQ_CONVOLUTION_SELECTION_ALGORITHM
 } inq_convolution_selection_algorithm_value_t;
 
+/// Local context for INQConvolution
 typedef struct {
-  int32_t base_axis;
-  rt_list_t pad;      ///< Original type is [Shape]
-  rt_list_t stride;   ///< Original type is [Shape]
-  rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;
-  int32_t num_bits;
+  int32_t base_axis;        ///< int64
+  rt_list_t pad;            ///< Original type is [Shape]
+  rt_list_t stride;         ///< Original type is [Shape]
+  rt_list_t dilation;       ///< Original type is [Shape]
+  int32_t group;            ///< int64
+  int32_t num_bits;         ///< int64
   rt_list_t inq_iterations; ///< Original type is [repeated int64]
-  inq_convolution_selection_algorithm_value_t selection_algorithm;
-  int32_t seed;
-  void *private;
+  inq_convolution_selection_algorithm_value_t selection_algorithm; ///< string
+  int32_t seed;                                                    ///< int64
+  void *private; ///< Private area
 } inq_convolution_local_context_t;
 
+/// Allocate INQConvolution local context
 rt_function_error_t allocate_inq_convolution_local_context(rt_function_t *f);
-rt_function_error_t free_inq_convolution_local_context(rt_function_t *f);
-rt_function_error_t exec_inq_convolution(rt_function_t *f);
 
-// FixedPointQuantize
+/// Free INQConvolution local context
+rt_function_error_t free_inq_convolution_local_context(rt_function_t *f);
+
+/// Exec INQConvolution
+rt_function_error_t exec_inq_convolution(rt_function_t *f);
+/// @}
+
+/// @defgroup FixedPointQuantize FixedPointQuantize
+/// @{
+
+/// Local context for FixedPointQuantize
 typedef struct {
-  uint8_t sign;
-  int32_t n;
-  float delta;
-  uint8_t ste_fine_grained;
-  void *private;
+  uint8_t sign;             ///< bool
+  int32_t n;                ///< int64
+  float delta;              ///< float
+  uint8_t ste_fine_grained; ///< bool
+  void *private;            ///< Private area
 } fixed_point_quantize_local_context_t;
 
+/// Allocate FixedPointQuantize local context
 rt_function_error_t
 allocate_fixed_point_quantize_local_context(rt_function_t *f);
-rt_function_error_t free_fixed_point_quantize_local_context(rt_function_t *f);
-rt_function_error_t exec_fixed_point_quantize(rt_function_t *f);
 
-// Pow2Quantize
+/// Free FixedPointQuantize local context
+rt_function_error_t free_fixed_point_quantize_local_context(rt_function_t *f);
+
+/// Exec FixedPointQuantize
+rt_function_error_t exec_fixed_point_quantize(rt_function_t *f);
+/// @}
+
+/// @defgroup Pow2Quantize Pow2Quantize
+/// @{
+
+/// Local context for Pow2Quantize
 typedef struct {
-  uint8_t sign;
-  uint8_t with_zero;
-  int32_t n;
-  int32_t m;
-  uint8_t ste_fine_grained;
-  void *private;
+  uint8_t sign;             ///< bool
+  uint8_t with_zero;        ///< bool
+  int32_t n;                ///< int64
+  int32_t m;                ///< int64
+  uint8_t ste_fine_grained; ///< bool
+  void *private;            ///< Private area
 } pow2_quantize_local_context_t;
 
+/// Allocate Pow2Quantize local context
 rt_function_error_t allocate_pow2_quantize_local_context(rt_function_t *f);
+
+/// Free Pow2Quantize local context
 rt_function_error_t free_pow2_quantize_local_context(rt_function_t *f);
+
+/// Exec Pow2Quantize
 rt_function_error_t exec_pow2_quantize(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Validation
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Validation Validation
+/// @{
 
-// TopNError
+/// @defgroup TopNError TopNError
+/// @{
+
+/// Local context for TopNError
 typedef struct {
-  int32_t axis;
-  int32_t n;
-  void *private;
+  int32_t axis;  ///< int64
+  int32_t n;     ///< int64
+  void *private; ///< Private area
 } top_n_error_local_context_t;
 
+/// Allocate TopNError local context
 rt_function_error_t allocate_top_n_error_local_context(rt_function_t *f);
+
+/// Free TopNError local context
 rt_function_error_t free_top_n_error_local_context(rt_function_t *f);
+
+/// Exec TopNError
 rt_function_error_t exec_top_n_error(rt_function_t *f);
+/// @}
 
-// BinaryError
+/// @defgroup BinaryError BinaryError
+/// @{
 
+/// Allocate BinaryError local context
 rt_function_error_t allocate_binary_error_local_context(rt_function_t *f);
-rt_function_error_t free_binary_error_local_context(rt_function_t *f);
-rt_function_error_t exec_binary_error(rt_function_t *f);
 
-// ConfusionMatrix
+/// Free BinaryError local context
+rt_function_error_t free_binary_error_local_context(rt_function_t *f);
+
+/// Exec BinaryError
+rt_function_error_t exec_binary_error(rt_function_t *f);
+/// @}
+
+/// @defgroup ConfusionMatrix ConfusionMatrix
+/// @{
+
+/// Local context for ConfusionMatrix
 typedef struct {
-  int32_t axis;
-  void *private;
+  int32_t axis;  ///< int64
+  void *private; ///< Private area
 } confusion_matrix_local_context_t;
 
+/// Allocate ConfusionMatrix local context
 rt_function_error_t allocate_confusion_matrix_local_context(rt_function_t *f);
+
+/// Free ConfusionMatrix local context
 rt_function_error_t free_confusion_matrix_local_context(rt_function_t *f);
+
+/// Exec ConfusionMatrix
 rt_function_error_t exec_confusion_matrix(rt_function_t *f);
+/// @}
+
+/// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Unsupported, Special Use
-////////////////////////////////////////////////////////////////////////////////
+/// @defgroup Unsupported,SpecialUse Unsupported, Special Use
+/// @{
 
-// VATNoise
+/// @defgroup VATNoise VATNoise
+/// @{
+
+/// Local context for VATNoise
 typedef struct {
-  int32_t base_axis;
-  float eps;
-  void *private;
+  int32_t base_axis; ///< int64
+  float eps;         ///< float
+  void *private;     ///< Private area
 } vat_noise_local_context_t;
 
+/// Allocate VATNoise local context
 rt_function_error_t allocate_vat_noise_local_context(rt_function_t *f);
+
+/// Free VATNoise local context
 rt_function_error_t free_vat_noise_local_context(rt_function_t *f);
+
+/// Exec VATNoise
 rt_function_error_t exec_vat_noise(rt_function_t *f);
+/// @}
 
-// Unlink
+/// @defgroup Unlink Unlink
+/// @{
 
+/// Allocate Unlink local context
 rt_function_error_t allocate_unlink_local_context(rt_function_t *f);
-rt_function_error_t free_unlink_local_context(rt_function_t *f);
-rt_function_error_t exec_unlink(rt_function_t *f);
 
-// Sink
+/// Free Unlink local context
+rt_function_error_t free_unlink_local_context(rt_function_t *f);
+
+/// Exec Unlink
+rt_function_error_t exec_unlink(rt_function_t *f);
+/// @}
+
+/// @defgroup Sink Sink
+/// @{
+
+/// Local context for Sink
 typedef struct {
-  uint8_t one_input_grad;
-  void *private;
+  uint8_t one_input_grad; ///< bool
+  void *private;          ///< Private area
 } sink_local_context_t;
 
+/// Allocate Sink local context
 rt_function_error_t allocate_sink_local_context(rt_function_t *f);
+
+/// Free Sink local context
 rt_function_error_t free_sink_local_context(rt_function_t *f);
+
+/// Exec Sink
 rt_function_error_t exec_sink(rt_function_t *f);
+/// @}
+
+/// @}
+
+/// @}
 
 #ifdef __cplusplus
 }

@@ -26,16 +26,15 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
 
   rt_context_t *c = malloc(sizeof(rt_context_t));
   if (c == 0) {
-    WHOAMI("RT_ERROR_ALLOCATE_CONTEXT\n");
     return RT_ERROR_ALLOCATE_CONTEXT;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   // Buffers
   c->num_of_buffers = n->buffers.size;
   c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
 
   if (c->buffers == 0) {
-    WHOAMI("RT_ERROR_ALLOCATE_CONTEXT\n");
     return RT_ERROR_ALLOCATE_CONTEXT;
   }
 
@@ -45,16 +44,15 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
     c->buffers[i].buffer =
         malloc(*(list + i) * sizeof(float)); // TODO float only.
     if (c->buffers[i].buffer == 0) {
-      WHOAMI("RT_ERROR_ALLOCATE_CONTEXT\n");
       return RT_ERROR_ALLOCATE_CONTEXT;
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   // Variables
   c->num_of_variables = n->variables.size;
   c->variables = malloc(sizeof(rt_variable_t) * c->num_of_variables);
   if (c->variables == 0) {
-    WHOAMI("RT_ERROR_ALLOCATE_CONTEXT\n");
     return RT_ERROR_ALLOCATE_CONTEXT;
   }
 
@@ -75,6 +73,8 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
     }
   }
 
+  //////////////////////////////////////////////////////////////////////////////
+  // Functions
   c->num_of_functions = n->functions.size;
   c->functions = malloc(sizeof(rt_function_context_t) * c->num_of_functions);
   list = (int *)NN_GET(n, n->functions.list);
@@ -102,7 +102,6 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
 }
 
 rt_error_enum_t rt_free_context(rt_context_pointer *context) {
-  WHOAMI("%s\n", __func__);
   rt_context_t *c = *context;
 
   int i; // Iterator
@@ -202,9 +201,8 @@ float *rt_output_buffer(rt_context_pointer context, size_t index) {
   return c->variables[c->output_variable_ids[index]].data;
 }
 
-rt_error_enum_t rt_forward(rt_context_pointer context, float **input,
-                           float **output) {
-  WHOAMI("%s\n", __func__);
+rt_error_enum_t rt_forward(rt_context_pointer context, void **input,
+                           void **output) {
   int i; // Iterator
   rt_context_t *c = context;
   for (i = 0; i < c->num_of_functions; i++) {

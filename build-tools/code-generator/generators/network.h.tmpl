@@ -27,8 +27,8 @@ extern "C" {
 #define NN_BINARY_FORMAT_VERSION  (1)
 #define NN_BINARY_FORMAT_REVISION ${BINARY_VERSION}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup NetworkDefinitions Internal network representation
-///
 /// @{
 
 typedef int32_t pointer_index_t; ///< Index of data.
@@ -42,8 +42,8 @@ typedef struct {
 
 /// @brief Variable buffer information.
 typedef struct {
-  int id;
-  int size;
+  int id; ///< Variable buffer identifier
+  int size; ///< Variable size in number of data.
 } nn_variable_buffer_t;
 
 /// @brief Data types.
@@ -66,11 +66,6 @@ typedef struct {
                         ///in memory.
 } nn_variable_t;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Functions
-/// @brief Definitions for functions.
-/// @{
-
 /// @brief Function types.
 typedef enum {
     ${FUNCTION_ENUMS}
@@ -78,33 +73,35 @@ typedef enum {
 
 /// @brief Function implement type.
 typedef enum {
-    NN_FUNCTION_IMPLEMENT_GENERIC,
-    NN_FUNCTION_IMPLEMENT_FLOAT,
-    NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT
+  NN_FUNCTION_IMPLEMENT_FLOAT,                ///< Calculate with 32bit floating point.
+  NN_FUNCTION_IMPLEMENT_FIXED16,              ///< Calculate with 16bit fixed point.
+  NN_FUNCTION_IMPLEMENT_FIXED8,               ///< Calculate with 8bit fixed point.
+  NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT = 99 ///< End of official implement calcuration type
 } nn_function_implement_t;
 
 /// @brief Common definition of Function.
 /// This type is to be used for the function does not have arguements.
-/// @{
+
 typedef struct {
   nn_function_type_t type;        ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
+  nn_function_implement_t impl;   ///< Common: function implementation.
   nn_list_t inputs;               ///< Common: List of input variables.
   nn_list_t outputs;              ///< Common: List of output variables.
 } nn_function_t;
 
-/// @}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @defgroup IndividualFunctions IndividualFunctions
+/// @brief Individual function definitions
+/// @{
 
 ${FUNCTION_DEFINES}
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Network
-/// @brief Definitions for network.
-/// @{
+/// @}
 
+/// Define memory size at the end of nn_network_t.
 typedef struct {
-  nn_size_t num_of_data;
-  nn_size_t data_size;
+  nn_size_t num_of_data; ///< Number of datum
+  nn_size_t data_size;   ///< Total data size in byte
 } nn_memory_t;
 
 /// @brief Definition of Network.
@@ -119,23 +116,20 @@ typedef struct {
   nn_memory_t memory;  ///< memory to store all data.
 } nn_network_t;
 
-/// @}
-/// @}
-/// @}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup ErrorCodes
+/// @defgroup ErrorCodes Common Error codes
 ///
 /// @{
-#define NN_ERROR_CODE_NOERROR (0)
+#define NN_ERROR_CODE_NOERROR (0) ///< No error
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup DebugFunctions
+/// @defgroup DebugFunctions Debug functionality
 ///
 /// @{
 #ifndef WHOAMI
-#define WHOAMI(...)                                                            \
+/// Print specified message and positon itself.
+#define WHOAMI(...)                                                     \
 {                                                                          \
     printf("%s:%d :", __FILE__, __LINE__);                                   \
     printf(__VA_ARGS__);                                                     \
@@ -144,6 +138,7 @@ typedef struct {
 #endif // WHOAMI
 /// @}
 
+/// @}
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

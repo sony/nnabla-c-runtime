@@ -41,11 +41,11 @@ def generate(filename, info):
                 defines.append('  // End of common part.')
                 for an, arg in func['arguments'].items():
                     if arg['type'] == 'bool':
-                        defines.append('  uint8_t {};'.format(an))
+                        defines.append('  uint8_t {}; ///< Original type is [{}]'.format(an, arg['type']))
                     elif arg['type'] == 'double' or arg['type'] == 'float':
-                        defines.append('  float {};'.format(an))
+                        defines.append('  float {}; ///< Original type is [{}]'.format(an, arg['type']))
                     elif arg['type'] == 'int64':
-                        defines.append('  int32_t {};'.format(an))
+                        defines.append('  int32_t {}; ///< Original type is [{}]'.format(an, arg['type']))
                     elif arg['type'] == 'repeated int64' or arg['type'] == 'Shape':
                         defines.append(
                             '  nn_list_t {};  ///< Original type is [{}]'.format(an, arg['type']))
