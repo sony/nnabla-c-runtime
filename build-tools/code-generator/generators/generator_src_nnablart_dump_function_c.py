@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def generate(filename, info):
     funcid = 0
     dump = []
@@ -55,7 +56,8 @@ def generate(filename, info):
     from mako import exceptions
     try:
         tmpl = Template(filename=filename)
-        output = tmpl.render(typenames='\n'.join(typenames), dump='\n'.join(dump))
+        output = tmpl.render(typenames='\n'.join(
+            typenames), dump='\n'.join(dump))
         return output
     except:
         print(exceptions.text_error_template().render())

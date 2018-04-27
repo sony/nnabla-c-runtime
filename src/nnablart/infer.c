@@ -29,7 +29,11 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   }
 
   rt_context_pointer context = 0;
-  ret = rt_initialize_context(&context, net);
+
+  ret = rt_allocate_context(&context);
+  assert(ret == RT_ERROR_NOERROR);
+
+  ret = rt_initialize_context(context, net);
   assert(ret == RT_ERROR_NOERROR);
 
   for (i = 0; i < rt_num_of_input(context); i++) {

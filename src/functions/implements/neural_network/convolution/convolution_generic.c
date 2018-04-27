@@ -13,20 +13,20 @@
 // limitations under the License.
 
 #include "../../../utilities.h"
+#include "convolution_internal.h"
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
-#include "convolution_internal.h"
 
 #define _S(p) (sizeof(p) / sizeof(p[0]))
 
 /*
  * group (g) [default 1]: If g > 1, we restrict the connectivity of each filter
- * to a subset of the input. Specifically, the input and output channels are 
+ * to a subset of the input. Specifically, the input and output channels are
  * separated into g groups, and the i-th output group channels will be only
  * connected  to the i-th input group channels.
  */
-static inline nn_size_t var_calc_offset(var_t* var, int* pos, int size) {
+static inline nn_size_t var_calc_offset(var_t *var, int *pos, int size) {
   int *s = var->stride.data;
   int len = var->stride.size > size ? size : var->stride.size;
   int i, offset = 0;
@@ -37,26 +37,25 @@ static inline nn_size_t var_calc_offset(var_t* var, int* pos, int size) {
   return offset;
 }
 
-void var_free(var_t* var)
-{
+void var_free(var_t *var) {
   free_list(var->shape);
   free_list(var->stride);
 }
 
-static inline void var_setpos(var_t* var, int* pos, int size) {
+static inline void var_setpos(var_t *var, int *pos, int size) {
   var->offset = var_calc_offset(var, pos, size);
 }
 
-static inline float var_get(var_t* var, nn_size_t offset) {
+static inline float var_get(var_t *var, nn_size_t offset) {
   return var->get(var->v, offset);
 }
 
-static inline void var_set(var_t* var, nn_size_t offset, float v) {
+static inline void var_set(var_t *var, nn_size_t offset, float v) {
   return var->set(var->v, offset, v);
 }
 
-static inline void conv2d(var_t* out, var_t* in, var_t* ke, var_t* b,
-  rt_list_t pad, rt_list_t stride, rt_list_t dilation) {
+static inline void conv2d(var_t *out, var_t *in, var_t *ke, var_t *b,
+                          rt_list_t pad, rt_list_t stride, rt_list_t dilation) {
   int ix, iy, ox, oy, kx, ky;
   int pad_y = pad.data[SPH];
   int pad_x = pad.data[SPW];
@@ -71,7 +70,7 @@ static inline void conv2d(var_t* out, var_t* in, var_t* ke, var_t* b,
   int in_w = in->shape.data[W];
   int in_h = in->shape.data[H];
 
-  for(iy = -pad_y, oy = 0; oy < out_h; ++oy, iy += step_y) {
+  for (iy = -pad_y, oy = 0; oy < out_h; ++oy, iy += step_y) {
     for (ix = -pad_x, ox = 0; ox < out_w; ++ox, ix += step_x) {
       float sum = 0.0f;
       for (ky = 0; ky < kh; ++ky) {
@@ -92,7 +91,7 @@ static inline void conv2d(var_t* out, var_t* in, var_t* ke, var_t* b,
   }
 }
 
-static inline void add_bias(var_t* out, var_t* b) {
+static inline void add_bias(var_t *out, var_t *b) {
   int size = out->stride.data[I];
   int i;
   float bias = var_get(b, b->offset);
@@ -104,7 +103,8 @@ static inline void add_bias(var_t* out, var_t* b) {
 }
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f) {
-  convolution_local_context_t* c = (convolution_local_context_t*)f->local_context;
+  convolution_local_context_t *c =
+      (convolution_local_context_t *)f->local_context;
   convolution_private_t *p = (convolution_private_t *)(c->private);
 
   nn_size_t group = c->group;
@@ -112,13 +112,13 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   nn_size_t out_vars = p->out_var.shape.data[I];
   nn_size_t batch_size;
   nn_size_t om, im, g, b;
-  var_t* out_var = &p->out_var;
-  var_t* in_var = &p->in_var;
-  var_t* w_var = &p->w_var;
-  var_t* b_var = &p->b_var;
+  var_t *out_var = &p->out_var;
+  var_t *in_var = &p->in_var;
+  var_t *w_var = &p->w_var;
+  var_t *b_var = &p->b_var;
 
   batch_size = p->in_var.shape.data[0];
-  for (b= 0; b < batch_size; ++b) {
+  for (b = 0; b < batch_size; ++b) {
     for (g = 0; g < group; ++g) {
       for (om = 0; om < out_vars; ++om) {
         int o_pos[] = {b, g, om};

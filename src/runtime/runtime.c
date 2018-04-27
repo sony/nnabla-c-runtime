@@ -20,14 +20,44 @@
 
 #include "runtime_internal.h"
 
-rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
-                                      nn_network_t *n) {
-  int i; // Iterator
-
+rt_error_enum_t rt_allocate_context(rt_context_pointer *context) {
   rt_context_t *c = malloc(sizeof(rt_context_t));
   if (c == 0) {
     return RT_ERROR_ALLOCATE_CONTEXT;
   }
+  *context = c;
+  return RT_ERROR_NOERROR;
+}
+
+rt_error_enum_t
+rt_add_callback(rt_context_pointer context, nn_function_type_t type,
+                rt_function_error_t (*allocate_local_context)(rt_function_t *f),
+                rt_function_error_t (*free_local_context)(rt_function_t *f),
+                rt_function_error_t (*exec)(rt_function_t *f)) {
+  rt_context_t *c = context;
+
+  rt_function_callback_t *callbacks;
+  callbacks = realloc(c->callbacks, (c->num_of_callbacks + 1) *
+                                        sizeof(rt_function_callback_t));
+  if (callbacks == 0) {
+    return RT_ERROR_ALLOCATE_CALLBACK_BUFFER;
+  }
+  c->callbacks = callbacks;
+  c->num_of_callbacks += 1;
+
+  (c->callbacks + c->num_of_callbacks)->type = type;
+  (c->callbacks + c->num_of_callbacks)->allocate_local_context =
+      allocate_local_context;
+  (c->callbacks + c->num_of_callbacks)->free_local_context = free_local_context;
+  (c->callbacks + c->num_of_callbacks)->exec = exec;
+
+  return RT_ERROR_NOERROR;
+}
+
+rt_error_enum_t rt_initialize_context(rt_context_pointer context,
+                                      nn_network_t *n) {
+  rt_context_t *c = context;
+  int i; // Iterator
 
   //////////////////////////////////////////////////////////////////////////////
   // Buffers
@@ -97,7 +127,6 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
     c->output_variable_ids[i] = outputs.data[i];
   }
 
-  *context = c;
   return RT_ERROR_NOERROR;
 }
 

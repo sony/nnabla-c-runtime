@@ -19,8 +19,8 @@
 
 // MeanSubtraction
 rt_function_error_t allocate_mean_subtraction_local_context(rt_function_t *f) {
-  mean_subtraction_local_context_t* ctx = 
-      (mean_subtraction_local_context_t*)f->local_context;
+  mean_subtraction_local_context_t *ctx =
+      (mean_subtraction_local_context_t *)f->local_context;
   rt_list_t in_shape = f->inputs[0]->shape;
   int s0 = 1, i;
   for (i = ctx->base_axis; i < in_shape.size; ++i) {
@@ -41,12 +41,12 @@ rt_function_error_t free_mean_subtraction_local_context(rt_function_t *f) {
  * we do not update running mean any more.
  */
 rt_function_error_t exec_mean_subtraction(rt_function_t *f) {
-  mean_subtraction_local_context_t* ctx = 
-      (mean_subtraction_local_context_t*)f->local_context;
+  mean_subtraction_local_context_t *ctx =
+      (mean_subtraction_local_context_t *)f->local_context;
   rt_list_t in_shape = f->inputs[0]->shape;
-  float* y = (float*)(f->outputs[0]->data);
-  float* x = (float*)(f->inputs[0]->data);
-  float* rm = (float*)(f->inputs[1]->data);
+  float *y = (float *)(f->outputs[0]->data);
+  float *x = (float *)(f->inputs[0]->data);
+  float *rm = (float *)(f->inputs[1]->data);
   int i, j, s0 = 1, s1;
 
   for (i = ctx->base_axis; i < in_shape.size; ++i) {

@@ -25,7 +25,6 @@ typedef struct {
   rt_list_t in_shape;
 } celu_private_t;
 
-
 // CELU
 rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
@@ -35,15 +34,15 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  celu_private_t* p = (celu_private_t*)malloc(sizeof(celu_private_t));
+  celu_private_t *p = (celu_private_t *)malloc(sizeof(celu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  ((celu_local_context_t*)f->local_context)->private = p;
-  p->input = (float*)f->inputs[0]->data;
+  ((celu_local_context_t *)f->local_context)->private = p;
+  p->input = (float *)f->inputs[0]->data;
   p->input_size = calc_shape_size(f->inputs[0]->shape);
-  p->output = (float*)f->outputs[0]->data;
+  p->output = (float *)f->outputs[0]->data;
   p->output_size = calc_shape_size(f->outputs[0]->shape);
   p->in_shape = clone_list(f->inputs[0]->shape);
 
@@ -56,8 +55,8 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_celu_local_context(rt_function_t *f) {
-  celu_local_context_t* c = (celu_local_context_t*)(f->local_context);
-  celu_private_t* p = (celu_private_t*)(c->private);
+  celu_local_context_t *c = (celu_local_context_t *)(f->local_context);
+  celu_private_t *p = (celu_private_t *)(c->private);
   free_list(p->in_shape);
   free(c->private);
   return RT_FUNCTION_ERROR_NOERROR;
@@ -70,7 +69,7 @@ rt_function_error_t free_celu_local_context(rt_function_t *f) {
  */
 rt_function_error_t exec_celu(rt_function_t *f) {
   celu_local_context_t *c = (celu_local_context_t *)(f->local_context);
-  celu_private_t* p = (celu_private_t*)(c->private);
+  celu_private_t *p = (celu_private_t *)(c->private);
   int i, j, s0 = 1, s1;
 
   for (i = c->axis; i < p->in_shape.size; ++i) {
@@ -81,8 +80,10 @@ rt_function_error_t exec_celu(rt_function_t *f) {
   for (i = 0; i < s1; ++i) {
     for (j = 0; j < s0; ++j) {
       float x = *(p->input + i * s0 + j);
-      *(p->output + i * s0 * 2 + j) = x > 0.0f ? x : c->alpha * (expf(x) - 1.0f);
-      *(p->output + i * s0 * 2 + s0 + j) = x < 0.0f ? -x : c->alpha * (expf(x) - 1.0f);
+      *(p->output + i * s0 * 2 + j) =
+          x > 0.0f ? x : c->alpha * (expf(x) - 1.0f);
+      *(p->output + i * s0 * 2 + s0 + j) =
+          x < 0.0f ? -x : c->alpha * (expf(x) - 1.0f);
     }
   }
   return RT_FUNCTION_ERROR_NOERROR;

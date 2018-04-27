@@ -39,11 +39,15 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  private->input = f->inputs[0]->data;
-  private->input_size = calc_shape_size(f->inputs[0]->shape);
+private
+  ->input = f->inputs[0]->data;
+private
+  ->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  private->output = f->outputs[0]->data;
-  private->output_size = calc_shape_size(f->outputs[0]->shape);
+private
+  ->output = f->outputs[0]->data;
+private
+  ->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (private->input_size != private->output_size) {
     free(private);
@@ -65,7 +69,8 @@ rt_function_error_t exec_relu(rt_function_t *f) {
   int i; // Iterator
   for (i = 0; i < private->output_size; i++) {
     float x = private->input[i];
-    private->output[i] = (x > 0.0f) ? x : 0.0f;
+  private
+    ->output[i] = (x > 0.0f) ? x : 0.0f;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

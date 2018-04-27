@@ -22,6 +22,7 @@ import subprocess
 import yaml
 import zlib
 
+
 def represent_odict(dumper, instance):
     return dumper.represent_mapping('tag:yaml.org,2002:map', instance.items())
 
@@ -51,10 +52,11 @@ class CodeGenerator:
 
     def get_function_info(self):
         with open(join(dirname(abspath(__file__)),
-                               'functions.yaml'), 'r') as f:
+                       'functions.yaml'), 'r') as f:
             functions_yaml = f.read()
             self.info = load_yaml_ordered(functions_yaml)
-            self.version = zlib.crc32(functions_yaml.encode('utf-8')) & 0x7ffffff
+            self.version = zlib.crc32(
+                functions_yaml.encode('utf-8')) & 0x7ffffff
 
     def generate(self, name):
         output_filename = abspath(join(
@@ -63,7 +65,8 @@ class CodeGenerator:
         generator_module = 'generators.generator_' + \
             name.replace('/', '_').replace('.', '_')
         generator = importlib.import_module(generator_module)
-        contents = generator.generate(abspath(join(dirname(abspath(__file__)), 'generators', basename(name) + '.tmpl')), self.info)
+        contents = generator.generate(abspath(join(
+            dirname(abspath(__file__)), 'generators', basename(name) + '.tmpl')), self.info)
 
         with open(output_filename, 'w', encoding='utf-8') as f:
             f.write(contents)

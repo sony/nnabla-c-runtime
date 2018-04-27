@@ -40,11 +40,15 @@ rt_function_error_t allocate_log_local_context(rt_function_t *f) {
   }
 
   f->local_context = (void *)private;
-  private->input = (float *)f->inputs[0]->data;
-  private->input_size = calc_shape_size(f->inputs[0]->shape);
+private
+  ->input = (float *)f->inputs[0]->data;
+private
+  ->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  private->output = (float *)f->outputs[0]->data;
-  private->output_size = calc_shape_size(f->outputs[0]->shape);
+private
+  ->output = (float *)f->outputs[0]->data;
+private
+  ->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (private->input_size != private->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
@@ -62,7 +66,8 @@ rt_function_error_t exec_log(rt_function_t *f) {
 
   int i; // Iterator
   for (i = 0; i < private->output_size; i++) {
-    private->output[i] = log(private->input[i]);
+  private
+    ->output[i] = log(private->input[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

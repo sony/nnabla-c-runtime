@@ -122,7 +122,7 @@ rt_error_enum_t rt_allocate_context(rt_context_pointer *context);
 /// @param[in] context
 /// @return @ref rt_error_enum_t
 rt_error_enum_t
-rt_add_callback(rt_context_pointer *context, nn_function_type_t type,
+rt_add_callback(rt_context_pointer context, nn_function_type_t type,
                 rt_function_error_t (*allocate_local_context)(rt_function_t *f),
                 rt_function_error_t (*free_local_context)(rt_function_t *f),
                 rt_function_error_t (*exec)(rt_function_t *f));
@@ -133,7 +133,7 @@ rt_add_callback(rt_context_pointer *context, nn_function_type_t type,
 /// rt_free_context()
 /// @param[in] network
 /// @return @ref rt_error_enum_t
-rt_error_enum_t rt_initialize_context(rt_context_pointer *context,
+rt_error_enum_t rt_initialize_context(rt_context_pointer context,
                                       nn_network_t *network);
 
 /// @brief Free context.

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
 #include "../../utilities.h"
+#include <nnablart/functions.h>
 
 // Div2
 rt_function_error_t allocate_div2_local_context(rt_function_t *f) {

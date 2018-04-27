@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities.h"
 #include <math.h>
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 
 rt_function_error_t allocate_elu_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
@@ -31,9 +31,7 @@ rt_function_error_t exec_elu(rt_function_t *f) {
   const int size = calc_shape_size(f->inputs[0]->shape);
   int s;
   for (s = 0; s < size; s++) {
-    y[s] = x[s] > (float)0 
-          ? x[s] 
-          : context->alpha * (exp(x[s]) - (float)1);
+    y[s] = x[s] > (float)0 ? x[s] : context->alpha * (exp(x[s]) - (float)1);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

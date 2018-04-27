@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
-#include <math.h>
 #include "../../utilities.h"
+#include <math.h>
+#include <nnablart/functions.h>
 
 typedef struct {
   rt_list_t batch_mean;
@@ -27,11 +27,12 @@ typedef struct {
 } batch_normalization_private_t;
 
 // BatchNormalization
-rt_function_error_t allocate_batch_normalization_local_context(rt_function_t *f) {
-  batch_normalization_local_context_t *context = 
-                    (batch_normalization_local_context_t *)(f->local_context);
-  batch_normalization_private_t *private = 
-                    malloc(sizeof(batch_normalization_private_t));
+rt_function_error_t
+allocate_batch_normalization_local_context(rt_function_t *f) {
+  batch_normalization_local_context_t *context =
+      (batch_normalization_local_context_t *)(f->local_context);
+  batch_normalization_private_t *private =
+      malloc(sizeof(batch_normalization_private_t));
   if (private == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -46,41 +47,48 @@ rt_function_error_t allocate_batch_normalization_local_context(rt_function_t *f)
   const int size_axis =
       axis <= 0 ? size : shape_product_of(f->inputs[0], axis,
                                           f->inputs[0]->shape.size);
-  private->batch_size = size / size_axis;
-  private->specified_axis_size = input_shape.data[context->axes.data[0]];
-  private->output_size = 
-                    size / private->batch_size / private->specified_axis_size;
-  private->multiplication_axis_output =
-                    private->specified_axis_size * private->output_size;
-  private->multiplication_batch_axis = 
-                    private->batch_size * private->output_size;
-  if (private->batch_size * private->specified_axis_size * 
-                                      private->output_size != size) {
+private
+  ->batch_size = size / size_axis;
+private
+  ->specified_axis_size = input_shape.data[context->axes.data[0]];
+private
+  ->output_size = size / private->batch_size / private->specified_axis_size;
+private
+  ->multiplication_axis_output =
+      private->specified_axis_size * private->output_size;
+private
+  ->multiplication_batch_axis = private->batch_size * private->output_size;
+  if (private->batch_size * private->specified_axis_size *
+          private->output_size !=
+      size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
 
-  private->batch_mean = clone_list(f->inputs[1]->shape);
-  private->batch_var = clone_list(f->inputs[2]->shape);
+private
+  ->batch_mean = clone_list(f->inputs[1]->shape);
+private
+  ->batch_var = clone_list(f->inputs[2]->shape);
   free_list(input_shape);
-  ((batch_normalization_local_context_t *)(f->local_context))->private = 
-                                                              (void *)private;
+  ((batch_normalization_local_context_t *)(f->local_context))->private =
+      (void *)private;
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_batch_normalization_local_context(rt_function_t *f) {
   batch_normalization_private_t *private =
-      (batch_normalization_private_t *)(((batch_normalization_local_context_t *)
-      (f->local_context))->private);
+      (batch_normalization_private_t
+           *)(((batch_normalization_local_context_t *)(f->local_context))
+                  ->private);
   free_list(private->batch_mean);
   free_list(private->batch_var);
   free(private);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-static void forward_impl_batch(rt_function_t *f, 
-                        batch_normalization_local_context_t *context,
-                        batch_normalization_private_t *private) {
+static void forward_impl_batch(rt_function_t *f,
+                               batch_normalization_local_context_t *context,
+                               batch_normalization_private_t *private) {
   const float *x = (float *)(f->inputs[0]->data);
   const float *beta = (float *)(f->inputs[1]->data);
   const float *gamma = (float *)(f->inputs[2]->data);
@@ -113,8 +121,8 @@ static void forward_impl_batch(rt_function_t *f,
     // Moving mean and var
     rm[i1] = context->decay_rate * rm[i1] + (1 - context->decay_rate) * m[i1];
     rv[i1] = context->decay_rate * rv[i1] +
-             (1 - context->decay_rate) * v[i1] * multiplication_batch_axis / 
-             (multiplication_batch_axis - 1);
+             (1 - context->decay_rate) * v[i1] * multiplication_batch_axis /
+                 (multiplication_batch_axis - 1);
 
     // Subtract mean and divide by std, and apply beta and gamma.
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
@@ -127,9 +135,9 @@ static void forward_impl_batch(rt_function_t *f,
   }
 }
 
-static void forward_impl_global(rt_function_t *f, 
-                        batch_normalization_local_context_t *context,
-                        batch_normalization_private_t *private) {
+static void forward_impl_global(rt_function_t *f,
+                                batch_normalization_local_context_t *context,
+                                batch_normalization_private_t *private) {
   const float *x = (float *)(f->inputs[0]->data);
   const float *beta = (float *)(f->inputs[1]->data);
   const float *gamma = (float *)(f->inputs[2]->data);
@@ -157,11 +165,11 @@ static void forward_impl_global(rt_function_t *f,
 }
 
 rt_function_error_t exec_batch_normalization(rt_function_t *f) {
-  batch_normalization_local_context_t *context = 
-                      (batch_normalization_local_context_t *)(f->local_context);
-  batch_normalization_private_t *private = 
-                      (batch_normalization_private_t *)(context->private);
-  
+  batch_normalization_local_context_t *context =
+      (batch_normalization_local_context_t *)(f->local_context);
+  batch_normalization_private_t *private =
+      (batch_normalization_private_t *)(context->private);
+
   if (context->batch_stat) {
     forward_impl_batch(f, context, private);
   } else {

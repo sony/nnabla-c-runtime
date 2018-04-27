@@ -41,11 +41,14 @@ def generate(filename, info):
                 defines.append('  // End of common part.')
                 for an, arg in func['arguments'].items():
                     if arg['type'] == 'bool':
-                        defines.append('  uint8_t {}; ///< Original type is [{}]'.format(an, arg['type']))
+                        defines.append(
+                            '  uint8_t {}; ///< Original type is [{}]'.format(an, arg['type']))
                     elif arg['type'] == 'double' or arg['type'] == 'float':
-                        defines.append('  float {}; ///< Original type is [{}]'.format(an, arg['type']))
+                        defines.append(
+                            '  float {}; ///< Original type is [{}]'.format(an, arg['type']))
                     elif arg['type'] == 'int64':
-                        defines.append('  int32_t {}; ///< Original type is [{}]'.format(an, arg['type']))
+                        defines.append(
+                            '  int32_t {}; ///< Original type is [{}]'.format(an, arg['type']))
                     elif arg['type'] == 'repeated int64' or arg['type'] == 'Shape':
                         defines.append(
                             '  nn_list_t {};  ///< Original type is [{}]'.format(an, arg['type']))
@@ -63,8 +66,8 @@ def generate(filename, info):
     try:
         tmpl = Template(filename=filename)
         output = tmpl.render(BINARY_VERSION=m.hexdigest(),
-                         FUNCTION_ENUMS='\n'.join(enums),
-                         FUNCTION_DEFINES='\n'.join(defines))
+                             FUNCTION_ENUMS='\n'.join(enums),
+                             FUNCTION_DEFINES='\n'.join(defines))
         return output
     except:
         print(exceptions.text_error_template().render())
