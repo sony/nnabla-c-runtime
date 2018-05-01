@@ -20,27 +20,26 @@
 
 #include "runtime_internal.h"
 
-rt_error_enum_t rt_allocate_context(rt_context_pointer *context) {
+rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
   rt_context_t *c = malloc(sizeof(rt_context_t));
   if (c == 0) {
-    return RT_ERROR_ALLOCATE_CONTEXT;
+    return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
   *context = c;
-  return RT_ERROR_NOERROR;
+  return RT_RET_NOERROR;
 }
 
-rt_error_enum_t
+rt_return_value_t
 rt_add_callback(rt_context_pointer context, nn_function_type_t type,
                 rt_function_error_t (*allocate_local_context)(rt_function_t *f),
-                rt_function_error_t (*free_local_context)(rt_function_t *f),
-                rt_function_error_t (*exec)(rt_function_t *f)) {
+                rt_function_error_t (*free_local_context)(rt_function_t *f)) {
   rt_context_t *c = context;
 
   rt_function_callback_t *callbacks;
   callbacks = realloc(c->callbacks, (c->num_of_callbacks + 1) *
                                         sizeof(rt_function_callback_t));
   if (callbacks == 0) {
-    return RT_ERROR_ALLOCATE_CALLBACK_BUFFER;
+    return RT_RET_ERROR_ALLOCATE_CALLBACK_BUFFER;
   }
   c->callbacks = callbacks;
   c->num_of_callbacks += 1;
@@ -49,13 +48,12 @@ rt_add_callback(rt_context_pointer context, nn_function_type_t type,
   (c->callbacks + c->num_of_callbacks)->allocate_local_context =
       allocate_local_context;
   (c->callbacks + c->num_of_callbacks)->free_local_context = free_local_context;
-  (c->callbacks + c->num_of_callbacks)->exec = exec;
 
-  return RT_ERROR_NOERROR;
+  return RT_RET_NOERROR;
 }
 
-rt_error_enum_t rt_initialize_context(rt_context_pointer context,
-                                      nn_network_t *n) {
+rt_return_value_t rt_initialize_context(rt_context_pointer context,
+                                        nn_network_t *n) {
   rt_context_t *c = context;
   int i; // Iterator
 
@@ -65,7 +63,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
   c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
 
   if (c->buffers == 0) {
-    return RT_ERROR_ALLOCATE_CONTEXT;
+    return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
   for (i = 0; i < c->num_of_buffers; i++) {
     c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_INITIAL;
@@ -98,7 +96,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
       c->buffers[i].buffer =
           malloc(*(list + i) * sizeof(float)); // TODO float only.
       if (c->buffers[i].buffer == 0) {
-        return RT_ERROR_ALLOCATE_CONTEXT;
+        return RT_RET_ERROR_ALLOCATE_CONTEXT;
       }
     }
   }
@@ -108,7 +106,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
   c->num_of_variables = n->variables.size;
   c->variables = malloc(sizeof(rt_variable_t) * c->num_of_variables);
   if (c->variables == 0) {
-    return RT_ERROR_ALLOCATE_CONTEXT;
+    return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
 
   list = (int *)NN_GET(n, n->variables.list);
@@ -120,7 +118,7 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
     if (var->data_index < 0) {
       int index = (-1 * var->data_index) - 1;
       if (index >= c->num_of_buffers) {
-        return RT_ERROR_INVALID_BUFFER_INDEX;
+        return RT_RET_ERROR_INVALID_BUFFER_INDEX;
       }
       c->variables[i].data = c->buffers[index].buffer;
     } else {
@@ -138,10 +136,10 @@ rt_error_enum_t rt_initialize_context(rt_context_pointer context,
     c->functions[i] = allocate_function_context(n, c, func);
   }
 
-  return RT_ERROR_NOERROR;
+  return RT_RET_NOERROR;
 }
 
-rt_error_enum_t rt_free_context(rt_context_pointer *context) {
+rt_return_value_t rt_free_context(rt_context_pointer *context) {
   rt_context_t *c = *context;
 
   int i; // Iterator
@@ -170,7 +168,7 @@ rt_error_enum_t rt_free_context(rt_context_pointer *context) {
   free(c->output_variable_ids);
 
   free(*context);
-  return RT_ERROR_NOERROR;
+  return RT_RET_NOERROR;
 }
 
 int rt_num_of_input(rt_context_pointer context) {
@@ -241,7 +239,7 @@ float *rt_output_buffer(rt_context_pointer context, size_t index) {
   return c->variables[c->output_variable_ids[index]].data;
 }
 
-rt_error_enum_t rt_forward(rt_context_pointer context) {
+rt_return_value_t rt_forward(rt_context_pointer context) {
   int i; // Iterator
   rt_context_t *c = context;
 
@@ -249,5 +247,5 @@ rt_error_enum_t rt_forward(rt_context_pointer context) {
     c->functions[i].exec_func(&(c->functions[i].func));
   }
 
-  return RT_ERROR_NOERROR;
+  return RT_RET_NOERROR;
 }

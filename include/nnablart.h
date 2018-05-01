@@ -14,9 +14,57 @@
 
 /// @mainpage
 ///
+/// @section Modules
+///
 /// - @ref Network
 /// - @ref Functions
 /// - @ref Runtime
+///
+/// @section Development Development workflow
+///
+/// @startuml
+/// skinparam monochrome true
+/// hide footbox
+///
+/// actor Developer
+///
+/// group Update function info
+///   note right
+///     To update Function info run 'nnabla_cli function_info' after
+///     installing nnabla.
+///   end note
+///   Developer -> NNabla: Create function information
+///   activate Developer
+///   note left: $ nnabla_cli function_info
+///   activate NNabla
+///   NNabla --> Developer: functions.yaml
+///   deactivate NNabla
+///
+///   Developer -> Developer: Copy into nnabla-c-runtime
+///   activate Developer
+///   deactivate Developer
+///   deactivate Developer
+/// end
+///
+/// Developer -> Developer: compile
+/// activate Developer
+/// note left: $ make
+///
+/// Developer -> NNablaCRuntime: compile
+/// activate NNablaCRuntime
+///
+/// NNablaCRuntime -> NNablaCRuntime: generate source code
+/// activate NNablaCRuntime
+/// deactivate NNablaCRuntime
+///
+/// NNablaCRuntime -> NNablaCRuntime: auto-format
+/// activate NNablaCRuntime
+/// deactivate NNablaCRuntime
+///
+/// NNablaCRuntime --> Developer : <binary>
+/// deactivate NNablaCRuntime
+///
+/// @enduml
 
 #include <network.h>
 #include <runtime.h>

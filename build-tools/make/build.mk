@@ -16,7 +16,30 @@
 # Suppress most of make message.
 .SILENT:
 
-all: bwd-build bwd-doc
+.PHONY: build
+build: generate auto-format compile
 
-include build-tools/make/build.mk
-include build-tools/make/build-with-docker.mk
+.PHONY: generate
+generate:
+	@python3 build-tools/code-generator/generate.py
+
+.PHONY: compile
+compile:
+	@mkdir -p build
+	@cd build && cmake ..
+	@make -C build
+
+.PHONY: clean
+clean:
+	@rm -rf build
+	@rm -rf doc
+
+.PHONY: doc
+doc:
+	@doxygen build-tools/doc/Doxyfile 
+
+.PHONY: auto-format
+auto-format:
+	@find . -type f -name "*.py" |xargs -n1 autopep8 -i
+	@find . -type f -name "*.[ch]" |xargs -n1 clang-format -i
+

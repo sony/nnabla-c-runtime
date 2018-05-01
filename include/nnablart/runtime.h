@@ -23,6 +23,91 @@ extern "C" {
 /// @defgroup Runtime Runtime APIs
 /// @brief Calcurate feed forward neural network with @ref Network
 ///
+/// - Sequence to use Rutime API.
+///   - Initialization
+/// @li Initialize runtime context with @ref rt_initialize_context()
+/// @li Allocate I/O buffers in size get from @ref rt_num_of_input(), @ref
+/// rt_input_size(), @ref rt_num_of_output() and @ref rt_output_size()
+///   - Diagram
+/// @startuml
+/// skinparam monochrome true
+/// hide footbox
+///
+/// UserApplication -> Runtime: "rt_allocate_context(&context)"
+/// activate Runtime
+/// Runtime --> UserApplication: "(Context)"
+/// deactivate Runtime
+///
+/// loop
+///   UserApplication -> Runtime: "rt_add_callback"
+///   activate Runtime
+///   Runtime --> UserApplication:
+///   deactivate Runtime
+///  end
+///
+/// UserApplication -> Runtime: "rt_initialize_context(context, network)"
+/// activate Runtime
+/// Runtime --> UserApplication:
+/// deactivate Runtime
+///
+/// UserApplication -> Runtime: "rt_num_of_input(context)"
+/// activate Runtime
+/// Runtime --> UserApplication: num_of_input
+/// deactivate Runtime
+///
+/// loop
+///   UserApplication -> Runtime: "rt_input_size(context, index)"
+///   activate Runtime
+///   Runtime --> UserApplication: input_size[index]
+///   deactivate Runtime
+///   UserApplication -> Runtime: "rt_input_buffer(context, index)"
+///   activate Runtime
+///   Runtime --> UserApplication: input_buffer[index]
+///   deactivate Runtime
+/// end
+///
+/// UserApplication -> Runtime: "rt_num_of_output(context)"
+/// activate Runtime
+/// Runtime --> UserApplication: num_of_output
+/// deactivate Runtime
+///
+/// loop
+///   UserApplication -> Runtime: "rt_output_size(context, index)"
+///   activate Runtime
+///   Runtime --> UserApplication: output_size[index]
+///   deactivate Runtime
+///   UserApplication -> Runtime: "rt_output_buffer(context, index)"
+///   activate Runtime
+///   Runtime --> UserApplication: output_buffer[index]
+///   deactivate Runtime
+/// end
+///
+/// UserApplication -> UserApplication: Prepare to use buffer.
+/// activate UserApplication
+/// deactivate UserApplication
+///
+/// @enduml
+///   - Inference
+/// @li Prepare input data and buffer to output.
+/// @li @ref rt_forward()
+/// @li Use output data in output buffer.
+/// @startuml
+/// skinparam monochrome true
+/// hide footbox
+///
+/// UserApplication -> UserApplication: Copy input data into input buffer
+/// activate UserApplication
+/// deactivate UserApplication
+///
+/// UserApplication -> Runtime: rt_forward(context)
+/// activate Runtime
+/// Runtime -> Runtime: (Execute feedforward neural network)
+/// activate Runtime
+/// deactivate Runtime
+/// Runtime --> UserApplication: (Output stored into output_buffer)
+/// deactivate Runtime
+/// @enduml
+///
 /// @ref Runtime provides following functions.
 /// - @ref rt_initialize_context()
 ///   - @copydoc rt_initialize_context()
@@ -47,49 +132,6 @@ extern "C" {
 /// - @ref rt_forward()
 ///   - @copydoc rt_forward()
 ///
-/// - Sequence
-///   - Initialize
-/// @li Initialize runtime context with @ref rt_initialize_context()
-/// @li Allocate I/O buffers in size get from @ref rt_num_of_input(), @ref
-/// rt_input_size(), @ref rt_num_of_output() and @ref rt_output_size()
-///   - Diagram
-/// @msc
-///   UserApplication,Runtime;
-///   UserApplication=>Runtime [label="rt_initialize_context(&context,
-///   network)", URL="@ref rt_initialize_context()"];
-///   UserApplication<<Runtime [label="(Context stored into context)" ];
-///   UserApplication=>Runtime [label="rt_num_of_input(context)", URL="@ref
-///   rt_num_of_input()"];
-///   UserApplication<<Runtime [label="num_of_input" ];
-///   --- [label="LOOP: index"];
-///   UserApplication=>Runtime [label="rt_input_size(context, index)",
-///   URL="@ref rt_input_size()"];
-///   UserApplication<<Runtime [label="input_size[index]" ];
-///   --- [label="LOOP_END: index"];
-///   UserApplication=>UserApplication [label="(allocate input buffer)" ];
-///   UserApplication=>Runtime [label="rt_num_of_output(context)",
-///   URL="@ref rt_num_of_output()"];
-///   UserApplication<<Runtime [label="num_of_output" ];
-///   --- [label="LOOP: index"];
-///   UserApplication=>Runtime [label="rt_output_size(context)", URL="@ref
-///   rt_output_size()"];
-///   UserApplication<<Runtime [label="output_size" ];
-///   --- [label="LOOP_END: index"];
-///   UserApplication=>UserApplication [label="(allocate output buffer)" ];
-/// @endmsc
-///   - Execute
-/// @li Prepare input data and buffer to output.
-/// @li @ref rt_forward()
-/// @li Use output data in output buffer.
-/// @msc
-///   UserApplication,Runtime;
-///   UserApplication=>UserApplication [label="(Copy input data into input
-///   buffer)" ];
-///   UserApplication=>Runtime [label="rt_forward(context, input_buffer,
-///   output_buffer)", URL="@ref rt_forward()"];
-///   Runtime=>Runtime [label="(Execute feedforward neural network)" ];
-///   UserApplication<<Runtime [label="(Output stored into output_buffer)" ];
-/// @endmsc
 /// @{
 
 /// @file
@@ -97,17 +139,21 @@ extern "C" {
 
 #include <nnablart/functions.h>
 
-/// @brief Errors in @ref Runtime.
+/// @brief Return values in @ref Runtime.
 typedef enum {
-  RT_ERROR_VERSION_UNMATCH = -899,   ///< 899
-  RT_ERROR_ALLOCATE_CONTEXT,         ///< 898
-  RT_ERROR_INITIALIZE_CONTEXT_TWICE, ///< 897
-  RT_ERROR_ALLOCATE_CALLBACK_BUFFER, ///< 896
-  RT_ERROR_INVALID_BUFFER_INDEX,     ///< 895
-  RT_ERROR_INIT_VARIABLE,            ///< 894
-  RT_ERROR_UNKNOWN_FUNCTION,         ///< 893
-  RT_ERROR_NOERROR = 0               ///< 0
-} rt_error_enum_t;
+  RT_RET_ERROR_VERSION_UNMATCH = -899,   ///< 899
+  RT_RET_ERROR_ALLOCATE_CONTEXT,         ///< 898
+  RT_RET_ERROR_INITIALIZE_CONTEXT_TWICE, ///< 897
+  RT_RET_ERROR_ALLOCATE_CALLBACK_BUFFER, ///< 896
+  RT_RET_ERROR_INVALID_BUFFER_INDEX,     ///< 895
+  RT_RET_ERROR_INIT_VARIABLE,            ///< 894
+  RT_RET_ERROR_UNKNOWN_FUNCTION,         ///< 893
+  RT_RET_ERROR_NO_MATCHING_FUNCTION,     ///< 892
+  RT_RET_NOERROR = 0,                    ///< 0
+  RT_RET_FUNCTION_MATCH,                 ///< 1
+  RT_RET_FUNCTION_DONT_MATCH,            ///< 2
+  RT_RET_END_OF_VALUES
+} rt_return_value_t;
 
 typedef void *rt_context_pointer;
 
@@ -115,35 +161,33 @@ typedef void *rt_context_pointer;
 /// In this function only allocates runtime context.
 /// @param[out] context Pointer to created context. It must be freed by @ref
 /// rt_free_context()
-/// @return @ref rt_error_enum_t
-rt_error_enum_t rt_allocate_context(rt_context_pointer *context);
+/// @return @ref rt_return_value_t
+rt_return_value_t rt_allocate_context(rt_context_pointer *context);
 
 /// @brief Add callback function to runtime context.
 /// @param[in] context
 /// @param[in] type
 /// @param[in] allocate_local_context
 /// @param[in] free_local_context
-/// @param[in] exec
-/// @return @ref rt_error_enum_t
-rt_error_enum_t
+/// @return @ref rt_return_value_t
+rt_return_value_t
 rt_add_callback(rt_context_pointer context, nn_function_type_t type,
                 rt_function_error_t (*allocate_local_context)(rt_function_t *f),
-                rt_function_error_t (*free_local_context)(rt_function_t *f),
-                rt_function_error_t (*exec)(rt_function_t *f));
+                rt_function_error_t (*free_local_context)(rt_function_t *f));
 
 /// @brief Initialize runtime context with parsing @ref nn_network_t.
 /// Initialize all functions in context and prepare forward calculation.
 /// @param[out] context Pointer to created context. It must be freed by @ref
 /// rt_free_context()
 /// @param[in] network
-/// @return @ref rt_error_enum_t
-rt_error_enum_t rt_initialize_context(rt_context_pointer context,
-                                      nn_network_t *network);
+/// @return @ref rt_return_value_t
+rt_return_value_t rt_initialize_context(rt_context_pointer context,
+                                        nn_network_t *network);
 
 /// @brief Free context.
 /// @param[in] context
-/// @return @ref rt_error_enum_t
-rt_error_enum_t rt_free_context(rt_context_pointer *context);
+/// @return @ref rt_return_value_t
+rt_return_value_t rt_free_context(rt_context_pointer *context);
 
 /// @brief Get number of network inputs.
 /// @param[in] context
@@ -211,8 +255,8 @@ float *rt_output_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
 /// @param[in] context
-/// @return @ref rt_error_enum_t
-rt_error_enum_t rt_forward(rt_context_pointer context);
+/// @return @ref rt_return_value_t
+rt_return_value_t rt_forward(rt_context_pointer context);
 
 /// @}
 

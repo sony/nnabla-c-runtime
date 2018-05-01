@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-########################################################################################################################
-# Suppress most of make message.
-.SILENT:
+FROM ubuntu:16.04
 
-all: bwd-build bwd-doc
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    clang-format \
+    make \
+    python-pip \
+    && apt-get -yqq clean \
+    && rm -rf /var/lib/apt/lists/*
 
-include build-tools/make/build.mk
-include build-tools/make/build-with-docker.mk
+RUN pip install setuptools
+RUN pip install autopep8

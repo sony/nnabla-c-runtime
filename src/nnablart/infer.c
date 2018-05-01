@@ -22,7 +22,7 @@
 
 int infer(nn_network_t *net, int argc, char *argv[]) {
   int i, j; // Iterator
-  rt_error_enum_t ret;
+  rt_return_value_t ret;
 
   for (i = 0; i < argc; i++) {
     printf("     %d: %s\n", i, argv[i]);
@@ -31,10 +31,10 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   rt_context_pointer context = 0;
 
   ret = rt_allocate_context(&context);
-  assert(ret == RT_ERROR_NOERROR);
+  assert(ret == RT_RET_NOERROR);
 
   ret = rt_initialize_context(context, net);
-  assert(ret == RT_ERROR_NOERROR);
+  assert(ret == RT_RET_NOERROR);
 
   for (i = 0; i < rt_num_of_input(context); i++) {
     printf("Input[%d] size:%d\n", i, rt_input_size(context, i));
@@ -61,7 +61,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   }
 
   ret = rt_forward(context);
-  assert(ret == RT_ERROR_NOERROR);
+  assert(ret == RT_RET_NOERROR);
 
   for (i = 0; i < rt_num_of_output(context); i++) {
     printf("Output[%d] size:%d\n", i, rt_output_size(context, i));
@@ -90,6 +90,6 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     printf(" )\n");
   }
   ret = rt_free_context(&context);
-  assert(ret == RT_ERROR_NOERROR);
+  assert(ret == RT_RET_NOERROR);
   return 0;
 }
