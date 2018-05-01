@@ -18,7 +18,8 @@ def generate(filename, info):
     for cn, cat in info.items():
         defines.append(
             '////////////////////////////////////////////////////////////////////////////////')
-        defines.append('/// @defgroup {} {}'.format(cn.replace(' ', ''), cn))
+        defines.append(
+            '/// @defgroup {} {}'.format(cn.split(',').pop().replace(' ', ''), cn.split(',').pop()))
         defines.append('/// @{')
         for fn, func in cat.items():
             defines.append('')

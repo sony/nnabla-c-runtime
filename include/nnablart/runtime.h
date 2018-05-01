@@ -21,7 +21,7 @@ extern "C" {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Runtime Runtime APIs
-/// @brief Calcurate feed forward neural network with @ref NetworkDefinitions
+/// @brief Calcurate feed forward neural network with @ref Network
 ///
 /// @ref Runtime provides following functions.
 /// - @ref rt_initialize_context()
@@ -120,6 +120,10 @@ rt_error_enum_t rt_allocate_context(rt_context_pointer *context);
 
 /// @brief Add callback function to runtime context.
 /// @param[in] context
+/// @param[in] type
+/// @param[in] allocate_local_context
+/// @param[in] free_local_context
+/// @param[in] exec
 /// @return @ref rt_error_enum_t
 rt_error_enum_t
 rt_add_callback(rt_context_pointer context, nn_function_type_t type,
@@ -129,7 +133,7 @@ rt_add_callback(rt_context_pointer context, nn_function_type_t type,
 
 /// @brief Initialize runtime context with parsing @ref nn_network_t.
 /// Initialize all functions in context and prepare forward calculation.
-/// @param[in/out] context Pointer to created context. It must be freed by @ref
+/// @param[out] context Pointer to created context. It must be freed by @ref
 /// rt_free_context()
 /// @param[in] network
 /// @return @ref rt_error_enum_t
@@ -206,7 +210,6 @@ int rt_output_shape(rt_context_pointer context, size_t index,
 float *rt_output_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
-/// Get data from @ref input and store result to @output.
 /// @param[in] context
 /// @return @ref rt_error_enum_t
 rt_error_enum_t rt_forward(rt_context_pointer context);

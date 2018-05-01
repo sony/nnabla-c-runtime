@@ -28,7 +28,7 @@ extern "C" {
 #define NN_BINARY_FORMAT_REVISION 344621eb4e6d3bb0a2afc8779eb2de1f
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup NetworkDefinitions Internal network representation
+/// @defgroup Network Internal network representation
 /// @{
 
 typedef int32_t pointer_index_t; ///< Index of data.

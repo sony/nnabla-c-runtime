@@ -2318,7 +2318,7 @@ rt_function_error_t exec_confusion_matrix(rt_function_t *f);
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Unsupported,SpecialUse Unsupported, Special Use
+/// @defgroup SpecialUse  Special Use
 /// @{
 
 /// @defgroup VATNoise VATNoise

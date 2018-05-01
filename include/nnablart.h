@@ -12,20 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef H_UTILITIES_H_171218134406_
-#define H_UTILITIES_H_171218134406_
-
-////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Utilities Utilities
+/// @mainpage
 ///
-/// Utility functions for calculate vector, shape, list and access
-/// functions to 8/16 bit fixed point variable.
+/// - @ref Network
+/// - @ref Functions
+/// - @ref Runtime
 
-#include "utilities/accessor.h"
-#include "utilities/arithmetic.h"
-#include "utilities/list.h"
-#include "utilities/pooling.h"
-#include "utilities/shape.h"
-#include "utilities/vector.h"
-
-#endif // H_UTILITIES_H_171218134406_
+#include <network.h>
+#include <runtime.h>
