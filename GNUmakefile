@@ -15,6 +15,6 @@ doc:
 	@doxygen build-tools/doc/Doxyfile 
 
 auto-format:
-	@find . -type f -name "*.py" |xargs -n1 autopep8 -i
+	@#find . -type f -name "*.py" |xargs -n1 autopep8 -i
 	@find . -type f -name "*.[ch]" |xargs -n1 clang-format -i
 
