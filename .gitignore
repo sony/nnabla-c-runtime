@@ -1,3 +1,4 @@
 *.pyc
-/doc.log
+/build
 /doc
+/doc.log
