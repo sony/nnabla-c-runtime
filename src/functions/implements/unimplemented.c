@@ -195,19 +195,6 @@ rt_function_error_t exec_reduce_mean(rt_function_t *f) {
 // Arithmetic
 ////////////////////////////////////////////////////////////////////////////////
 
-// Add2
-rt_function_error_t allocate_add2_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_add2_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_add2(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // BcAdd2
 rt_function_error_t allocate_bc_add2_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;

@@ -58,6 +58,7 @@ add_library(nnablart_functions STATIC
   implements/arithmetic/mul2.c
   implements/arithmetic/div2.c
   implements/arithmetic/pow2.c
+  implements/arithmetic/add2.c
   implements/logical/maximum_scalar.c
   implements/logical/minimum_scalar.c
   implements/logical/maximum2.c
