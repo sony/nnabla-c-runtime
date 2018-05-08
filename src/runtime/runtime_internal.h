@@ -57,6 +57,4 @@ rt_function_context_t allocate_function_context(nn_network_t *n,
                                                 rt_context_t *c,
                                                 nn_function_t *function);
 
-void free_function_context(rt_context_t *c, rt_function_context_t func);
-
 #endif // H_RUNTIME_INTERNAL_H_171220111925_

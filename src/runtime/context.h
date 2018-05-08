@@ -27,13 +27,12 @@ typedef struct {
   nn_function_type_t type;
   rt_function_t func;
   rt_function_error_t (*exec_func)(rt_function_t *f);
+  rt_function_error_t (*free_local_context_func)(rt_function_t *f);
 } rt_function_context_t;
 
 typedef struct {
   nn_function_type_t type;
   rt_function_error_t (*allocate_local_context)(rt_function_t *f);
-  rt_function_error_t (*free_local_context)(rt_function_t *f);
-  rt_function_error_t (*exec)(rt_function_t *f);
 } rt_function_callback_t;
 
 typedef struct {

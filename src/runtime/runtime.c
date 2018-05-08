@@ -29,10 +29,10 @@ rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
   return RT_RET_NOERROR;
 }
 
-rt_return_value_t
-rt_add_callback(rt_context_pointer context, nn_function_type_t type,
-                rt_function_error_t (*allocate_local_context)(rt_function_t *f),
-                rt_function_error_t (*free_local_context)(rt_function_t *f)) {
+rt_return_value_t rt_add_callback(
+    rt_context_pointer context, nn_function_type_t type,
+    rt_function_error_t (*allocate_local_context)(rt_function_t *f)) {
+
   rt_context_t *c = context;
 
   rt_function_callback_t *callbacks;
@@ -47,8 +47,6 @@ rt_add_callback(rt_context_pointer context, nn_function_type_t type,
   (c->callbacks + c->num_of_callbacks)->type = type;
   (c->callbacks + c->num_of_callbacks)->allocate_local_context =
       allocate_local_context;
-  (c->callbacks + c->num_of_callbacks)->free_local_context = free_local_context;
-
   return RT_RET_NOERROR;
 }
 
@@ -160,7 +158,10 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
     free(c->functions[i].func.inputs);
     free(c->functions[i].func.outputs);
 
-    free_function_context(c, c->functions[i]);
+    c->functions[i].free_local_context_func(&(c->functions[i].func));
+    if (c->functions[i].func.local_context != 0) {
+      free(c->functions[i].func.local_context);
+    }
   }
   free(c->functions);
 

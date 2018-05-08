@@ -77,7 +77,7 @@ class CodeGenerator:
         print('Generated [{}].'.format(basename(output_filename)))
 
     def generate_all(self):
-        self.generate('SUPPORT_STATUS.md')
+        self.generate('doc/SUPPORT_STATUS.md')
         self.generate('include/nnablart/network.h')
         self.generate('include/nnablart/functions.h')
         self.generate('src/nnablart/dump_function.c')

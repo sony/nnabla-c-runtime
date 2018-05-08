@@ -30,76 +30,67 @@ typedef struct {
 rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
   unpooling_local_context_t *context =
       (unpooling_local_context_t *)(f->local_context);
-  unpooling_private_t *private = malloc(sizeof(unpooling_private_t));
-  if (private == 0) {
+  unpooling_private_t *p = malloc(sizeof(unpooling_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-private
-  ->input_shape = clone_list(f->inputs[0]->shape);
-private
-  ->output_shape = clone_list(f->outputs[0]->shape);
-private
-  ->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
-private
-  ->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
-private
-  ->input = (float *)(f->inputs[0]->data);
-private
-  ->output = (float *)(f->outputs[0]->data);
+  p->input_shape = clone_list(f->inputs[0]->shape);
+  p->output_shape = clone_list(f->outputs[0]->shape);
+  p->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
+  p->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
+  p->input = (float *)(f->inputs[0]->data);
+  p->output = (float *)(f->outputs[0]->data);
 
-  if (context->kernel.size > private->input_shape.size) {
+  if (context->kernel.size > p->input_shape.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
 
   // Calc and set output shape.
-  rt_list_t shape = allocate_list(private->input_shape.size);
-  int diff = private->input_shape.size - context->kernel.size;
+  rt_list_t shape = allocate_list(p->input_shape.size);
+  int diff = p->input_shape.size - context->kernel.size;
   int i;
   for (i = 0; i < diff; i++) {
     shape.data[i] = 1;
   }
-  for (i = diff; i < private->input_shape.size; i++) {
+  for (i = diff; i < p->input_shape.size; i++) {
     shape.data[i] = context->kernel.data[i - diff];
   }
-private
-  ->kernel = clone_list(shape);
-  for (i = 0; i < private->input_shape.size; i++) {
-  private
-    ->output_shape.data[i] =
-        private->input_shape.data[i] * private->kernel.data[i];
+  p->kernel = clone_list(shape);
+  for (i = 0; i < p->input_shape.size; i++) {
+    p->output_shape.data[i] = p->input_shape.data[i] * p->kernel.data[i];
   }
   free_list(shape);
 
-  ((unpooling_local_context_t *)(f->local_context))->private = (void *)private;
+  ((unpooling_local_context_t *)(f->local_context))->private = (void *)p;
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_unpooling_local_context(rt_function_t *f) {
-  unpooling_private_t *private =
+  unpooling_private_t *p =
       (unpooling_private_t *)(((unpooling_local_context_t *)(f->local_context))
                                   ->private);
-  free_list(private->input_shape);
-  free_list(private->output_shape);
-  free_list(private->input_strides);
-  free_list(private->output_strides);
-  free_list(private->kernel);
-  free(private);
+  free_list(p->input_shape);
+  free_list(p->output_shape);
+  free_list(p->input_strides);
+  free_list(p->output_strides);
+  free_list(p->kernel);
+  free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-static void unpooling_forward_recursive(unpooling_private_t *private,
-                                        int x_offset, int y_offset, int dim) {
+static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
+                                        int y_offset, int dim) {
   int current_x_offset = x_offset;
   int current_y_offset = y_offset;
-  const int x_stride = private->input_strides.data[dim];
-  const int y_stride = private->output_strides.data[dim];
-  const int kernel = private->kernel.data[dim];
-  const int size = private->output_shape.data[dim];
-  const float *x = private->input;
-  float *y = private->output;
+  const int x_stride = p->input_strides.data[dim];
+  const int y_stride = p->output_strides.data[dim];
+  const int kernel = p->kernel.data[dim];
+  const int size = p->output_shape.data[dim];
+  const float *x = p->input;
+  float *y = p->output;
 
-  if (dim == private->input_shape.size - 1) {
+  if (dim == p->input_shape.size - 1) {
     const float *current_x = x + current_x_offset;
     float *current_y = y + current_y_offset;
     if (x_stride == 1 && kernel == 1) {
@@ -120,7 +111,7 @@ static void unpooling_forward_recursive(unpooling_private_t *private,
     int count = 0;
     int i;
     for (i = 0; i < size; i++) {
-      unpooling_forward_recursive(private, current_x_offset, current_y_offset,
+      unpooling_forward_recursive(p, current_x_offset, current_y_offset,
                                   dim + 1);
       if (++count >= kernel) {
         count = 0;
@@ -132,9 +123,9 @@ static void unpooling_forward_recursive(unpooling_private_t *private,
 }
 
 rt_function_error_t exec_unpooling(rt_function_t *f) {
-  unpooling_private_t *private =
+  unpooling_private_t *p =
       (unpooling_private_t *)(((unpooling_local_context_t *)(f->local_context))
                                   ->private);
-  unpooling_forward_recursive(private, 0, 0, 0);
+  unpooling_forward_recursive(p, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }

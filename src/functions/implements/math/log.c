@@ -34,40 +34,34 @@ rt_function_error_t allocate_log_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  log_private_t *private = malloc(sizeof(log_private_t));
-  if (private == 0) {
+  log_private_t *p = malloc(sizeof(log_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  f->local_context = (void *)private;
-private
-  ->input = (float *)f->inputs[0]->data;
-private
-  ->input_size = calc_shape_size(f->inputs[0]->shape);
+  f->local_context = (void *)p;
+  p->input = (float *)f->inputs[0]->data;
+  p->input_size = calc_shape_size(f->inputs[0]->shape);
 
-private
-  ->output = (float *)f->outputs[0]->data;
-private
-  ->output_size = calc_shape_size(f->outputs[0]->shape);
+  p->output = (float *)f->outputs[0]->data;
+  p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (private->input_size != private->output_size) {
+  if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_log_local_context(rt_function_t *f) {
-  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_log(rt_function_t *f) {
-  log_private_t *private = (log_private_t *)(f->local_context);
+  log_private_t *p = (log_private_t *)(f->local_context);
 
   int i; // Iterator
-  for (i = 0; i < private->output_size; i++) {
-  private
-    ->output[i] = log(private->input[i]);
+  for (i = 0; i < p->output_size; i++) {
+    p->output[i] = log(p->input[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

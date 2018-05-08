@@ -1,5 +1,4 @@
 *.pyc
 /\?
 /build
-/doc
-/doc.log
+/doc/html

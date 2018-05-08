@@ -54,7 +54,6 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_sigmoid_local_context(rt_function_t *f) {
-  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
