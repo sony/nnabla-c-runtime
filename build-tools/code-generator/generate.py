@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from collections import OrderedDict
-from os.path import basename, abspath, dirname, join
+from os.path import basename, abspath, dirname, join, splitext
 import importlib
 import json
 import os
@@ -71,10 +71,13 @@ class CodeGenerator:
         with open(output_filename, 'w', encoding='utf-8') as f:
             f.write(contents)
 
-        subprocess.run(['clang-format', '-i', '--style=llvm', output_filename])
+        if splitext(output_filename)[1] in ['.c', '.h']:
+            subprocess.run(
+                ['clang-format', '-i', '--style=llvm', output_filename])
         print('Generated [{}].'.format(basename(output_filename)))
 
     def generate_all(self):
+        self.generate('SUPPORT_STATUS.md')
         self.generate('include/nnablart/network.h')
         self.generate('include/nnablart/functions.h')
         self.generate('src/nnablart/dump_function.c')

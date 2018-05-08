@@ -36,7 +36,8 @@ clean:
 
 .PHONY: doc
 doc:
-	@doxygen build-tools/doc/Doxyfile 
+	@doxygen build-tools/doc/Doxyfile
+	@rm -rf "?"  # plantuml(JRE?) creates '?' directory.
 
 .PHONY: auto-format
 auto-format:

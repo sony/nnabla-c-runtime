@@ -254,6 +254,10 @@ int rt_output_shape(rt_context_pointer context, size_t index,
 float *rt_output_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
+///
+///
+///
+///
 /// @param[in] context
 /// @return @ref rt_return_value_t
 rt_return_value_t rt_forward(rt_context_pointer context);

@@ -14,13 +14,49 @@
 
 /// @mainpage
 ///
+/// @section Documents Documents
+///
+/// - @ref Usage
+/// - @ref Development
+/// - @ref FileFormat
+///
 /// @section Modules
 ///
 /// - @ref Network
 /// - @ref Functions
 /// - @ref Runtime
 ///
-/// @section Development Development workflow
+
+/// @page Usage Usage
+///
+/// @section WithCSRC Use with C source code conveted from NNP file.
+///
+/// @section WithNNB Use with NNB file converted from NNP file.
+///
+///
+///
+///
+
+/// @page Development Development itself
+///
+/// @section Update Update function info
+///
+/// NNabla C Runtime is part of NNabla but source code of this is independent
+/// from NNabla code.
+///
+/// If you want to follow newest NNabla by hand, you can update @c
+/// functions.yaml with following command.
+///
+/// @code{.sh}
+/// $ nnabla_cli function_info build-tools/code-generator/functions.yaml
+/// @endcode
+///
+/// @section Compile Compile
+/// Otherwise, you can compile NNabla C Runtime just typing @c make .
+///
+/// @code{.sh}
+/// $ make
+/// @endcode
 ///
 /// @startuml
 /// skinparam monochrome true
@@ -65,6 +101,12 @@
 /// deactivate NNablaCRuntime
 ///
 /// @enduml
+
+/// @page FileFormat NNB file format
+///
+/// @ref network.h
+///
+///
 
 #include <network.h>
 #include <runtime.h>
