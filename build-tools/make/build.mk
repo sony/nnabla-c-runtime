@@ -32,7 +32,7 @@ compile:
 .PHONY: clean
 clean:
 	@rm -rf build
-	@rm -rf doc
+	@rm -rf doc/html
 
 .PHONY: doc
 doc:

@@ -25,13 +25,15 @@ rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
   if (c == 0) {
     return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
+  c->callbacks = 0;
+  c->num_of_callbacks = 0;
   *context = c;
   return RT_RET_NOERROR;
 }
 
-rt_return_value_t rt_add_callback(
-    rt_context_pointer context, nn_function_type_t type,
-    rt_function_error_t (*allocate_local_context)(rt_function_t *f)) {
+rt_return_value_t
+rt_add_callback(rt_context_pointer context, nn_function_type_t type,
+                rt_return_value_t (*allocate_local_context)(void *f)) {
 
   rt_context_t *c = context;
 
@@ -53,7 +55,7 @@ rt_return_value_t rt_add_callback(
 rt_return_value_t rt_initialize_context(rt_context_pointer context,
                                         nn_network_t *n) {
   rt_context_t *c = context;
-  int i; // Iterator
+  int i, j; // Iterator
 
   //////////////////////////////////////////////////////////////////////////////
   // Buffer list
@@ -131,7 +133,20 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   list = (int *)NN_GET(n, n->functions.list);
   for (i = 0; i < c->num_of_functions; i++) {
     nn_function_t *func = (nn_function_t *)(NN_GET(n, *(list + i)));
-    c->functions[i] = allocate_function_context(n, c, func);
+    c->functions[i] = allocate_function_io(n, c, func);
+
+    for (j = 0; j < c->num_of_callbacks; j++) {
+      if ((c->callbacks + j)->type == func->type) {
+        if ((c->callbacks +
+             j)->allocate_local_context((void *)(c->functions + i)) !=
+            RT_RET_FUNCTION_MATCH) {
+          // If callback is registered but registered function does not match
+          // context, it will cause error.
+          return RT_RET_ERROR_NO_MATCHING_FUNCTION;
+        }
+      }
+    }
+    allocate_function_context(n, func, c->functions + i);
   }
 
   return RT_RET_NOERROR;
@@ -167,6 +182,11 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
 
   free(c->input_variable_ids);
   free(c->output_variable_ids);
+
+  // Callback
+  if (c->callbacks) {
+    free(c->callbacks);
+  }
 
   free(*context);
   return RT_RET_NOERROR;

@@ -53,8 +53,10 @@
 
 rt_list_t create_rt_list_from_nn_list(nn_network_t *n, nn_list_t list);
 
-rt_function_context_t allocate_function_context(nn_network_t *n,
-                                                rt_context_t *c,
-                                                nn_function_t *function);
+rt_function_context_t allocate_function_io(nn_network_t *n, rt_context_t *c,
+                                           nn_function_t *function);
+
+void allocate_function_context(nn_network_t *n, nn_function_t *function,
+                               rt_function_context_t *function_context);
 
 #endif // H_RUNTIME_INTERNAL_H_171220111925_

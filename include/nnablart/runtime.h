@@ -171,7 +171,7 @@ rt_return_value_t rt_allocate_context(rt_context_pointer *context);
 /// @return @ref rt_return_value_t
 rt_return_value_t rt_add_callback(
     rt_context_pointer context, nn_function_type_t type,
-    rt_function_error_t (*allocate_local_context)(rt_function_t *f));
+    rt_return_value_t (*allocate_local_context)(void *function_context));
 
 /// @brief Initialize runtime context with parsing @ref nn_network_t.
 /// Initialize all functions in context and prepare forward calculation.
