@@ -44,11 +44,12 @@ rt_add_callback(rt_context_pointer context, nn_function_type_t type,
     return RT_RET_ERROR_ALLOCATE_CALLBACK_BUFFER;
   }
   c->callbacks = callbacks;
-  c->num_of_callbacks += 1;
 
   (c->callbacks + c->num_of_callbacks)->type = type;
   (c->callbacks + c->num_of_callbacks)->allocate_local_context =
       allocate_local_context;
+
+  c->num_of_callbacks += 1;
   return RT_RET_NOERROR;
 }
 
@@ -135,18 +136,23 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     nn_function_t *func = (nn_function_t *)(NN_GET(n, *(list + i)));
     c->functions[i] = allocate_function_io(n, c, func);
 
+    int callback_registered_flag = 0;
     for (j = 0; j < c->num_of_callbacks; j++) {
-      if ((c->callbacks + j)->type == func->type) {
-        if ((c->callbacks +
-             j)->allocate_local_context((void *)(c->functions + i)) !=
-            RT_RET_FUNCTION_MATCH) {
-          // If callback is registered but registered function does not match
-          // context, it will cause error.
+      if (((c->callbacks + j)->type == func->type) &&
+          c->functions[i].impl > NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) {
+        rt_return_value_t ret =
+            (c->callbacks +
+             j)->allocate_local_context((void *)(&(c->functions[i])));
+        if (ret != RT_RET_FUNCTION_MATCH) {
           return RT_RET_ERROR_NO_MATCHING_FUNCTION;
         }
+        callback_registered_flag = 1;
+        break;
       }
     }
-    allocate_function_context(n, func, c->functions + i);
+    if (!callback_registered_flag) {
+      allocate_function_context(n, func, c->functions + i);
+    }
   }
 
   return RT_RET_NOERROR;

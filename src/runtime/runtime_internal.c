@@ -30,6 +30,7 @@ rt_function_context_t allocate_function_io(nn_network_t *n, rt_context_t *c,
 
   rt_function_context_t func;
   func.type = function->type;
+  func.impl = function->impl;
 
   rt_list_t inputs = create_rt_list_from_nn_list(n, function->inputs);
   func.func.num_of_inputs = inputs.size;

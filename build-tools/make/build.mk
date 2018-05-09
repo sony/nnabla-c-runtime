@@ -29,6 +29,10 @@ compile:
 	@cd build && cmake ..
 	@make -C build
 
+.PHONY: examples
+examples: build
+	@make -C examples/callback
+
 .PHONY: clean
 clean:
 	@rm -rf build

@@ -159,6 +159,7 @@ typedef void *rt_context_pointer;
 
 /// @brief Create runtime context.
 /// In this function only allocates runtime context.
+/// You must initialize context with @ref rt_initialize_context
 /// @param[out] context Pointer to created context. It must be freed by @ref
 /// rt_free_context()
 /// @return @ref rt_return_value_t

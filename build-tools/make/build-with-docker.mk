@@ -81,3 +81,10 @@ bwd-build: docker_image_build
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_DOC) make build
 
+########################################################################################################################
+# Examples
+.PHONY: bwd-examples
+bwd-examples: docker_image_build
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_DOC) make examples
+

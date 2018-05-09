@@ -25,6 +25,7 @@ typedef struct {
 
 typedef struct {
   nn_function_type_t type;
+  nn_function_implement_t impl;
   rt_function_t func;
   rt_function_error_t (*exec_func)(rt_function_t *f);
   rt_function_error_t (*free_local_context_func)(rt_function_t *f);
