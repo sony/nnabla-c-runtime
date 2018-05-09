@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart.h>
+#include <nnablart/network.h>
+#include <nnablart/runtime.h>
 
 #include "context.h"
 
