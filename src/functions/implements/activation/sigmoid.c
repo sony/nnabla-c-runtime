@@ -50,6 +50,15 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
   if (c->input_size != c->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_sigmoid;
+  } else {
+    // Only float is implemented.
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

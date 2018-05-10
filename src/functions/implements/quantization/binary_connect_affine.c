@@ -69,7 +69,7 @@ allocate_binary_connect_affine_local_context(rt_function_t *f) {
     p->output_loop_size *= p->output->shape.data[i];
   }
 
-  p->exec = exec_affine_generic;
+  f->exec_func = exec_affine_generic;
 
   ((affine_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
@@ -81,7 +81,6 @@ rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_binary_connect_affine(rt_function_t *f) {
-  return ((affine_private_t *)(((affine_local_context_t *)(f->local_context))
-                                   ->data))
-      ->exec(f);
+  // Float implementation does not exist.
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }

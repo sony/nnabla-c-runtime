@@ -18,8 +18,6 @@
 #include "../../../utilities/accessor.h"
 #include "../../../utilities/shape.h"
 
-typedef rt_function_error_t (*exec_affine_func_t)(rt_function_t *f);
-
 typedef struct {
   rt_variable_t *input;
   rt_variable_getter get_input;
@@ -39,7 +37,6 @@ typedef struct {
   int input_loop_size;
   int output_loop_size;
 
-  exec_affine_func_t exec;
 } affine_private_t;
 
 #endif // H_AFFINE_INTERNAL_H_171218154530_

@@ -107,7 +107,7 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
     p->b_var.v = 0;
   }
 
-  p->exec =
+  f->exec_func =
       exec_convolution_generic; // currently, we only implement a generic one
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -126,7 +126,6 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_convolution(rt_function_t *f) {
-  return ((convolution_private_t
-               *)(((convolution_local_context_t *)(f->local_context))->data))
-      ->exec(f);
+  // Float implementation does not exist.
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
