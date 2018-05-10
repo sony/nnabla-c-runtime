@@ -66,14 +66,20 @@ typedef struct {
 } rt_variable_t;
 
 /// @brief Function
-typedef struct {
+struct st_rt_function_t;
+typedef struct st_rt_function_t rt_function_t;
+
+struct st_rt_function_t {
   int num_of_inputs;       ///< Number of inputs
   rt_variable_t **inputs;  ///< List of input variable
   int num_of_outputs;      ///< Number of outputs
   rt_variable_t **outputs; ///< List of output variable
 
+  rt_function_error_t (*exec_func)(rt_function_t *f);
+  rt_function_error_t (*free_local_context_func)(rt_function_t *f);
+
   void *local_context; ///< General perpose context
-} rt_function_t;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup NeuralNetworkLayer Neural Network Layer
@@ -85,7 +91,7 @@ typedef struct {
 /// Local context for Affine
 typedef struct {
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } affine_local_context_t;
 
 /// Allocate Affine local context
@@ -108,7 +114,7 @@ typedef struct {
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;      ///< int64
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } convolution_local_context_t;
 
 /// Allocate Convolution local context
@@ -131,7 +137,7 @@ typedef struct {
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t multiplier; ///< int64
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } depthwise_convolution_local_context_t;
 
 /// Allocate DepthwiseConvolution local context
@@ -155,7 +161,7 @@ typedef struct {
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;      ///< int64
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } deconvolution_local_context_t;
 
 /// Allocate Deconvolution local context
@@ -178,7 +184,7 @@ typedef struct {
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t divisor;    ///< int64
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } depthwise_deconvolution_local_context_t;
 
 /// Allocate DepthwiseDeconvolution local context
@@ -202,7 +208,7 @@ typedef struct {
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
-  void *private;         ///< Private area
+  void *data;            ///< General perpose data area
 } max_pooling_local_context_t;
 
 /// Allocate MaxPooling local context
@@ -225,7 +231,7 @@ typedef struct {
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
   uint8_t including_pad; ///< bool
-  void *private;         ///< Private area
+  void *data;            ///< General perpose data area
 } average_pooling_local_context_t;
 
 /// Allocate AveragePooling local context
@@ -261,7 +267,7 @@ typedef struct {
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
-  void *private;         ///< Private area
+  void *data;            ///< General perpose data area
 } sum_pooling_local_context_t;
 
 /// Allocate SumPooling local context
@@ -280,7 +286,7 @@ rt_function_error_t exec_sum_pooling(rt_function_t *f);
 /// Local context for Unpooling
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]
-  void *private;    ///< Private area
+  void *data;       ///< General perpose data area
 } unpooling_local_context_t;
 
 /// Allocate Unpooling local context
@@ -358,7 +364,7 @@ rt_function_error_t exec_tanh(rt_function_t *f);
 /// Local context for ReLU
 typedef struct {
   uint8_t inplace; ///< bool
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } relu_local_context_t;
 
 /// Allocate ReLU local context
@@ -376,8 +382,8 @@ rt_function_error_t exec_relu(rt_function_t *f);
 
 /// Local context for LeakyReLU
 typedef struct {
-  float alpha;   ///< float
-  void *private; ///< Private area
+  float alpha; ///< float
+  void *data;  ///< General perpose data area
 } leaky_relu_local_context_t;
 
 /// Allocate LeakyReLU local context
@@ -395,8 +401,8 @@ rt_function_error_t exec_leaky_relu(rt_function_t *f);
 
 /// Local context for Softmax
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } softmax_local_context_t;
 
 /// Allocate Softmax local context
@@ -414,8 +420,8 @@ rt_function_error_t exec_softmax(rt_function_t *f);
 
 /// Local context for ELU
 typedef struct {
-  float alpha;   ///< double
-  void *private; ///< Private area
+  float alpha; ///< double
+  void *data;  ///< General perpose data area
 } elu_local_context_t;
 
 /// Allocate ELU local context
@@ -433,9 +439,9 @@ rt_function_error_t exec_elu(rt_function_t *f);
 
 /// Local context for SELU
 typedef struct {
-  float scale;   ///< double
-  float alpha;   ///< double
-  void *private; ///< Private area
+  float scale; ///< double
+  float alpha; ///< double
+  void *data;  ///< General perpose data area
 } selu_local_context_t;
 
 /// Allocate SELU local context
@@ -453,8 +459,8 @@ rt_function_error_t exec_selu(rt_function_t *f);
 
 /// Local context for CReLU
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } crelu_local_context_t;
 
 /// Allocate CReLU local context
@@ -472,9 +478,9 @@ rt_function_error_t exec_crelu(rt_function_t *f);
 
 /// Local context for CELU
 typedef struct {
-  float alpha;   ///< double
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  float alpha;  ///< double
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } celu_local_context_t;
 
 /// Allocate CELU local context
@@ -493,7 +499,7 @@ rt_function_error_t exec_celu(rt_function_t *f);
 /// Local context for PReLU
 typedef struct {
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } prelu_local_context_t;
 
 /// Allocate PReLU local context
@@ -521,7 +527,7 @@ typedef struct {
   float decay_rate;   ///< float
   float eps;          ///< float
   uint8_t batch_stat; ///< bool
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } batch_normalization_local_context_t;
 
 /// Allocate BatchNormalization local context
@@ -542,7 +548,7 @@ rt_function_error_t exec_batch_normalization(rt_function_t *f);
 typedef struct {
   int32_t base_axis;           ///< int64
   uint8_t update_running_mean; ///< bool
-  void *private;               ///< Private area
+  void *data;                  ///< General perpose data area
 } mean_subtraction_local_context_t;
 
 /// Allocate MeanSubtraction local context
@@ -568,7 +574,7 @@ rt_function_error_t exec_mean_subtraction(rt_function_t *f);
 typedef struct {
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } sum_local_context_t;
 
 /// Allocate Sum local context
@@ -588,7 +594,7 @@ rt_function_error_t exec_sum(rt_function_t *f);
 typedef struct {
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } mean_local_context_t;
 
 /// Allocate Mean local context
@@ -608,7 +614,7 @@ rt_function_error_t exec_mean(rt_function_t *f);
 typedef struct {
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } max_local_context_t;
 
 /// Allocate Max local context
@@ -628,7 +634,7 @@ rt_function_error_t exec_max(rt_function_t *f);
 typedef struct {
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } min_local_context_t;
 
 /// Allocate Min local context
@@ -648,7 +654,7 @@ rt_function_error_t exec_min(rt_function_t *f);
 typedef struct {
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } prod_local_context_t;
 
 /// Allocate Prod local context
@@ -699,7 +705,7 @@ rt_function_error_t exec_reduce_mean(rt_function_t *f);
 /// Local context for Add2
 typedef struct {
   uint8_t inplace; ///< bool
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } add2_local_context_t;
 
 /// Allocate Add2 local context
@@ -782,8 +788,8 @@ rt_function_error_t exec_pow2(rt_function_t *f);
 
 /// Local context for AddScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } add_scalar_local_context_t;
 
 /// Allocate AddScalar local context
@@ -801,8 +807,8 @@ rt_function_error_t exec_add_scalar(rt_function_t *f);
 
 /// Local context for MulScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } mul_scalar_local_context_t;
 
 /// Allocate MulScalar local context
@@ -820,8 +826,8 @@ rt_function_error_t exec_mul_scalar(rt_function_t *f);
 
 /// Local context for PowScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } pow_scalar_local_context_t;
 
 /// Allocate PowScalar local context
@@ -839,8 +845,8 @@ rt_function_error_t exec_pow_scalar(rt_function_t *f);
 
 /// Local context for RSubScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } r_sub_scalar_local_context_t;
 
 /// Allocate RSubScalar local context
@@ -858,8 +864,8 @@ rt_function_error_t exec_r_sub_scalar(rt_function_t *f);
 
 /// Local context for RDivScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } r_div_scalar_local_context_t;
 
 /// Allocate RDivScalar local context
@@ -877,8 +883,8 @@ rt_function_error_t exec_r_div_scalar(rt_function_t *f);
 
 /// Local context for RPowScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } r_pow_scalar_local_context_t;
 
 /// Allocate RPowScalar local context
@@ -902,8 +908,8 @@ rt_function_error_t exec_r_pow_scalar(rt_function_t *f);
 
 /// Local context for Sign
 typedef struct {
-  float alpha;   ///< float
-  void *private; ///< Private area
+  float alpha; ///< float
+  void *data;  ///< General perpose data area
 } sign_local_context_t;
 
 /// Allocate Sign local context
@@ -947,8 +953,8 @@ rt_function_error_t exec_maximum2(rt_function_t *f);
 
 /// Local context for MinimumScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } minimum_scalar_local_context_t;
 
 /// Allocate MinimumScalar local context
@@ -966,8 +972,8 @@ rt_function_error_t exec_minimum_scalar(rt_function_t *f);
 
 /// Local context for MaximumScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } maximum_scalar_local_context_t;
 
 /// Allocate MaximumScalar local context
@@ -1102,8 +1108,8 @@ rt_function_error_t exec_less(rt_function_t *f);
 
 /// Local context for LogicalAndScalar
 typedef struct {
-  uint8_t val;   ///< bool
-  void *private; ///< Private area
+  uint8_t val; ///< bool
+  void *data;  ///< General perpose data area
 } logical_and_scalar_local_context_t;
 
 /// Allocate LogicalAndScalar local context
@@ -1121,8 +1127,8 @@ rt_function_error_t exec_logical_and_scalar(rt_function_t *f);
 
 /// Local context for LogicalOrScalar
 typedef struct {
-  uint8_t val;   ///< bool
-  void *private; ///< Private area
+  uint8_t val; ///< bool
+  void *data;  ///< General perpose data area
 } logical_or_scalar_local_context_t;
 
 /// Allocate LogicalOrScalar local context
@@ -1140,8 +1146,8 @@ rt_function_error_t exec_logical_or_scalar(rt_function_t *f);
 
 /// Local context for LogicalXorScalar
 typedef struct {
-  uint8_t val;   ///< bool
-  void *private; ///< Private area
+  uint8_t val; ///< bool
+  void *data;  ///< General perpose data area
 } logical_xor_scalar_local_context_t;
 
 /// Allocate LogicalXorScalar local context
@@ -1159,8 +1165,8 @@ rt_function_error_t exec_logical_xor_scalar(rt_function_t *f);
 
 /// Local context for EqualScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } equal_scalar_local_context_t;
 
 /// Allocate EqualScalar local context
@@ -1178,8 +1184,8 @@ rt_function_error_t exec_equal_scalar(rt_function_t *f);
 
 /// Local context for NotEqualScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } not_equal_scalar_local_context_t;
 
 /// Allocate NotEqualScalar local context
@@ -1197,8 +1203,8 @@ rt_function_error_t exec_not_equal_scalar(rt_function_t *f);
 
 /// Local context for GreaterEqualScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } greater_equal_scalar_local_context_t;
 
 /// Allocate GreaterEqualScalar local context
@@ -1217,8 +1223,8 @@ rt_function_error_t exec_greater_equal_scalar(rt_function_t *f);
 
 /// Local context for GreaterScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } greater_scalar_local_context_t;
 
 /// Allocate GreaterScalar local context
@@ -1236,8 +1242,8 @@ rt_function_error_t exec_greater_scalar(rt_function_t *f);
 
 /// Local context for LessEqualScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } less_equal_scalar_local_context_t;
 
 /// Allocate LessEqualScalar local context
@@ -1255,8 +1261,8 @@ rt_function_error_t exec_less_equal_scalar(rt_function_t *f);
 
 /// Local context for LessScalar
 typedef struct {
-  float val;     ///< double
-  void *private; ///< Private area
+  float val;  ///< double
+  void *data; ///< General perpose data area
 } less_scalar_local_context_t;
 
 /// Allocate LessScalar local context
@@ -1295,7 +1301,7 @@ rt_function_error_t exec_logical_not(rt_function_t *f);
 typedef struct {
   float val;       ///< float
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } constant_local_context_t;
 
 /// Allocate Constant local context
@@ -1367,7 +1373,7 @@ rt_function_error_t exec_identity(rt_function_t *f);
 typedef struct {
   uint8_t transpose_a; ///< bool
   uint8_t transpose_b; ///< bool
-  void *private;       ///< Private area
+  void *data;          ///< General perpose data area
 } batch_matmul_local_context_t;
 
 /// Allocate BatchMatmul local context
@@ -1404,8 +1410,8 @@ rt_function_error_t exec_round(rt_function_t *f);
 
 /// Local context for Concatenate
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } concatenate_local_context_t;
 
 /// Allocate Concatenate local context
@@ -1423,8 +1429,8 @@ rt_function_error_t exec_concatenate(rt_function_t *f);
 
 /// Local context for Split
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } split_local_context_t;
 
 /// Allocate Split local context
@@ -1442,8 +1448,8 @@ rt_function_error_t exec_split(rt_function_t *f);
 
 /// Local context for Stack
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } stack_local_context_t;
 
 /// Allocate Stack local context
@@ -1464,7 +1470,7 @@ typedef struct {
   rt_list_t start; ///< Original type is [repeated int64]
   rt_list_t stop;  ///< Original type is [repeated int64]
   rt_list_t step;  ///< Original type is [repeated int64]
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } slice_local_context_t;
 
 /// Allocate Slice local context
@@ -1483,7 +1489,7 @@ rt_function_error_t exec_slice(rt_function_t *f);
 /// Local context for Transpose
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
-  void *private;  ///< Private area
+  void *data;     ///< General perpose data area
 } transpose_local_context_t;
 
 /// Allocate Transpose local context
@@ -1502,7 +1508,7 @@ rt_function_error_t exec_transpose(rt_function_t *f);
 /// Local context for Broadcast
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } broadcast_local_context_t;
 
 /// Allocate Broadcast local context
@@ -1521,7 +1527,7 @@ rt_function_error_t exec_broadcast(rt_function_t *f);
 /// Local context for OneHot
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } one_hot_local_context_t;
 
 /// Allocate OneHot local context
@@ -1540,7 +1546,7 @@ rt_function_error_t exec_one_hot(rt_function_t *f);
 /// Local context for Flip
 typedef struct {
   rt_list_t axes; ///< Original type is [repeated int64]
-  void *private;  ///< Private area
+  void *data;     ///< General perpose data area
 } flip_local_context_t;
 
 /// Allocate Flip local context
@@ -1567,7 +1573,7 @@ typedef enum {
 typedef struct {
   rt_list_t shifts;                      ///< Original type is [repeated int64]
   shift_border_mode_value_t border_mode; ///< string
-  void *private;                         ///< Private area
+  void *data;                            ///< General perpose data area
 } shift_local_context_t;
 
 /// Allocate Shift local context
@@ -1586,7 +1592,7 @@ rt_function_error_t exec_shift(rt_function_t *f);
 /// Local context for Reshape
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } reshape_local_context_t;
 
 /// Allocate Reshape local context
@@ -1636,9 +1642,9 @@ rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
 
 /// Local context for Dropout
 typedef struct {
-  float p;       ///< double
-  int32_t seed;  ///< int64
-  void *private; ///< Private area
+  float p;      ///< double
+  int32_t seed; ///< int64
+  void *data;   ///< General perpose data area
 } dropout_local_context_t;
 
 /// Allocate Dropout local context
@@ -1660,7 +1666,7 @@ typedef struct {
   uint8_t abs;       ///< bool
   uint8_t reduce;    ///< bool
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } top_k_data_local_context_t;
 
 /// Allocate TopKData local context
@@ -1681,7 +1687,7 @@ typedef struct {
   int32_t k;         ///< int64
   uint8_t abs;       ///< bool
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } top_k_grad_local_context_t;
 
 /// Allocate TopKGrad local context
@@ -1703,7 +1709,7 @@ typedef struct {
   float high;      ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } rand_local_context_t;
 
 /// Allocate Rand local context
@@ -1725,7 +1731,7 @@ typedef struct {
   int32_t high;    ///< int64
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } randint_local_context_t;
 
 /// Allocate Randint local context
@@ -1747,7 +1753,7 @@ typedef struct {
   float sigma;     ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *private;   ///< Private area
+  void *data;      ///< General perpose data area
 } randn_local_context_t;
 
 /// Allocate Randn local context
@@ -1768,7 +1774,7 @@ typedef struct {
   rt_list_t shape;   ///< Original type is [Shape]
   int32_t base_axis; ///< int64
   int32_t seed;      ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } random_crop_local_context_t;
 
 /// Allocate RandomCrop local context
@@ -1789,7 +1795,7 @@ typedef struct {
   rt_list_t axes;    ///< Original type is [repeated int64]
   int32_t base_axis; ///< int64
   int32_t seed;      ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } random_flip_local_context_t;
 
 /// Allocate RandomFlip local context
@@ -1818,7 +1824,7 @@ typedef struct {
   random_shift_border_mode_value_t border_mode; ///< string
   int32_t base_axis;                            ///< int64
   int32_t seed;                                 ///< int64
-  void *private;                                ///< Private area
+  void *data;                                   ///< General perpose data area
 } random_shift_local_context_t;
 
 /// Allocate RandomShift local context
@@ -1852,7 +1858,7 @@ typedef struct {
   uint8_t contrast_each;   ///< bool
   float noise;             ///< float
   int32_t seed;            ///< int64
-  void *private;           ///< Private area
+  void *data;              ///< General perpose data area
 } image_augmentation_local_context_t;
 
 /// Allocate ImageAugmentation local context
@@ -1904,8 +1910,8 @@ rt_function_error_t exec_binary_cross_entropy(rt_function_t *f);
 
 /// Local context for SoftmaxCrossEntropy
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } softmax_cross_entropy_local_context_t;
 
 /// Allocate SoftmaxCrossEntropy local context
@@ -1924,8 +1930,8 @@ rt_function_error_t exec_softmax_cross_entropy(rt_function_t *f);
 
 /// Local context for CategoricalCrossEntropy
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } categorical_cross_entropy_local_context_t;
 
 /// Allocate CategoricalCrossEntropy local context
@@ -1971,8 +1977,8 @@ rt_function_error_t exec_absolute_error(rt_function_t *f);
 
 /// Local context for HuberLoss
 typedef struct {
-  float delta;   ///< float
-  void *private; ///< Private area
+  float delta; ///< float
+  void *data;  ///< General perpose data area
 } huber_loss_local_context_t;
 
 /// Allocate HuberLoss local context
@@ -1991,7 +1997,7 @@ rt_function_error_t exec_huber_loss(rt_function_t *f);
 /// Local context for EpsilonInsensitiveLoss
 typedef struct {
   float epsilon; ///< float
-  void *private; ///< Private area
+  void *data;    ///< General perpose data area
 } epsilon_insensitive_loss_local_context_t;
 
 /// Allocate EpsilonInsensitiveLoss local context
@@ -2012,7 +2018,7 @@ rt_function_error_t exec_epsilon_insensitive_loss(rt_function_t *f);
 /// Local context for KLMultinomial
 typedef struct {
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } kl_multinomial_local_context_t;
 
 /// Allocate KLMultinomial local context
@@ -2063,7 +2069,7 @@ rt_function_error_t exec_binary_tanh(rt_function_t *f);
 /// Local context for BinaryConnectAffine
 typedef struct {
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } binary_connect_affine_local_context_t;
 
 /// Allocate BinaryConnectAffine local context
@@ -2087,7 +2093,7 @@ typedef struct {
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;      ///< int64
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } binary_connect_convolution_local_context_t;
 
 /// Allocate BinaryConnectConvolution local context
@@ -2108,7 +2114,7 @@ rt_function_error_t exec_binary_connect_convolution(rt_function_t *f);
 /// Local context for BinaryWeightAffine
 typedef struct {
   int32_t base_axis; ///< int64
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } binary_weight_affine_local_context_t;
 
 /// Allocate BinaryWeightAffine local context
@@ -2132,7 +2138,7 @@ typedef struct {
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t group;      ///< int64
-  void *private;      ///< Private area
+  void *data;         ///< General perpose data area
 } binary_weight_convolution_local_context_t;
 
 /// Allocate BinaryWeightConvolution local context
@@ -2164,7 +2170,7 @@ typedef struct {
   rt_list_t inq_iterations; ///< Original type is [repeated int64]
   inq_affine_selection_algorithm_value_t selection_algorithm; ///< string
   int32_t seed;                                               ///< int64
-  void *private;                                              ///< Private area
+  void *data; ///< General perpose data area
 } inq_affine_local_context_t;
 
 /// Allocate INQAffine local context
@@ -2198,7 +2204,7 @@ typedef struct {
   rt_list_t inq_iterations; ///< Original type is [repeated int64]
   inq_convolution_selection_algorithm_value_t selection_algorithm; ///< string
   int32_t seed;                                                    ///< int64
-  void *private; ///< Private area
+  void *data; ///< General perpose data area
 } inq_convolution_local_context_t;
 
 /// Allocate INQConvolution local context
@@ -2220,7 +2226,7 @@ typedef struct {
   int32_t n;                ///< int64
   float delta;              ///< float
   uint8_t ste_fine_grained; ///< bool
-  void *private;            ///< Private area
+  void *data;               ///< General perpose data area
 } fixed_point_quantize_local_context_t;
 
 /// Allocate FixedPointQuantize local context
@@ -2244,7 +2250,7 @@ typedef struct {
   int32_t n;                ///< int64
   int32_t m;                ///< int64
   uint8_t ste_fine_grained; ///< bool
-  void *private;            ///< Private area
+  void *data;               ///< General perpose data area
 } pow2_quantize_local_context_t;
 
 /// Allocate Pow2Quantize local context
@@ -2268,9 +2274,9 @@ rt_function_error_t exec_pow2_quantize(rt_function_t *f);
 
 /// Local context for TopNError
 typedef struct {
-  int32_t axis;  ///< int64
-  int32_t n;     ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  int32_t n;    ///< int64
+  void *data;   ///< General perpose data area
 } top_n_error_local_context_t;
 
 /// Allocate TopNError local context
@@ -2301,8 +2307,8 @@ rt_function_error_t exec_binary_error(rt_function_t *f);
 
 /// Local context for ConfusionMatrix
 typedef struct {
-  int32_t axis;  ///< int64
-  void *private; ///< Private area
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
 } confusion_matrix_local_context_t;
 
 /// Allocate ConfusionMatrix local context
@@ -2328,7 +2334,7 @@ rt_function_error_t exec_confusion_matrix(rt_function_t *f);
 typedef struct {
   int32_t base_axis; ///< int64
   float eps;         ///< float
-  void *private;     ///< Private area
+  void *data;        ///< General perpose data area
 } vat_noise_local_context_t;
 
 /// Allocate VATNoise local context
@@ -2360,7 +2366,7 @@ rt_function_error_t exec_unlink(rt_function_t *f);
 /// Local context for Sink
 typedef struct {
   uint8_t one_input_grad; ///< bool
-  void *private;          ///< Private area
+  void *data;             ///< General perpose data area
 } sink_local_context_t;
 
 /// Allocate Sink local context

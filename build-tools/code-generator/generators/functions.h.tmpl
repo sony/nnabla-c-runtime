@@ -65,14 +65,20 @@ typedef struct {
 } rt_variable_t;
 
 /// @brief Function
-typedef struct {
+struct st_rt_function_t;
+typedef struct st_rt_function_t rt_function_t;
+
+struct st_rt_function_t {
   int num_of_inputs;       ///< Number of inputs
   rt_variable_t **inputs;  ///< List of input variable
   int num_of_outputs;      ///< Number of outputs
   rt_variable_t **outputs; ///< List of output variable
 
+  rt_function_error_t (*exec_func)(rt_function_t *f);
+  rt_function_error_t (*free_local_context_func)(rt_function_t *f);
+
   void *local_context;     ///< General perpose context
-} rt_function_t;
+};
 
 ${FUNCTION_DEFINES}
 

@@ -19,9 +19,9 @@ def generate(filename, info):
         for fn, func in cat.items():
             l.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snake_name'].upper(), fn))
-            l.append('      function_context->exec_func = exec_{};'.format(
+            l.append('      function_context->func.exec_func = exec_{};'.format(
                 func['snake_name']))
-            l.append('      function_context->free_local_context_func = free_{}_local_context;'.format(
+            l.append('      function_context->func.free_local_context_func = free_{}_local_context;'.format(
                 func['snake_name']))
             if 'arguments' in func and len(func['arguments']) > 0:
                 l.append(

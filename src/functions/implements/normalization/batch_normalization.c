@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 #include <nnablart/functions.h>
 
@@ -59,8 +59,7 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
   p->batch_mean = clone_list(f->inputs[1]->shape);
   p->batch_var = clone_list(f->inputs[2]->shape);
   free_list(input_shape);
-  ((batch_normalization_local_context_t *)(f->local_context))->private =
-      (void *)p;
+  ((batch_normalization_local_context_t *)(f->local_context))->data = (void *)p;
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -69,7 +68,7 @@ rt_function_error_t free_batch_normalization_local_context(rt_function_t *f) {
   batch_normalization_private_t *p =
       (batch_normalization_private_t
            *)(((batch_normalization_local_context_t *)(f->local_context))
-                  ->private);
+                  ->data);
   free_list(p->batch_mean);
   free_list(p->batch_var);
   free(p);
@@ -158,7 +157,7 @@ rt_function_error_t exec_batch_normalization(rt_function_t *f) {
   batch_normalization_local_context_t *context =
       (batch_normalization_local_context_t *)(f->local_context);
   batch_normalization_private_t *p =
-      (batch_normalization_private_t *)(context->private);
+      (batch_normalization_private_t *)(context->data);
 
   if (context->batch_stat) {
     forward_impl_batch(f, context, p);

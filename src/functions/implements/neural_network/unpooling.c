@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/list.h"
+#include "../../utilities/shape.h"
+#include "pooling.h"
+
 #include <nnablart/functions.h>
 
 #include <string.h>
@@ -61,7 +64,7 @@ rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
   }
   free_list(shape);
 
-  ((unpooling_local_context_t *)(f->local_context))->private = (void *)p;
+  ((unpooling_local_context_t *)(f->local_context))->data = (void *)p;
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -69,7 +72,7 @@ rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
 rt_function_error_t free_unpooling_local_context(rt_function_t *f) {
   unpooling_private_t *p =
       (unpooling_private_t *)(((unpooling_local_context_t *)(f->local_context))
-                                  ->private);
+                                  ->data);
   free_list(p->input_shape);
   free_list(p->output_shape);
   free_list(p->input_strides);
@@ -125,7 +128,7 @@ static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
 rt_function_error_t exec_unpooling(rt_function_t *f) {
   unpooling_private_t *p =
       (unpooling_private_t *)(((unpooling_local_context_t *)(f->local_context))
-                                  ->private);
+                                  ->data);
   unpooling_forward_recursive(p, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }

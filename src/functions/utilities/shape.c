@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "shape.h"
-#include "../utilities.h"
 
 void pos_to_shape(rt_list_t out, rt_list_t shape, int pos) {
   int i = 0, o = 1;

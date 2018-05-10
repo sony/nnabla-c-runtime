@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "arithmetic.h"
-#include "shape.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 
 // Common algorism for arithmetic calculation between two vectors has same

@@ -14,7 +14,7 @@
 
 #include <nnablart/functions.h>
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 #include <math.h>
 
@@ -49,18 +49,18 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
     free(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((relu_local_context_t *)(f->local_context))->private = (void *)p;
+  ((relu_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_relu_local_context(rt_function_t *f) {
-  free(((relu_local_context_t *)(f->local_context))->private);
+  free(((relu_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_relu(rt_function_t *f) {
   relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
-  relu_private_t *p = (relu_private_t *)(context->private);
+  relu_private_t *p = (relu_private_t *)(context->data);
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {

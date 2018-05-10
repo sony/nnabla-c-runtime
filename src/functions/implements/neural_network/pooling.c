@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "pooling.h"
-#include "shape.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 
 rt_function_error_t allocate_pooling(rt_function_t *f,

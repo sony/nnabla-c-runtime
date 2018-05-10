@@ -179,7 +179,7 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
     free(c->functions[i].func.inputs);
     free(c->functions[i].func.outputs);
 
-    c->functions[i].free_local_context_func(&(c->functions[i].func));
+    c->functions[i].func.free_local_context_func(&(c->functions[i].func));
     if (c->functions[i].func.local_context != 0) {
       free(c->functions[i].func.local_context);
     }
@@ -271,7 +271,7 @@ rt_return_value_t rt_forward(rt_context_pointer context) {
   rt_context_t *c = context;
 
   for (i = 0; i < c->num_of_functions; i++) {
-    c->functions[i].exec_func(&(c->functions[i].func));
+    c->functions[i].func.exec_func(&(c->functions[i].func));
   }
 
   return RT_RET_NOERROR;

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>

@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../../utilities.h"
 #include "convolution_internal.h"
+
+#include "../../../utilities/list.h"
+#include "../../../utilities/shape.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
@@ -44,7 +47,7 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  c->private = (void *)p;
+  c->data = (void *)p;
 
   if (in_shape.data[c->base_axis] % c->group != 0) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
@@ -113,7 +116,7 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
 rt_function_error_t free_convolution_local_context(rt_function_t *f) {
   convolution_local_context_t *c =
       (convolution_local_context_t *)(f->local_context);
-  convolution_private_t *p = (convolution_private_t *)c->private;
+  convolution_private_t *p = (convolution_private_t *)c->data;
   var_free(&p->out_var);
   var_free(&p->in_var);
   var_free(&p->w_var);
@@ -124,6 +127,6 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_convolution(rt_function_t *f) {
   return ((convolution_private_t
-               *)(((convolution_local_context_t *)(f->local_context))->private))
+               *)(((convolution_local_context_t *)(f->local_context))->data))
       ->exec(f);
 }

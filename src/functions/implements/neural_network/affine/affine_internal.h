@@ -15,7 +15,8 @@
 #ifndef H_AFFINE_INTERNAL_H_171218154530_
 #define H_AFFINE_INTERNAL_H_171218154530_
 
-#include "../../../utilities.h"
+#include "../../../utilities/accessor.h"
+#include "../../../utilities/shape.h"
 
 typedef rt_function_error_t (*exec_affine_func_t)(rt_function_t *f);
 

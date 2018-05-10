@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../../utilities.h"
 #include "convolution_internal.h"
+
+#include "../../../utilities/list.h"
+#include "../../../utilities/shape.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
@@ -105,7 +108,7 @@ static inline void add_bias(var_t *out, var_t *b) {
 rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   convolution_local_context_t *c =
       (convolution_local_context_t *)f->local_context;
-  convolution_private_t *p = (convolution_private_t *)(c->private);
+  convolution_private_t *p = (convolution_private_t *)(c->data);
 
   nn_size_t group = c->group;
   nn_size_t in_vars = p->in_var.shape.data[I];

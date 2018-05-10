@@ -15,7 +15,7 @@
 #include <math.h>
 #include <nnablart/functions.h>
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 static inline float max(float a, float b) { return a < b ? b : a; }
 
@@ -48,19 +48,19 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   if (p->batch_size * p->specified_axis_size * p->output_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((softmax_local_context_t *)(f->local_context))->private = (void *)p;
+  ((softmax_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_softmax_local_context(rt_function_t *f) {
-  free(((softmax_local_context_t *)(f->local_context))->private);
+  free(((softmax_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_softmax(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
-  softmax_private_t *p = (softmax_private_t *)(context->private);
+  softmax_private_t *p = (softmax_private_t *)(context->data);
   const float *const x = (float *)(f->inputs[0]->data);
   float *const y = (float *)(f->outputs[0]->data);
   const int batch_size = p->batch_size;

@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../../utilities/accessor.h"
+#include <nnablart/functions.h>
+
 #ifndef H_CONVOLUTION_INTERNAL_H_171218154530_
 #define H_CONVOLUTION_INTERNAL_H_171218154530_
-
-#include "../../../utilities.h"
 
 typedef rt_function_error_t (*exec_conv_func_t)(rt_function_t *f);
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 #include "../neural_network/affine/affine_generic.h"
 #include "../neural_network/affine/affine_internal.h"
 #include <nnablart/functions.h>
@@ -71,17 +71,17 @@ allocate_binary_connect_affine_local_context(rt_function_t *f) {
 
   p->exec = exec_affine_generic;
 
-  ((affine_local_context_t *)(f->local_context))->private = (void *)p;
+  ((affine_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f) {
-  free((((affine_local_context_t *)(f->local_context))->private));
+  free((((affine_local_context_t *)(f->local_context))->data));
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_binary_connect_affine(rt_function_t *f) {
   return ((affine_private_t *)(((affine_local_context_t *)(f->local_context))
-                                   ->private))
+                                   ->data))
       ->exec(f);
 }
