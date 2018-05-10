@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 42/121
+Total 48/121
 
 
 ## Neural Network Layer
@@ -95,11 +95,11 @@ Count 10/12
 |        RPowScalar        |     yes      |      -       |
 
 ## Logical
-Count 4/24
+Count 5/24
 
 |         Function         |  Available   |   generic    |
 |--------------------------|--------------|--------------|
-|           Sign           |      no      |      -       |
+|           Sign           |     yes      |      -       |
 |         Minimum2         |     yes      |      -       |
 |         Maximum2         |     yes      |      -       |
 |      MinimumScalar       |     yes      |      -       |
@@ -125,7 +125,7 @@ Count 4/24
 |        LogicalNot        |      no      |      -       |
 
 ## Math
-Count 5/7
+Count 6/7
 
 |         Function         |  Available   |   generic    |
 |--------------------------|--------------|--------------|
@@ -134,26 +134,26 @@ Count 5/7
 |           Exp            |     yes      |      -       |
 |           Log            |     yes      |      -       |
 |         Identity         |     yes      |      -       |
-|       BatchMatmul        |      no      |      -       |
+|       BatchMatmul        |     yes      |      -       |
 |          Round           |     yes      |      -       |
 
 ## Array Manipulation
-Count 1/12
+Count 5/12
 
 |         Function         |  Available   |   generic    |
 |--------------------------|--------------|--------------|
 |       Concatenate        |      no      |      -       |
 |          Split           |      no      |      -       |
 |          Stack           |      no      |      -       |
-|          Slice           |      no      |      -       |
+|          Slice           |     yes      |      -       |
 |        Transpose         |      no      |      -       |
 |        Broadcast         |      no      |      -       |
 |          OneHot          |      no      |      -       |
 |           Flip           |      no      |      -       |
-|          Shift           |      no      |      -       |
+|          Shift           |     yes      |      -       |
 |         Reshape          |     yes      |      -       |
-|        MatrixDiag        |      no      |      -       |
-|      MatrixDiagPart      |      no      |      -       |
+|        MatrixDiag        |     yes      |      -       |
+|      MatrixDiagPart      |     yes      |      -       |
 
 ## Stochasticity
 Count 0/10

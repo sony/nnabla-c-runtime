@@ -41,33 +41,39 @@ add_library(nnablart_functions STATIC
   implements/activation/swish.c
 
   implements/math/abs.c
+  implements/math/batch_matmul.c
   implements/math/exp.c
+  implements/math/identity.c
   implements/math/log.c
   implements/math/round.c
-  implements/math/identity.c
 
   implements/quantization/binary_tanh.c
   implements/quantization/binary_sigmoid.c
   implements/quantization/binary_connect_affine.c
 
-  implements/arithmetic/arithmetic.c
   implements/arithmetic/add_scalar.c
-  implements/arithmetic/mul_scalar.c
-  implements/arithmetic/r_sub_scalar.c
-  implements/arithmetic/r_div_scalar.c
-  implements/arithmetic/pow_scalar.c
-  implements/arithmetic/r_pow_scalar.c
-  implements/arithmetic/sub2.c
-  implements/arithmetic/mul2.c
+  implements/arithmetic/arithmetic.c
   implements/arithmetic/div2.c
+  implements/arithmetic/mul2.c
+  implements/arithmetic/mul_scalar.c
   implements/arithmetic/pow2.c
+  implements/arithmetic/pow_scalar.c
+  implements/arithmetic/r_div_scalar.c
+  implements/arithmetic/r_pow_scalar.c
+  implements/arithmetic/r_sub_scalar.c
+  implements/arithmetic/sub2.c
 
   implements/logical/maximum_scalar.c
   implements/logical/minimum_scalar.c
   implements/logical/maximum2.c
   implements/logical/minimum2.c  
+  implements/logical/sign.c
 
+  implements/array/matrix_diag.c
+  implements/array/matrix_diag_part.c
   implements/array/reshape.c
+  implements/array/shift.c
+  implements/array/slice.c
 
   implements/normalization/batch_normalization.c
   implements/normalization/mean_subtraction.c
