@@ -13,28 +13,25 @@
 // limitations under the License.
 
 #include "pooling.h"
-#include "shape.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 
 rt_function_error_t allocate_pooling(rt_function_t *f,
                                      pooling_context_t *context,
-                                     pooling_private_t *private) {
-  if (private == 0) {
+                                     pooling_private_t *p) {
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-private
-  ->input_shape = clone_list(f->inputs[0]->shape);
-private
-  ->output_shape = clone_list(f->outputs[0]->shape);
-private
-  ->input_n_kernel_size_diff = private->input_shape.size - context->kernel.size;
+  p->input_shape = clone_list(f->inputs[0]->shape);
+  p->output_shape = clone_list(f->outputs[0]->shape);
+  p->input_n_kernel_size_diff = p->input_shape.size - context->kernel.size;
   if (context->stride.size == 0) {
     context->stride = clone_list(context->kernel);
   } else {
     if (context->kernel.size != context->stride.size) {
       return RT_FUNCTION_ERROR_INVALID_SHAPE;
     }
-    if (context->kernel.size > private->input_shape.size) {
+    if (context->kernel.size > p->input_shape.size) {
       return RT_FUNCTION_ERROR_INVALID_SHAPE;
     }
   }
@@ -49,8 +46,7 @@ private
   rt_list_t shape = allocate_list(context->kernel.size);
   int i;
   for (i = 0; i < context->kernel.size; i++) {
-    shape.data[i] =
-        private->input_shape.data[i + private->input_n_kernel_size_diff];
+    shape.data[i] = p->input_shape.data[i + p->input_n_kernel_size_diff];
   }
   for (i = 0; i < shape.size; i++) {
     shape.data[i] += 2 * context->pad.data[i];
@@ -62,14 +58,11 @@ private
       shape.data[i] = ceil(shape.data[i] * 1.0 / context->stride.data[i]);
     }
   }
-  for (i = 0; i < private->input_shape.size; i++) {
-    if (i < private->input_n_kernel_size_diff) {
-    private
-      ->output_shape.data[i] = private->input_shape.data[i];
+  for (i = 0; i < p->input_shape.size; i++) {
+    if (i < p->input_n_kernel_size_diff) {
+      p->output_shape.data[i] = p->input_shape.data[i];
     } else {
-    private
-      ->output_shape.data[i] =
-          shape.data[i - private->input_n_kernel_size_diff];
+      p->output_shape.data[i] = shape.data[i - p->input_n_kernel_size_diff];
     }
   }
   free_list(shape);
@@ -78,64 +71,50 @@ private
   const rt_list_t input_strides = calc_contiguous_strides(f->inputs[0]->shape);
   const rt_list_t output_strides =
       calc_contiguous_strides(f->outputs[0]->shape);
-private
-  ->x_stride = (private->input_n_kernel_size_diff == 0)
-                   ? calc_shape_size(f->inputs[0]->shape)
-                   : input_strides.data[private->input_n_kernel_size_diff - 1];
-private
-  ->y_stride = (private->input_n_kernel_size_diff == 0)
-                   ? calc_shape_size(f->outputs[0]->shape)
-                   : output_strides.data[private->input_n_kernel_size_diff - 1];
+  p->x_stride = (p->input_n_kernel_size_diff == 0)
+                    ? calc_shape_size(f->inputs[0]->shape)
+                    : input_strides.data[p->input_n_kernel_size_diff - 1];
+  p->y_stride = (p->input_n_kernel_size_diff == 0)
+                    ? calc_shape_size(f->outputs[0]->shape)
+                    : output_strides.data[p->input_n_kernel_size_diff - 1];
   free_list(input_strides);
   free_list(output_strides);
 
   // Init calc_context.
-private
-  ->calc_context.hstart = 0;
-private
-  ->calc_context.hend = 0;
-private
-  ->calc_context.wstart = 0;
-private
-  ->calc_context.wend = 0;
-private
-  ->calc_context.wx =
-      private->input_shape.data[private->input_n_kernel_size_diff + 1];
-private
-  ->calc_context.pool_size = 0;
-private
-  ->calc_context.x = (float *)(f->inputs[0]->data);
-private
-  ->calc_context.including_pad = context->including_pad;
+  p->calc_context.hstart = 0;
+  p->calc_context.hend = 0;
+  p->calc_context.wstart = 0;
+  p->calc_context.wend = 0;
+  p->calc_context.wx = p->input_shape.data[p->input_n_kernel_size_diff + 1];
+  p->calc_context.pool_size = 0;
+  p->calc_context.x = (float *)(f->inputs[0]->data);
+  p->calc_context.including_pad = context->including_pad;
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t free_pooling(pooling_private_t *private) {
-  free_list(private->input_shape);
-  free_list(private->output_shape);
-  free(private);
+rt_function_error_t free_pooling(pooling_private_t *p) {
+  free_list(p->input_shape);
+  free_list(p->output_shape);
+  free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
-                                 pooling_private_t *private,
+                                 pooling_private_t *p,
                                  exec_pooling_func_t exec) {
   float *y = (float *)(f->outputs[0]->data);
-  const int hx =
-      private->input_shape.data[private->input_n_kernel_size_diff + 0];
-  const int wx = private->calc_context.wx;
-  const int hy =
-      private->output_shape.data[private->input_n_kernel_size_diff + 0];
-  const int wy =
-      private->output_shape.data[private->input_n_kernel_size_diff + 1];
+  const int hx = p->input_shape.data[p->input_n_kernel_size_diff + 0];
+  const int wx = p->calc_context.wx;
+  const int hy = p->output_shape.data[p->input_n_kernel_size_diff + 0];
+  const int wy = p->output_shape.data[p->input_n_kernel_size_diff + 1];
   const int hkernel = context->kernel.data[0];
   const int wkernel = context->kernel.data[1];
   const int hstride = context->stride.data[0];
   const int wstride = context->stride.data[1];
   const int hpad = context->pad.data[0];
   const int wpad = context->pad.data[1];
-  const int n_map = calc_shape_size(f->inputs[0]->shape) / private->x_stride;
+  const int n_map = calc_shape_size(f->inputs[0]->shape) / p->x_stride;
   int n;
   for (n = 0; n < n_map; n++) {
     int iy;
@@ -146,24 +125,18 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
         int wstart = jy * wstride - wpad;
         int hend = fminf(hstart + hkernel, hx + hpad);
         int wend = fminf(wstart + wkernel, wx + wpad);
-      private
-        ->calc_context.pool_size = (hend - hstart) * (wend - wstart);
-      private
-        ->calc_context.hstart = fmaxf(hstart, 0);
-      private
-        ->calc_context.wstart = fmaxf(wstart, 0);
-      private
-        ->calc_context.hend = fminf(hend, hx);
-      private
-        ->calc_context.wend = fminf(wend, wx);
+        p->calc_context.pool_size = (hend - hstart) * (wend - wstart);
+        p->calc_context.hstart = fmaxf(hstart, 0);
+        p->calc_context.wstart = fmaxf(wstart, 0);
+        p->calc_context.hend = fminf(hend, hx);
+        p->calc_context.wend = fminf(wend, wx);
         int k = iy * wy + jy;
-        float val = exec(private->calc_context);
+        float val = exec(p->calc_context);
         y[k] = val;
       }
     }
-  private
-    ->calc_context.x += private->x_stride;
-    y += private->y_stride;
+    p->calc_context.x += p->x_stride;
+    y += p->y_stride;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

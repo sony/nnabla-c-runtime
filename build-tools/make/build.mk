@@ -1,0 +1,50 @@
+# Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+########################################################################################################################
+# Suppress most of make message.
+.SILENT:
+
+.PHONY: build
+build: generate auto-format compile
+
+.PHONY: generate
+generate:
+	@python3 build-tools/code-generator/generate.py
+
+.PHONY: compile
+compile:
+	@mkdir -p build
+	@cd build && cmake ..
+	@make -C build
+
+.PHONY: examples
+examples: build
+	@make -C examples/callback
+
+.PHONY: clean
+clean:
+	@rm -rf build
+	@rm -rf doc/html
+
+.PHONY: doc
+doc:
+	@doxygen build-tools/doc/Doxyfile
+	@rm -rf "?"  # plantuml(JRE?) creates '?' directory.
+
+.PHONY: auto-format
+auto-format:
+	@find . -type f -name "*.py" |xargs -n1 autopep8 -i
+	@find . -type f -name "*.[ch]" |xargs -n1 clang-format -i
+

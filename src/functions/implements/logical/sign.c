@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 
 // Sign
 rt_function_error_t allocate_sign_local_context(rt_function_t *f) {

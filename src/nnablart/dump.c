@@ -24,7 +24,6 @@
 
 int dump(nn_network_t *net, int argc, char *argv[]) {
   int i, j;
-  WHOAMI("%s\n", __func__);
 
   printf("NNB: Version: [%d]\n", net->version);
   printf("NNB: Has %d buffers.\n", net->buffers.size);

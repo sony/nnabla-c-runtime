@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 #include <string.h>
 
 typedef struct {
@@ -37,67 +37,65 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  slice_private_t *private = malloc(sizeof(slice_private_t));
-  if (private == 0) {
+  slice_private_t *p = malloc(sizeof(slice_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
   slice_local_context_t *context = (slice_local_context_t *)(f->local_context);
-  ((slice_local_context_t *)(f->local_context))->private = (void *)private;
-  private->input_shape = clone_list(f->inputs[0]->shape);
-  private->output_shape = clone_list(f->outputs[0]->shape);
-  private->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
-  private->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
-  private->start = allocate_list(private->input_shape.size);
-  private->stop = allocate_list(private->input_shape.size);
-  private->step = allocate_list(private->input_shape.size);
-  private->input = (float *)(f->inputs[0]->data);
-  private->output = (float *)(f->outputs[0]->data);
+  ((slice_local_context_t *)(f->local_context))->data = (void *)p;
+  p->input_shape = clone_list(f->inputs[0]->shape);
+  p->output_shape = clone_list(f->outputs[0]->shape);
+  p->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
+  p->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
+  p->start = allocate_list(p->input_shape.size);
+  p->stop = allocate_list(p->input_shape.size);
+  p->step = allocate_list(p->input_shape.size);
+  p->input = (float *)(f->inputs[0]->data);
+  p->output = (float *)(f->outputs[0]->data);
 
   int i, j;
-  int diff = private->input_shape.size - context->start.size - 1;
+  int diff = p->input_shape.size - context->start.size - 1;
   for (i = 0; i <= diff; i++) {
-    private->start.data[i] = 0;
-    private->stop.data[i] = private->input_shape.data[i];
-    private->step.data[i] = 1;
+    p->start.data[i] = 0;
+    p->stop.data[i] = p->input_shape.data[i];
+    p->step.data[i] = 1;
   }
-  for (j = 0; i < private->input_shape.size; i++, j++) {
-    private->start.data[i] = context->start.data[j];
-    private->stop.data[i] = context->stop.data[j];
-    private->step.data[i] = context->step.data[j];
+  for (j = 0; i < p->input_shape.size; i++, j++) {
+    p->start.data[i] = context->start.data[j];
+    p->stop.data[i] = context->stop.data[j];
+    p->step.data[i] = context->step.data[j];
   }
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_slice_local_context(rt_function_t *f) {
-  slice_private_t *private =
-      (slice_private_t *)(((slice_local_context_t *)(f->local_context))
-                              ->private);
-  free_list(private->input_shape);
-  free_list(private->output_shape);
-  free_list(private->input_strides);
-  free_list(private->output_strides);
-  free_list(private->start);
-  free_list(private->stop);
-  free_list(private->step);
-  free(private);
+  slice_private_t *p =
+      (slice_private_t *)(((slice_local_context_t *)(f->local_context))->data);
+  free_list(p->input_shape);
+  free_list(p->output_shape);
+  free_list(p->input_strides);
+  free_list(p->output_strides);
+  free_list(p->start);
+  free_list(p->stop);
+  free_list(p->step);
+  free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-static void slice_recursive(slice_local_context_t *context,
-                            int x_offset, int y_offset, int dim)
-{
-  slice_private_t *private = (slice_private_t *)(context->private);
+static void slice_recursive(slice_local_context_t *context, int x_offset,
+                            int y_offset, int dim) {
+  slice_private_t *p = (slice_private_t *)(context->data);
   int current_x_offset = x_offset;
   int current_y_offset = y_offset;
-  const int x_stride = private->input_strides.data[dim] * private->step.data[dim];
-  const int y_stride = private->output_strides.data[dim];
-  current_x_offset += private->input_strides.data[dim] * private->start.data[dim];
-  const int size = private->output_shape.data[dim];
-  const float *x = private->input;
-  float *y = private->output;
+  const int x_stride = p->input_strides.data[dim] * p->step.data[dim];
+  const int y_stride = p->output_strides.data[dim];
+  current_x_offset += p->input_strides.data[dim] * p->start.data[dim];
+  const int size = p->output_shape.data[dim];
+  const float *x = p->input;
+  float *y = p->output;
 
-  if (dim == private->input_shape.size - 1) {
+  if (dim == p->input_shape.size - 1) {
     const float *current_x = x + current_x_offset;
     float *current_y = y + current_y_offset;
     if (x_stride == 1) {

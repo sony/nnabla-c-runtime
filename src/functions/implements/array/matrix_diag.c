@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 
 typedef struct {
   float *input;
@@ -44,7 +44,7 @@ rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
   c->output = (float *)f->outputs[0]->data;
   c->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  c->last_ndim = f->inputs[0]->shape.data[f->inputs[0]->shape.size-1];
+  c->last_ndim = f->inputs[0]->shape.data[f->inputs[0]->shape.size - 1];
 
   if (c->input_size * c->last_ndim != c->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
@@ -58,7 +58,8 @@ rt_function_error_t free_matrix_diag_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_matrix_diag(rt_function_t *f) {
-  matrix_diag_local_context_t *context = (matrix_diag_local_context_t *)(f->local_context);
+  matrix_diag_local_context_t *context =
+      (matrix_diag_local_context_t *)(f->local_context);
 
   int i, j;
   for (i = 0; i < context->input_size; i++) {

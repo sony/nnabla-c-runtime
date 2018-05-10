@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
@@ -49,7 +50,8 @@ rt_function_error_t free_leaky_relu_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_leaky_relu(rt_function_t *f) {
-  leaky_relu_local_context_t *c = (leaky_relu_local_context_t *)(f->local_context);
+  leaky_relu_local_context_t *c =
+      (leaky_relu_local_context_t *)(f->local_context);
   const float *x = (float *)(f->inputs[0]->data);
   float *y = (float *)(f->outputs[0]->data);
   const int output_size = calc_shape_size(f->inputs[0]->shape);
