@@ -20,6 +20,12 @@
 #include <assert.h>
 #include <string.h>
 
+/// @defgroup Examples Examples
+/// @{
+
+/// @file
+/// @brief Simple callback example.
+
 /// @brief NNB format binary data from Affine_000.nntxt
 ///
 /// To use callback, you must set 'function implement flag' in NNB file.
@@ -58,7 +64,6 @@
 /// @code{.sh}
 /// $ xxd -i <Affine_000.nnb
 /// @endcode
-///
 ///
 static unsigned char affine_nnb[] = {
     0xb0, 0x3f, 0x66, 0x02, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00,
@@ -116,34 +121,47 @@ static unsigned char affine_nnb[] = {
     0x03, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
     0x0f, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00};
 
+/// @brief dummy input data.
 static unsigned char input[] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
                                 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
                                 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18};
 
+/// @brief Example callback for execute function.
+/// It does nothing but just print function name itself.
 static rt_function_error_t cb_exec(rt_function_t *f) {
-  WHOAMI(" cb_exec\n");
+  WHOAMI("%s", __func__);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+/// @brief Example callback for free function local context.
+/// It does nothing but just print function name itself.
 static rt_function_error_t cb_free(rt_function_t *f) {
-  WHOAMI(" cb_free\n");
+  WHOAMI("%s", __func__);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+/// @brief Example callback for allocate function local context.
+/// It just does followings.
+/// - check func->imple == 100
+/// - register @ref cb_exec as function executtor.
+/// - register @ref cb_free as function local context de-allocator.
+///
+/// See also @ref rt_initialize_context
 static rt_return_value_t cb_alloc(void *function_context) {
-  WHOAMI(" cb_alloc\n");
+  WHOAMI("%s", __func__);
   rt_function_context_t *func = (rt_function_context_t *)function_context;
   if ((int)func->impl != 100) {
     return RT_RET_FUNCTION_DONT_MATCH;
   }
 
-  func->exec_func = cb_exec;
-  func->free_local_context_func = cb_free;
+  func->func.exec_func = cb_exec;
+  func->func.free_local_context_func = cb_free;
   return RT_RET_FUNCTION_MATCH;
 }
 
+/// @brief Simple example to use user defined functions.
 int main(int argc, char *argv[]) {
-  WHOAMI("Callback test.\n");
+  WHOAMI("Callback test.");
   rt_context_pointer context = 0;
 
   rt_return_value_t ret = rt_allocate_context(&context);
@@ -168,3 +186,5 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
+/// @}

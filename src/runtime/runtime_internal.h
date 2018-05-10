@@ -17,36 +17,36 @@
 
 #include "context.h"
 
-/// @brief インデックス部分のサイズを計算します。
-/// @note
-/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+/// @brief Calculate index size.
+/// @note It is intended to internal use, and not assumed to use from the
+/// outside.
 #define NN_NETWORK_INDEX_SIZE(xNetwork)                                        \
   ((xNetwork)->memory.num_of_data * sizeof(pointer_index_t))
 
-/// @brief データ部分のサイズを計算します。
-/// @note
-/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+/// @brief Data size.
+/// @note It is intended to internal use, and not assumed to use from the
+/// outside.
 #define NN_NETWORK_DATA_SIZE(xNetwork) ((xNetwork)->memory.data_size)
 
-/// @brief ネットワーク全体のデータサイズを計算します。
+/// @brief Size of whole network.
 #define NN_NETWORK_SIZE(xNetwork)                                              \
   (sizeof(nn_network_t) + NN_NETWORK_INDEX_SIZE(xNetwork) +                    \
    NN_NETWORK_DATA_SIZE(xNetwork))
 
-/// @brief インデックスエリアの先頭ポインタを返します。
-/// @note
-/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+/// @brief Get pointer of index area.
+/// @note It is intended to internal use, and not assumed to use from the
+/// outside.
 #define NN_NETWORK_INDEX_POINTER(xNetwork)                                     \
   ((pointer_index_t *)(((uint8_t *)xNetwork) + sizeof(nn_network_t)))
 
-/// @brief データエリアの先頭ポインタを返します。
-/// @note
-/// マクロ内から利用するためのものであり、外部から利用することは想定していません。
+/// @brief Get pointer of data area.
+/// @note It is intended to internal use, and not assumed to use from the
+/// outside.
 #define NN_NETWORK_DATA_POINTER(xNetwork)                                      \
   ((uint8_t *)NN_NETWORK_INDEX_POINTER(xNetwork) +                             \
    NN_NETWORK_INDEX_SIZE(xNetwork))
 
-/// @brief インデックスからポインタを返します。
+/// @brief Get pointer from index.
 #define NN_GET(xNetwork, xIndex)                                               \
   (NN_NETWORK_DATA_POINTER(xNetwork) +                                         \
    NN_NETWORK_INDEX_POINTER(xNetwork)[xIndex])

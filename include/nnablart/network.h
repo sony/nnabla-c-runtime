@@ -1853,8 +1853,9 @@ typedef struct {
 /// Print specified message and positon itself.
 #define WHOAMI(...)                                                            \
   {                                                                            \
-    printf("%s:%d :", __FILE__, __LINE__);                                     \
+    printf("%s:%d: ", __FILE__, __LINE__);                                     \
     printf(__VA_ARGS__);                                                       \
+    printf("\n");                                                              \
     fflush(stdout);                                                            \
   }
 #endif // WHOAMI

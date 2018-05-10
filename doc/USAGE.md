@@ -1,12 +1,6 @@
 # Usage
 
-NNabla C RuntimeはNNablaに内蔵されているFile Format Converterと共
-に利用します。
-
-NNablaのネットワーク保存形式であるNNPファイルを入力とし、NNabla C
-Runtime専用のファイルフォーマットであるNNB、もしくはNNabla C
-Runtimeの一部ライブラリをリンクして利用するためのCソースコードを出
-力します。
+NNabla C Runtime depends `File Format Converter` that is included in `NNabla`.
 
 ## Use with C source code conveted from NNP file.
 
@@ -25,17 +19,14 @@ $ nnabla_cli -O CSRC convert input.nnp output
 
 ## Add your own implementation.
 
-@ref rt_add_callback
-を用いることにより、ユーザー独自の関数を追加することが可能です。
+To use user defined functions, use @ref rt_add_callback.
 
-ユーザーが用意するべき関数は、
+The function that the user should prepare is
+
 - allocate
 - exec
 - free
 
-の3種類ですが、コールバックとして指定するのはallocateのみで、execとfreeは
-@ref rt_function_context_t にユーザーが自ら登録します。
+that 3 types.
 
-
-Callbackの使い方について詳しくは、(examples/callback/callback.c)を参照してください。
-
+Please see (examples/callback/callback.c) for details.

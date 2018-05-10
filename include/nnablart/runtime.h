@@ -109,28 +109,18 @@ extern "C" {
 /// @enduml
 ///
 /// @ref Runtime provides following functions.
+/// - @ref rt_allocate_context()
 /// - @ref rt_initialize_context()
-///   - @copydoc rt_initialize_context()
 /// - @ref rt_free_context()
-///   - @copydoc rt_free_context()
 /// - @ref rt_num_of_input()
-///   - @copydoc rt_num_of_input()
 /// - @ref rt_input_size()
-///   - @copydoc rt_input_size()
 /// - @ref rt_input_dimension()
-///   - @copydoc rt_input_dimension()
 /// - @ref rt_input_shape()
-///   - @copydoc rt_input_shape()
 /// - @ref rt_num_of_output()
-///   - @copydoc rt_num_of_output()
 /// - @ref rt_output_size()
-///   - @copydoc rt_output_size()
 /// - @ref rt_output_dimension()
-///   - @copydoc rt_output_dimension()
 /// - @ref rt_output_shape()
-///   - @copydoc rt_output_shape()
 /// - @ref rt_forward()
-///   - @copydoc rt_forward()
 ///
 /// @{
 
@@ -176,6 +166,34 @@ rt_return_value_t rt_add_callback(
 
 /// @brief Initialize runtime context with parsing @ref nn_network_t.
 /// Initialize all functions in context and prepare forward calculation.
+///
+///
+/// Callback selection rule.
+/// @startuml
+/// skinparam monochrome true
+/// start
+///
+/// if (num_of_callbacks > 0) then (yes)
+///   if (Found callback->type is same as func->type
+///       and impl > NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) then (yes)
+///     :Call user defined allocatior;
+///     if (return value == RT_RET_FUNCTION_MATCH) then (yes)
+///       stop
+///     else (no)
+///       :return RT_RET_ERROR_NO_MATCHING_FUNCTION;
+///       stop
+///     endif
+///   else (no)
+///     :Call default allocator;
+///     stop
+///   endif
+/// else (no)
+///   :Call default allocator;
+///   stop
+/// endif
+///
+/// @enduml
+///
 /// @param[out] context Pointer to created context. It must be freed by @ref
 /// rt_free_context()
 /// @param[in] network
@@ -253,10 +271,6 @@ int rt_output_shape(rt_context_pointer context, size_t index,
 float *rt_output_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
-///
-///
-///
-///
 /// @param[in] context
 /// @return @ref rt_return_value_t
 rt_return_value_t rt_forward(rt_context_pointer context);
