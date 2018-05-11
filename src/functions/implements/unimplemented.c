@@ -91,7 +91,6 @@ rt_function_error_t exec_embed(rt_function_t *f) {
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Normalization
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,19 +223,6 @@ rt_function_error_t exec_bc_add2(rt_function_t *f) {
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
 ////////////////////////////////////////////////////////////////////////////////
-
-// Sign
-rt_function_error_t allocate_sign_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_sign_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_sign(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 // LogicalAnd
 rt_function_error_t allocate_logical_and_local_context(rt_function_t *f) {
@@ -506,19 +492,6 @@ rt_function_error_t exec_constant(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-// BatchMatmul
-rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_batch_matmul_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_batch_matmul(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
 ////////////////////////////////////////////////////////////////////////////////
@@ -559,19 +532,6 @@ rt_function_error_t free_stack_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_stack(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// Slice
-rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_slice_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_slice(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
@@ -624,47 +584,6 @@ rt_function_error_t free_flip_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_flip(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// Shift
-rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_shift_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_shift(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// MatrixDiag
-
-rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_matrix_diag_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_matrix_diag(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// MatrixDiagPart
-
-rt_function_error_t allocate_matrix_diag_part_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_matrix_diag_part(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 

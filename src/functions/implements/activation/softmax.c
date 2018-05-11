@@ -15,7 +15,7 @@
 #include <math.h>
 #include <nnablart/functions.h>
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 static inline float max(float a, float b) { return a < b ? b : a; }
 
@@ -28,8 +28,8 @@ typedef struct {
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
-  softmax_private_t *private = malloc(sizeof(softmax_private_t));
-  if (private == 0) {
+  softmax_private_t *p = malloc(sizeof(softmax_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
   const int axis = context->axis;
@@ -42,35 +42,30 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   if (f->inputs[0]->shape.size <= axis) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-private
-  ->batch_size = size / size_axis;
-private
-  ->specified_axis_size = size_axis;
-private
-  ->output_size = size / private->batch_size / private->specified_axis_size;
-  if (private->batch_size * private->specified_axis_size *
-          private->output_size !=
-      size) {
+  p->batch_size = size / size_axis;
+  p->specified_axis_size = size_axis;
+  p->output_size = size / p->batch_size / p->specified_axis_size;
+  if (p->batch_size * p->specified_axis_size * p->output_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((softmax_local_context_t *)(f->local_context))->private = (void *)private;
+  ((softmax_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_softmax_local_context(rt_function_t *f) {
-  free(((softmax_local_context_t *)(f->local_context))->private);
+  free(((softmax_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_softmax(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
-  softmax_private_t *private = (softmax_private_t *)(context->private);
+  softmax_private_t *p = (softmax_private_t *)(context->data);
   const float *const x = (float *)(f->inputs[0]->data);
   float *const y = (float *)(f->outputs[0]->data);
-  const int batch_size = private->batch_size;
-  const int specified_axis_size = private->specified_axis_size;
-  const int output_size = private->output_size;
+  const int batch_size = p->batch_size;
+  const int specified_axis_size = p->specified_axis_size;
+  const int output_size = p->output_size;
 
   int sample_index;
   for (sample_index = 0; sample_index < batch_size; ++sample_index) {

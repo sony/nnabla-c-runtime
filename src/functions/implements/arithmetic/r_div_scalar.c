@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
+#include "arithmetic.h"
 #include <nnablart/functions.h>
 
 // RDivScalar

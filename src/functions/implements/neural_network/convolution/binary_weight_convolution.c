@@ -25,6 +25,14 @@ rt_function_error_t
 allocate_binary_weight_convolution_local_context(rt_function_t *f) {
   assert(sizeof(convolution_local_context_t)
     == sizeof(binary_weight_convolution_local_context_t));
+
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_binary_weight_convolution;
+  } else {
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
 }
 
@@ -34,7 +42,7 @@ free_binary_weight_convolution_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_binary_weight_convolution(rt_function_t *f) {
-  return ((convolution_private_t *)(((convolution_local_context_t*)(f->local_context))
-                                   ->private))
+  return ((convolution_private_t *)(((convolution_local_context_t *)(f->local_context))
+                                   ->data))
       ->exec(f);
 }

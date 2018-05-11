@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
-#include "../../utilities.h"
-#include "../neural_network/affine/affine_internal.h"
+#include "../../utilities/shape.h"
 #include "../neural_network/affine/affine_generic.h"
+#include "../neural_network/affine/affine_internal.h"
+#include <nnablart/functions.h>
 
 // BinaryConnectAffine
-rt_function_error_t allocate_binary_connect_affine_local_context(rt_function_t *f) {
+rt_function_error_t
+allocate_binary_connect_affine_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 3 && f->num_of_inputs != 4) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }
@@ -68,19 +69,18 @@ rt_function_error_t allocate_binary_connect_affine_local_context(rt_function_t *
     p->output_loop_size *= p->output->shape.data[i];
   }
 
-  p->exec = exec_affine_generic;
+  f->exec_func = exec_affine_generic;
 
-  ((affine_local_context_t *)(f->local_context))->private = (void *)p;
+  ((affine_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f) {
-  free((((affine_local_context_t *)(f->local_context))->private));
+  free((((affine_local_context_t *)(f->local_context))->data));
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_binary_connect_affine(rt_function_t *f) {
-  return ((affine_private_t *)(((affine_local_context_t *)(f->local_context))
-                                   ->private))
-      ->exec(f);
+  // Float implementation does not exist.
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }

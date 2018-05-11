@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../../utilities.h"
+#include "convolution_internal.h"
+
+#include "../../../utilities/list.h"
+#include "../../../utilities/shape.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
-#include "convolution_internal.h"
 
 #define X             (0)            //x input
 #define WEIGHT        (1)            //weight
@@ -26,6 +29,13 @@
 
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_convolution;
+  } else {
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
 }
 
@@ -34,7 +44,7 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_convolution(rt_function_t *f) {
-  return ((convolution_private_t *)(((convolution_local_context_t*)(f->local_context))
-                                   ->private))
+  return ((convolution_private_t *)(((convolution_local_context_t *)(f->local_context))
+                                   ->data))
       ->exec(f);
 }

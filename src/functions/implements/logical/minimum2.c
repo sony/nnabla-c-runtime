@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
+#include "../arithmetic/arithmetic.h"
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 
 // Minimum2
 rt_function_error_t allocate_minimum2_local_context(rt_function_t *f) {

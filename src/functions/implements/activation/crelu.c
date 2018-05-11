@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
@@ -25,7 +26,6 @@ typedef struct {
   rt_list_t in_shape;
 } crelu_private_t;
 
-
 // CReLU
 rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
@@ -35,15 +35,15 @@ rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  crelu_private_t* p = (crelu_private_t*)malloc(sizeof(crelu_private_t));
+  crelu_private_t *p = (crelu_private_t *)malloc(sizeof(crelu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  ((crelu_local_context_t*)f->local_context)->private = p;
-  p->input = (float*)f->inputs[0]->data;
+  ((crelu_local_context_t *)f->local_context)->data = p;
+  p->input = (float *)f->inputs[0]->data;
   p->input_size = calc_shape_size(f->inputs[0]->shape);
-  p->output = (float*)f->outputs[0]->data;
+  p->output = (float *)f->outputs[0]->data;
   p->output_size = calc_shape_size(f->outputs[0]->shape);
   p->in_shape = clone_list(f->inputs[0]->shape);
 
@@ -56,10 +56,10 @@ rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_crelu_local_context(rt_function_t *f) {
-  crelu_local_context_t* c = (crelu_local_context_t*)(f->local_context);
-  crelu_private_t* p = (crelu_private_t*)(c->private);
+  crelu_local_context_t *c = (crelu_local_context_t *)(f->local_context);
+  crelu_private_t *p = (crelu_private_t *)(c->data);
   free_list(p->in_shape);
-  free(c->private);
+  free(c->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -70,7 +70,7 @@ rt_function_error_t free_crelu_local_context(rt_function_t *f) {
  */
 rt_function_error_t exec_crelu(rt_function_t *f) {
   crelu_local_context_t *c = (crelu_local_context_t *)(f->local_context);
-  crelu_private_t* p = (crelu_private_t*)(c->private);
+  crelu_private_t *p = (crelu_private_t *)(c->data);
   int i, j, s0 = 1, s1;
 
   for (i = c->axis; i < p->in_shape.size; ++i) {
@@ -87,4 +87,3 @@ rt_function_error_t exec_crelu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
-

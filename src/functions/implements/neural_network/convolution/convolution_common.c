@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "../../../utilities.h"
+#include "../../../utilities/shape.h"
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
@@ -20,7 +20,7 @@
 rt_function_error_t
 allocate_convolution_local_context_common(rt_function_t *f,
   int x, int weight, int bias, int alpha, int y0) {
-  convolution_local_context_t* c = (convolution_local_context_t*)(f->local_context);
+  convolution_local_context_t *c = (convolution_local_context_t *)(f->local_context);
   int i;
 
   if (f->num_of_inputs != bias && f->num_of_inputs != bias + 1) {
@@ -43,7 +43,7 @@ allocate_convolution_local_context_common(rt_function_t *f,
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  c->private = (void *)p;
+  c->data = (void *)p;
 
   if (in_shape.data[c->base_axis] % c->group != 0) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
@@ -123,8 +123,8 @@ allocate_convolution_local_context_common(rt_function_t *f,
 }
 
 rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
-  convolution_local_context_t* c = (convolution_local_context_t*)(f->local_context);
-  convolution_private_t *p = (convolution_private_t *)c->private;
+  convolution_local_context_t *c = (convolution_local_context_t *)(f->local_context);
+  convolution_private_t *p = (convolution_private_t *)c->data;
   var_free(&p->out_var);
   var_free(&p->in_var);
   var_free(&p->w_var);
