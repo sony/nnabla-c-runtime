@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <nnablart/functions.h>
-#include "../../utilities.h"
+#include "arithmetic.h"
+#include "../../utilities/shape.h"
 
 // Add2
 rt_function_error_t allocate_add2_local_context(rt_function_t *f) {
@@ -28,6 +29,15 @@ rt_function_error_t allocate_add2_local_context(rt_function_t *f) {
   if (f->outputs[0]->shape.size != f->inputs[0]->shape.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_add2;
+  } else {
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

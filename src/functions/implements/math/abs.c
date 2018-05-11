@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
 
-#include "../../utilities.h"
+#include <assert.h>
 
 #include <math.h>
 
@@ -34,40 +35,34 @@ rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  abs_private_t *private = malloc(sizeof(abs_private_t));
-  if (private == 0) {
+  abs_private_t *p = malloc(sizeof(abs_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  f->local_context = (void *)private;
-private
-  ->input = f->inputs[0]->data;
-private
-  ->input_size = calc_shape_size(f->inputs[0]->shape);
+  f->local_context = (void *)p;
+  p->input = f->inputs[0]->data;
+  p->input_size = calc_shape_size(f->inputs[0]->shape);
 
-private
-  ->output = f->outputs[0]->data;
-private
-  ->output_size = calc_shape_size(f->outputs[0]->shape);
+  p->output = f->outputs[0]->data;
+  p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (private->input_size != private->output_size) {
+  if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_abs_local_context(rt_function_t *f) {
-  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_abs(rt_function_t *f) {
-  abs_private_t *private = (abs_private_t *)(f->local_context);
+  abs_private_t *p = (abs_private_t *)(f->local_context);
 
   int i; // Iterator
-  for (i = 0; i < private->output_size; i++) {
-  private
-    ->output[i] = fabs(private->input[i]);
+  for (i = 0; i < p->output_size; i++) {
+    p->output[i] = fabs(p->input[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

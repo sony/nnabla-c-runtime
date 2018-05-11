@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
+#include "../../utilities/vector.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
@@ -31,30 +33,28 @@ rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  prelu_private_t *private = malloc(sizeof(prelu_private_t));
-  if (private == 0) {
+  prelu_private_t *p = malloc(sizeof(prelu_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-private
-  ->weight_param = *(f->inputs[1]);
+  p->weight_param = *(f->inputs[1]);
 
   rt_variable_t input = *(f->inputs[0]);
   rt_variable_t output = *(f->outputs[0]);
 
-  rt_variable_t inputs[] = {input, private->weight_param};
-private
-  ->calc_context = init_vector_calc_context(f->num_of_inputs, inputs, output);
-  ((prelu_local_context_t *)(f->local_context))->private = (void *)private;
+  rt_variable_t inputs[] = {input, p->weight_param};
+  p->calc_context = init_vector_calc_context(f->num_of_inputs, inputs, output);
+  ((prelu_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_prelu_local_context(rt_function_t *f) {
   prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
-  prelu_private_t *private = (prelu_private_t *)(context->private);
+  prelu_private_t *p = (prelu_private_t *)(context->data);
 
-  free_vector_calc_context(private->calc_context);
-  free(private);
+  free_vector_calc_context(p->calc_context);
+  free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -67,13 +67,12 @@ static float calc_prelu(int num_of_inputs, float *inputs) {
 
 rt_function_error_t exec_prelu(rt_function_t *f) {
   prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
-  prelu_private_t *private = (prelu_private_t *)(context->private);
+  prelu_private_t *p = (prelu_private_t *)(context->data);
 
   rt_variable_t input = *(f->inputs[0]);
   rt_variable_t output = *(f->outputs[0]);
 
-  rt_variable_t inputs[] = {input, private->weight_param};
-  vector_calc(private->calc_context, f->num_of_inputs, inputs, output,
-              calc_prelu);
+  rt_variable_t inputs[] = {input, p->weight_param};
+  vector_calc(p->calc_context, f->num_of_inputs, inputs, output, calc_prelu);
   return RT_FUNCTION_ERROR_NOERROR;
 }
