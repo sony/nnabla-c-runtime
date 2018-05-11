@@ -1,1 +1,6 @@
 *.pyc
+/\?
+/build
+/doc/html
+/examples/callback/callback
+/examples/callback/callback.exe

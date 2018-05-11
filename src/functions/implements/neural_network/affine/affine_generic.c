@@ -19,7 +19,7 @@
 rt_function_error_t exec_affine_generic(rt_function_t *f) {
   affine_private_t *p =
       (affine_private_t *)(((affine_local_context_t *)(f->local_context))
-                               ->private);
+                               ->data);
   int i, j, k; // Iterators.
 
   // Clear output

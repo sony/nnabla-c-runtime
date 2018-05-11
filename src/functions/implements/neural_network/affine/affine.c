@@ -15,11 +15,10 @@
 #include <nnablart/functions.h>
 
 #include <assert.h>
+#include <string.h>
 
-#include "affine_internal.h"
-
-#include "affine_float.h"
 #include "affine_generic.h"
+#include "affine_internal.h"
 
 // Affine
 rt_function_error_t allocate_affine_local_context(rt_function_t *f) {
@@ -76,22 +75,61 @@ rt_function_error_t allocate_affine_local_context(rt_function_t *f) {
       p->output->type == NN_DATA_TYPE_FLOAT &&
       p->weight->type == NN_DATA_TYPE_FLOAT &&
       ((p->bias && p->bias->type == NN_DATA_TYPE_FLOAT) || !p->bias)) {
-    p->exec = exec_affine_float;
+    f->exec_func = exec_affine;
   } else {
-    p->exec = exec_affine_generic;
+    f->exec_func = exec_affine_generic;
   }
 
-  ((affine_local_context_t *)(f->local_context))->private = (void *)p;
+  ((affine_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_affine_local_context(rt_function_t *f) {
-  free((((affine_local_context_t *)(f->local_context))->private));
+  free((((affine_local_context_t *)(f->local_context))->data));
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_affine(rt_function_t *f) {
-  return ((affine_private_t *)(((affine_local_context_t *)(f->local_context))
-                                   ->private))
-      ->exec(f);
+  affine_private_t *p =
+      (affine_private_t *)(((affine_local_context_t *)(f->local_context))
+                               ->data);
+  int i, j, k; // Iterators.
+  float *input = (float *)(p->input->data);
+  float *weight = (float *)(p->weight->data);
+  float *output = (float *)(p->output->data);
+
+  // Clear output
+  memset(output, 0, sizeof(float) * p->output_size);
+
+  for (k = 0; k < p->base_loop_size; k++) {
+    int output_offset = k * p->output_loop_size;
+    int input_offset = k * p->input_loop_size;
+
+    // Weight
+    for (j = 0; j < p->input_loop_size; j++) {
+      int ipos = input_offset + j;
+      int weight_offset = j * p->output_loop_size;
+
+      float u = *(input + ipos);
+      for (i = 0; i < p->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int wpos = weight_offset + i;
+
+        float w = *(weight + wpos);
+        float value = *(output + opos);
+        *(output + opos) = value + u * w;
+      }
+    }
+
+    // Bias
+    if (p->bias) {
+      float *bias = (float *)(p->bias->data);
+      for (i = 0; i < p->output_loop_size; i++) {
+        int opos = output_offset + i;
+        int bpos = i;
+        *(output + opos) = *(output + opos) + *(bias + bpos);
+      }
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
 }

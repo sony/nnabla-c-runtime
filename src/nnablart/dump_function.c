@@ -30,8 +30,10 @@ static const char *const typenames[] = {
     "Convolution",
     "DepthwiseConvolution",
     "Deconvolution",
+    "DepthwiseDeconvolution",
     "MaxPooling",
     "AveragePooling",
+    "GlobalAveragePooling",
     "SumPooling",
     "Unpooling",
     "Embed",
@@ -111,6 +113,8 @@ static const char *const typenames[] = {
     "MatrixDiag",
     "MatrixDiagPart",
     "Dropout",
+    "TopKData",
+    "TopKGrad",
     "Rand",
     "Randint",
     "Randn",
@@ -235,6 +239,30 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
   } break;
+  case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
+    nn_function_depthwise_deconvolution_t *f =
+        (nn_function_depthwise_deconvolution_t *)func;
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument pad: (");
+    list = (int *)NN_GET(net, f->pad.list);
+    for (i = 0; i < f->pad.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument stride: (");
+    list = (int *)NN_GET(net, f->stride.list);
+    for (i = 0; i < f->stride.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument dilation: (");
+    list = (int *)NN_GET(net, f->dilation.list);
+    for (i = 0; i < f->dilation.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument divisor: %d\n", f->divisor);
+  } break;
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
     nn_function_max_pooling_t *f = (nn_function_max_pooling_t *)func;
     printf("NNB: Function argument kernel: (");
@@ -279,6 +307,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument including_pad: %d\n", f->including_pad);
+  } break;
+  case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
   } break;
   case NN_FUNCTION_SUM_POOLING: { // SumPooling
     nn_function_sum_pooling_t *f = (nn_function_sum_pooling_t *)func;
@@ -662,6 +692,19 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_dropout_t *f = (nn_function_dropout_t *)func;
     printf("NNB: Function argument p: %f\n", f->p);
     printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
+  case NN_FUNCTION_TOP_K_DATA: { // TopKData
+    nn_function_top_k_data_t *f = (nn_function_top_k_data_t *)func;
+    printf("NNB: Function argument k: %d\n", f->k);
+    printf("NNB: Function argument abs: %d\n", f->abs);
+    printf("NNB: Function argument reduce: %d\n", f->reduce);
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+  } break;
+  case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
+    nn_function_top_k_grad_t *f = (nn_function_top_k_grad_t *)func;
+    printf("NNB: Function argument k: %d\n", f->k);
+    printf("NNB: Function argument abs: %d\n", f->abs);
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
   } break;
   case NN_FUNCTION_RAND: { // Rand
     nn_function_rand_t *f = (nn_function_rand_t *)func;

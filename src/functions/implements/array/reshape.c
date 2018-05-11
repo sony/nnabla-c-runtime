@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 
 typedef struct {
   float *input;
@@ -30,32 +30,33 @@ rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
   if (f->num_of_outputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
-  reshape_private_t *private = malloc(sizeof(reshape_private_t));
-  if (private == 0) {
+  reshape_private_t *p = malloc(sizeof(reshape_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  private->input = f->inputs[0]->data;
-  private->input_size = calc_shape_size(f->inputs[0]->shape);
-  private->output = f->outputs[0]->data;
-  private->output_size = calc_shape_size(f->outputs[0]->shape);
-  if (private->input_size != private->output_size) {
+  p->input = f->inputs[0]->data;
+  p->input_size = calc_shape_size(f->inputs[0]->shape);
+  p->output = f->outputs[0]->data;
+  p->output_size = calc_shape_size(f->outputs[0]->shape);
+  if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-  ((reshape_local_context_t *)(f->local_context))->private = (void *)private;
+  ((reshape_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_reshape_local_context(rt_function_t *f) {
-  free(((reshape_local_context_t *)(f->local_context))->private);
+  free(((reshape_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_reshape(rt_function_t *f) {
-  reshape_local_context_t *context = (reshape_local_context_t *)(f->local_context);
-  reshape_private_t *private = (reshape_private_t *)(context->private);
+  reshape_local_context_t *context =
+      (reshape_local_context_t *)(f->local_context);
+  reshape_private_t *p = (reshape_private_t *)(context->data);
   int i; // Iterator
-  for (i = 0; i < private->output_size; i++) {
-    private->output[i] = private->input[i];
+  for (i = 0; i < p->output_size; i++) {
+    p->output[i] = p->input[i];
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

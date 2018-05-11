@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <nnablart/functions.h>
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 // Sum
 rt_function_error_t allocate_sum_local_context(rt_function_t *f) {
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_sum;
+  } else {
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 

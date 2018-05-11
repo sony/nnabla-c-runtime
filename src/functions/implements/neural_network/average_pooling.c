@@ -12,33 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "pooling.h"
 #include <nnablart/functions.h>
 
 rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f) {
   average_pooling_local_context_t *context =
       (average_pooling_local_context_t *)(f->local_context);
-  pooling_private_t *private = malloc(sizeof(pooling_private_t));
+  pooling_private_t *p = malloc(sizeof(pooling_private_t));
   rt_function_error_t ret =
-      allocate_pooling(f, (pooling_context_t *)context, private);
+      allocate_pooling(f, (pooling_context_t *)context, p);
 
-  ((average_pooling_local_context_t *)(f->local_context))->private =
-      (void *)private;
+  ((average_pooling_local_context_t *)(f->local_context))->data = (void *)p;
   return ret;
 }
 
 rt_function_error_t free_average_pooling_local_context(rt_function_t *f) {
-  pooling_private_t *private =
+  pooling_private_t *p =
       (pooling_private_t
-           *)(((average_pooling_local_context_t *)(f->local_context))->private);
-  return free_pooling(private);
+           *)(((average_pooling_local_context_t *)(f->local_context))->data);
+  return free_pooling(p);
 }
 
 rt_function_error_t exec_average_pooling(rt_function_t *f) {
   average_pooling_local_context_t *context =
       (average_pooling_local_context_t *)(f->local_context);
-  pooling_private_t *private =
+  pooling_private_t *p =
       (pooling_private_t
-           *)(((average_pooling_local_context_t *)(f->local_context))->private);
-  return exec_pooling(f, (pooling_context_t *)context, private, calc_average);
+           *)(((average_pooling_local_context_t *)(f->local_context))->data);
+  return exec_pooling(f, (pooling_context_t *)context, p, calc_average);
 }
