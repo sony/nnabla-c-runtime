@@ -18,7 +18,10 @@
 #include "list.h"
 #include <nnablart/functions.h>
 
-/// @defgroup ShapeFunction
+////////////////////////////////////////////////////////////////////////////////
+/// @ingroup Utilities
+
+/// @defgroup ShapeFunction ShapeFunction
 /// @{
 
 /// Calc vector axis at specified data pos.

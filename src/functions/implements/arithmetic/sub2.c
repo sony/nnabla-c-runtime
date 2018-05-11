@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
+#include "arithmetic.h"
 #include <nnablart/functions.h>
-#include "../../utilities.h"
 
 // Sub2
 rt_function_error_t allocate_sub2_local_context(rt_function_t *f) {

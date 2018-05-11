@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
 
 typedef struct {
@@ -30,38 +30,31 @@ rt_function_error_t allocate_identity_local_context(rt_function_t *f) {
   if (f->num_of_outputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
-  identity_private_context_t *private =
-      malloc(sizeof(identity_private_context_t));
-  if (private == 0) {
+  identity_private_context_t *p = malloc(sizeof(identity_private_context_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  f->local_context = private;
-private
-  ->input = f->inputs[0]->data;
-private
-  ->input_size = calc_shape_size(f->inputs[0]->shape);
-private
-  ->output = f->outputs[0]->data;
-private
-  ->output_size = calc_shape_size(f->outputs[0]->shape);
-  if (private->input_size != private->output_size) {
+  f->local_context = p;
+  p->input = f->inputs[0]->data;
+  p->input_size = calc_shape_size(f->inputs[0]->shape);
+  p->output = f->outputs[0]->data;
+  p->output_size = calc_shape_size(f->outputs[0]->shape);
+  if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_identity_local_context(rt_function_t *f) {
-  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_identity(rt_function_t *f) {
-  identity_private_context_t *private =
+  identity_private_context_t *p =
       (identity_private_context_t *)(f->local_context);
   int i; // Iterator
-  for (i = 0; i < private->output_size; i++) {
-  private
-    ->output[i] = private->input[i];
+  for (i = 0; i < p->output_size; i++) {
+    p->output[i] = p->input[i];
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

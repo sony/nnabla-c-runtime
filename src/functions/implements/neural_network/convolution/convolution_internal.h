@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../../utilities/accessor.h"
+#include <nnablart/functions.h>
+
 #ifndef H_CONVOLUTION_INTERNAL_H_171218154530_
 #define H_CONVOLUTION_INTERNAL_H_171218154530_
-
-#include "../../../utilities.h"
 
 typedef rt_function_error_t (*exec_conv_func_t)(rt_function_t *f);
 
 typedef struct {
-  rt_variable_t* v;
+  rt_variable_t *v;
   rt_list_t shape;
   rt_list_t stride;
   rt_variable_setter set;
@@ -28,7 +29,7 @@ typedef struct {
   nn_size_t offset;
 } var_t;
 
-void var_free(var_t*);
+void var_free(var_t *);
 
 typedef struct {
   var_t out_var;
@@ -38,20 +39,20 @@ typedef struct {
   exec_conv_func_t exec;
 } convolution_private_t;
 
-#define B  (0)   //batch dimension of input or output
-#define G  (1)   //group dimension of input or output
-#define I  (2)   //index dimension of input or output
-#define H  (3)   //height of input or output
-#define W  (4)   //width of input or output
+#define B (0) // batch dimension of input or output
+#define G (1) // group dimension of input or output
+#define I (2) // index dimension of input or output
+#define H (3) // height of input or output
+#define W (4) // width of input or output
 
-#define KG  (0)   //group dimension of input or output
-#define KO  (1)   //index of output
-#define KI  (2)   //index of input
-#define KH  (3)   //height of kernel
-#define KW  (4)   //width of kernel
+#define KG (0) // group dimension of input or output
+#define KO (1) // index of output
+#define KI (2) // index of input
+#define KH (3) // height of kernel
+#define KW (4) // width of kernel
 
-#define SPH  (0)  //height of stride/pad
-#define SPW  (1)  //width of stride/pad
+#define SPH (0) // height of stride/pad
+#define SPW (1) // width of stride/pad
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f);
 

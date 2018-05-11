@@ -18,13 +18,16 @@
 #include <nnablart/functions.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// @defgroup VectorFunctions API for vector calculation.
+/// @ingroup Utilities
+
+////////////////////////////////////////////////////////////////////////////////
+/// @defgroup VectorFunctions VectorFunctions
 ///
 /// APIs for calculate vector.
 ///
 /// @{
 
-/// @defgroup TensorDot
+/// @defgroup TensorDot TensorDot
 /// @{
 
 typedef struct {
@@ -46,17 +49,16 @@ void free_tensordot_context(tensordot_context_t c);
 
 /// @}
 
-/// @defgroup VectorCalclation
+/// @defgroup VectorCalclation VectorCalclation
 /// @{
 
+/// Context for calc vector.
 typedef struct {
   int num_of_inputs;
-
-  rt_list_t shape;
-
   rt_list_t *input_shapes;
   rt_list_t output_shape;
 
+  rt_list_t shape;
   rt_list_t position;
   rt_list_t *input_positions;
   rt_list_t output_position;
@@ -75,7 +77,8 @@ void free_vector_calc_context(vector_calc_context_t c);
 
 /// @}
 
-/// @defgroup VectorAverages
+/// @defgroup VectorAverages VectorAverages
+/// Calcurate average of input variable.
 /// @{
 typedef struct {
   rt_list_t in_shape;

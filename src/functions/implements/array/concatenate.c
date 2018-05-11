@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <nnablart/functions.h>
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 typedef struct {
   int outer_size;
@@ -32,7 +32,17 @@ static inline int calc_size(rt_list_t shape, int axis)
 // Concatenate
 rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
   concatenate_local_context_t *c = (concatenate_local_context_t *)(f->local_context);
-  concatenate_private_t* p = (concatenate_private_t*)malloc(sizeof(concatenate_private_t));
+
+  for (int i = 0; i < f->num_of_inputs; i++) {
+    if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
+      return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+    }
+  }
+  if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
+  concatenate_private_t *p = (concatenate_private_t *)malloc(sizeof(concatenate_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -48,24 +58,24 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
   }
   p->outer_size = calc_shape_size(p->in_shape[0]) / calc_size(p->in_shape[0], c->axis);
 
-  ((concatenate_local_context_t *)(f->local_context))->private = (void *)p;
+  ((concatenate_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_concatenate_local_context(rt_function_t *f) {
-  concatenate_private_t *private =
+  concatenate_private_t *p =
       (concatenate_private_t *)(((concatenate_local_context_t *)(f->local_context))
-                           ->private);
+                           ->data);
   for (int i = 0; i < f->num_of_inputs; i++) {
-    free_list(private->in_shape[i]);
+    free_list(p->in_shape[i]);
   }
-  free(private);
+  free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_concatenate(rt_function_t *f) {
   concatenate_local_context_t *c = (concatenate_local_context_t *)(f->local_context);
-  concatenate_private_t* p = (concatenate_private_t*)(c->private);
+  concatenate_private_t *p = (concatenate_private_t *)(c->data);
 
   float *y = (float *)(f->outputs[0]->data);
   int inner_offset = 0;

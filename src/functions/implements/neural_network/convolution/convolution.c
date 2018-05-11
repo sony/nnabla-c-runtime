@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../../utilities.h"
+#include "convolution_internal.h"
+
+#include "../../../utilities/list.h"
+#include "../../../utilities/shape.h"
+
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
-#include "convolution_internal.h"
 
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
-  convolution_local_context_t* c = (convolution_local_context_t*)(f->local_context);
+  convolution_local_context_t *c =
+      (convolution_local_context_t *)(f->local_context);
   int i;
 
   if (f->num_of_inputs != 2 && f->num_of_inputs != 3) {
@@ -43,7 +47,7 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  c->private = (void *)p;
+  c->data = (void *)p;
 
   if (in_shape.data[c->base_axis] % c->group != 0) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
@@ -63,12 +67,12 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
   p->out_var.shape.data[I] = w_shape.data[0] / c->group;
 
   for (i = 0; i < spatial_dims; ++i) {
-    int k = w_shape.data[i+2];
-    int dims = p->in_var.shape.data[i+3]
-             = in_shape.data[c->base_axis + 1 + i];
+    int k = w_shape.data[i + 2];
+    int dims = p->in_var.shape.data[i + 3] =
+        in_shape.data[c->base_axis + 1 + i];
     int ks = c->dilation.data[i] * (k - 1) + 1;
     int o = (dims + 2 * c->pad.data[i] - ks) / c->stride.data[i] + 1;
-    p->out_var.shape.data[i+3] = o;
+    p->out_var.shape.data[i + 3] = o;
   }
   p->in_var.v = f->inputs[0];
   p->in_var.get = select_getter(f->inputs[0]);
@@ -99,19 +103,20 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
     p->b_var.shape.data[KG] = c->group;
     p->b_var.shape.data[KO] = f->inputs[2]->shape.data[0] / c->group;
     p->b_var.stride = calc_contiguous_strides(p->b_var.shape);
-  }
-  else {
+  } else {
     p->b_var.v = 0;
   }
 
-  p->exec = exec_convolution_generic; //currently, we only implement a generic one
+  f->exec_func =
+      exec_convolution_generic; // currently, we only implement a generic one
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_convolution_local_context(rt_function_t *f) {
-  convolution_local_context_t* c = (convolution_local_context_t*)(f->local_context);
-  convolution_private_t *p = (convolution_private_t *)c->private;
+  convolution_local_context_t *c =
+      (convolution_local_context_t *)(f->local_context);
+  convolution_private_t *p = (convolution_private_t *)c->data;
   var_free(&p->out_var);
   var_free(&p->in_var);
   var_free(&p->w_var);
@@ -121,7 +126,6 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_convolution(rt_function_t *f) {
-  return ((convolution_private_t *)(((convolution_local_context_t*)(f->local_context))
-                                   ->private))
-      ->exec(f);
+  // Float implementation does not exist.
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }

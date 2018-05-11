@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <nnablart/functions.h>
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 typedef struct {
   int num_outputs;
@@ -33,12 +33,22 @@ static inline int calc_size(rt_list_t shape, int axis)
 // Stack
 rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
   stack_local_context_t *c = (stack_local_context_t *)(f->local_context);
-  stack_private_t* p = (stack_private_t*)malloc(sizeof(stack_private_t));
+
+  for (int i = 0; i < f->num_of_inputs; i++) {
+    if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
+      return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+    }
+  }
+  if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
+    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  }
+
+  stack_private_t *p = (stack_private_t *)malloc(sizeof(stack_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  ((stack_local_context_t *)(f->local_context))->private = (void *)p;
+  ((stack_local_context_t *)(f->local_context))->data = (void *)p;
   p->num_outputs = f->inputs[0]->shape.data[c->axis];
 
   p->inner_size = calc_size(f->outputs[0]->shape, c->axis);
@@ -47,16 +57,16 @@ rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_stack_local_context(rt_function_t *f) {
-  stack_private_t *private =
+  stack_private_t *p =
       (stack_private_t *)(((stack_local_context_t *)(f->local_context))
-                                ->private);
-  free(private);
+                                ->data);
+  free(p);
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
 rt_function_error_t exec_stack(rt_function_t *f) {
   stack_local_context_t *c = (stack_local_context_t *)(f->local_context);
-  stack_private_t* p = (stack_private_t*)(c->private);
+  stack_private_t *p = (stack_private_t *)(c->data);
 
   float *y = (float *)(f->outputs[0]->data);
   for (int i = 0; i < p->num_outputs; i++) {

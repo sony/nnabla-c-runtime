@@ -14,7 +14,7 @@
 
 #include <nnablart/functions.h>
 
-#include "../../utilities.h"
+#include "../../utilities/shape.h"
 
 #include <math.h>
 
@@ -34,35 +34,34 @@ rt_function_error_t allocate_exp_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  exp_private_t *private = malloc(sizeof(exp_private_t));
-  if (private == 0) {
+  exp_private_t *p = malloc(sizeof(exp_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
-  f->local_context = (void *)private;
-  private->input = (float *)f->inputs[0]->data;
-  private->input_size = calc_shape_size(f->inputs[0]->shape);
+  f->local_context = (void *)p;
+  p->input = (float *)f->inputs[0]->data;
+  p->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  private->output = (float *)f->outputs[0]->data;
-  private->output_size = calc_shape_size(f->outputs[0]->shape);
+  p->output = (float *)f->outputs[0]->data;
+  p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (private->input_size != private->output_size) {
+  if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_exp_local_context(rt_function_t *f) {
-  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_exp(rt_function_t *f) {
-  exp_private_t *private = (exp_private_t *)(f->local_context);
+  exp_private_t *p = (exp_private_t *)(f->local_context);
 
   int i; // Iterator
-  for (i = 0; i < private->output_size; i++) {
-    private->output[i] = exp(private->input[i]);
+  for (i = 0; i < p->output_size; i++) {
+    p->output[i] = exp(p->input[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

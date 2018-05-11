@@ -14,9 +14,20 @@
 // *WARNING*
 // THIS FILE IS AUTO-GENERATED DUMMY CODE BY CODE GENERATOR.
 
-#ifndef H_TEMPLATE_SRC_NNABLART_DUMP_FUNCTION_H_171220144441_
-#define H_TEMPLATE_SRC_NNABLART_DUMP_FUNCTION_H_171220144441_
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
 
-void dump_function(nn_network_t *net, nn_function_t *func);
+#include <nnablart/functions.h>
+#include <nnablart/network.h>
+#include <nnablart/runtime.h>
 
-#endif // H_TEMPLATE_SRC_NNABLART_DUMP_FUNCTION_H_171220144441_
+#include "runtime_internal.h"
+
+void allocate_function_context(nn_network_t* n, nn_function_t* function, rt_function_context_t *function_context) {
+    switch (function_context->type) {
+      ${code}
+      default:
+        function_context->func.local_context = 0;
+    }
+}
