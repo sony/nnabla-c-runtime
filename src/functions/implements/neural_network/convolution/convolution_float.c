@@ -44,10 +44,12 @@ static inline void var_setpos(var_t *var, int *pos, int size) {
   var->offset = var_calc_offset(var, pos, size);
 }
 
-static inline void convnd(var_t *out, var_t *in, var_t *we, rt_list_t intput_shape,
-                     rt_list_t output_shape, rt_list_t kernel_shape, rt_list_t in_position,
-					 rt_list_t out_position, rt_list_t pad, rt_list_t stride,
-                     rt_list_t dilation, int spatial_dims) {
+static inline void convnd(var_t *out, var_t *in, var_t *we,
+                          rt_list_t intput_shape, rt_list_t output_shape,
+                          rt_list_t kernel_shape, rt_list_t in_position,
+                          rt_list_t out_position, rt_list_t pad,
+                          rt_list_t stride, rt_list_t dilation,
+                          int spatial_dims) {
   float *output = (float *)(out->v->data);
   float *input = (float *)(in->v->data);
   float *weight = (float *)(we->v->data);
@@ -64,13 +66,15 @@ static inline void convnd(var_t *out, var_t *in, var_t *we, rt_list_t intput_sha
         in_position.data[j] *= dilation.data[j];
         in_position.data[j] -= pad.data[j];
         in_position.data[j] += out_position.data[j] * stride.data[j];
-        if (in_position.data[j] < 0 || in_position.data[j] >= intput_shape.data[j]) {
+        if (in_position.data[j] < 0 ||
+            in_position.data[j] >= intput_shape.data[j]) {
           condition = 0;
           break;
         }
       }
       if (condition) {
-        float x = *(input + in->offset + shape_to_pos(intput_shape, in_position));
+        float x =
+            *(input + in->offset + shape_to_pos(intput_shape, in_position));
         float w = *(weight + we->offset + k);
         sum += x * w;
       }
@@ -89,7 +93,7 @@ static inline void add_bias(var_t *out, var_t *b) {
   }
 }
 
-static inline void mul_alpha(var_t* out, var_t* a) {
+static inline void mul_alpha(var_t *out, var_t *a) {
   int size = out->stride.data[I];
   int i;
   float *alpha = (float *)(a->v->data);
@@ -109,17 +113,17 @@ rt_function_error_t exec_convolution_float(rt_function_t *f) {
   nn_size_t out_vars = p->out_var.shape.data[I];
   nn_size_t batch_size;
   nn_size_t om, im, g, b;
-  var_t* out_var = &p->out_var;
-  var_t* in_var = &p->in_var;
-  var_t* w_var = &p->w_var;
-  var_t* b_var = &p->b_var;
-  var_t* a_var = &p->a_var;
+  var_t *out_var = &p->out_var;
+  var_t *in_var = &p->in_var;
+  var_t *w_var = &p->w_var;
+  var_t *b_var = &p->b_var;
+  var_t *a_var = &p->a_var;
   rt_list_t intput_shape = allocate_list(p->spatial_dims);
   rt_list_t kernel_shape = allocate_list(p->spatial_dims);
   rt_list_t output_shape = allocate_list(p->spatial_dims);
   rt_list_t in_position = allocate_list(p->spatial_dims);
   rt_list_t out_position = allocate_list(p->spatial_dims);
-  
+
   for (int i = 0; i < p->spatial_dims; i++) {
     kernel_shape.data[i] = p->w_var.shape.data[i + 3];
     intput_shape.data[i] = p->in_var.shape.data[i + 3];
@@ -137,10 +141,9 @@ rt_function_error_t exec_convolution_float(rt_function_t *f) {
           int w_pos[] = {g, om, im};
           var_setpos(in_var, i_pos, _S(i_pos));
           var_setpos(w_var, w_pos, _S(w_pos));
-          convnd(out_var, in_var, w_var,
-                 intput_shape, output_shape, kernel_shape,
-                 in_position, out_position,
-                 c->pad, c->stride, c->dilation, p->spatial_dims);
+          convnd(out_var, in_var, w_var, intput_shape, output_shape,
+                 kernel_shape, in_position, out_position, c->pad, c->stride,
+                 c->dilation, p->spatial_dims);
         }
         {
           int b_pos[] = {g, om};

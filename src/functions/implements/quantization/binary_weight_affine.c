@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "../../utilities/shape.h"
+#include "../neural_network/affine/affine_generic.h"
+#include "../neural_network/affine/affine_internal.h"
 #include <nnablart/functions.h>
 #include <string.h>
-#include "../../utilities/shape.h"
-#include "../neural_network/affine/affine_internal.h"
-#include "../neural_network/affine/affine_generic.h"
 
 // BinaryWeightAffine
-rt_function_error_t allocate_binary_weight_affine_local_context(rt_function_t *f) {
+rt_function_error_t
+allocate_binary_weight_affine_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 4 && f->num_of_inputs != 5) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }

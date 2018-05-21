@@ -21,11 +21,11 @@
 #include <math.h>
 #include <nnablart/functions.h>
 
-#define X             (0)            //x input
-#define WEIGHT        (1)            //weight
-#define BIAS          (2)            //bias
-#define Y0            (0)            //y0 output
-#define ALPHA         (-1)           //ALPHA
+#define X (0)      // x input
+#define WEIGHT (1) // weight
+#define BIAS (2)   // bias
+#define Y0 (0)     // y0 output
+#define ALPHA (-1) // ALPHA
 
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
@@ -36,7 +36,8 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
     f->exec_func = exec_convolution_generic;
   }
 
-  return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
+  return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA,
+                                                   Y0);
 }
 
 rt_function_error_t free_convolution_local_context(rt_function_t *f) {

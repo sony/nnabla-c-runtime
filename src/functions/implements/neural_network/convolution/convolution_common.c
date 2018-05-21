@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "../../../utilities/shape.h"
+#include "convolution_internal.h"
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
-#include "convolution_internal.h"
 
 rt_function_error_t
-allocate_convolution_local_context_common(rt_function_t *f,
-  int x, int weight, int bias, int alpha, int y0) {
-  convolution_local_context_t *c = (convolution_local_context_t *)(f->local_context);
+allocate_convolution_local_context_common(rt_function_t *f, int x, int weight,
+                                          int bias, int alpha, int y0) {
+  convolution_local_context_t *c =
+      (convolution_local_context_t *)(f->local_context);
   int i;
 
   if (f->num_of_inputs != bias && f->num_of_inputs != bias + 1) {
@@ -63,12 +64,12 @@ allocate_convolution_local_context_common(rt_function_t *f,
   p->out_var.shape.data[I] = w_shape.data[0] / c->group;
 
   for (i = 0; i < spatial_dims; ++i) {
-    int k = w_shape.data[i+2];
-    int dims = p->in_var.shape.data[i+3]
-             = in_shape.data[c->base_axis + 1 + i];
+    int k = w_shape.data[i + 2];
+    int dims = p->in_var.shape.data[i + 3] =
+        in_shape.data[c->base_axis + 1 + i];
     int ks = c->dilation.data[i] * (k - 1) + 1;
     int o = (dims + 2 * c->pad.data[i] - ks) / c->stride.data[i] + 1;
-    p->out_var.shape.data[i+3] = o;
+    p->out_var.shape.data[i + 3] = o;
   }
   p->in_var.v = f->inputs[x];
   p->in_var.get = select_getter(f->inputs[x]);
@@ -99,8 +100,7 @@ allocate_convolution_local_context_common(rt_function_t *f,
     p->b_var.shape.data[KG] = c->group;
     p->b_var.shape.data[KO] = f->inputs[bias]->shape.data[0] / c->group;
     p->b_var.stride = calc_contiguous_strides(p->b_var.shape);
-  }
-  else {
+  } else {
     p->b_var.v = 0;
   }
 
@@ -112,8 +112,7 @@ allocate_convolution_local_context_common(rt_function_t *f,
     p->a_var.shape.data[KG] = c->group;
     p->a_var.shape.data[KO] = f->inputs[alpha]->shape.data[0] / c->group;
     p->a_var.stride = calc_contiguous_strides(p->a_var.shape);
-  }
-  else {
+  } else {
     p->a_var.v = 0;
   }
   p->spatial_dims = spatial_dims;
@@ -126,7 +125,8 @@ static inline void var_free(var_t *var) {
 }
 
 rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
-  convolution_local_context_t *c = (convolution_local_context_t *)(f->local_context);
+  convolution_local_context_t *c =
+      (convolution_local_context_t *)(f->local_context);
   convolution_private_t *p = (convolution_private_t *)c->data;
   var_free(&p->out_var);
   var_free(&p->in_var);

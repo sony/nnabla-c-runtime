@@ -18,205 +18,205 @@
 
 # Implement status
 
-Total 48/121
+Total 51/121
 
 
 ## Neural Network Layer
 Count 6/11
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|          Affine          |     yes      |     yes      |
-|       Convolution        |     yes      |     yes      |
-|   DepthwiseConvolution   |      no      |      -       |
-|      Deconvolution       |      no      |      -       |
-|  DepthwiseDeconvolution  |      no      |      -       |
-|        MaxPooling        |     yes      |      -       |
-|      AveragePooling      |     yes      |      -       |
-|   GlobalAveragePooling   |      no      |      -       |
-|        SumPooling        |     yes      |      -       |
-|        Unpooling         |     yes      |      -       |
-|          Embed           |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|          Affine          |     yes      |      -       |     yes      |
+|       Convolution        |     yes      |     yes      |     yes      |
+|   DepthwiseConvolution   |      no      |      -       |      -       |
+|      Deconvolution       |      no      |      -       |      -       |
+|  DepthwiseDeconvolution  |      no      |      -       |      -       |
+|        MaxPooling        |     yes      |      -       |      -       |
+|      AveragePooling      |     yes      |      -       |      -       |
+|   GlobalAveragePooling   |      no      |      -       |      -       |
+|        SumPooling        |     yes      |      -       |      -       |
+|        Unpooling         |     yes      |      -       |      -       |
+|          Embed           |      no      |      -       |      -       |
 
 ## Neural Network Activation Functions
 Count 11/11
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|         Sigmoid          |     yes      |      -       |
-|          Swish           |     yes      |      -       |
-|           Tanh           |     yes      |      -       |
-|           ReLU           |     yes      |      -       |
-|        LeakyReLU         |     yes      |      -       |
-|         Softmax          |     yes      |      -       |
-|           ELU            |     yes      |      -       |
-|           SELU           |     yes      |      -       |
-|          CReLU           |     yes      |      -       |
-|           CELU           |     yes      |      -       |
-|          PReLU           |     yes      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|         Sigmoid          |     yes      |      -       |      -       |
+|          Swish           |     yes      |      -       |      -       |
+|           Tanh           |     yes      |      -       |      -       |
+|           ReLU           |     yes      |      -       |      -       |
+|        LeakyReLU         |     yes      |      -       |      -       |
+|         Softmax          |     yes      |      -       |      -       |
+|           ELU            |     yes      |      -       |      -       |
+|           SELU           |     yes      |      -       |      -       |
+|          CReLU           |     yes      |      -       |      -       |
+|           CELU           |     yes      |      -       |      -       |
+|          PReLU           |     yes      |      -       |      -       |
 
 ## Normalization
 Count 2/2
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|    BatchNormalization    |     yes      |      -       |
-|     MeanSubtraction      |     yes      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|    BatchNormalization    |     yes      |      -       |      -       |
+|     MeanSubtraction      |     yes      |      -       |      -       |
 
 ## Reduction
 Count 0/7
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|           Sum            |      no      |      -       |
-|           Mean           |      no      |      -       |
-|           Max            |      no      |      -       |
-|           Min            |      no      |      -       |
-|           Prod           |      no      |      -       |
-|        ReduceSum         |      no      |      -       |
-|        ReduceMean        |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|           Sum            |      no      |      -       |      -       |
+|           Mean           |      no      |      -       |      -       |
+|           Max            |      no      |      -       |      -       |
+|           Min            |      no      |      -       |      -       |
+|           Prod           |      no      |      -       |      -       |
+|        ReduceSum         |      no      |      -       |      -       |
+|        ReduceMean        |      no      |      -       |      -       |
 
 ## Arithmetic
 Count 10/12
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|           Add2           |      no      |      -       |
-|          BcAdd2          |      no      |      -       |
-|           Sub2           |     yes      |      -       |
-|           Mul2           |     yes      |      -       |
-|           Div2           |     yes      |      -       |
-|           Pow2           |     yes      |      -       |
-|        AddScalar         |     yes      |      -       |
-|        MulScalar         |     yes      |      -       |
-|        PowScalar         |     yes      |      -       |
-|        RSubScalar        |     yes      |      -       |
-|        RDivScalar        |     yes      |      -       |
-|        RPowScalar        |     yes      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|           Add2           |      no      |      -       |      -       |
+|          BcAdd2          |      no      |      -       |      -       |
+|           Sub2           |     yes      |      -       |      -       |
+|           Mul2           |     yes      |      -       |      -       |
+|           Div2           |     yes      |      -       |      -       |
+|           Pow2           |     yes      |      -       |      -       |
+|        AddScalar         |     yes      |      -       |      -       |
+|        MulScalar         |     yes      |      -       |      -       |
+|        PowScalar         |     yes      |      -       |      -       |
+|        RSubScalar        |     yes      |      -       |      -       |
+|        RDivScalar        |     yes      |      -       |      -       |
+|        RPowScalar        |     yes      |      -       |      -       |
 
 ## Logical
 Count 5/24
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|           Sign           |     yes      |      -       |
-|         Minimum2         |     yes      |      -       |
-|         Maximum2         |     yes      |      -       |
-|      MinimumScalar       |     yes      |      -       |
-|      MaximumScalar       |     yes      |      -       |
-|        LogicalAnd        |      no      |      -       |
-|        LogicalOr         |      no      |      -       |
-|        LogicalXor        |      no      |      -       |
-|          Equal           |      no      |      -       |
-|         NotEqual         |      no      |      -       |
-|       GreaterEqual       |      no      |      -       |
-|         Greater          |      no      |      -       |
-|        LessEqual         |      no      |      -       |
-|           Less           |      no      |      -       |
-|     LogicalAndScalar     |      no      |      -       |
-|     LogicalOrScalar      |      no      |      -       |
-|     LogicalXorScalar     |      no      |      -       |
-|       EqualScalar        |      no      |      -       |
-|      NotEqualScalar      |      no      |      -       |
-|    GreaterEqualScalar    |      no      |      -       |
-|      GreaterScalar       |      no      |      -       |
-|     LessEqualScalar      |      no      |      -       |
-|        LessScalar        |      no      |      -       |
-|        LogicalNot        |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|           Sign           |     yes      |      -       |      -       |
+|         Minimum2         |     yes      |      -       |      -       |
+|         Maximum2         |     yes      |      -       |      -       |
+|      MinimumScalar       |     yes      |      -       |      -       |
+|      MaximumScalar       |     yes      |      -       |      -       |
+|        LogicalAnd        |      no      |      -       |      -       |
+|        LogicalOr         |      no      |      -       |      -       |
+|        LogicalXor        |      no      |      -       |      -       |
+|          Equal           |      no      |      -       |      -       |
+|         NotEqual         |      no      |      -       |      -       |
+|       GreaterEqual       |      no      |      -       |      -       |
+|         Greater          |      no      |      -       |      -       |
+|        LessEqual         |      no      |      -       |      -       |
+|           Less           |      no      |      -       |      -       |
+|     LogicalAndScalar     |      no      |      -       |      -       |
+|     LogicalOrScalar      |      no      |      -       |      -       |
+|     LogicalXorScalar     |      no      |      -       |      -       |
+|       EqualScalar        |      no      |      -       |      -       |
+|      NotEqualScalar      |      no      |      -       |      -       |
+|    GreaterEqualScalar    |      no      |      -       |      -       |
+|      GreaterScalar       |      no      |      -       |      -       |
+|     LessEqualScalar      |      no      |      -       |      -       |
+|        LessScalar        |      no      |      -       |      -       |
+|        LogicalNot        |      no      |      -       |      -       |
 
 ## Math
 Count 6/7
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|         Constant         |      no      |      -       |
-|           Abs            |     yes      |      -       |
-|           Exp            |     yes      |      -       |
-|           Log            |     yes      |      -       |
-|         Identity         |     yes      |      -       |
-|       BatchMatmul        |     yes      |      -       |
-|          Round           |     yes      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|         Constant         |      no      |      -       |      -       |
+|           Abs            |     yes      |      -       |      -       |
+|           Exp            |     yes      |      -       |      -       |
+|           Log            |     yes      |      -       |      -       |
+|         Identity         |     yes      |      -       |      -       |
+|       BatchMatmul        |     yes      |      -       |      -       |
+|          Round           |     yes      |      -       |      -       |
 
 ## Array Manipulation
 Count 5/12
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|       Concatenate        |      no      |      -       |
-|          Split           |      no      |      -       |
-|          Stack           |      no      |      -       |
-|          Slice           |     yes      |      -       |
-|        Transpose         |      no      |      -       |
-|        Broadcast         |      no      |      -       |
-|          OneHot          |      no      |      -       |
-|           Flip           |      no      |      -       |
-|          Shift           |     yes      |      -       |
-|         Reshape          |     yes      |      -       |
-|        MatrixDiag        |     yes      |      -       |
-|      MatrixDiagPart      |     yes      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|       Concatenate        |      no      |      -       |      -       |
+|          Split           |      no      |      -       |      -       |
+|          Stack           |      no      |      -       |      -       |
+|          Slice           |     yes      |      -       |      -       |
+|        Transpose         |      no      |      -       |      -       |
+|        Broadcast         |      no      |      -       |      -       |
+|          OneHot          |      no      |      -       |      -       |
+|           Flip           |      no      |      -       |      -       |
+|          Shift           |     yes      |      -       |      -       |
+|         Reshape          |     yes      |      -       |      -       |
+|        MatrixDiag        |     yes      |      -       |      -       |
+|      MatrixDiagPart      |     yes      |      -       |      -       |
 
 ## Stochasticity
 Count 0/10
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|         Dropout          |      no      |      -       |
-|         TopKData         |      no      |      -       |
-|         TopKGrad         |      no      |      -       |
-|           Rand           |      no      |      -       |
-|         Randint          |      no      |      -       |
-|          Randn           |      no      |      -       |
-|        RandomCrop        |      no      |      -       |
-|        RandomFlip        |      no      |      -       |
-|       RandomShift        |      no      |      -       |
-|    ImageAugmentation     |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|         Dropout          |      no      |      -       |      -       |
+|         TopKData         |      no      |      -       |      -       |
+|         TopKGrad         |      no      |      -       |      -       |
+|           Rand           |      no      |      -       |      -       |
+|         Randint          |      no      |      -       |      -       |
+|          Randn           |      no      |      -       |      -       |
+|        RandomCrop        |      no      |      -       |      -       |
+|        RandomFlip        |      no      |      -       |      -       |
+|       RandomShift        |      no      |      -       |      -       |
+|    ImageAugmentation     |      no      |      -       |      -       |
 
 ## Loss Functions
 Count 0/9
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|   SigmoidCrossEntropy    |      no      |      -       |
-|    BinaryCrossEntropy    |      no      |      -       |
-|   SoftmaxCrossEntropy    |      no      |      -       |
-| CategoricalCrossEntropy  |      no      |      -       |
-|       SquaredError       |      no      |      -       |
-|      AbsoluteError       |      no      |      -       |
-|        HuberLoss         |      no      |      -       |
-|  EpsilonInsensitiveLoss  |      no      |      -       |
-|      KLMultinomial       |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|   SigmoidCrossEntropy    |      no      |      -       |      -       |
+|    BinaryCrossEntropy    |      no      |      -       |      -       |
+|   SoftmaxCrossEntropy    |      no      |      -       |      -       |
+| CategoricalCrossEntropy  |      no      |      -       |      -       |
+|       SquaredError       |      no      |      -       |      -       |
+|      AbsoluteError       |      no      |      -       |      -       |
+|        HuberLoss         |      no      |      -       |      -       |
+|  EpsilonInsensitiveLoss  |      no      |      -       |      -       |
+|      KLMultinomial       |      no      |      -       |      -       |
 
 ## Quantization Neural Network Layers
-Count 3/10
+Count 6/10
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|      BinarySigmoid       |     yes      |      -       |
-|        BinaryTanh        |     yes      |      -       |
-|   BinaryConnectAffine    |     yes      |      -       |
-| BinaryConnectConvolution |      no      |      -       |
-|    BinaryWeightAffine    |      no      |      -       |
-| BinaryWeightConvolution  |      no      |      -       |
-|        INQAffine         |      no      |      -       |
-|      INQConvolution      |      no      |      -       |
-|    FixedPointQuantize    |      no      |      -       |
-|       Pow2Quantize       |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|      BinarySigmoid       |     yes      |      -       |      -       |
+|        BinaryTanh        |     yes      |      -       |      -       |
+|   BinaryConnectAffine    |     yes      |      -       |      -       |
+| BinaryConnectConvolution |     yes      |      -       |      -       |
+|    BinaryWeightAffine    |     yes      |      -       |      -       |
+| BinaryWeightConvolution  |     yes      |      -       |      -       |
+|        INQAffine         |      no      |      -       |      -       |
+|      INQConvolution      |      no      |      -       |      -       |
+|    FixedPointQuantize    |      no      |      -       |      -       |
+|       Pow2Quantize       |      no      |      -       |      -       |
 
 ## Validation
 Count 0/3
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|        TopNError         |      no      |      -       |
-|       BinaryError        |      no      |      -       |
-|     ConfusionMatrix      |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|        TopNError         |      no      |      -       |      -       |
+|       BinaryError        |      no      |      -       |      -       |
+|     ConfusionMatrix      |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
 Count 0/3
 
-|         Function         |  Available   |   generic    |
-|--------------------------|--------------|--------------|
-|         VATNoise         |      no      |      -       |
-|          Unlink          |      no      |      -       |
-|           Sink           |      no      |      -       |
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|         VATNoise         |      no      |      -       |      -       |
+|          Unlink          |      no      |      -       |      -       |
+|           Sink           |      no      |      -       |      -       |
 
