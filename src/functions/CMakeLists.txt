@@ -50,6 +50,7 @@ add_library(nnablart_functions STATIC
   implements/quantization/binary_tanh.c
   implements/quantization/binary_sigmoid.c
   implements/quantization/binary_connect_affine.c
+  implements/quantization/binary_weight_affine.c
 
   implements/arithmetic/add_scalar.c
   implements/arithmetic/arithmetic.c
