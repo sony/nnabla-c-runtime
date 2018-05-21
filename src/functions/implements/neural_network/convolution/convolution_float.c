@@ -44,18 +44,13 @@ static inline void var_setpos(var_t *var, int *pos, int size) {
   var->offset = var_calc_offset(var, pos, size);
 }
 
-static inline float var_get(var_t *var, nn_size_t offset) {
-  return var->get(var->v, offset);
-}
-
-static inline void var_set(var_t *var, nn_size_t offset, float v) {
-  return var->set(var->v, offset, v);
-}
-
 static inline void convnd(var_t *out, var_t *in, var_t *we, rt_list_t intput_shape,
-                          rt_list_t output_shape, rt_list_t kernel_shape, rt_list_t in_position,
-                          rt_list_t out_position, rt_list_t pad, rt_list_t stride,
-                          rt_list_t dilation, int spatial_dims) {
+                     rt_list_t output_shape, rt_list_t kernel_shape, rt_list_t in_position,
+					 rt_list_t out_position, rt_list_t pad, rt_list_t stride,
+                     rt_list_t dilation, int spatial_dims) {
+  float *output = (float *)(out->v->data);
+  float *input = (float *)(in->v->data);
+  float *weight = (float *)(we->v->data);
   int output_size = calc_shape_size(output_shape);
   int kernel_size = calc_shape_size(kernel_shape);
 
@@ -75,40 +70,36 @@ static inline void convnd(var_t *out, var_t *in, var_t *we, rt_list_t intput_sha
         }
       }
       if (condition) {
-        float x = var_get(in, in->offset + shape_to_pos(intput_shape, in_position));
-        float w = var_get(we, we->offset + k);
+        float x = *(input + in->offset + shape_to_pos(intput_shape, in_position));
+        float w = *(weight + we->offset + k);
         sum += x * w;
       }
     }
-    float value = var_get(out, out->offset + o);
-    value += sum;
-    var_set(out, out->offset + o, value);
+    *(output + out->offset + o) += sum;
   }
 }
 
 static inline void add_bias(var_t *out, var_t *b) {
   int size = out->stride.data[I];
   int i;
-  float bias = var_get(b, b->offset);
+  float *bias = (float *)(b->v->data);
+  float *output = (float *)(out->v->data);
   for (i = 0; i < size; ++i) {
-    float x = var_get(out, out->offset + i);
-    x += bias;
-    var_set(out, out->offset + i, x);
+    *(output + out->offset + i) += *(bias + b->offset);
   }
 }
 
 static inline void mul_alpha(var_t* out, var_t* a) {
   int size = out->stride.data[I];
   int i;
-  float alpha = var_get(a, a->offset);
+  float *alpha = (float *)(a->v->data);
+  float *output = (float *)(out->v->data);
   for (i = 0; i < size; ++i) {
-    float x = var_get(out, out->offset + i);
-    x *= alpha;
-    var_set(out, out->offset + i, x);
+    *(output + out->offset + i) *= *(alpha + a->offset);
   }
 }
 
-rt_function_error_t exec_convolution_generic(rt_function_t *f) {
+rt_function_error_t exec_convolution_float(rt_function_t *f) {
   convolution_local_context_t *c =
       (convolution_local_context_t *)f->local_context;
   convolution_private_t *p = (convolution_private_t *)(c->data);
@@ -128,7 +119,7 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   rt_list_t output_shape = allocate_list(p->spatial_dims);
   rt_list_t in_position = allocate_list(p->spatial_dims);
   rt_list_t out_position = allocate_list(p->spatial_dims);
-
+  
   for (int i = 0; i < p->spatial_dims; i++) {
     kernel_shape.data[i] = p->w_var.shape.data[i + 3];
     intput_shape.data[i] = p->in_var.shape.data[i + 3];

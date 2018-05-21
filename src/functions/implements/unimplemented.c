@@ -853,35 +853,6 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
-// BinaryConnectConvolution
-rt_function_error_t
-allocate_binary_connect_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t
-free_binary_connect_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_binary_connect_convolution(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-// BinaryWeightConvolution
-rt_function_error_t
-allocate_binary_weight_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t
-free_binary_weight_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_binary_weight_convolution(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
 
 // INQAffine
 rt_function_error_t allocate_inq_affine_local_context(rt_function_t *f) {

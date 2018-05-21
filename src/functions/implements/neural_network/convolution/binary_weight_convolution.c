@@ -11,27 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+#include <assert.h>
 #include "convolution_internal.h"
 
-#include "../../../utilities/list.h"
-#include "../../../utilities/shape.h"
-
-#include <assert.h>
-#include <math.h>
-#include <nnablart/functions.h>
-
 #define X             (0)            //x input
-#define WEIGHT        (1)            //weight
-#define BIAS          (2)            //bias
+#define WEIGHT        (2)            //weight
+#define ALPHA         (3)            //alpha
+#define BIAS          (4)            //bias
 #define Y0            (0)            //y0 output
-#define ALPHA         (-1)           //ALPHA
 
-// Convolution
-rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
+// BinaryWeightConvolution
+rt_function_error_t
+allocate_binary_weight_convolution_local_context(rt_function_t *f) {
+  assert(sizeof(convolution_local_context_t)
+    == sizeof(binary_weight_convolution_local_context_t));
+
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
-    f->exec_func = exec_convolution;
+    f->exec_func = exec_binary_weight_convolution;
   } else {
     f->exec_func = exec_convolution_generic;
   }
@@ -39,10 +36,11 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
 }
 
-rt_function_error_t free_convolution_local_context(rt_function_t *f) {
+rt_function_error_t
+free_binary_weight_convolution_local_context(rt_function_t *f) {
   return free_convolution_local_context_common(f);
 }
 
-rt_function_error_t exec_convolution(rt_function_t *f) {
+rt_function_error_t exec_binary_weight_convolution(rt_function_t *f) {
   return exec_convolution_float(f);
 }
