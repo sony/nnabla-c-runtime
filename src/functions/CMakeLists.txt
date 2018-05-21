@@ -24,6 +24,7 @@ add_library(nnablart_functions STATIC
   implements/neural_network/unpooling.c
   implements/neural_network/convolution/convolution.c
   implements/neural_network/convolution/convolution_generic.c
+  implements/neural_network/convolution/convolution_float.c
   implements/neural_network/convolution/convolution_common.c
   implements/neural_network/convolution/binary_connect_convolution.c
   implements/neural_network/convolution/binary_weight_convolution.c

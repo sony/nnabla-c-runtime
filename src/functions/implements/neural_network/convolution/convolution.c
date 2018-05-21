@@ -33,7 +33,7 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_convolution;
   } else {
-    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+    f->exec_func = exec_convolution_generic;
   }
 
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA, Y0);
@@ -44,7 +44,5 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_convolution(rt_function_t *f) {
-  return ((convolution_private_t *)(((convolution_local_context_t *)(f->local_context))
-                                   ->data))
-      ->exec(f);
+  return exec_convolution_float(f);
 }

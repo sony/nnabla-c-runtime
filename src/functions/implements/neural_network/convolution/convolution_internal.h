@@ -29,15 +29,13 @@ typedef struct {
   nn_size_t offset;
 } var_t;
 
-void var_free(var_t *);
-
 typedef struct {
   var_t out_var;
   var_t in_var;
   var_t w_var;
   var_t b_var;
   var_t a_var;
-  exec_conv_func_t exec;
+  int spatial_dims;
 } convolution_private_t;
 
 #define B (0) // batch dimension of input or output
@@ -56,6 +54,7 @@ typedef struct {
 #define SPW (1) // width of stride/pad
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f);
+rt_function_error_t exec_convolution_float(rt_function_t *f);
 rt_function_error_t allocate_convolution_local_context_common(rt_function_t *f,
                               int x, int weight, int bias, int alpha, int y0);
 rt_function_error_t free_convolution_local_context_common(rt_function_t *f);

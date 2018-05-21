@@ -116,10 +116,13 @@ allocate_convolution_local_context_common(rt_function_t *f,
   else {
     p->a_var.v = 0;
   }
-
-  p->exec = exec_convolution_generic; //currently, we only implement a generic one
-
+  p->spatial_dims = spatial_dims;
   return RT_FUNCTION_ERROR_NOERROR;
+}
+
+static inline void var_free(var_t *var) {
+  free_list(var->shape);
+  free_list(var->stride);
 }
 
 rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
