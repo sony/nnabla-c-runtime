@@ -25,7 +25,7 @@
 #include "runtime_internal.h"
 
 void allocate_function_context(nn_network_t* n, nn_function_t* function, rt_function_context_t *function_context) {
-    switch (function_context->type) {
+    switch (function_context->info->type) {
       ${code}
       default:
         function_context->func.local_context = 0;

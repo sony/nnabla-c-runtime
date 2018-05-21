@@ -150,7 +150,7 @@ static rt_function_error_t cb_free(rt_function_t *f) {
 static rt_return_value_t cb_alloc(void *function_context) {
   WHOAMI("%s", __func__);
   rt_function_context_t *func = (rt_function_context_t *)function_context;
-  if ((int)func->impl != 100) {
+  if ((int)func->info->impl != 100) {
     return RT_RET_FUNCTION_DONT_MATCH;
   }
 

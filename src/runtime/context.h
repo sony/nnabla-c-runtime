@@ -24,8 +24,7 @@ typedef struct {
 } rt_variable_buffer_context_t;
 
 typedef struct {
-  nn_function_type_t type;
-  nn_function_implement_t impl;
+  nn_function_t *info;
   rt_function_t func;
 } rt_function_context_t;
 

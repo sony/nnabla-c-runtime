@@ -57,7 +57,7 @@ docker_image_doc:
 docker_image_build:
 	docker pull ubuntu:16.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_IMAGE_DOC) -f build-tools/docker/Dockerfile.build .
+	&& docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_IMAGE_BUILD) -f build-tools/docker/Dockerfile.build .
 
 ########################################################################################################################
 # Auto Format
@@ -79,12 +79,12 @@ bwd-doc: bwd-build docker_image_doc
 .PHONY: bwd-build
 bwd-build: docker_image_build
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_DOC) make build
+	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_BUILD) make build
 
 ########################################################################################################################
 # Examples
 .PHONY: bwd-examples
 bwd-examples: docker_image_build
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_DOC) make examples
+	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_BUILD) make examples
 

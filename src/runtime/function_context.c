@@ -26,7 +26,7 @@
 
 void allocate_function_context(nn_network_t *n, nn_function_t *function,
                                rt_function_context_t *function_context) {
-  switch (function_context->type) {
+  switch (function_context->info->type) {
   case NN_FUNCTION_AFFINE: { // Affine
     function_context->func.exec_func = exec_affine;
     function_context->func.free_local_context_func = free_affine_local_context;
