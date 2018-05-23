@@ -39,5 +39,10 @@ rt_function_error_t exec_average_pooling(rt_function_t *f) {
   pooling_private_t *p =
       (pooling_private_t
            *)(((average_pooling_local_context_t *)(f->local_context))->data);
-  return exec_pooling(f, (pooling_context_t *)context, p, calc_average);
+  if (p->calc_context.x->type == NN_DATA_TYPE_FLOAT &&
+      p->calc_context.y->type == NN_DATA_TYPE_FLOAT) {
+    return exec_pooling(f, (pooling_context_t *)context, p, calc_average);
+  } else {
+    return exec_pooling_generic(f, (pooling_context_t *)context, p, calc_average_generic);
+  }
 }
