@@ -1,0 +1,33 @@
+digraph G {
+  nodesep=.05;
+  
+  node [shape=record, width=.1, height=.1];
+  network [label="<v>version|{buffers|{<bs>size|<bl>list}}|{variables|{<vs>size|<vl>list}} | {functions|{<fs>size|<fl>list}}|{inputs|{<is>size|<il>list}}|{outputs|{<os>size|<ol>list}}|{memory|{<indexes>indexes|<data>data}}"];
+
+  indexes [label="DATA_INDEX|{|<i0>i0|<i1>i1|<i2>i2|i3|...}"];
+  data [label="DATA|{|<d0>d0|<d1>d1|<d2>d2|...}"];
+  
+  network:indexes -> indexes;
+  network:data -> data;
+  
+  d0 [label="size0|size1|size2|..."];
+  d1 [label="{variable|{id|{shape|{size|list}}|type|pos|<i>data_index}}|..."];
+  d2 [label="data buffer"];
+  
+  network:bl -> indexes:i0;
+  
+  indexes:i0 -> data:d0;
+  indexes:i1 -> data:d1;
+  indexes:i2 -> data:d2;
+
+  network:vl -> indexes:i1;
+
+  data:d0 -> d0;
+  data:d1 -> d1;
+  data:d2 -> d2;
+  d1:i -> indexes:i2;
+  
+  
+}
+
+

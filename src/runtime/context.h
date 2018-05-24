@@ -30,7 +30,7 @@ typedef struct {
 
 typedef struct {
   nn_function_type_t type;
-  rt_return_value_t (*allocate_local_context)(void *f);
+  rt_return_value_t (*allocate_local_context)(nn_network_t *net, void *f);
 } rt_function_callback_t;
 
 typedef struct {

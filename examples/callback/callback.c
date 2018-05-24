@@ -147,7 +147,7 @@ static rt_function_error_t cb_free(rt_function_t *f) {
 /// - register @ref cb_free as function local context de-allocator.
 ///
 /// See also @ref rt_initialize_context
-static rt_return_value_t cb_alloc(void *function_context) {
+static rt_return_value_t cb_alloc(nn_network_t *net, void *function_context) {
   WHOAMI("%s", __func__);
   rt_function_context_t *func = (rt_function_context_t *)function_context;
   if ((int)func->info->impl != 100) {

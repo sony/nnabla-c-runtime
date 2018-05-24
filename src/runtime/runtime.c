@@ -31,9 +31,9 @@ rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
   return RT_RET_NOERROR;
 }
 
-rt_return_value_t
-rt_add_callback(rt_context_pointer context, nn_function_type_t type,
-                rt_return_value_t (*allocate_local_context)(void *f)) {
+rt_return_value_t rt_add_callback(
+    rt_context_pointer context, nn_function_type_t type,
+    rt_return_value_t (*allocate_local_context)(nn_network_t *net, void *f)) {
 
   rt_context_t *c = context;
 
@@ -143,7 +143,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
               NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) {
         rt_return_value_t ret =
             (c->callbacks +
-             j)->allocate_local_context((void *)(&(c->functions[i])));
+             j)->allocate_local_context(n, (void *)(&(c->functions[i])));
         if (ret != RT_RET_FUNCTION_MATCH) {
           return RT_RET_ERROR_NO_MATCHING_FUNCTION;
         }
