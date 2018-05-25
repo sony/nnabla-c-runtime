@@ -228,7 +228,7 @@ int rt_input_shape(rt_context_pointer context, size_t index,
   return c->variables[c->input_variable_ids[index]].shape.data[shape_index];
 }
 
-float *rt_input_buffer(rt_context_pointer context, size_t index) {
+void *rt_input_buffer(rt_context_pointer context, size_t index) {
   rt_context_t *c = context;
   return c->variables[c->input_variable_ids[index]].data;
 }
@@ -262,7 +262,7 @@ int rt_output_shape(rt_context_pointer context, size_t index,
   return c->variables[c->output_variable_ids[index]].shape.data[shape_index];
 }
 
-float *rt_output_buffer(rt_context_pointer context, size_t index) {
+void *rt_output_buffer(rt_context_pointer context, size_t index) {
   rt_context_t *c = context;
   return c->variables[c->output_variable_ids[index]].data;
 }
