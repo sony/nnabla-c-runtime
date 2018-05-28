@@ -15,16 +15,20 @@
 #include <nnablart/functions.h>
 
 #include "../../utilities/shape.h"
-
+#include "../../utilities/accessor.h"
 #include <assert.h>
 #include <math.h>
 
 typedef struct {
-  float *input;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
   int input_size;
-  float *output;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
   int output_size;
 } sigmoid_local_context_t;
+
+rt_function_error_t exec_sigmoid_generic(rt_function_t *f);
 
 // Sigmoid
 rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
@@ -41,10 +45,12 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
   }
 
   f->local_context = (void *)c;
-  c->input = f->inputs[0]->data;
+  c->input = f->inputs[0];
+  c->get_input = select_getter(c->input);
   c->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  c->output = f->outputs[0]->data;
+  c->output = f->outputs[0];
+  c->set_output = select_setter(c->output);
   c->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (c->input_size != c->output_size) {
@@ -55,8 +61,7 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_sigmoid;
   } else {
-    // Only float is implemented.
-    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+    f->exec_func = exec_sigmoid_generic;
   }
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -68,11 +73,24 @@ rt_function_error_t free_sigmoid_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_sigmoid(rt_function_t *f) {
   sigmoid_local_context_t *c = (sigmoid_local_context_t *)(f->local_context);
+  float *x = (float *)(c->input->data);
+  float *y = (float *)(c->output->data);
 
   int i; // Iterator
   for (i = 0; i < c->output_size; i++) {
-    float x = *(c->input + i);
-    *(c->output + i) = 1.0f / (1.0f + expf(-x));
+    y[i] = 1.0f / (1.0f + expf(-x[i]));
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_sigmoid_generic(rt_function_t *f) {
+  sigmoid_local_context_t *c = (sigmoid_local_context_t *)(f->local_context);
+
+  int i; // Iterator
+  for (i = 0; i < c->output_size; i++) {
+    float val_x = c->get_input(c->input, i);
+	float val_y = 1.0f / (1.0f + expf(-val_x));
+    c->set_output(c->output, i, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

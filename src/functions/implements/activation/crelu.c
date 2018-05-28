@@ -13,18 +13,23 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
 
 typedef struct {
-  float *input;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
   int input_size;
-  float *output;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
   int output_size;
   rt_list_t in_shape;
 } crelu_private_t;
+
+rt_function_error_t exec_crelu_generic(rt_function_t *f);
 
 // CReLU
 rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
@@ -41,9 +46,11 @@ rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
   }
 
   ((crelu_local_context_t *)f->local_context)->data = p;
-  p->input = (float *)f->inputs[0]->data;
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
   p->input_size = calc_shape_size(f->inputs[0]->shape);
-  p->output = (float *)f->outputs[0]->data;
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
   p->in_shape = clone_list(f->inputs[0]->shape);
 
@@ -51,6 +58,12 @@ rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
     free_list(p->in_shape);
     free(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
+  }
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_crelu;
+  } else {
+    f->exec_func = exec_crelu_generic;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -80,9 +93,32 @@ rt_function_error_t exec_crelu(rt_function_t *f) {
 
   for (i = 0; i < s1; ++i) {
     for (j = 0; j < s0; ++j) {
-      float x = *(p->input + i * s0 + j);
-      *(p->output + i * s0 * 2 + j) = x > 0.0f ? x : 0.0f;
-      *(p->output + i * s0 * 2 + s0 + j) = x < 0.0f ? -x : 0.0f;
+      float x = *((float *)(p->input->data) + i * s0 + j);
+      float *y = (float *)(p->output->data);
+      *(y + i * s0 * 2 + j) = x > 0.0f ? x : 0.0f;
+      *(y + i * s0 * 2 + s0 + j) = x < 0.0f ? -x : 0.0f;
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_crelu_generic(rt_function_t *f) {
+  crelu_local_context_t *c = (crelu_local_context_t *)(f->local_context);
+  crelu_private_t *p = (crelu_private_t *)(c->data);
+  int i, j, s0 = 1, s1;
+
+  for (i = c->axis; i < p->in_shape.size; ++i) {
+    s0 *= p->in_shape.data[i];
+  }
+  s1 = p->input_size / s0;
+
+  for (i = 0; i < s1; ++i) {
+    for (j = 0; j < s0; ++j) {
+      float x = p->get_input(p->input, i * s0 + j);
+      float value = x > 0.0f ? x : 0.0f;
+      p->set_output(p->output, i * s0 * 2 + j, value);
+      value = x < 0.0f ? -x : 0.0f;
+      p->set_output(p->output, i * s0 * 2 + s0 + j, value);
     }
   }
   return RT_FUNCTION_ERROR_NOERROR;
