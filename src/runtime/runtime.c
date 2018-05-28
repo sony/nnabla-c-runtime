@@ -95,7 +95,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     if (c->buffers[i].allocate_type == RT_BUFFER_ALLOCATE_TYPE_INITIAL) {
       c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_MALLOC;
       c->buffers[i].buffer =
-          malloc(*(list + i) * sizeof(float)); // TODO float only.
+          calloc(*(list + i) * sizeof(float), 1); // TODO float only.
       if (c->buffers[i].buffer == 0) {
         return RT_RET_ERROR_ALLOCATE_CONTEXT;
       }
