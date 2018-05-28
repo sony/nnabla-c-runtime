@@ -13,17 +13,12 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
-
+#include "../../utilities/accessor.h"
 #include <assert.h>
 #include <math.h>
 #include <nnablart/functions.h>
 
-typedef struct {
-  float *input;
-  int input_size;
-  float *output;
-  int output_size;
-} leaky_relu_private_t;
+rt_function_error_t exec_leaky_relu_generic(rt_function_t *f);
 
 // LeakyReLU
 rt_function_error_t allocate_leaky_relu_local_context(rt_function_t *f) {
@@ -42,6 +37,12 @@ rt_function_error_t allocate_leaky_relu_local_context(rt_function_t *f) {
   if (input_size != output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_leaky_relu;
+  } else {
+    f->exec_func = exec_leaky_relu_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -59,6 +60,24 @@ rt_function_error_t exec_leaky_relu(rt_function_t *f) {
 
   for (i = 0; i < output_size; ++i) {
     y[i] = x[i] > 0.0f ? x[i] : x[i] * c->alpha;
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_leaky_relu_generic(rt_function_t *f) {
+  leaky_relu_local_context_t *c =
+      (leaky_relu_local_context_t *)(f->local_context);
+  rt_variable_t *input = f->inputs[0];
+  rt_variable_getter get_input = select_getter(input);
+  rt_variable_t *output = f->outputs[0];
+  rt_variable_setter set_output = select_setter(output);
+  const int output_size = calc_shape_size(f->inputs[0]->shape);
+  int i;
+
+  for (i = 0; i < output_size; ++i) {
+    float val_x = get_input(input, i);
+    float val_y = val_x > 0.0f ? val_x : val_x * c->alpha;
+    set_output(output, i, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

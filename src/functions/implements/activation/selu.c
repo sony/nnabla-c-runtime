@@ -13,10 +13,19 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 #include <math.h>
 #include <nnablart/functions.h>
 
+rt_function_error_t exec_selu_generic(rt_function_t *f);
+
 rt_function_error_t allocate_selu_local_context(rt_function_t *f) {
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_selu;
+  } else {
+    f->exec_func = exec_selu_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -34,6 +43,23 @@ rt_function_error_t exec_selu(rt_function_t *f) {
   for (s = 0; s < size; s++) {
     y[s] =
         x[s] > (float)0 ? context->scale * x[s] : coef * (exp(x[s]) - (float)1);
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_selu_generic(rt_function_t *f) {
+  selu_local_context_t *context = (selu_local_context_t *)(f->local_context);
+  rt_variable_t *input = f->inputs[0];
+  rt_variable_getter get_input = select_getter(input);
+  rt_variable_t *output = f->outputs[0];
+  rt_variable_setter set_output = select_setter(output);
+  const float coef = context->alpha * context->scale;
+  const int size = calc_shape_size(f->inputs[0]->shape);
+  int s;
+  for (s = 0; s < size; s++) {
+    float val_x = get_input(input, s);
+    float val_y = val_x > (float)0 ? context->scale * val_x : coef * (exp(val_x) - (float)1);
+    set_output(output, s, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
