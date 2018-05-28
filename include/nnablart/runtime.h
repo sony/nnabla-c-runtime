@@ -237,7 +237,7 @@ int rt_input_shape(rt_context_pointer context, size_t index,
 /// @param[in] context
 /// @param[in] index
 /// @return pointer
-float *rt_input_buffer(rt_context_pointer context, size_t index);
+void *rt_input_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Get number of network outputs.
 /// @param[in] context
@@ -269,7 +269,7 @@ int rt_output_shape(rt_context_pointer context, size_t index,
 /// @param[in] context
 /// @param[in] index
 /// @return pointer
-float *rt_output_buffer(rt_context_pointer context, size_t index);
+void *rt_output_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
 /// @param[in] context
