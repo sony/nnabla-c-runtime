@@ -26,8 +26,10 @@ typedef struct {
   rt_list_t input_strides;
   rt_list_t output_strides;
   rt_list_t kernel;
-  float *input;
-  float *output;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
 } unpooling_private_t;
 
 rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
@@ -41,8 +43,10 @@ rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
   p->output_shape = clone_list(f->outputs[0]->shape);
   p->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
   p->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
-  p->input = (float *)(f->inputs[0]->data);
-  p->output = (float *)(f->outputs[0]->data);
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
 
   if (context->kernel.size > p->input_shape.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
@@ -82,7 +86,50 @@ rt_function_error_t free_unpooling_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
+static void unpooling_forward_recursive_generic(unpooling_private_t *p,
+                                                int x_offset, int y_offset, int dim) {
+  int current_x_offset = x_offset;
+  int current_y_offset = y_offset;
+  const int x_stride = p->input_strides.data[dim];
+  const int y_stride = p->output_strides.data[dim];
+  const int kernel = p->kernel.data[dim];
+  const int size = p->output_shape.data[dim];
+
+  if (dim == p->input_shape.size - 1) {
+    if (x_stride == 1 && kernel == 1) {
+      for (int i = 0; i < size; i++) {
+        float value = p->get_input(p->input, i + current_x_offset);
+        p->set_output(p->output, i + current_y_offset, value);
+      }
+    } else {
+      int count = 0;
+      for (int i = 0; i < size; i++) {
+        float value = p->get_input(p->input, current_x_offset);
+        p->set_output(p->output, current_y_offset, value);
+        if (++count >= kernel) {
+          count = 0;
+          current_x_offset += x_stride;
+        }
+        current_y_offset += y_stride;
+      }
+    }
+  } else {
+    int count = 0;
+    int i;
+    for (i = 0; i < size; i++) {
+      unpooling_forward_recursive_generic(p, current_x_offset,
+                                          current_y_offset, dim + 1);
+      if (++count >= kernel) {
+        count = 0;
+        current_x_offset += x_stride;
+      }
+      current_y_offset += y_stride;
+    }
+  }
+}
+
+static void unpooling_forward_recursive(unpooling_private_t *p,
+                                        int x_offset,
                                         int y_offset, int dim) {
   int current_x_offset = x_offset;
   int current_y_offset = y_offset;
@@ -90,8 +137,8 @@ static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
   const int y_stride = p->output_strides.data[dim];
   const int kernel = p->kernel.data[dim];
   const int size = p->output_shape.data[dim];
-  const float *x = p->input;
-  float *y = p->output;
+  const float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
 
   if (dim == p->input_shape.size - 1) {
     const float *current_x = x + current_x_offset;
@@ -114,8 +161,8 @@ static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
     int count = 0;
     int i;
     for (i = 0; i < size; i++) {
-      unpooling_forward_recursive(p, current_x_offset, current_y_offset,
-                                  dim + 1);
+      unpooling_forward_recursive(p, current_x_offset,
+                                  current_y_offset, dim + 1);
       if (++count >= kernel) {
         count = 0;
         current_x_offset += x_stride;
@@ -129,6 +176,11 @@ rt_function_error_t exec_unpooling(rt_function_t *f) {
   unpooling_private_t *p =
       (unpooling_private_t *)(((unpooling_local_context_t *)(f->local_context))
                                   ->data);
-  unpooling_forward_recursive(p, 0, 0, 0);
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    unpooling_forward_recursive(p, 0, 0, 0);
+  } else {
+    unpooling_forward_recursive_generic(p, 0, 0, 0);
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
