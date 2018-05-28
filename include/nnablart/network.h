@@ -189,8 +189,8 @@ typedef enum {
   NN_FUNCTION_VAT_NOISE = 118,                  ///< VATNoise
   NN_FUNCTION_UNLINK = 119,                     ///< Unlink
   NN_FUNCTION_SINK = 120,                       ///< Sink
-} nn_function_type_t_;
-typedef int32_t nn_function_type_t;
+  NN_END_OF_FUNCTION = 65535                    // Ensure this type has 16bits
+} nn_function_type_t;
 
 /// @brief Function implement type.
 typedef enum {
@@ -198,9 +198,9 @@ typedef enum {
   NN_FUNCTION_IMPLEMENT_FIXED16, ///< Calculate with 16bit fixed point.
   NN_FUNCTION_IMPLEMENT_FIXED8,  ///< Calculate with 8bit fixed point.
   NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT =
-      99 ///< End of official implement calcuration type
-} nn_function_implement_t_;
-typedef int32_t nn_function_implement_t;
+      99,                     ///< End of official implement calcuration type
+  NN_END_OF_IMPLEMENT = 65535 // Ensure this type has 16bits
+} nn_function_implement_t;
 
 /// @brief Common definition of Function.
 /// This type is to be used for the function does not have arguements.
