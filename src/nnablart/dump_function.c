@@ -986,5 +986,6 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_sink_t *f = (nn_function_sink_t *)func;
     printf("NNB: Function argument one_input_grad: %d\n", f->one_input_grad);
   } break;
+  default:;
   }
 }
