@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 
 #include <assert.h>
 #include <math.h>
@@ -95,10 +95,8 @@ rt_function_error_t exec_celu(rt_function_t *f) {
     for (j = 0; j < s0; ++j) {
       float x = *((float *)(p->input->data) + i * s0 + j);
       float *y = (float *)(p->output->data);
-      *(y + i * s0 * 2 + j) =
-          x > 0.0f ? x : c->alpha * (expf(x) - 1.0f);
-      *(y + i * s0 * 2 + s0 + j) =
-          x < 0.0f ? -x : c->alpha * (expf(x) - 1.0f);
+      *(y + i * s0 * 2 + j) = x > 0.0f ? x : c->alpha * (expf(x) - 1.0f);
+      *(y + i * s0 * 2 + s0 + j) = x < 0.0f ? -x : c->alpha * (expf(x) - 1.0f);
     }
   }
   return RT_FUNCTION_ERROR_NOERROR;

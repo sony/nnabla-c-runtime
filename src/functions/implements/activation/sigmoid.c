@@ -14,8 +14,8 @@
 
 #include <nnablart/functions.h>
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <assert.h>
 #include <math.h>
 
@@ -89,7 +89,7 @@ rt_function_error_t exec_sigmoid_generic(rt_function_t *f) {
   int i; // Iterator
   for (i = 0; i < c->output_size; i++) {
     float val_x = c->get_input(c->input, i);
-	float val_y = 1.0f / (1.0f + expf(-val_x));
+    float val_y = 1.0f / (1.0f + expf(-val_x));
     c->set_output(c->output, i, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;

@@ -25,14 +25,16 @@
 #include "dump.h"
 #include "dump_function.h"
 
-static const char *const typenames[] = {${typenames}};
-
 void dump_function(nn_network_t *net, nn_function_t *func) {
     int i;
     int *list;
 
-    printf("NNB: Function type:         %s(%d)\n", typenames[func->type],
-           func->type);
+    switch (func->type) {
+        ${printname}
+	default:
+	    ;
+    }
+
     list = (int *)NN_GET(net, func->inputs.list);
     for (i = 0; i < func->inputs.size; i++) {
       printf("NNB: Function input[%d]:   Variable id:%d\n", i, *(list + i)); 

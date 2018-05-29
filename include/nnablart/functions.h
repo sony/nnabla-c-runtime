@@ -561,6 +561,39 @@ rt_function_error_t free_mean_subtraction_local_context(rt_function_t *f);
 rt_function_error_t exec_mean_subtraction(rt_function_t *f);
 /// @}
 
+/// @defgroup ClipGradByValue ClipGradByValue
+/// @{
+
+/// Allocate ClipGradByValue local context
+rt_function_error_t allocate_clip_grad_by_value_local_context(rt_function_t *f);
+
+/// Free ClipGradByValue local context
+rt_function_error_t free_clip_grad_by_value_local_context(rt_function_t *f);
+
+/// Exec ClipGradByValue
+rt_function_error_t exec_clip_grad_by_value(rt_function_t *f);
+/// @}
+
+/// @defgroup ClipGradByNorm ClipGradByNorm
+/// @{
+
+/// Local context for ClipGradByNorm
+typedef struct {
+  float clip_norm; ///< float
+  rt_list_t axes;  ///< Original type is [repeated int64]
+  void *data;      ///< General perpose data area
+} clip_grad_by_norm_local_context_t;
+
+/// Allocate ClipGradByNorm local context
+rt_function_error_t allocate_clip_grad_by_norm_local_context(rt_function_t *f);
+
+/// Free ClipGradByNorm local context
+rt_function_error_t free_clip_grad_by_norm_local_context(rt_function_t *f);
+
+/// Exec ClipGradByNorm
+rt_function_error_t exec_clip_grad_by_norm(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1397,6 +1430,149 @@ rt_function_error_t free_round_local_context(rt_function_t *f);
 
 /// Exec Round
 rt_function_error_t exec_round(rt_function_t *f);
+/// @}
+
+/// @defgroup Sin Sin
+/// @{
+
+/// Allocate Sin local context
+rt_function_error_t allocate_sin_local_context(rt_function_t *f);
+
+/// Free Sin local context
+rt_function_error_t free_sin_local_context(rt_function_t *f);
+
+/// Exec Sin
+rt_function_error_t exec_sin(rt_function_t *f);
+/// @}
+
+/// @defgroup Cos Cos
+/// @{
+
+/// Allocate Cos local context
+rt_function_error_t allocate_cos_local_context(rt_function_t *f);
+
+/// Free Cos local context
+rt_function_error_t free_cos_local_context(rt_function_t *f);
+
+/// Exec Cos
+rt_function_error_t exec_cos(rt_function_t *f);
+/// @}
+
+/// @defgroup Tan Tan
+/// @{
+
+/// Allocate Tan local context
+rt_function_error_t allocate_tan_local_context(rt_function_t *f);
+
+/// Free Tan local context
+rt_function_error_t free_tan_local_context(rt_function_t *f);
+
+/// Exec Tan
+rt_function_error_t exec_tan(rt_function_t *f);
+/// @}
+
+/// @defgroup Sinh Sinh
+/// @{
+
+/// Allocate Sinh local context
+rt_function_error_t allocate_sinh_local_context(rt_function_t *f);
+
+/// Free Sinh local context
+rt_function_error_t free_sinh_local_context(rt_function_t *f);
+
+/// Exec Sinh
+rt_function_error_t exec_sinh(rt_function_t *f);
+/// @}
+
+/// @defgroup Cosh Cosh
+/// @{
+
+/// Allocate Cosh local context
+rt_function_error_t allocate_cosh_local_context(rt_function_t *f);
+
+/// Free Cosh local context
+rt_function_error_t free_cosh_local_context(rt_function_t *f);
+
+/// Exec Cosh
+rt_function_error_t exec_cosh(rt_function_t *f);
+/// @}
+
+/// @defgroup ASin ASin
+/// @{
+
+/// Allocate ASin local context
+rt_function_error_t allocate_asin_local_context(rt_function_t *f);
+
+/// Free ASin local context
+rt_function_error_t free_asin_local_context(rt_function_t *f);
+
+/// Exec ASin
+rt_function_error_t exec_asin(rt_function_t *f);
+/// @}
+
+/// @defgroup ACos ACos
+/// @{
+
+/// Allocate ACos local context
+rt_function_error_t allocate_acos_local_context(rt_function_t *f);
+
+/// Free ACos local context
+rt_function_error_t free_acos_local_context(rt_function_t *f);
+
+/// Exec ACos
+rt_function_error_t exec_acos(rt_function_t *f);
+/// @}
+
+/// @defgroup ATan ATan
+/// @{
+
+/// Allocate ATan local context
+rt_function_error_t allocate_atan_local_context(rt_function_t *f);
+
+/// Free ATan local context
+rt_function_error_t free_atan_local_context(rt_function_t *f);
+
+/// Exec ATan
+rt_function_error_t exec_atan(rt_function_t *f);
+/// @}
+
+/// @defgroup ASinh ASinh
+/// @{
+
+/// Allocate ASinh local context
+rt_function_error_t allocate_asinh_local_context(rt_function_t *f);
+
+/// Free ASinh local context
+rt_function_error_t free_asinh_local_context(rt_function_t *f);
+
+/// Exec ASinh
+rt_function_error_t exec_asinh(rt_function_t *f);
+/// @}
+
+/// @defgroup ACosh ACosh
+/// @{
+
+/// Allocate ACosh local context
+rt_function_error_t allocate_acosh_local_context(rt_function_t *f);
+
+/// Free ACosh local context
+rt_function_error_t free_acosh_local_context(rt_function_t *f);
+
+/// Exec ACosh
+rt_function_error_t exec_acosh(rt_function_t *f);
+/// @}
+
+/// @defgroup ATanh ATanh
+/// @{
+
+/// Allocate ATanh local context
+rt_function_error_t allocate_atanh_local_context(rt_function_t *f);
+
+/// Free ATanh local context
+rt_function_error_t free_atanh_local_context(rt_function_t *f);
+
+/// Exec ATanh
+rt_function_error_t exec_atanh(rt_function_t *f);
 /// @}
 
 /// @}
@@ -2377,6 +2553,27 @@ rt_function_error_t free_sink_local_context(rt_function_t *f);
 
 /// Exec Sink
 rt_function_error_t exec_sink(rt_function_t *f);
+/// @}
+
+/// @defgroup NmsDetection2d NmsDetection2d
+/// @{
+
+/// Local context for NmsDetection2d
+typedef struct {
+  float thresh;          ///< float
+  float nms;             ///< float
+  uint8_t nms_per_class; ///< bool
+  void *data;            ///< General perpose data area
+} nms_detection2d_local_context_t;
+
+/// Allocate NmsDetection2d local context
+rt_function_error_t allocate_nms_detection2d_local_context(rt_function_t *f);
+
+/// Free NmsDetection2d local context
+rt_function_error_t free_nms_detection2d_local_context(rt_function_t *f);
+
+/// Exec NmsDetection2d
+rt_function_error_t exec_nms_detection2d(rt_function_t *f);
 /// @}
 
 /// @}
