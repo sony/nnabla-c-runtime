@@ -159,15 +159,16 @@ rt_function_error_t exec_convolution_float(rt_function_t *f) {
   rt_list_t output_shape = allocate_list(p->spatial_dims);
   rt_list_t in_position = allocate_list(p->spatial_dims);
   rt_list_t out_position = allocate_list(p->spatial_dims);
-  int output_size = calc_shape_size(output_shape);
-
-  memset(out_var->v->data, 0, sizeof(float) * output_size);
 
   for (int i = 0; i < p->spatial_dims; i++) {
     kernel_shape.data[i] = p->w_var.shape.data[i + 3];
     input_shape.data[i] = p->in_var.shape.data[i + 3];
     output_shape.data[i] = p->out_var.shape.data[i + 3];
   }
+
+  int output_size = calc_shape_size(output_shape);
+
+  memset(out_var->v->data, 0, sizeof(float) * output_size);
 
   batch_size = p->in_var.shape.data[0];
   if (p->spatial_dims == 2) {
