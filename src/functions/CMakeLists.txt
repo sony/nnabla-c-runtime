@@ -57,6 +57,7 @@ add_library(nnablart_functions STATIC
 
   implements/arithmetic/add_scalar.c
   implements/arithmetic/arithmetic.c
+  implements/arithmetic/arithmetic_generic.c
   implements/arithmetic/div2.c
   implements/arithmetic/mul2.c
   implements/arithmetic/mul_scalar.c
