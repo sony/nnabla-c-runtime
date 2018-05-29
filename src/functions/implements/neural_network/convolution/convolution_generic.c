@@ -172,7 +172,7 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
     output_shape.data[i] = p->out_var.shape.data[i + 3];
   }
 
-  int output_size = calc_shape_size(output_shape);
+  int output_size = calc_shape_size(p->out_var.shape);
 
   memset(out_var->v->data, 0, sizeof(float) * output_size);
 
