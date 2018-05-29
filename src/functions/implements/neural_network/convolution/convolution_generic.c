@@ -18,6 +18,7 @@
 #include "../../../utilities/shape.h"
 
 #include <assert.h>
+#include <string.h>
 #include <math.h>
 #include <nnablart/functions.h>
 
@@ -53,7 +54,7 @@ static inline void var_set(var_t *var, nn_size_t offset, float v) {
 }
 
 static inline void convnd(var_t *out, var_t *in, var_t *we,
-                          rt_list_t intput_shape, rt_list_t output_shape,
+                          rt_list_t input_shape, rt_list_t output_shape,
                           rt_list_t kernel_shape, rt_list_t in_position,
                           rt_list_t out_position, rt_list_t pad,
                           rt_list_t stride, rt_list_t dilation,
@@ -72,14 +73,14 @@ static inline void convnd(var_t *out, var_t *in, var_t *we,
         in_position.data[j] -= pad.data[j];
         in_position.data[j] += out_position.data[j] * stride.data[j];
         if (in_position.data[j] < 0 ||
-            in_position.data[j] >= intput_shape.data[j]) {
+            in_position.data[j] >= input_shape.data[j]) {
           condition = 0;
           break;
         }
       }
       if (condition) {
         float x =
-            var_get(in, in->offset + shape_to_pos(intput_shape, in_position));
+            var_get(in, in->offset + shape_to_pos(input_shape, in_position));
         float w = var_get(we, we->offset + k);
         sum += x * w;
       }
@@ -87,6 +88,38 @@ static inline void convnd(var_t *out, var_t *in, var_t *we,
     float value = var_get(out, out->offset + o);
     value += sum;
     var_set(out, out->offset + o, value);
+  }
+}
+
+static inline void conv2d(var_t *out, var_t *in, var_t *we,
+                          rt_list_t input_shape, rt_list_t output_shape,
+                          rt_list_t kernel_shape, rt_list_t in_position,
+                          rt_list_t out_position, rt_list_t pad,
+                          rt_list_t stride, rt_list_t dilation,
+                          int spatial_dims) {
+  int ix, iy, ox, oy, kx, ky;
+
+  for (iy = -pad.data[0], oy = 0; oy < output_shape.data[0];
+       ++oy, iy += stride.data[0]) {
+    for (ix = -pad.data[1], ox = 0; ox < output_shape.data[1];
+         ++ox, ix += stride.data[1]) {
+      float sum = 0.0f;
+      for (ky = 0; ky < kernel_shape.data[0]; ++ky) {
+        for (kx = 0; kx < kernel_shape.data[1]; ++kx) {
+          int iky = ky * dilation.data[0] + iy;
+          int ikx = kx * dilation.data[1] + ix;
+          if (ikx >= 0 && ikx < input_shape.data[1] &&
+              iky >= 0 && iky < input_shape.data[0]) {
+            float x = var_get(in, in->offset + iky * input_shape.data[1] + ikx);
+            float w = var_get(we, we->offset + ky * kernel_shape.data[1] + kx);
+            sum += x * w;
+          }
+        }
+      }
+      float o = var_get(out, out->offset + oy * output_shape.data[1] + ox);
+      o += sum;
+      var_set(out, out->offset + oy * output_shape.data[1] + ox, o);
+    }
   }
 }
 
@@ -127,48 +160,82 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   var_t *w_var = &p->w_var;
   var_t *b_var = &p->b_var;
   var_t *a_var = &p->a_var;
-  rt_list_t intput_shape = allocate_list(p->spatial_dims);
+  rt_list_t input_shape = allocate_list(p->spatial_dims);
   rt_list_t kernel_shape = allocate_list(p->spatial_dims);
   rt_list_t output_shape = allocate_list(p->spatial_dims);
   rt_list_t in_position = allocate_list(p->spatial_dims);
   rt_list_t out_position = allocate_list(p->spatial_dims);
+  int output_size = calc_shape_size(output_shape);
+
+  memset(out_var->v->data, 0, sizeof(float) * output_size);
 
   for (int i = 0; i < p->spatial_dims; i++) {
     kernel_shape.data[i] = p->w_var.shape.data[i + 3];
-    intput_shape.data[i] = p->in_var.shape.data[i + 3];
+    input_shape.data[i] = p->in_var.shape.data[i + 3];
     output_shape.data[i] = p->out_var.shape.data[i + 3];
   }
 
   batch_size = p->in_var.shape.data[0];
-  for (b = 0; b < batch_size; ++b) {
-    for (g = 0; g < group; ++g) {
-      for (om = 0; om < out_vars; ++om) {
-        int o_pos[] = {b, g, om};
-        var_setpos(out_var, o_pos, _S(o_pos));
-        for (im = 0; im < in_vars; ++im) {
-          int i_pos[] = {b, g, im};
-          int w_pos[] = {g, om, im};
-          var_setpos(in_var, i_pos, _S(i_pos));
-          var_setpos(w_var, w_pos, _S(w_pos));
-          convnd(out_var, in_var, w_var, intput_shape, output_shape,
-                 kernel_shape, in_position, out_position, c->pad, c->stride,
-                 c->dilation, p->spatial_dims);
-        }
-        {
-          int b_pos[] = {g, om};
-          if (p->a_var.v) {
-            var_setpos(a_var, b_pos, _S(b_pos));
-            mul_alpha(out_var, a_var);
+  if (p->spatial_dims == 2) {
+    for (b = 0; b < batch_size; ++b) {
+      for (g = 0; g < group; ++g) {
+        for (om = 0; om < out_vars; ++om) {
+          int o_pos[] = {b, g, om};
+          var_setpos(out_var, o_pos, _S(o_pos));
+          for (im = 0; im < in_vars; ++im) {
+            int i_pos[] = {b, g, im};
+            int w_pos[] = {g, om, im};
+            var_setpos(in_var, i_pos, _S(i_pos));
+            var_setpos(w_var, w_pos, _S(w_pos));
+            conv2d(out_var, in_var, w_var, input_shape, output_shape,
+                   kernel_shape, in_position, out_position, c->pad, c->stride,
+                   c->dilation, p->spatial_dims);
           }
-          if (p->b_var.v) {
-            var_setpos(b_var, b_pos, _S(b_pos));
-            add_bias(out_var, b_var);
+          {
+            int b_pos[] = {g, om};
+            if (p->a_var.v) {
+              var_setpos(a_var, b_pos, _S(b_pos));
+              mul_alpha(out_var, a_var);
+            }
+            if (p->b_var.v) {
+              var_setpos(b_var, b_pos, _S(b_pos));
+              add_bias(out_var, b_var);
+            }
+          }
+        }
+      }
+    }
+  } else {
+    for (b = 0; b < batch_size; ++b) {
+      for (g = 0; g < group; ++g) {
+        for (om = 0; om < out_vars; ++om) {
+          int o_pos[] = {b, g, om};
+          var_setpos(out_var, o_pos, _S(o_pos));
+          for (im = 0; im < in_vars; ++im) {
+            int i_pos[] = {b, g, im};
+            int w_pos[] = {g, om, im};
+            var_setpos(in_var, i_pos, _S(i_pos));
+            var_setpos(w_var, w_pos, _S(w_pos));
+            convnd(out_var, in_var, w_var, input_shape, output_shape,
+                   kernel_shape, in_position, out_position, c->pad, c->stride,
+                   c->dilation, p->spatial_dims);
+          }
+          {
+            int b_pos[] = {g, om};
+            if (p->a_var.v) {
+              var_setpos(a_var, b_pos, _S(b_pos));
+              mul_alpha(out_var, a_var);
+            }
+            if (p->b_var.v) {
+              var_setpos(b_var, b_pos, _S(b_pos));
+              add_bias(out_var, b_var);
+            }
           }
         }
       }
     }
   }
-  free_list(intput_shape);
+  free_list(input_shape);
   free_list(kernel_shape);
   free_list(in_position);
   free_list(out_position);
