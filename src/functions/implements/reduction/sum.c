@@ -13,6 +13,9 @@
 // limitations under the License.
 #include <nnablart/functions.h>
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
+
+rt_function_error_t exec_sum_generic(rt_function_t *f);
 
 // Sum
 rt_function_error_t allocate_sum_local_context(rt_function_t *f) {
@@ -20,14 +23,14 @@ rt_function_error_t allocate_sum_local_context(rt_function_t *f) {
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_sum;
   } else {
-    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+    f->exec_func = exec_sum_generic;
   }
 
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_sum_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t exec_sum(rt_function_t *f) {
@@ -42,10 +45,31 @@ rt_function_error_t exec_sum(rt_function_t *f) {
 
   const int outer_size = calc_shape_size(f->inputs[0]->shape) / reduction_size;
   for (int i = 0; i < outer_size; i++) {
-    y[i] = 1;
     for (int j = 0; j < reduction_size; j++) {
       y[i] += x[i * reduction_size + j];
     }
   }
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_sum_generic(rt_function_t *f) {
+  sum_local_context_t *context = (sum_local_context_t *)(f->local_context);
+  rt_variable_t *input = f->inputs[0];
+  rt_variable_getter get_input = select_getter(input);
+  rt_variable_t *output = f->outputs[0];
+  rt_variable_setter set_output = select_setter(output);
+  int reduction_size = 1;
+
+  for (int i = 0; i < context->axes.size; i++) {
+    reduction_size *= f->inputs[0]->shape.data[context->axes.data[i]];
+  }
+
+  const int outer_size = calc_shape_size(f->inputs[0]->shape) / reduction_size;
+  for (int i = 0; i < outer_size; i++) {
+    for (int j = 0; j < reduction_size; j++) {
+      float x = get_input(input, i * reduction_size + j);
+      set_output(output, i, x);
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
 }
