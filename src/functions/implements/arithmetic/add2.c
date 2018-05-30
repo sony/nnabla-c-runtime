@@ -15,6 +15,8 @@
 #include "arithmetic.h"
 #include "../../utilities/shape.h"
 
+rt_function_error_t exec_add2_generic(rt_function_t *f);
+
 // Add2
 rt_function_error_t allocate_add2_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 2) {
@@ -35,7 +37,7 @@ rt_function_error_t allocate_add2_local_context(rt_function_t *f) {
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_add2;
   } else {
-    return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+    f->exec_func = exec_add2_generic;
   }
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -47,7 +49,10 @@ rt_function_error_t free_add2_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_add2(rt_function_t *f) {
   calc_arithmetic(f, calc_add);
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  return RT_FUNCTION_ERROR_NOERROR;
 }
 
-
+rt_function_error_t exec_add2_generic(rt_function_t *f) {
+  calc_arithmetic_generic(f, calc_add);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
