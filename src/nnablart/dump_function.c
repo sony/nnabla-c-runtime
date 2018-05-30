@@ -25,136 +25,419 @@
 #include "dump.h"
 #include "dump_function.h"
 
-static const char *const typenames[] = {
-    "Affine",
-    "Convolution",
-    "DepthwiseConvolution",
-    "Deconvolution",
-    "DepthwiseDeconvolution",
-    "MaxPooling",
-    "AveragePooling",
-    "GlobalAveragePooling",
-    "SumPooling",
-    "Unpooling",
-    "Embed",
-    "Sigmoid",
-    "Swish",
-    "Tanh",
-    "ReLU",
-    "LeakyReLU",
-    "Softmax",
-    "ELU",
-    "SELU",
-    "CReLU",
-    "CELU",
-    "PReLU",
-    "BatchNormalization",
-    "MeanSubtraction",
-    "Sum",
-    "Mean",
-    "Max",
-    "Min",
-    "Prod",
-    "ReduceSum",
-    "ReduceMean",
-    "Add2",
-    "BcAdd2",
-    "Sub2",
-    "Mul2",
-    "Div2",
-    "Pow2",
-    "AddScalar",
-    "MulScalar",
-    "PowScalar",
-    "RSubScalar",
-    "RDivScalar",
-    "RPowScalar",
-    "Sign",
-    "Minimum2",
-    "Maximum2",
-    "MinimumScalar",
-    "MaximumScalar",
-    "LogicalAnd",
-    "LogicalOr",
-    "LogicalXor",
-    "Equal",
-    "NotEqual",
-    "GreaterEqual",
-    "Greater",
-    "LessEqual",
-    "Less",
-    "LogicalAndScalar",
-    "LogicalOrScalar",
-    "LogicalXorScalar",
-    "EqualScalar",
-    "NotEqualScalar",
-    "GreaterEqualScalar",
-    "GreaterScalar",
-    "LessEqualScalar",
-    "LessScalar",
-    "LogicalNot",
-    "Constant",
-    "Abs",
-    "Exp",
-    "Log",
-    "Identity",
-    "BatchMatmul",
-    "Round",
-    "Concatenate",
-    "Split",
-    "Stack",
-    "Slice",
-    "Transpose",
-    "Broadcast",
-    "OneHot",
-    "Flip",
-    "Shift",
-    "Reshape",
-    "MatrixDiag",
-    "MatrixDiagPart",
-    "Dropout",
-    "TopKData",
-    "TopKGrad",
-    "Rand",
-    "Randint",
-    "Randn",
-    "RandomCrop",
-    "RandomFlip",
-    "RandomShift",
-    "ImageAugmentation",
-    "SigmoidCrossEntropy",
-    "BinaryCrossEntropy",
-    "SoftmaxCrossEntropy",
-    "CategoricalCrossEntropy",
-    "SquaredError",
-    "AbsoluteError",
-    "HuberLoss",
-    "EpsilonInsensitiveLoss",
-    "KLMultinomial",
-    "BinarySigmoid",
-    "BinaryTanh",
-    "BinaryConnectAffine",
-    "BinaryConnectConvolution",
-    "BinaryWeightAffine",
-    "BinaryWeightConvolution",
-    "INQAffine",
-    "INQConvolution",
-    "FixedPointQuantize",
-    "Pow2Quantize",
-    "TopNError",
-    "BinaryError",
-    "ConfusionMatrix",
-    "VATNoise",
-    "Unlink",
-    "Sink",
-};
-
 void dump_function(nn_network_t *net, nn_function_t *func) {
   int i;
   int *list;
 
-  printf("NNB: Function type:         %s(%d)\n", typenames[func->type],
-         func->type);
+  switch (func->type) {
+  case NN_FUNCTION_AFFINE: { // Affine
+    printf("NNB: Function type:    Affine(0)\n");
+  } break;
+  case NN_FUNCTION_CONVOLUTION: { // Convolution
+    printf("NNB: Function type:    Convolution(1)\n");
+  } break;
+  case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
+    printf("NNB: Function type:    DepthwiseConvolution(2)\n");
+  } break;
+  case NN_FUNCTION_DECONVOLUTION: { // Deconvolution
+    printf("NNB: Function type:    Deconvolution(3)\n");
+  } break;
+  case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
+    printf("NNB: Function type:    DepthwiseDeconvolution(4)\n");
+  } break;
+  case NN_FUNCTION_MAX_POOLING: { // MaxPooling
+    printf("NNB: Function type:    MaxPooling(5)\n");
+  } break;
+  case NN_FUNCTION_AVERAGE_POOLING: { // AveragePooling
+    printf("NNB: Function type:    AveragePooling(6)\n");
+  } break;
+  case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
+    printf("NNB: Function type:    GlobalAveragePooling(7)\n");
+  } break;
+  case NN_FUNCTION_SUM_POOLING: { // SumPooling
+    printf("NNB: Function type:    SumPooling(8)\n");
+  } break;
+  case NN_FUNCTION_UNPOOLING: { // Unpooling
+    printf("NNB: Function type:    Unpooling(9)\n");
+  } break;
+  case NN_FUNCTION_EMBED: { // Embed
+    printf("NNB: Function type:    Embed(10)\n");
+  } break;
+  case NN_FUNCTION_SIGMOID: { // Sigmoid
+    printf("NNB: Function type:    Sigmoid(11)\n");
+  } break;
+  case NN_FUNCTION_SWISH: { // Swish
+    printf("NNB: Function type:    Swish(12)\n");
+  } break;
+  case NN_FUNCTION_TANH: { // Tanh
+    printf("NNB: Function type:    Tanh(13)\n");
+  } break;
+  case NN_FUNCTION_RELU: { // ReLU
+    printf("NNB: Function type:    ReLU(14)\n");
+  } break;
+  case NN_FUNCTION_LEAKY_RELU: { // LeakyReLU
+    printf("NNB: Function type:    LeakyReLU(15)\n");
+  } break;
+  case NN_FUNCTION_SOFTMAX: { // Softmax
+    printf("NNB: Function type:    Softmax(16)\n");
+  } break;
+  case NN_FUNCTION_ELU: { // ELU
+    printf("NNB: Function type:    ELU(17)\n");
+  } break;
+  case NN_FUNCTION_SELU: { // SELU
+    printf("NNB: Function type:    SELU(18)\n");
+  } break;
+  case NN_FUNCTION_CRELU: { // CReLU
+    printf("NNB: Function type:    CReLU(19)\n");
+  } break;
+  case NN_FUNCTION_CELU: { // CELU
+    printf("NNB: Function type:    CELU(20)\n");
+  } break;
+  case NN_FUNCTION_PRELU: { // PReLU
+    printf("NNB: Function type:    PReLU(21)\n");
+  } break;
+  case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
+    printf("NNB: Function type:    BatchNormalization(22)\n");
+  } break;
+  case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
+    printf("NNB: Function type:    MeanSubtraction(23)\n");
+  } break;
+  case NN_FUNCTION_CLIP_GRAD_BY_VALUE: { // ClipGradByValue
+    printf("NNB: Function type:    ClipGradByValue(121)\n");
+  } break;
+  case NN_FUNCTION_CLIP_GRAD_BY_NORM: { // ClipGradByNorm
+    printf("NNB: Function type:    ClipGradByNorm(122)\n");
+  } break;
+  case NN_FUNCTION_SUM: { // Sum
+    printf("NNB: Function type:    Sum(24)\n");
+  } break;
+  case NN_FUNCTION_MEAN: { // Mean
+    printf("NNB: Function type:    Mean(25)\n");
+  } break;
+  case NN_FUNCTION_MAX: { // Max
+    printf("NNB: Function type:    Max(26)\n");
+  } break;
+  case NN_FUNCTION_MIN: { // Min
+    printf("NNB: Function type:    Min(27)\n");
+  } break;
+  case NN_FUNCTION_PROD: { // Prod
+    printf("NNB: Function type:    Prod(28)\n");
+  } break;
+  case NN_FUNCTION_REDUCE_SUM: { // ReduceSum
+    printf("NNB: Function type:    ReduceSum(29)\n");
+  } break;
+  case NN_FUNCTION_REDUCE_MEAN: { // ReduceMean
+    printf("NNB: Function type:    ReduceMean(30)\n");
+  } break;
+  case NN_FUNCTION_ADD2: { // Add2
+    printf("NNB: Function type:    Add2(31)\n");
+  } break;
+  case NN_FUNCTION_BC_ADD2: { // BcAdd2
+    printf("NNB: Function type:    BcAdd2(32)\n");
+  } break;
+  case NN_FUNCTION_SUB2: { // Sub2
+    printf("NNB: Function type:    Sub2(33)\n");
+  } break;
+  case NN_FUNCTION_MUL2: { // Mul2
+    printf("NNB: Function type:    Mul2(34)\n");
+  } break;
+  case NN_FUNCTION_DIV2: { // Div2
+    printf("NNB: Function type:    Div2(35)\n");
+  } break;
+  case NN_FUNCTION_POW2: { // Pow2
+    printf("NNB: Function type:    Pow2(36)\n");
+  } break;
+  case NN_FUNCTION_ADD_SCALAR: { // AddScalar
+    printf("NNB: Function type:    AddScalar(37)\n");
+  } break;
+  case NN_FUNCTION_MUL_SCALAR: { // MulScalar
+    printf("NNB: Function type:    MulScalar(38)\n");
+  } break;
+  case NN_FUNCTION_POW_SCALAR: { // PowScalar
+    printf("NNB: Function type:    PowScalar(39)\n");
+  } break;
+  case NN_FUNCTION_R_SUB_SCALAR: { // RSubScalar
+    printf("NNB: Function type:    RSubScalar(40)\n");
+  } break;
+  case NN_FUNCTION_R_DIV_SCALAR: { // RDivScalar
+    printf("NNB: Function type:    RDivScalar(41)\n");
+  } break;
+  case NN_FUNCTION_R_POW_SCALAR: { // RPowScalar
+    printf("NNB: Function type:    RPowScalar(42)\n");
+  } break;
+  case NN_FUNCTION_SIGN: { // Sign
+    printf("NNB: Function type:    Sign(43)\n");
+  } break;
+  case NN_FUNCTION_MINIMUM2: { // Minimum2
+    printf("NNB: Function type:    Minimum2(44)\n");
+  } break;
+  case NN_FUNCTION_MAXIMUM2: { // Maximum2
+    printf("NNB: Function type:    Maximum2(45)\n");
+  } break;
+  case NN_FUNCTION_MINIMUM_SCALAR: { // MinimumScalar
+    printf("NNB: Function type:    MinimumScalar(46)\n");
+  } break;
+  case NN_FUNCTION_MAXIMUM_SCALAR: { // MaximumScalar
+    printf("NNB: Function type:    MaximumScalar(47)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_AND: { // LogicalAnd
+    printf("NNB: Function type:    LogicalAnd(48)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_OR: { // LogicalOr
+    printf("NNB: Function type:    LogicalOr(49)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_XOR: { // LogicalXor
+    printf("NNB: Function type:    LogicalXor(50)\n");
+  } break;
+  case NN_FUNCTION_EQUAL: { // Equal
+    printf("NNB: Function type:    Equal(51)\n");
+  } break;
+  case NN_FUNCTION_NOT_EQUAL: { // NotEqual
+    printf("NNB: Function type:    NotEqual(52)\n");
+  } break;
+  case NN_FUNCTION_GREATER_EQUAL: { // GreaterEqual
+    printf("NNB: Function type:    GreaterEqual(53)\n");
+  } break;
+  case NN_FUNCTION_GREATER: { // Greater
+    printf("NNB: Function type:    Greater(54)\n");
+  } break;
+  case NN_FUNCTION_LESS_EQUAL: { // LessEqual
+    printf("NNB: Function type:    LessEqual(55)\n");
+  } break;
+  case NN_FUNCTION_LESS: { // Less
+    printf("NNB: Function type:    Less(56)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_AND_SCALAR: { // LogicalAndScalar
+    printf("NNB: Function type:    LogicalAndScalar(57)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_OR_SCALAR: { // LogicalOrScalar
+    printf("NNB: Function type:    LogicalOrScalar(58)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_XOR_SCALAR: { // LogicalXorScalar
+    printf("NNB: Function type:    LogicalXorScalar(59)\n");
+  } break;
+  case NN_FUNCTION_EQUAL_SCALAR: { // EqualScalar
+    printf("NNB: Function type:    EqualScalar(60)\n");
+  } break;
+  case NN_FUNCTION_NOT_EQUAL_SCALAR: { // NotEqualScalar
+    printf("NNB: Function type:    NotEqualScalar(61)\n");
+  } break;
+  case NN_FUNCTION_GREATER_EQUAL_SCALAR: { // GreaterEqualScalar
+    printf("NNB: Function type:    GreaterEqualScalar(62)\n");
+  } break;
+  case NN_FUNCTION_GREATER_SCALAR: { // GreaterScalar
+    printf("NNB: Function type:    GreaterScalar(63)\n");
+  } break;
+  case NN_FUNCTION_LESS_EQUAL_SCALAR: { // LessEqualScalar
+    printf("NNB: Function type:    LessEqualScalar(64)\n");
+  } break;
+  case NN_FUNCTION_LESS_SCALAR: { // LessScalar
+    printf("NNB: Function type:    LessScalar(65)\n");
+  } break;
+  case NN_FUNCTION_LOGICAL_NOT: { // LogicalNot
+    printf("NNB: Function type:    LogicalNot(66)\n");
+  } break;
+  case NN_FUNCTION_CONSTANT: { // Constant
+    printf("NNB: Function type:    Constant(67)\n");
+  } break;
+  case NN_FUNCTION_ABS: { // Abs
+    printf("NNB: Function type:    Abs(68)\n");
+  } break;
+  case NN_FUNCTION_EXP: { // Exp
+    printf("NNB: Function type:    Exp(69)\n");
+  } break;
+  case NN_FUNCTION_LOG: { // Log
+    printf("NNB: Function type:    Log(70)\n");
+  } break;
+  case NN_FUNCTION_IDENTITY: { // Identity
+    printf("NNB: Function type:    Identity(71)\n");
+  } break;
+  case NN_FUNCTION_BATCH_MATMUL: { // BatchMatmul
+    printf("NNB: Function type:    BatchMatmul(72)\n");
+  } break;
+  case NN_FUNCTION_ROUND: { // Round
+    printf("NNB: Function type:    Round(73)\n");
+  } break;
+  case NN_FUNCTION_SIN: { // Sin
+    printf("NNB: Function type:    Sin(173)\n");
+  } break;
+  case NN_FUNCTION_COS: { // Cos
+    printf("NNB: Function type:    Cos(174)\n");
+  } break;
+  case NN_FUNCTION_TAN: { // Tan
+    printf("NNB: Function type:    Tan(175)\n");
+  } break;
+  case NN_FUNCTION_SINH: { // Sinh
+    printf("NNB: Function type:    Sinh(176)\n");
+  } break;
+  case NN_FUNCTION_COSH: { // Cosh
+    printf("NNB: Function type:    Cosh(177)\n");
+  } break;
+  case NN_FUNCTION_ASIN: { // ASin
+    printf("NNB: Function type:    ASin(178)\n");
+  } break;
+  case NN_FUNCTION_ACOS: { // ACos
+    printf("NNB: Function type:    ACos(179)\n");
+  } break;
+  case NN_FUNCTION_ATAN: { // ATan
+    printf("NNB: Function type:    ATan(180)\n");
+  } break;
+  case NN_FUNCTION_ASINH: { // ASinh
+    printf("NNB: Function type:    ASinh(181)\n");
+  } break;
+  case NN_FUNCTION_ACOSH: { // ACosh
+    printf("NNB: Function type:    ACosh(182)\n");
+  } break;
+  case NN_FUNCTION_ATANH: { // ATanh
+    printf("NNB: Function type:    ATanh(183)\n");
+  } break;
+  case NN_FUNCTION_CONCATENATE: { // Concatenate
+    printf("NNB: Function type:    Concatenate(74)\n");
+  } break;
+  case NN_FUNCTION_SPLIT: { // Split
+    printf("NNB: Function type:    Split(75)\n");
+  } break;
+  case NN_FUNCTION_STACK: { // Stack
+    printf("NNB: Function type:    Stack(76)\n");
+  } break;
+  case NN_FUNCTION_SLICE: { // Slice
+    printf("NNB: Function type:    Slice(77)\n");
+  } break;
+  case NN_FUNCTION_TRANSPOSE: { // Transpose
+    printf("NNB: Function type:    Transpose(78)\n");
+  } break;
+  case NN_FUNCTION_BROADCAST: { // Broadcast
+    printf("NNB: Function type:    Broadcast(79)\n");
+  } break;
+  case NN_FUNCTION_ONE_HOT: { // OneHot
+    printf("NNB: Function type:    OneHot(80)\n");
+  } break;
+  case NN_FUNCTION_FLIP: { // Flip
+    printf("NNB: Function type:    Flip(81)\n");
+  } break;
+  case NN_FUNCTION_SHIFT: { // Shift
+    printf("NNB: Function type:    Shift(82)\n");
+  } break;
+  case NN_FUNCTION_RESHAPE: { // Reshape
+    printf("NNB: Function type:    Reshape(83)\n");
+  } break;
+  case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
+    printf("NNB: Function type:    MatrixDiag(84)\n");
+  } break;
+  case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
+    printf("NNB: Function type:    MatrixDiagPart(85)\n");
+  } break;
+  case NN_FUNCTION_DROPOUT: { // Dropout
+    printf("NNB: Function type:    Dropout(86)\n");
+  } break;
+  case NN_FUNCTION_TOP_K_DATA: { // TopKData
+    printf("NNB: Function type:    TopKData(87)\n");
+  } break;
+  case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
+    printf("NNB: Function type:    TopKGrad(88)\n");
+  } break;
+  case NN_FUNCTION_RAND: { // Rand
+    printf("NNB: Function type:    Rand(89)\n");
+  } break;
+  case NN_FUNCTION_RANDINT: { // Randint
+    printf("NNB: Function type:    Randint(90)\n");
+  } break;
+  case NN_FUNCTION_RANDN: { // Randn
+    printf("NNB: Function type:    Randn(91)\n");
+  } break;
+  case NN_FUNCTION_RANDOM_CROP: { // RandomCrop
+    printf("NNB: Function type:    RandomCrop(92)\n");
+  } break;
+  case NN_FUNCTION_RANDOM_FLIP: { // RandomFlip
+    printf("NNB: Function type:    RandomFlip(93)\n");
+  } break;
+  case NN_FUNCTION_RANDOM_SHIFT: { // RandomShift
+    printf("NNB: Function type:    RandomShift(94)\n");
+  } break;
+  case NN_FUNCTION_IMAGE_AUGMENTATION: { // ImageAugmentation
+    printf("NNB: Function type:    ImageAugmentation(95)\n");
+  } break;
+  case NN_FUNCTION_SIGMOID_CROSS_ENTROPY: { // SigmoidCrossEntropy
+    printf("NNB: Function type:    SigmoidCrossEntropy(96)\n");
+  } break;
+  case NN_FUNCTION_BINARY_CROSS_ENTROPY: { // BinaryCrossEntropy
+    printf("NNB: Function type:    BinaryCrossEntropy(97)\n");
+  } break;
+  case NN_FUNCTION_SOFTMAX_CROSS_ENTROPY: { // SoftmaxCrossEntropy
+    printf("NNB: Function type:    SoftmaxCrossEntropy(98)\n");
+  } break;
+  case NN_FUNCTION_CATEGORICAL_CROSS_ENTROPY: { // CategoricalCrossEntropy
+    printf("NNB: Function type:    CategoricalCrossEntropy(99)\n");
+  } break;
+  case NN_FUNCTION_SQUARED_ERROR: { // SquaredError
+    printf("NNB: Function type:    SquaredError(100)\n");
+  } break;
+  case NN_FUNCTION_ABSOLUTE_ERROR: { // AbsoluteError
+    printf("NNB: Function type:    AbsoluteError(101)\n");
+  } break;
+  case NN_FUNCTION_HUBER_LOSS: { // HuberLoss
+    printf("NNB: Function type:    HuberLoss(102)\n");
+  } break;
+  case NN_FUNCTION_EPSILON_INSENSITIVE_LOSS: { // EpsilonInsensitiveLoss
+    printf("NNB: Function type:    EpsilonInsensitiveLoss(103)\n");
+  } break;
+  case NN_FUNCTION_KL_MULTINOMIAL: { // KLMultinomial
+    printf("NNB: Function type:    KLMultinomial(104)\n");
+  } break;
+  case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
+    printf("NNB: Function type:    BinarySigmoid(105)\n");
+  } break;
+  case NN_FUNCTION_BINARY_TANH: { // BinaryTanh
+    printf("NNB: Function type:    BinaryTanh(106)\n");
+  } break;
+  case NN_FUNCTION_BINARY_CONNECT_AFFINE: { // BinaryConnectAffine
+    printf("NNB: Function type:    BinaryConnectAffine(107)\n");
+  } break;
+  case NN_FUNCTION_BINARY_CONNECT_CONVOLUTION: { // BinaryConnectConvolution
+    printf("NNB: Function type:    BinaryConnectConvolution(108)\n");
+  } break;
+  case NN_FUNCTION_BINARY_WEIGHT_AFFINE: { // BinaryWeightAffine
+    printf("NNB: Function type:    BinaryWeightAffine(109)\n");
+  } break;
+  case NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION: { // BinaryWeightConvolution
+    printf("NNB: Function type:    BinaryWeightConvolution(110)\n");
+  } break;
+  case NN_FUNCTION_INQ_AFFINE: { // INQAffine
+    printf("NNB: Function type:    INQAffine(111)\n");
+  } break;
+  case NN_FUNCTION_INQ_CONVOLUTION: { // INQConvolution
+    printf("NNB: Function type:    INQConvolution(112)\n");
+  } break;
+  case NN_FUNCTION_FIXED_POINT_QUANTIZE: { // FixedPointQuantize
+    printf("NNB: Function type:    FixedPointQuantize(113)\n");
+  } break;
+  case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
+    printf("NNB: Function type:    Pow2Quantize(114)\n");
+  } break;
+  case NN_FUNCTION_TOP_N_ERROR: { // TopNError
+    printf("NNB: Function type:    TopNError(115)\n");
+  } break;
+  case NN_FUNCTION_BINARY_ERROR: { // BinaryError
+    printf("NNB: Function type:    BinaryError(116)\n");
+  } break;
+  case NN_FUNCTION_CONFUSION_MATRIX: { // ConfusionMatrix
+    printf("NNB: Function type:    ConfusionMatrix(117)\n");
+  } break;
+  case NN_FUNCTION_VAT_NOISE: { // VATNoise
+    printf("NNB: Function type:    VATNoise(118)\n");
+  } break;
+  case NN_FUNCTION_UNLINK: { // Unlink
+    printf("NNB: Function type:    Unlink(119)\n");
+  } break;
+  case NN_FUNCTION_SINK: { // Sink
+    printf("NNB: Function type:    Sink(120)\n");
+  } break;
+  case NN_FUNCTION_NMS_DETECTION2D: { // NmsDetection2d
+    printf("NNB: Function type:    NmsDetection2d(231)\n");
+  } break;
+  default:;
+  }
+
   list = (int *)NN_GET(net, func->inputs.list);
   for (i = 0; i < func->inputs.size; i++) {
     printf("NNB: Function input[%d]:   Variable id:%d\n", i, *(list + i));
@@ -402,6 +685,19 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument update_running_mean: %d\n",
            f->update_running_mean);
   } break;
+  case NN_FUNCTION_CLIP_GRAD_BY_VALUE: { // ClipGradByValue
+  } break;
+  case NN_FUNCTION_CLIP_GRAD_BY_NORM: { // ClipGradByNorm
+    nn_function_clip_grad_by_norm_t *f =
+        (nn_function_clip_grad_by_norm_t *)func;
+    printf("NNB: Function argument clip_norm: %f\n", f->clip_norm);
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+  } break;
   case NN_FUNCTION_SUM: { // Sum
     nn_function_sum_t *f = (nn_function_sum_t *)func;
     printf("NNB: Function argument axes: (");
@@ -595,6 +891,28 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument transpose_b: %d\n", f->transpose_b);
   } break;
   case NN_FUNCTION_ROUND: { // Round
+  } break;
+  case NN_FUNCTION_SIN: { // Sin
+  } break;
+  case NN_FUNCTION_COS: { // Cos
+  } break;
+  case NN_FUNCTION_TAN: { // Tan
+  } break;
+  case NN_FUNCTION_SINH: { // Sinh
+  } break;
+  case NN_FUNCTION_COSH: { // Cosh
+  } break;
+  case NN_FUNCTION_ASIN: { // ASin
+  } break;
+  case NN_FUNCTION_ACOS: { // ACos
+  } break;
+  case NN_FUNCTION_ATAN: { // ATan
+  } break;
+  case NN_FUNCTION_ASINH: { // ASinh
+  } break;
+  case NN_FUNCTION_ACOSH: { // ACosh
+  } break;
+  case NN_FUNCTION_ATANH: { // ATanh
   } break;
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     nn_function_concatenate_t *f = (nn_function_concatenate_t *)func;
@@ -985,6 +1303,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SINK: { // Sink
     nn_function_sink_t *f = (nn_function_sink_t *)func;
     printf("NNB: Function argument one_input_grad: %d\n", f->one_input_grad);
+  } break;
+  case NN_FUNCTION_NMS_DETECTION2D: { // NmsDetection2d
+    nn_function_nms_detection2d_t *f = (nn_function_nms_detection2d_t *)func;
+    printf("NNB: Function argument thresh: %f\n", f->thresh);
+    printf("NNB: Function argument nms: %f\n", f->nms);
+    printf("NNB: Function argument nms_per_class: %d\n", f->nms_per_class);
   } break;
   default:;
   }

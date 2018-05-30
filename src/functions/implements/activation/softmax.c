@@ -15,8 +15,8 @@
 #include <math.h>
 #include <nnablart/functions.h>
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 
 static inline float max(float a, float b) { return a < b ? b : a; }
 

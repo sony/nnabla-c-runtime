@@ -14,8 +14,8 @@
 
 #include <nnablart/functions.h>
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <assert.h>
 #include <math.h>
 

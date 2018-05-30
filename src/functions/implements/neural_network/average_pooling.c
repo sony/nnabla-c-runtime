@@ -43,6 +43,7 @@ rt_function_error_t exec_average_pooling(rt_function_t *f) {
       p->calc_context.y->type == NN_DATA_TYPE_FLOAT) {
     return exec_pooling(f, (pooling_context_t *)context, p, calc_average);
   } else {
-    return exec_pooling_generic(f, (pooling_context_t *)context, p, calc_average_generic);
+    return exec_pooling_generic(f, (pooling_context_t *)context, p,
+                                calc_average_generic);
   }
 }

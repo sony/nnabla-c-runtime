@@ -16,35 +16,80 @@
 # Suppress most of make message.
 .SILENT:
 
-.PHONY: build
-build: generate auto-format compile
+NNABLA_C_RUNTIME_DIRECTORY ?= $(shell pwd)
+NNABLA_C_RUNTIME_REFERENCE_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/reference
+NNABLA_C_RUNTIME_TEST_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/test
 
-.PHONY: generate
-generate:
-	@python3 build-tools/code-generator/generate.py
+export NNABLA_C_RUNTIME_REFERENCE_DIRECTORY
+export NNABLA_C_RUNTIME_TEST_DIRECTORY
+export CRUNTIME_TEST_FUNCTION_LIST
+export CRUNTIME_TEST_FUNCTION_EXCLUDE_LIST
 
-.PHONY: compile
-compile:
-	@mkdir -p build
-	@cd build && cmake ..
-	@make -C build
+########################################################################################################################
+# Build
 
-.PHONY: examples
-examples: build
-	@make -C examples/callback
+.PHONY: nnabla-c-runtime-build
+nnabla-c-runtime-build: nnabla-c-runtime-generate nnabla-c-runtime-auto-format nnabla-c-runtime-compile
 
-.PHONY: clean
-clean:
-	@rm -rf build
-	@rm -rf doc/html
+.PHONY: nnabla-c-runtime-generate
+nnabla-c-runtime-generate:
+	@cd $(NNABLA_C_RUNTIME_DIRECTORY) && python3 build-tools/code-generator/generate.py
 
-.PHONY: doc
-doc:
-	@doxygen build-tools/doc/Doxyfile
-	@rm -rf "?"  # plantuml(JRE?) creates '?' directory.
+.PHONY: nnabla-c-runtime-compile
+nnabla-c-runtime-compile:
+	@mkdir -p $(NNABLA_C_RUNTIME_DIRECTORY)/build
+	@cd $(NNABLA_C_RUNTIME_DIRECTORY)/build && cmake ..
+	@make -C $(NNABLA_C_RUNTIME_DIRECTORY)/build
 
-.PHONY: auto-format
-auto-format:
-	@find . -type f -name "*.py" |xargs -n1 autopep8 -i
-	@find . -type f -name "*.[ch]" |xargs -n1 clang-format -i
+.PHONY: nnabla-c-runtime-examples
+nnabla-c-runtime-examples: build
+	@make -C $(NNABLA_C_RUNTIME_DIRECTORY)/examples/callback
 
+.PHONY: nnabla-c-runtime-clean
+nnabla-c-runtime-clean:
+	@rm -rf $(NNABLA_C_RUNTIME_DIRECTORY)/build
+	@rm -rf $(NNABLA_C_RUNTIME_DIRECTORY)/doc/html
+
+########################################################################################################################
+# Document
+.PHONY: nnabla-c-runtime-doc
+nnabla-c-runtime-doc:
+	@cd $(NNABLA_C_RUNTIME_DIRECTORY) && doxygen build-tools/doc/Doxyfile
+	@cd $(NNABLA_C_RUNTIME_DIRECTORY) && rm -rf "?"  # plantuml(JRE?) creates '?' directory.
+
+########################################################################################################################
+# Auto format
+.PHONY: nnabla-c-runtime-auto-format
+nnabla-c-runtime-auto-format:
+	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.py" |xargs -n1 autopep8 -i
+	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.[ch]" |xargs -n1 clang-format -i
+
+########################################################################################################################
+# With NNabla
+
+.PHONY: nnabla-c-runtime-update-function-info
+nnabla-c-runtime-update-function-info: nnabla-install
+	@nnabla_cli function_info $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
+
+.PHONY: nnabla-c-runtime-generate-function-test
+nnabla-c-runtime-generate-function-test: nnabla-install
+	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla
+	@cd $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla && PYTHONPATH=$$(cd ../../../build-tools/test/callback && pwd) \
+		python -m pytest ../../../../nnabla/python/test
+	@NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/test/scripts/exec_all_functions.sh
+	@rm -rf $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
+	@mkdir -p $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
+	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*.nntxt $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
+	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_input_?.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
+	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_output_?.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
+	@rm -f $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/*_nnabla_cli_output_?.bin
+
+.PHONY: nnabla-c-runtime-test-all-functions
+nnabla-c-runtime-test-all-functions: nnabla-c-runtime-build nnabla-install
+	@rm -rf $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/nnb
+	@rm -rf $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/csrc
+	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/
+	@python build-tools/test/scripts/create_nnabla_c_runtime_function_test_makefile.py
+	@NNABLA_C_RUNTIME_REFERENCE_DIRECTORY=$(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY) \
+	 NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) \
+		$(MAKE) -j1 -f $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/test_functions.mk

@@ -15,8 +15,8 @@
 #ifndef H_POOLING_H_
 #define H_POOLING_H_
 
-#include <nnablart/functions.h>
 #include "../../utilities/accessor.h"
+#include <nnablart/functions.h>
 
 typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]
@@ -61,10 +61,10 @@ rt_function_error_t free_pooling(pooling_private_t *p);
 rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
                                  pooling_private_t *p,
                                  exec_pooling_func_t exec);
-rt_function_error_t
-exec_pooling_generic(rt_function_t *f, pooling_context_t *context,
-                     pooling_private_t *p,
-                     exec_pooling_func_t exec);
+rt_function_error_t exec_pooling_generic(rt_function_t *f,
+                                         pooling_context_t *context,
+                                         pooling_private_t *p,
+                                         exec_pooling_func_t exec);
 
 /// Calculate max value.
 float calc_max(pooling_calc_context_t calc);

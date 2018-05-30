@@ -146,10 +146,10 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
-rt_function_error_t
-exec_pooling_generic(rt_function_t *f, pooling_context_t *context,
-                                 pooling_private_t *p,
-                                 exec_pooling_func_t exec) {
+rt_function_error_t exec_pooling_generic(rt_function_t *f,
+                                         pooling_context_t *context,
+                                         pooling_private_t *p,
+                                         exec_pooling_func_t exec) {
   const int hx = p->input_shape.data[p->input_n_kernel_size_diff + 0];
   const int wx = p->calc_context.wx;
   const int hy = p->output_shape.data[p->input_n_kernel_size_diff + 0];
@@ -178,7 +178,8 @@ exec_pooling_generic(rt_function_t *f, pooling_context_t *context,
         p->calc_context.wend = fminf(wend, wx);
         int k = iy * wy + jy;
         float val = exec(p->calc_context);
-        p->calc_context.set_y(p->calc_context.y, k + p->calc_context.offset_y, val);
+        p->calc_context.set_y(p->calc_context.y, k + p->calc_context.offset_y,
+                              val);
       }
     }
     p->calc_context.offset_x += p->x_stride;

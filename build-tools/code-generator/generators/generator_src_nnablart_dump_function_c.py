@@ -15,11 +15,15 @@
 
 def generate(filename, info):
     funcid = 0
+    printname = []
     dump = []
-    typenames = []
     for cn, cat in info.items():
         for fn, func in cat.items():
-            typenames.append('  "{}",'.format(fn))
+            printname.append(
+                '    case NN_FUNCTION_{}: {{ // {}'.format(func['snake_name'].upper(), fn))
+            printname.append(
+                '        printf("NNB: Function type:    {}({})\\n");'.format(fn, func['id']))
+            printname.append('        } break;')
             dump.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snake_name'].upper(), fn))
             if 'arguments' in func and len(func['arguments']) > 0:
@@ -56,8 +60,8 @@ def generate(filename, info):
     from mako import exceptions
     try:
         tmpl = Template(filename=filename)
-        output = tmpl.render(typenames='\n'.join(
-            typenames), dump='\n'.join(dump))
+        output = tmpl.render(printname='\n'.join(
+            printname), dump='\n'.join(dump))
         return output
     except:
         print(exceptions.text_error_template().render())

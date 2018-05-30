@@ -21,70 +21,116 @@
 
 NNABLA_C_RUNTIME_DIRECTORY ?= $(shell pwd)
 
-DOCKER_IMAGE_NAME_BASE ?= nnabla-c-runtime-build
+NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE ?= nnabla-c-runtime-build
 
-DOCKER_IMAGE_AUTO_FORMAT ?= $(DOCKER_IMAGE_NAME_BASE)-auto-format
-DOCKER_IMAGE_DOC ?= $(DOCKER_IMAGE_NAME_BASE)-doc
-DOCKER_IMAGE_BUILD ?= $(DOCKER_IMAGE_NAME_BASE)-build
+NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-auto-format
+NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-doc
+NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-build
+NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-test
 
-DOCKER_RUN_OPTS +=--rm
-DOCKER_RUN_OPTS += -v $$(pwd):$$(pwd)
-DOCKER_RUN_OPTS += -w $$(pwd)
-DOCKER_RUN_OPTS += -u $$(id -u):$$(id -g)
-DOCKER_RUN_OPTS += -e HOME=/tmp
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS +=--rm
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -v $$(pwd):$$(pwd)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -w $$(pwd)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -u $$(id -u):$$(id -g)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e HOME=/tmp
+
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -v $(NNABLA_C_RUNTIME_DIRECTORY):$(NNABLA_C_RUNTIME_DIRECTORY)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e NNABLA_DIRECTORY=$(NNABLA_DIRECTORY)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e NNABLA_C_RUNTIME_DIRECTORY=$(NNABLA_C_RUNTIME_DIRECTORY)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e NNABLA_C_RUNTIME_REFERENCE_DIRECTORY=$(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY)
+
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS+= -e CRUNTIME_TEST_FUNCTION_LIST=$(CRUNTIME_TEST_FUNCTION_LIST)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS+= -e CRUNTIME_TEST_FUNCTION_EXCLUDE_LIST=$(CRUNTIME_TEST_FUNCTION_EXCLUDE_LIST)
+
 
 ## If your environment is under proxy uncomment following lines.
-DOCKER_BUILD_ARGS = --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
-DOCKER_RUN_OPTS += -e http_proxy=${http_proxy}
-DOCKER_RUN_OPTS += -e https_proxy=${https_proxy}
-DOCKER_RUN_OPTS += -e ftp_proxy=${ftp_proxy}
+NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS = --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e http_proxy=${http_proxy}
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e https_proxy=${https_proxy}
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e ftp_proxy=${ftp_proxy}
 
 ########################################################################################################################
 # Docker images
-.PHONY: docker_image_auto_format
-docker_image_auto_format:
+.PHONY: nnabla-c-runtime-docker_image_auto_format
+nnabla-c-runtime-docker_image_auto_format:
 	docker pull ubuntu:16.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_IMAGE_AUTO_FORMAT) -f build-tools/docker/Dockerfile.auto-format .
+	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT) \
+		-f build-tools/docker/Dockerfile.auto-format .
 
-.PHONY: docker_image_doc
-docker_image_doc:
+.PHONY: nnabla-c-runtime-docker_image_doc
+nnabla-c-runtime-docker_image_doc:
 	docker pull ubuntu:16.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_IMAGE_DOC) -f build-tools/docker/Dockerfile.doc .
+	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC) \
+		-f build-tools/docker/Dockerfile.doc .
 
-.PHONY: docker_image_build
-docker_image_build:
+.PHONY: nnabla-c-runtime-docker_image_build
+nnabla-c-runtime-docker_image_build:
 	docker pull ubuntu:16.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker build $(DOCKER_BUILD_ARGS) -t $(DOCKER_IMAGE_BUILD) -f build-tools/docker/Dockerfile.build .
+	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD) \
+		-f build-tools/docker/Dockerfile.build .
+
+.PHONY: nnabla-c-runtime-docker_image_test
+nnabla-c-runtime-docker_image_test:
+	docker pull ubuntu:16.04
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) \
+		-f build-tools/docker/Dockerfile.test .
 
 ########################################################################################################################
 # Auto Format
 
-.PHONY: bwd-auto-format
-bwd-auto-format: docker_image_auto_format
+.PHONY: bwd-nnabla-c-runtime-auto-format
+bwd-nnabla-c-runtime-auto-format: nnabla-c-runtime-docker_image_auto_format
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_AUTO_FORMAT) make auto-format
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT) make nnabla-c-runtime-auto-format
 
 ########################################################################################################################
 # Doc
-.PHONY: bwd-doc
-bwd-doc: bwd-build docker_image_doc
+.PHONY: bwd-nnabla-c-runtime-doc
+bwd-nnabla-c-runtime-doc: bwd-nnabla-c-runtime-build docker_image_doc
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_DOC) make doc
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC) make nnabla-c-runtime-doc
 
 ########################################################################################################################
 # Build
-.PHONY: bwd-build
-bwd-build: docker_image_build
+.PHONY: bwd-nnabla-c-runtime-build
+bwd-nnabla-c-runtime-build: nnabla-c-runtime-docker_image_build
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_BUILD) make build
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD) make nnabla-c-runtime-build
 
 ########################################################################################################################
 # Examples
-.PHONY: bwd-examples
-bwd-examples: docker_image_build
+.PHONY: bwd-nnabla-c-runtime-examples
+bwd-nnabla-c-runtime-examples: nnabla-c-runtime-docker_image_build
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(DOCKER_RUN_OPTS) $(DOCKER_IMAGE_BUILD) make examples
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD) make nnabla-c-runtime-examples
 
+########################################################################################################################
+# Update function definition
+.PHONY: bwd-nnabla-c-runtime-update-function-info
+bwd-nnabla-c-runtime-update-function-info: nnabla-c-runtime-docker_image_test
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-update-function-info
+
+########################################################################################################################
+# Tests
+.PHONY: bwd-nnabla-c-runtime-generate-function-test
+bwd-nnabla-c-runtime-generate-function-test: nnabla-c-runtime-docker_image_test
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-generate-function-test
+
+.PHONY: bwd-nnabla-c-runtime-test-all-functions
+bwd-nnabla-c-runtime-test-all-functions: nnabla-c-runtime-docker_image_test
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-test-all-functions

@@ -128,10 +128,14 @@ def generate(filename, info):
                 line = '|{{:^{}}}|{{:^{}}}|'.format(
                     function_length, impl_length).format(fn, 'yes')
                 for impl in implement_types:
-                    if impl in implemented[func['snake_name']]:
-                        line += '{{:^{}}}|'.format(impl_length).format('yes')
+                    if func['snake_name'] in implemented:
+                        if impl in implemented[func['snake_name']]:
+                            line += '{{:^{}}}|'.format(
+                                impl_length).format('yes')
+                        else:
+                            line += '{{:^{}}}|'.format(impl_length).format('-')
                     else:
-                        line += '{{:^{}}}|'.format(impl_length).format('-')
+                        line += '{{:^{}}}|'.format(impl_length).format('?')
             table += line + '\n'
 
     from mako.template import Template

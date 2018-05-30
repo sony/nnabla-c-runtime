@@ -87,7 +87,8 @@ rt_function_error_t free_unpooling_local_context(rt_function_t *f) {
 }
 
 static void unpooling_forward_recursive_generic(unpooling_private_t *p,
-                                                int x_offset, int y_offset, int dim) {
+                                                int x_offset, int y_offset,
+                                                int dim) {
   int current_x_offset = x_offset;
   int current_y_offset = y_offset;
   const int x_stride = p->input_strides.data[dim];
@@ -117,8 +118,8 @@ static void unpooling_forward_recursive_generic(unpooling_private_t *p,
     int count = 0;
     int i;
     for (i = 0; i < size; i++) {
-      unpooling_forward_recursive_generic(p, current_x_offset,
-                                          current_y_offset, dim + 1);
+      unpooling_forward_recursive_generic(p, current_x_offset, current_y_offset,
+                                          dim + 1);
       if (++count >= kernel) {
         count = 0;
         current_x_offset += x_stride;
@@ -128,8 +129,7 @@ static void unpooling_forward_recursive_generic(unpooling_private_t *p,
   }
 }
 
-static void unpooling_forward_recursive(unpooling_private_t *p,
-                                        int x_offset,
+static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
                                         int y_offset, int dim) {
   int current_x_offset = x_offset;
   int current_y_offset = y_offset;
@@ -161,8 +161,8 @@ static void unpooling_forward_recursive(unpooling_private_t *p,
     int count = 0;
     int i;
     for (i = 0; i < size; i++) {
-      unpooling_forward_recursive(p, current_x_offset,
-                                  current_y_offset, dim + 1);
+      unpooling_forward_recursive(p, current_x_offset, current_y_offset,
+                                  dim + 1);
       if (++count >= kernel) {
         count = 0;
         current_x_offset += x_stride;

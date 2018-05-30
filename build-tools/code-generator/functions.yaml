@@ -366,6 +366,29 @@ Normalization:
       y: {}
     uniq_name: MeanSubtraction_iB
     id: 23
+  ClipGradByValue:
+    snake_name: clip_grad_by_value
+    inputs:
+      x: {}
+      min: {}
+      max: {}
+    outputs:
+      y: {}
+    uniq_name: ClipGradByValue
+    id: 121
+  ClipGradByNorm:
+    snake_name: clip_grad_by_norm
+    inputs:
+      x: {}
+    arguments:
+      clip_norm:
+        type: float
+      axes:
+        type: repeated int64
+    outputs:
+      y: {}
+    uniq_name: ClipGradByNorm_fiI
+    id: 122
 Reduction:
   Sum:
     snake_name: sum
@@ -880,6 +903,94 @@ Math:
       y: {}
     uniq_name: Round_
     id: 73
+  Sin:
+    snake_name: sin
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: Sin
+    id: 173
+  Cos:
+    snake_name: cos
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: Cos
+    id: 174
+  Tan:
+    snake_name: tan
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: Tan
+    id: 175
+  Sinh:
+    snake_name: sinh
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: Sinh
+    id: 176
+  Cosh:
+    snake_name: cosh
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: Cosh
+    id: 177
+  ASin:
+    snake_name: asin
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: ASin
+    id: 178
+  ACos:
+    snake_name: acos
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: ACos
+    id: 179
+  ATan:
+    snake_name: atan
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: ATan
+    id: 180
+  ASinh:
+    snake_name: asinh
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: ASinh
+    id: 181
+  ACosh:
+    snake_name: acosh
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: ACosh
+    id: 182
+  ATanh:
+    snake_name: atanh
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    uniq_name: ATanh
+    id: 183
 Array Manipulation:
   Concatenate:
     snake_name: concatenate
@@ -1601,3 +1712,18 @@ Unsupported, Special Use:
       y: {}
     uniq_name: Sink_B
     id: 120
+  NmsDetection2d:
+    snake_name: nms_detection2d
+    inputs:
+      x: {}
+    arguments:
+      thresh:
+        type: float
+      nms:
+        type: float
+      nms_per_class:
+        type: bool
+    outputs:
+      y: {}
+    uniq_name: NmsDetection2d_ffB
+    id: 231
