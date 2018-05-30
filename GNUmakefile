@@ -15,7 +15,15 @@
 ########################################################################################################################
 # Suppress most of make message.
 .SILENT:
+.PHONY: all
 all: bwd-nnabla-c-runtime-build bwd-nnabla-c-runtime-doc
+
+.PHONY: clean
+clean: nnabla-c-runtime-clean
+
+.PHONY: clean-all
+clean-all:
+	@git clean -fdx
 
 ########################################################################################################################
 # Include NNABLA make file if exists.
