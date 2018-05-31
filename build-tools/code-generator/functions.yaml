@@ -206,7 +206,8 @@ Neural Network Layer:
     inputs:
       x0:
         template: TI
-      x1: {}
+      w:
+        parameter: true
     outputs:
       y: {}
     uniq_name: Embed
