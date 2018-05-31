@@ -56,8 +56,8 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                 param.data.extend(i.d.flatten())
 
             else:
-                i.d.flatten().tofile('{}_{:03d}_input_{}.bin'.format(
-                    func_name, result_nums[func_name], n))
+                i.d.flatten().tofile('{}_{:03d}_input_{}_{}.bin'.format(
+                    func_name, result_nums[func_name], i.d.dtype, n))
 
                 data_names.append(input_name)
 

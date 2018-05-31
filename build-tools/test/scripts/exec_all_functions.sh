@@ -22,7 +22,7 @@ for f in $(find ${NNABLA_C_RUNTIME_TEST_DIRECTORY}/nnabla -maxdepth 1 -name '*_?
 do
     base=$(basename $f .nntxt)
     echo -n $base" "
-    inputs=$(find ${NNABLA_C_RUNTIME_TEST_DIRECTORY}/nnabla -maxdepth 1 -name ${base}_input_\?.bin |sort)
+    inputs=$(find ${NNABLA_C_RUNTIME_TEST_DIRECTORY}/nnabla -maxdepth 1 -name ${base}_input_\*.bin |sort)
     output_prefix=${NNABLA_C_RUNTIME_TEST_DIRECTORY}/nnabla/${base}_nnabla_cli_output
     if nnabla_cli infer -b 1 -c $f -o $output_prefix $inputs &> ${NNABLA_C_RUNTIME_TEST_DIRECTORY}/nnabla/${base}.log
     then
