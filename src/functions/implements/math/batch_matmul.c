@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 #include <stdio.h>
 
@@ -27,11 +28,17 @@ typedef struct {
   int offset_a;
   int offset_b;
   int offset_y;
-  float *input_a;
-  float *input_b;
-  float *output;
+  rt_variable_t *input_a;
+  rt_variable_getter get_input_a;
+  rt_variable_t *input_b;
+  rt_variable_getter get_input_b;
+  rt_variable_t *output;
+  rt_variable_getter get_output;
+  rt_variable_setter set_output;
   int output_size;
 } batch_matmul_private_t;
+
+rt_function_error_t exec_batch_matmul_generic(rt_function_t *f);
 
 // BatchMatmul
 rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
@@ -44,40 +51,29 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
 
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
-  batch_matmul_private_t *private = malloc(sizeof(batch_matmul_private_t));
-  if (private == 0) {
+  batch_matmul_private_t *p = malloc(sizeof(batch_matmul_private_t));
+  if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  ((batch_matmul_local_context_t *)(f->local_context))->data = (void *)private;
-private
-  ->row_a = f->inputs[0]->shape.data[f->inputs[0]->shape.size - 2];
-private
-  ->col_a = f->inputs[0]->shape.data[f->inputs[0]->shape.size - 1];
-private
-  ->row_b = f->inputs[1]->shape.data[f->inputs[1]->shape.size - 2];
-private
-  ->col_b = f->inputs[1]->shape.data[f->inputs[1]->shape.size - 1];
-private
-  ->row_y = context->transpose_a ? private->col_a : private->row_a;
-private
-  ->col_y = context->transpose_b ? private->row_b : private->col_b;
-private
-  ->offset_a = private->row_a * private->col_a;
-private
-  ->offset_b = private->row_b * private->col_b;
-private
-  ->offset_y = private->row_y * private->col_y;
+  ((batch_matmul_local_context_t *)(f->local_context))->data = (void *)p;
+  p->row_a = f->inputs[0]->shape.data[f->inputs[0]->shape.size - 2];
+  p->col_a = f->inputs[0]->shape.data[f->inputs[0]->shape.size - 1];
+  p->row_b = f->inputs[1]->shape.data[f->inputs[1]->shape.size - 2];
+  p->col_b = f->inputs[1]->shape.data[f->inputs[1]->shape.size - 1];
+  p->row_y = context->transpose_a ? p->col_a : p->row_a;
+  p->col_y = context->transpose_b ? p->row_b : p->col_b;
+  p->offset_a = p->row_a * p->col_a;
+  p->offset_b = p->row_b * p->col_b;
+  p->offset_y = p->row_y * p->col_y;
 
-private
-  ->input_a = (float *)f->inputs[0]->data;
-private
-  ->input_b = (float *)f->inputs[1]->data;
+  p->input_a = f->inputs[0];
+  p->get_input_a = select_getter(p->input_a);
+  p->input_b = f->inputs[1];
+  p->get_input_b = select_getter(p->input_b);
 
-private
-  ->samples = 1;
+  p->samples = 1;
   for (int i = 0; i < f->inputs[0]->shape.size - 2; ++i) {
-  private
-    ->samples *= f->inputs[0]->shape.data[i];
+    p->samples *= f->inputs[0]->shape.data[i];
   }
 
   int samples_b = 1;
@@ -85,16 +81,22 @@ private
     samples_b *= f->inputs[1]->shape.data[j];
   }
 
-private
-  ->output = (float *)f->outputs[0]->data;
-private
-  ->output_size = calc_shape_size(f->outputs[0]->shape);
+  p->output = f->outputs[0];
+  p->get_output = select_getter(p->output);
+  p->set_output = select_setter(p->output);
+  p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (private->output_size != private->row_y * private->col_y ||
-      private->col_a != private->row_b || private->samples != samples_b) {
+  if (p->output_size != p->row_y * p->col_y ||
+      p->col_a != p->row_b || p->samples != samples_b) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
-
+  if (p->input_a->type == NN_DATA_TYPE_FLOAT &&
+      p->input_b->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_batch_matmul;
+  } else {
+    f->exec_func = exec_batch_matmul_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -133,11 +135,14 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
   batch_matmul_private_t *p = (batch_matmul_private_t *)(context->data);
+  float *input_a = (float *)(p->input_a->data);
+  float *input_b = (float *)(p->input_b->data);
+  float *output = (float *)(p->output->data);
 
   int i;
   if (context->transpose_a) {
     for (i = 0; i < p->samples; i++) {
-      transpose(p->input_a + p->offset_a * i, p->row_a, p->col_a);
+      transpose(input_a + p->offset_a * i, p->row_a, p->col_a);
     }
     p->row_a = p->row_a ^ p->col_a;
     p->col_a = p->row_a ^ p->col_a;
@@ -145,16 +150,16 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
   }
   if (context->transpose_b) {
     for (i = 0; i < p->samples; i++) {
-      transpose(p->input_b + p->offset_b * i, p->row_b, p->col_b);
+      transpose(input_b + p->offset_b * i, p->row_b, p->col_b);
     }
     p->row_b = p->row_b ^ p->col_b;
     p->col_b = p->row_b ^ p->col_b;
     p->row_b = p->row_b ^ p->col_b;
   }
   for (i = 0; i < p->samples; i++) {
-    float *mtx_y = p->output + p->offset_y * i;
-    float *mtx_a = p->input_a + p->offset_a * i;
-    float *mtx_b = p->input_b + p->offset_b * i;
+    float *mtx_y = output + p->offset_y * i;
+    float *mtx_a = input_a + p->offset_a * i;
+    float *mtx_b = input_b + p->offset_b * i;
     int row_a = p->row_a;
     int col_b = p->col_b;
     int col_a = p->col_a;
@@ -164,6 +169,53 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
           float a = *(mtx_a + col_a * j + l);
           float b = *(mtx_b + col_b * l + k);
           *(mtx_y + col_b * j + k) += a * b;
+        }
+      }
+    }
+  }
+
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
+  batch_matmul_local_context_t *context =
+    (batch_matmul_local_context_t *)(f->local_context);
+  batch_matmul_private_t *p = (batch_matmul_private_t *)(context->data);
+  float *input_a = (float *)(p->input_a->data);
+  float *input_b = (float *)(p->input_b->data);
+
+  int i;
+  if (context->transpose_a) {
+    for (i = 0; i < p->samples; i++) {
+      transpose(input_a + p->offset_a * i, p->row_a, p->col_a);
+    }
+    p->row_a = p->row_a ^ p->col_a;
+    p->col_a = p->row_a ^ p->col_a;
+    p->row_a = p->row_a ^ p->col_a;
+  }
+  if (context->transpose_b) {
+    for (i = 0; i < p->samples; i++) {
+      transpose(input_b + p->offset_b * i, p->row_b, p->col_b);
+    }
+    p->row_b = p->row_b ^ p->col_b;
+    p->col_b = p->row_b ^ p->col_b;
+    p->row_b = p->row_b ^ p->col_b;
+  }
+  for (i = 0; i < p->samples; i++) {
+    int row_a = p->row_a;
+    int col_b = p->col_b;
+    int col_a = p->col_a;
+    for (int j = 0; j < row_a; j++) {
+      for (int k = 0; k < col_b; k++) {
+        for (int l = 0; l < col_a; l++) {
+          float a = p->get_input_a(p->input_a,
+                                   p->offset_y * i + col_a * j + l);
+          float b = p->get_input_b(p->input_b,
+                                   p->offset_b * i + col_b * l + k);
+          float y = p->get_output(p->output,
+                                  p->offset_y * i + col_b * j + k);
+          y += a * b;
+          p->set_output(p->output, p->offset_y * i + col_b * j + k, y);
         }
       }
     }

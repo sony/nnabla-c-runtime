@@ -13,16 +13,21 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 
 #include <math.h>
 
 typedef struct {
-  float *input;
-  float *output;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
   int input_size;
   int output_size;
 } log_private_t;
+
+rt_function_error_t exec_log_generic(rt_function_t *f);
 
 // Log
 rt_function_error_t allocate_log_local_context(rt_function_t *f) {
@@ -39,14 +44,22 @@ rt_function_error_t allocate_log_local_context(rt_function_t *f) {
   }
 
   f->local_context = (void *)p;
-  p->input = (float *)f->inputs[0]->data;
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
   p->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  p->output = (float *)f->outputs[0]->data;
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
+  }
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_log;
+  } else {
+    f->exec_func = exec_log_generic;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -57,10 +70,22 @@ rt_function_error_t free_log_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_log(rt_function_t *f) {
   log_private_t *p = (log_private_t *)(f->local_context);
+  float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    p->output[i] = log(p->input[i]);
+    y[i] = log(x[i]);
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_log_generic(rt_function_t *f) {
+  log_private_t *p = (log_private_t *)(f->local_context);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    p->set_output(p->output, i, p->get_input(p->input, i));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
