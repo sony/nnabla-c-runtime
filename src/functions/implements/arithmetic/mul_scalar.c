@@ -16,6 +16,8 @@
 #include "arithmetic.h"
 #include <nnablart/functions.h>
 
+rt_function_error_t exec_mul_scalar_generic(rt_function_t *f);
+
 // MulScalar
 rt_function_error_t allocate_mul_scalar_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 1) {
@@ -29,6 +31,12 @@ rt_function_error_t allocate_mul_scalar_local_context(rt_function_t *f) {
   if (input_size != output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_mul_scalar;
+  } else {
+    f->exec_func = exec_mul_scalar_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -40,5 +48,12 @@ rt_function_error_t exec_mul_scalar(rt_function_t *f) {
   mul_scalar_local_context_t *context =
       (mul_scalar_local_context_t *)(f->local_context);
   calc_scalar(f, context->val, calc_mul);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_mul_scalar_generic(rt_function_t *f) {
+  mul_scalar_local_context_t *context =
+		(mul_scalar_local_context_t *)(f->local_context);
+  calc_scalar_generic(f, context->val, calc_mul);
   return RT_FUNCTION_ERROR_NOERROR;
 }

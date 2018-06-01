@@ -16,6 +16,8 @@
 #include "arithmetic.h"
 #include <nnablart/functions.h>
 
+rt_function_error_t exec_pow2_generic(rt_function_t *f);
+
 // Pow2
 rt_function_error_t allocate_pow2_local_context(rt_function_t *f) {
   if (f->num_of_inputs != 2) {
@@ -30,6 +32,13 @@ rt_function_error_t allocate_pow2_local_context(rt_function_t *f) {
   if (f->outputs[0]->shape.size != f->inputs[0]->shape.size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_pow2;
+  } else {
+    f->exec_func = exec_pow2_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -39,5 +48,10 @@ rt_function_error_t free_pow2_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_pow2(rt_function_t *f) {
   calc_arithmetic(f, calc_pow);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_pow2_generic(rt_function_t *f) {
+  calc_arithmetic_generic(f, calc_pow);
   return RT_FUNCTION_ERROR_NOERROR;
 }

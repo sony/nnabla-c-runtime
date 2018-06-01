@@ -25,7 +25,7 @@ extern "C" {
 #include <stdlib.h> // for size_t
 
 #define NN_BINARY_FORMAT_VERSION (1)
-#define NN_BINARY_FORMAT_REVISION 344621eb4e6d3bb0a2afc8779eb2de1f
+#define NN_BINARY_FORMAT_REVISION 3569d137a03b3bf484d6d2ed2889f543
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -92,6 +92,8 @@ typedef enum {
   NN_FUNCTION_PRELU = 21,                       ///< PReLU
   NN_FUNCTION_BATCH_NORMALIZATION = 22,         ///< BatchNormalization
   NN_FUNCTION_MEAN_SUBTRACTION = 23,            ///< MeanSubtraction
+  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,         ///< ClipGradByValue
+  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,          ///< ClipGradByNorm
   NN_FUNCTION_SUM = 24,                         ///< Sum
   NN_FUNCTION_MEAN = 25,                        ///< Mean
   NN_FUNCTION_MAX = 26,                         ///< Max
@@ -142,6 +144,17 @@ typedef enum {
   NN_FUNCTION_IDENTITY = 71,                    ///< Identity
   NN_FUNCTION_BATCH_MATMUL = 72,                ///< BatchMatmul
   NN_FUNCTION_ROUND = 73,                       ///< Round
+  NN_FUNCTION_SIN = 173,                        ///< Sin
+  NN_FUNCTION_COS = 174,                        ///< Cos
+  NN_FUNCTION_TAN = 175,                        ///< Tan
+  NN_FUNCTION_SINH = 176,                       ///< Sinh
+  NN_FUNCTION_COSH = 177,                       ///< Cosh
+  NN_FUNCTION_ASIN = 178,                       ///< ASin
+  NN_FUNCTION_ACOS = 179,                       ///< ACos
+  NN_FUNCTION_ATAN = 180,                       ///< ATan
+  NN_FUNCTION_ASINH = 181,                      ///< ASinh
+  NN_FUNCTION_ACOSH = 182,                      ///< ACosh
+  NN_FUNCTION_ATANH = 183,                      ///< ATanh
   NN_FUNCTION_CONCATENATE = 74,                 ///< Concatenate
   NN_FUNCTION_SPLIT = 75,                       ///< Split
   NN_FUNCTION_STACK = 76,                       ///< Stack
@@ -189,6 +202,8 @@ typedef enum {
   NN_FUNCTION_VAT_NOISE = 118,                  ///< VATNoise
   NN_FUNCTION_UNLINK = 119,                     ///< Unlink
   NN_FUNCTION_SINK = 120,                       ///< Sink
+  NN_FUNCTION_NMS_DETECTION2D = 231,            ///< NmsDetection2d
+  NN_END_OF_FUNCTION = 65535                    // Ensure this type has 16bits
 } nn_function_type_t;
 
 /// @brief Function implement type.
@@ -197,17 +212,18 @@ typedef enum {
   NN_FUNCTION_IMPLEMENT_FIXED16, ///< Calculate with 16bit fixed point.
   NN_FUNCTION_IMPLEMENT_FIXED8,  ///< Calculate with 8bit fixed point.
   NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT =
-      99 ///< End of official implement calcuration type
+      99,                     ///< End of official implement calcuration type
+  NN_END_OF_IMPLEMENT = 65535 // Ensure this type has 16bits
 } nn_function_implement_t;
 
 /// @brief Common definition of Function.
 /// This type is to be used for the function does not have arguements.
 
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,10 +234,10 @@ typedef struct {
 /// @brief Affine function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
 } nn_function_affine_t;
@@ -231,10 +247,10 @@ typedef struct {
 /// @brief Convolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;  ///< Original type is [int64]
   nn_list_t pad;      ///< Original type is [Shape]
@@ -248,10 +264,10 @@ typedef struct {
 /// @brief DepthwiseConvolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;  ///< Original type is [int64]
   nn_list_t pad;      ///< Original type is [Shape]
@@ -265,10 +281,10 @@ typedef struct {
 /// @brief Deconvolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;  ///< Original type is [int64]
   nn_list_t pad;      ///< Original type is [Shape]
@@ -282,10 +298,10 @@ typedef struct {
 /// @brief DepthwiseDeconvolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;  ///< Original type is [int64]
   nn_list_t pad;      ///< Original type is [Shape]
@@ -299,10 +315,10 @@ typedef struct {
 /// @brief MaxPooling function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t kernel;      ///< Original type is [Shape]
   nn_list_t stride;      ///< Original type is [Shape]
@@ -315,10 +331,10 @@ typedef struct {
 /// @brief AveragePooling function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t kernel;      ///< Original type is [Shape]
   nn_list_t stride;      ///< Original type is [Shape]
@@ -332,10 +348,10 @@ typedef struct {
 /// @brief GlobalAveragePooling function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_global_average_pooling_t;
 
 /// @}
@@ -343,10 +359,10 @@ typedef struct {
 /// @brief SumPooling function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t kernel;      ///< Original type is [Shape]
   nn_list_t stride;      ///< Original type is [Shape]
@@ -359,10 +375,10 @@ typedef struct {
 /// @brief Unpooling function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t kernel; ///< Original type is [Shape]
 } nn_function_unpooling_t;
@@ -372,10 +388,10 @@ typedef struct {
 /// @brief Embed function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_embed_t;
 
 /// @}
@@ -383,10 +399,10 @@ typedef struct {
 /// @brief Sigmoid function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_sigmoid_t;
 
 /// @}
@@ -394,10 +410,10 @@ typedef struct {
 /// @brief Swish function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_swish_t;
 
 /// @}
@@ -405,10 +421,10 @@ typedef struct {
 /// @brief Tanh function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_tanh_t;
 
 /// @}
@@ -416,10 +432,10 @@ typedef struct {
 /// @brief ReLU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t inplace; ///< Original type is [bool]
 } nn_function_relu_t;
@@ -429,10 +445,10 @@ typedef struct {
 /// @brief LeakyReLU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float alpha; ///< Original type is [float]
 } nn_function_leaky_relu_t;
@@ -442,10 +458,10 @@ typedef struct {
 /// @brief Softmax function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_softmax_t;
@@ -455,10 +471,10 @@ typedef struct {
 /// @brief ELU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float alpha; ///< Original type is [double]
 } nn_function_elu_t;
@@ -468,10 +484,10 @@ typedef struct {
 /// @brief SELU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float scale; ///< Original type is [double]
   float alpha; ///< Original type is [double]
@@ -482,10 +498,10 @@ typedef struct {
 /// @brief CReLU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_crelu_t;
@@ -495,10 +511,10 @@ typedef struct {
 /// @brief CELU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float alpha;  ///< Original type is [double]
   int32_t axis; ///< Original type is [int64]
@@ -509,10 +525,10 @@ typedef struct {
 /// @brief PReLU function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
 } nn_function_prelu_t;
@@ -522,10 +538,10 @@ typedef struct {
 /// @brief BatchNormalization function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;     ///< Original type is [repeated int64]
   float decay_rate;   ///< Original type is [float]
@@ -538,10 +554,10 @@ typedef struct {
 /// @brief MeanSubtraction function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;           ///< Original type is [int64]
   uint8_t update_running_mean; ///< Original type is [bool]
@@ -549,13 +565,38 @@ typedef struct {
 
 /// @}
 
+/// @brief ClipGradByValue function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_clip_grad_by_value_t;
+
+/// @}
+
+/// @brief ClipGradByNorm function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float clip_norm; ///< Original type is [float]
+  nn_list_t axes;  ///< Original type is [repeated int64]
+} nn_function_clip_grad_by_norm_t;
+
+/// @}
+
 /// @brief Sum function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< Original type is [bool]
@@ -566,10 +607,10 @@ typedef struct {
 /// @brief Mean function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< Original type is [bool]
@@ -580,10 +621,10 @@ typedef struct {
 /// @brief Max function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< Original type is [bool]
@@ -594,10 +635,10 @@ typedef struct {
 /// @brief Min function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< Original type is [bool]
@@ -608,10 +649,10 @@ typedef struct {
 /// @brief Prod function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< Original type is [bool]
@@ -622,10 +663,10 @@ typedef struct {
 /// @brief ReduceSum function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_reduce_sum_t;
 
 /// @}
@@ -633,10 +674,10 @@ typedef struct {
 /// @brief ReduceMean function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_reduce_mean_t;
 
 /// @}
@@ -644,10 +685,10 @@ typedef struct {
 /// @brief Add2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t inplace; ///< Original type is [bool]
 } nn_function_add2_t;
@@ -657,10 +698,10 @@ typedef struct {
 /// @brief BcAdd2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_bc_add2_t;
 
 /// @}
@@ -668,10 +709,10 @@ typedef struct {
 /// @brief Sub2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_sub2_t;
 
 /// @}
@@ -679,10 +720,10 @@ typedef struct {
 /// @brief Mul2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_mul2_t;
 
 /// @}
@@ -690,10 +731,10 @@ typedef struct {
 /// @brief Div2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_div2_t;
 
 /// @}
@@ -701,10 +742,10 @@ typedef struct {
 /// @brief Pow2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_pow2_t;
 
 /// @}
@@ -712,10 +753,10 @@ typedef struct {
 /// @brief AddScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_add_scalar_t;
@@ -725,10 +766,10 @@ typedef struct {
 /// @brief MulScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_mul_scalar_t;
@@ -738,10 +779,10 @@ typedef struct {
 /// @brief PowScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_pow_scalar_t;
@@ -751,10 +792,10 @@ typedef struct {
 /// @brief RSubScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_r_sub_scalar_t;
@@ -764,10 +805,10 @@ typedef struct {
 /// @brief RDivScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_r_div_scalar_t;
@@ -777,10 +818,10 @@ typedef struct {
 /// @brief RPowScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_r_pow_scalar_t;
@@ -790,10 +831,10 @@ typedef struct {
 /// @brief Sign function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float alpha; ///< Original type is [float]
 } nn_function_sign_t;
@@ -803,10 +844,10 @@ typedef struct {
 /// @brief Minimum2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_minimum2_t;
 
 /// @}
@@ -814,10 +855,10 @@ typedef struct {
 /// @brief Maximum2 function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_maximum2_t;
 
 /// @}
@@ -825,10 +866,10 @@ typedef struct {
 /// @brief MinimumScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_minimum_scalar_t;
@@ -838,10 +879,10 @@ typedef struct {
 /// @brief MaximumScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_maximum_scalar_t;
@@ -851,10 +892,10 @@ typedef struct {
 /// @brief LogicalAnd function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_logical_and_t;
 
 /// @}
@@ -862,10 +903,10 @@ typedef struct {
 /// @brief LogicalOr function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_logical_or_t;
 
 /// @}
@@ -873,10 +914,10 @@ typedef struct {
 /// @brief LogicalXor function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_logical_xor_t;
 
 /// @}
@@ -884,10 +925,10 @@ typedef struct {
 /// @brief Equal function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_equal_t;
 
 /// @}
@@ -895,10 +936,10 @@ typedef struct {
 /// @brief NotEqual function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_not_equal_t;
 
 /// @}
@@ -906,10 +947,10 @@ typedef struct {
 /// @brief GreaterEqual function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_greater_equal_t;
 
 /// @}
@@ -917,10 +958,10 @@ typedef struct {
 /// @brief Greater function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_greater_t;
 
 /// @}
@@ -928,10 +969,10 @@ typedef struct {
 /// @brief LessEqual function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_less_equal_t;
 
 /// @}
@@ -939,10 +980,10 @@ typedef struct {
 /// @brief Less function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_less_t;
 
 /// @}
@@ -950,10 +991,10 @@ typedef struct {
 /// @brief LogicalAndScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t val; ///< Original type is [bool]
 } nn_function_logical_and_scalar_t;
@@ -963,10 +1004,10 @@ typedef struct {
 /// @brief LogicalOrScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t val; ///< Original type is [bool]
 } nn_function_logical_or_scalar_t;
@@ -976,10 +1017,10 @@ typedef struct {
 /// @brief LogicalXorScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t val; ///< Original type is [bool]
 } nn_function_logical_xor_scalar_t;
@@ -989,10 +1030,10 @@ typedef struct {
 /// @brief EqualScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_equal_scalar_t;
@@ -1002,10 +1043,10 @@ typedef struct {
 /// @brief NotEqualScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_not_equal_scalar_t;
@@ -1015,10 +1056,10 @@ typedef struct {
 /// @brief GreaterEqualScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_greater_equal_scalar_t;
@@ -1028,10 +1069,10 @@ typedef struct {
 /// @brief GreaterScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_greater_scalar_t;
@@ -1041,10 +1082,10 @@ typedef struct {
 /// @brief LessEqualScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_less_equal_scalar_t;
@@ -1054,10 +1095,10 @@ typedef struct {
 /// @brief LessScalar function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val; ///< Original type is [double]
 } nn_function_less_scalar_t;
@@ -1067,10 +1108,10 @@ typedef struct {
 /// @brief LogicalNot function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_logical_not_t;
 
 /// @}
@@ -1078,10 +1119,10 @@ typedef struct {
 /// @brief Constant function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float val;       ///< Original type is [float]
   nn_list_t shape; ///< Original type is [Shape]
@@ -1092,10 +1133,10 @@ typedef struct {
 /// @brief Abs function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_abs_t;
 
 /// @}
@@ -1103,10 +1144,10 @@ typedef struct {
 /// @brief Exp function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_exp_t;
 
 /// @}
@@ -1114,10 +1155,10 @@ typedef struct {
 /// @brief Log function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_log_t;
 
 /// @}
@@ -1125,10 +1166,10 @@ typedef struct {
 /// @brief Identity function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_identity_t;
 
 /// @}
@@ -1136,10 +1177,10 @@ typedef struct {
 /// @brief BatchMatmul function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t transpose_a; ///< Original type is [bool]
   uint8_t transpose_b; ///< Original type is [bool]
@@ -1150,21 +1191,142 @@ typedef struct {
 /// @brief Round function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_round_t;
+
+/// @}
+
+/// @brief Sin function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_sin_t;
+
+/// @}
+
+/// @brief Cos function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_cos_t;
+
+/// @}
+
+/// @brief Tan function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_tan_t;
+
+/// @}
+
+/// @brief Sinh function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_sinh_t;
+
+/// @}
+
+/// @brief Cosh function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_cosh_t;
+
+/// @}
+
+/// @brief ASin function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_asin_t;
+
+/// @}
+
+/// @brief ACos function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_acos_t;
+
+/// @}
+
+/// @brief ATan function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_atan_t;
+
+/// @}
+
+/// @brief ASinh function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_asinh_t;
+
+/// @}
+
+/// @brief ACosh function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_acosh_t;
+
+/// @}
+
+/// @brief ATanh function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_atanh_t;
 
 /// @}
 
 /// @brief Concatenate function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_concatenate_t;
@@ -1174,10 +1336,10 @@ typedef struct {
 /// @brief Split function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_split_t;
@@ -1187,10 +1349,10 @@ typedef struct {
 /// @brief Stack function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_stack_t;
@@ -1200,10 +1362,10 @@ typedef struct {
 /// @brief Slice function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t start; ///< Original type is [repeated int64]
   nn_list_t stop;  ///< Original type is [repeated int64]
@@ -1215,10 +1377,10 @@ typedef struct {
 /// @brief Transpose function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes; ///< Original type is [repeated int64]
 } nn_function_transpose_t;
@@ -1228,10 +1390,10 @@ typedef struct {
 /// @brief Broadcast function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape; ///< Original type is [Shape]
 } nn_function_broadcast_t;
@@ -1241,10 +1403,10 @@ typedef struct {
 /// @brief OneHot function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape; ///< Original type is [Shape]
 } nn_function_one_hot_t;
@@ -1254,10 +1416,10 @@ typedef struct {
 /// @brief Flip function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes; ///< Original type is [repeated int64]
 } nn_function_flip_t;
@@ -1267,10 +1429,10 @@ typedef struct {
 /// @brief Shift function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shifts;     ///< Original type is [repeated int64]
   uint32_t border_mode; ///< Original type is [string]
@@ -1281,10 +1443,10 @@ typedef struct {
 /// @brief Reshape function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape; ///< Original type is [Shape]
 } nn_function_reshape_t;
@@ -1294,10 +1456,10 @@ typedef struct {
 /// @brief MatrixDiag function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_matrix_diag_t;
 
 /// @}
@@ -1305,10 +1467,10 @@ typedef struct {
 /// @brief MatrixDiagPart function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_matrix_diag_part_t;
 
 /// @}
@@ -1316,10 +1478,10 @@ typedef struct {
 /// @brief Dropout function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float p;      ///< Original type is [double]
   int32_t seed; ///< Original type is [int64]
@@ -1330,10 +1492,10 @@ typedef struct {
 /// @brief TopKData function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t k;         ///< Original type is [int64]
   uint8_t abs;       ///< Original type is [bool]
@@ -1346,10 +1508,10 @@ typedef struct {
 /// @brief TopKGrad function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t k;         ///< Original type is [int64]
   uint8_t abs;       ///< Original type is [bool]
@@ -1361,10 +1523,10 @@ typedef struct {
 /// @brief Rand function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float low;       ///< Original type is [float]
   float high;      ///< Original type is [float]
@@ -1377,10 +1539,10 @@ typedef struct {
 /// @brief Randint function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t low;     ///< Original type is [int64]
   int32_t high;    ///< Original type is [int64]
@@ -1393,10 +1555,10 @@ typedef struct {
 /// @brief Randn function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float mu;        ///< Original type is [float]
   float sigma;     ///< Original type is [float]
@@ -1409,10 +1571,10 @@ typedef struct {
 /// @brief RandomCrop function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape;   ///< Original type is [Shape]
   int32_t base_axis; ///< Original type is [int64]
@@ -1424,10 +1586,10 @@ typedef struct {
 /// @brief RandomFlip function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t axes;    ///< Original type is [repeated int64]
   int32_t base_axis; ///< Original type is [int64]
@@ -1439,10 +1601,10 @@ typedef struct {
 /// @brief RandomShift function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shifts;     ///< Original type is [repeated int64]
   uint32_t border_mode; ///< Original type is [string]
@@ -1455,10 +1617,10 @@ typedef struct {
 /// @brief ImageAugmentation function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape;         ///< Original type is [Shape]
   nn_list_t pad;           ///< Original type is [Shape]
@@ -1483,10 +1645,10 @@ typedef struct {
 /// @brief SigmoidCrossEntropy function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_sigmoid_cross_entropy_t;
 
 /// @}
@@ -1494,10 +1656,10 @@ typedef struct {
 /// @brief BinaryCrossEntropy function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_binary_cross_entropy_t;
 
 /// @}
@@ -1505,10 +1667,10 @@ typedef struct {
 /// @brief SoftmaxCrossEntropy function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_softmax_cross_entropy_t;
@@ -1518,10 +1680,10 @@ typedef struct {
 /// @brief CategoricalCrossEntropy function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_categorical_cross_entropy_t;
@@ -1531,10 +1693,10 @@ typedef struct {
 /// @brief SquaredError function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_squared_error_t;
 
 /// @}
@@ -1542,10 +1704,10 @@ typedef struct {
 /// @brief AbsoluteError function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_absolute_error_t;
 
 /// @}
@@ -1553,10 +1715,10 @@ typedef struct {
 /// @brief HuberLoss function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float delta; ///< Original type is [float]
 } nn_function_huber_loss_t;
@@ -1566,10 +1728,10 @@ typedef struct {
 /// @brief EpsilonInsensitiveLoss function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   float epsilon; ///< Original type is [float]
 } nn_function_epsilon_insensitive_loss_t;
@@ -1579,10 +1741,10 @@ typedef struct {
 /// @brief KLMultinomial function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
 } nn_function_kl_multinomial_t;
@@ -1592,10 +1754,10 @@ typedef struct {
 /// @brief BinarySigmoid function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_binary_sigmoid_t;
 
 /// @}
@@ -1603,10 +1765,10 @@ typedef struct {
 /// @brief BinaryTanh function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_binary_tanh_t;
 
 /// @}
@@ -1614,10 +1776,10 @@ typedef struct {
 /// @brief BinaryConnectAffine function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
 } nn_function_binary_connect_affine_t;
@@ -1627,10 +1789,10 @@ typedef struct {
 /// @brief BinaryConnectConvolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;  ///< Original type is [int64]
   nn_list_t pad;      ///< Original type is [Shape]
@@ -1644,10 +1806,10 @@ typedef struct {
 /// @brief BinaryWeightAffine function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
 } nn_function_binary_weight_affine_t;
@@ -1657,10 +1819,10 @@ typedef struct {
 /// @brief BinaryWeightConvolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;  ///< Original type is [int64]
   nn_list_t pad;      ///< Original type is [Shape]
@@ -1674,10 +1836,10 @@ typedef struct {
 /// @brief INQAffine function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;            ///< Original type is [int64]
   int32_t num_bits;             ///< Original type is [int64]
@@ -1691,10 +1853,10 @@ typedef struct {
 /// @brief INQConvolution function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis;            ///< Original type is [int64]
   nn_list_t pad;                ///< Original type is [Shape]
@@ -1712,10 +1874,10 @@ typedef struct {
 /// @brief FixedPointQuantize function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t sign;             ///< Original type is [bool]
   int32_t n;                ///< Original type is [int64]
@@ -1728,10 +1890,10 @@ typedef struct {
 /// @brief Pow2Quantize function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t sign;             ///< Original type is [bool]
   uint8_t with_zero;        ///< Original type is [bool]
@@ -1745,10 +1907,10 @@ typedef struct {
 /// @brief TopNError function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
   int32_t n;    ///< Original type is [int64]
@@ -1759,10 +1921,10 @@ typedef struct {
 /// @brief BinaryError function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_binary_error_t;
 
 /// @}
@@ -1770,10 +1932,10 @@ typedef struct {
 /// @brief ConfusionMatrix function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_confusion_matrix_t;
@@ -1783,10 +1945,10 @@ typedef struct {
 /// @brief VATNoise function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
   float eps;         ///< Original type is [float]
@@ -1797,10 +1959,10 @@ typedef struct {
 /// @brief Unlink function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_unlink_t;
 
 /// @}
@@ -1808,13 +1970,28 @@ typedef struct {
 /// @brief Sink function.
 /// @{
 typedef struct {
-  nn_function_type_t type;      ///< Common: type of function.
-  nn_function_implement_t impl; ///< Common: function implementation.
-  nn_list_t inputs;             ///< Common: List of input variables.
-  nn_list_t outputs;            ///< Common: List of output variables.
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   uint8_t one_input_grad; ///< Original type is [bool]
 } nn_function_sink_t;
+
+/// @}
+
+/// @brief NmsDetection2d function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float thresh;          ///< Original type is [float]
+  float nms;             ///< Original type is [float]
+  uint8_t nms_per_class; ///< Original type is [bool]
+} nn_function_nms_detection2d_t;
 
 /// @}
 

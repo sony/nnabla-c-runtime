@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 #include <string.h>
 
@@ -24,12 +25,16 @@ typedef struct {
   rt_list_t input_strides;
   rt_list_t output_strides;
   int **table;
-  float *input;
-  float *output;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
 } shift_private_t;
 
 #define MAX(a, b) ((a > b) ? a : b)
 #define MIN(a, b) ((a < b) ? a : b)
+
+rt_function_error_t exec_shift_generic(rt_function_t *f);
 
 // Shift
 rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
@@ -50,8 +55,10 @@ rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
   p->output_shape = clone_list(f->outputs[0]->shape);
   p->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
   p->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
-  p->input = (float *)(f->inputs[0]->data);
-  p->output = (float *)(f->outputs[0]->data);
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
 
   p->table = malloc(sizeof(int *) * p->input_shape.size);
 
@@ -73,7 +80,12 @@ rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
       }
     }
   }
-
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_shift;
+  } else {
+    f->exec_func = exec_shift_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -98,8 +110,8 @@ static void shift_recursive(shift_local_context_t *context, int x_offset,
   int current_y_offset = y_offset;
   const int stride = p->input_strides.data[dim];
   const int size = p->input_shape.data[dim];
-  const float *x = p->input;
-  float *y = p->output;
+  const float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
   if (dim == p->input_shape.size - 1) {
     for (int i = 0; i < size; i++) {
       y[current_y_offset] = x[x_offset + p->table[dim][i]];
@@ -113,9 +125,39 @@ static void shift_recursive(shift_local_context_t *context, int x_offset,
     }
   }
 }
+
+static void shift_recursive_generic(shift_local_context_t *context,
+                                    int x_offset, int y_offset, int dim) {
+  shift_private_t *p = (shift_private_t *)(context->data);
+  int current_y_offset = y_offset;
+  const int stride = p->input_strides.data[dim];
+  const int size = p->input_shape.data[dim];
+
+  if (dim == p->input_shape.size - 1) {
+    for (int i = 0; i < size; i++) {
+      float x = p->get_input(p->input, x_offset + p->table[dim][i]);
+      p->set_output(p->output, current_y_offset, x);
+      current_y_offset += stride;
+    }
+  } else {
+    for (int i = 0; i < size; i++) {
+      shift_recursive_generic(context, x_offset + p->table[dim][i],
+                              current_y_offset, dim + 1);
+      current_y_offset += stride;
+    }
+  }
+}
+
 rt_function_error_t exec_shift(rt_function_t *f) {
   shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
 
   shift_recursive(context, 0, 0, 0);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_shift_generic(rt_function_t *f) {
+  shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
+
+  shift_recursive_generic(context, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }

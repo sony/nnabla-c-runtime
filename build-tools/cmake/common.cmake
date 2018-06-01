@@ -15,7 +15,6 @@
 #-------------------------------------------------------------------------------
 # CMake Settings.
 #-------------------------------------------------------------------------------
-cmake_policy(SET CMP0002 OLD)
 set(CMAKE_INSTALL_PREFIX ${project_root}/dist)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 

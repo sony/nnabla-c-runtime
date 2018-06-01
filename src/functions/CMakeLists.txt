@@ -57,6 +57,7 @@ add_library(nnablart_functions STATIC
 
   implements/arithmetic/add_scalar.c
   implements/arithmetic/arithmetic.c
+  implements/arithmetic/arithmetic_generic.c
   implements/arithmetic/div2.c
   implements/arithmetic/mul2.c
   implements/arithmetic/mul_scalar.c
@@ -66,7 +67,8 @@ add_library(nnablart_functions STATIC
   implements/arithmetic/r_pow_scalar.c
   implements/arithmetic/r_sub_scalar.c
   implements/arithmetic/sub2.c
-
+  implements/arithmetic/add2.c
+  
   implements/logical/maximum_scalar.c
   implements/logical/minimum_scalar.c
   implements/logical/maximum2.c
@@ -76,6 +78,9 @@ add_library(nnablart_functions STATIC
   implements/array/matrix_diag.c
   implements/array/matrix_diag_part.c
   implements/array/reshape.c
+  implements/array/concatenate.c
+  implements/array/split.c
+  implements/array/stack.c
   implements/array/shift.c
   implements/array/slice.c
 
@@ -83,5 +88,6 @@ add_library(nnablart_functions STATIC
   implements/normalization/mean_subtraction.c
 
   implements/stochasticity/dropout.c
-
+  implements/reduction/sum.c
+  
   implements/unimplemented.c)

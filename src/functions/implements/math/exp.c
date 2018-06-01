@@ -15,15 +15,20 @@
 #include <nnablart/functions.h>
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 
 #include <math.h>
 
 typedef struct {
-  float *input;
-  float *output;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
   int input_size;
   int output_size;
 } exp_private_t;
+
+rt_function_error_t exec_exp_generic(rt_function_t *f);
 
 // Exp
 rt_function_error_t allocate_exp_local_context(rt_function_t *f) {
@@ -40,14 +45,22 @@ rt_function_error_t allocate_exp_local_context(rt_function_t *f) {
   }
 
   f->local_context = (void *)p;
-  p->input = (float *)f->inputs[0]->data;
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
   p->input_size = calc_shape_size(f->inputs[0]->shape);
 
-  p->output = (float *)f->outputs[0]->data;
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
+  }
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_exp;
+  } else {
+    f->exec_func = exec_exp_generic;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -58,10 +71,23 @@ rt_function_error_t free_exp_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_exp(rt_function_t *f) {
   exp_private_t *p = (exp_private_t *)(f->local_context);
+  float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    p->output[i] = exp(p->input[i]);
+    y[i] = exp(x[i]);
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_exp_generic(rt_function_t *f) {
+  exp_private_t *p = (exp_private_t *)(f->local_context);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    float x = p->get_input(p->input, i);
+    p->set_output(p->output, i, x);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

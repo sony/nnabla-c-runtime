@@ -15,6 +15,7 @@
 #include <math.h>
 #include <nnablart/functions.h>
 
+#include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 
 static inline float max(float a, float b) { return a < b ? b : a; }
@@ -24,6 +25,8 @@ typedef struct {
   int specified_axis_size;
   int output_size;
 } softmax_private_t;
+
+rt_function_error_t exec_softmax_generic(rt_function_t *f);
 
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   softmax_local_context_t *context =
@@ -49,6 +52,12 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   ((softmax_local_context_t *)(f->local_context))->data = (void *)p;
+  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_softmax;
+  } else {
+    f->exec_func = exec_softmax_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -95,6 +104,53 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
            ++specified_index) {
         const int k = specified_index * output_size + j;
         y[k] = y[k] / exp_sum;
+      }
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_softmax_generic(rt_function_t *f) {
+  softmax_local_context_t *context =
+      (softmax_local_context_t *)(f->local_context);
+  softmax_private_t *p = (softmax_private_t *)(context->data);
+  rt_variable_t *input = f->inputs[0];
+  rt_variable_getter get_input = select_getter(input);
+  rt_variable_t *output = f->outputs[0];
+  rt_variable_getter get_output = select_getter(output);
+  rt_variable_setter set_output = select_setter(output);
+  const int batch_size = p->batch_size;
+  const int specified_axis_size = p->specified_axis_size;
+  const int output_size = p->output_size;
+
+  int sample_index;
+  for (sample_index = 0; sample_index < batch_size; ++sample_index) {
+    int output_index;
+    for (output_index = 0; output_index < output_size; ++output_index) {
+      const int j =
+          sample_index * specified_axis_size * output_size + output_index;
+      // compute maximum
+      float max_input = get_input(input, j);
+      int specified_index;
+      for (specified_index = 0; specified_index < specified_axis_size;
+           ++specified_index) {
+        const int k = specified_index * output_size + j;
+        max_input = max(max_input, get_input(input, k));
+      }
+      // Compute exponential and sum
+      float exp_sum = 0;
+      for (specified_index = 0; specified_index < specified_axis_size;
+           ++specified_index) {
+        const int k = specified_index * output_size + j;
+        const float tmp = expf(get_input(input, k) - max_input);
+        set_output(output, k, tmp);
+        exp_sum += tmp;
+      }
+      // Compute softmax
+      for (specified_index = 0; specified_index < specified_axis_size;
+           ++specified_index) {
+        const int k = specified_index * output_size + j;
+        set_output(output, k, (get_output(output, k) / exp_sum));
       }
     }
   }

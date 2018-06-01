@@ -30,9 +30,9 @@ def generate(filename, info):
             defines.append('/// @{')
             defines.append('typedef struct {')
             defines.append(
-                '  nn_function_type_t type; ///< Common: type of function.')
+                '  nn_function_type_t type : 16; ///< Common: type of function.')
             defines.append(
-                '  nn_function_implement_t impl; ///< Common: function implementation.')
+                '  nn_function_implement_t impl : 16; ///< Common: function implementation.')
             defines.append(
                 '  nn_list_t inputs;        ///< Common: List of input variables.')
             defines.append(

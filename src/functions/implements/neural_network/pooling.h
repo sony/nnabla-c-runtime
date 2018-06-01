@@ -15,6 +15,7 @@
 #ifndef H_POOLING_H_
 #define H_POOLING_H_
 
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 
 typedef struct {
@@ -33,7 +34,12 @@ typedef struct {
   int wend;
   int wx;
   int pool_size;
-  const float *x;
+  rt_variable_t *x;
+  rt_variable_getter get_x;
+  rt_variable_t *y;
+  rt_variable_setter set_y;
+  nn_size_t offset_x;
+  nn_size_t offset_y;
   uint8_t including_pad;
 } pooling_calc_context_t;
 
@@ -55,6 +61,10 @@ rt_function_error_t free_pooling(pooling_private_t *p);
 rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
                                  pooling_private_t *p,
                                  exec_pooling_func_t exec);
+rt_function_error_t exec_pooling_generic(rt_function_t *f,
+                                         pooling_context_t *context,
+                                         pooling_private_t *p,
+                                         exec_pooling_func_t exec);
 
 /// Calculate max value.
 float calc_max(pooling_calc_context_t calc);
@@ -64,5 +74,14 @@ float calc_sum(pooling_calc_context_t calc);
 
 /// Calculate average value.
 float calc_average(pooling_calc_context_t calc);
+
+/// Calculate max value.
+float calc_max_generic(pooling_calc_context_t calc);
+
+/// Calculate sum value.
+float calc_sum_generic(pooling_calc_context_t calc);
+
+/// Calculate average value.
+float calc_average_generic(pooling_calc_context_t calc);
 
 #endif // H_POOLING_H_

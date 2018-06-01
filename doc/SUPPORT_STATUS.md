@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 51/121
+Total 51/135
 
 
 ## Neural Network Layer
@@ -43,25 +43,27 @@ Count 11/11
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|         Sigmoid          |     yes      |      -       |      -       |
-|          Swish           |     yes      |      -       |      -       |
-|           Tanh           |     yes      |      -       |      -       |
-|           ReLU           |     yes      |      -       |      -       |
-|        LeakyReLU         |     yes      |      -       |      -       |
-|         Softmax          |     yes      |      -       |      -       |
-|           ELU            |     yes      |      -       |      -       |
-|           SELU           |     yes      |      -       |      -       |
-|          CReLU           |     yes      |      -       |      -       |
-|           CELU           |     yes      |      -       |      -       |
+|         Sigmoid          |     yes      |      -       |     yes      |
+|          Swish           |     yes      |      -       |     yes      |
+|           Tanh           |     yes      |      -       |     yes      |
+|           ReLU           |     yes      |      -       |     yes      |
+|        LeakyReLU         |     yes      |      -       |     yes      |
+|         Softmax          |     yes      |      -       |     yes      |
+|           ELU            |     yes      |      -       |     yes      |
+|           SELU           |     yes      |      -       |     yes      |
+|          CReLU           |     yes      |      -       |     yes      |
+|           CELU           |     yes      |      -       |     yes      |
 |          PReLU           |     yes      |      -       |      -       |
 
 ## Normalization
-Count 2/2
+Count 2/4
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |    BatchNormalization    |     yes      |      -       |      -       |
 |     MeanSubtraction      |     yes      |      -       |      -       |
+|     ClipGradByValue      |      no      |      -       |      -       |
+|      ClipGradByNorm      |      no      |      -       |      -       |
 
 ## Reduction
 Count 0/7
@@ -125,7 +127,7 @@ Count 5/24
 |        LogicalNot        |      no      |      -       |      -       |
 
 ## Math
-Count 6/7
+Count 6/18
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -136,6 +138,17 @@ Count 6/7
 |         Identity         |     yes      |      -       |      -       |
 |       BatchMatmul        |     yes      |      -       |      -       |
 |          Round           |     yes      |      -       |      -       |
+|           Sin            |      no      |      -       |      -       |
+|           Cos            |      no      |      -       |      -       |
+|           Tan            |      no      |      -       |      -       |
+|           Sinh           |      no      |      -       |      -       |
+|           Cosh           |      no      |      -       |      -       |
+|           ASin           |      no      |      -       |      -       |
+|           ACos           |      no      |      -       |      -       |
+|           ATan           |      no      |      -       |      -       |
+|          ASinh           |      no      |      -       |      -       |
+|          ACosh           |      no      |      -       |      -       |
+|          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
 Count 5/12
@@ -212,11 +225,12 @@ Count 0/3
 |     ConfusionMatrix      |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
-Count 0/3
+Count 0/4
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |         VATNoise         |      no      |      -       |      -       |
 |          Unlink          |      no      |      -       |      -       |
 |           Sink           |      no      |      -       |      -       |
+|      NmsDetection2d      |      no      |      -       |      -       |
 

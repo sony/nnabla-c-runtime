@@ -162,7 +162,8 @@ rt_return_value_t rt_allocate_context(rt_context_pointer *context);
 /// @return @ref rt_return_value_t
 rt_return_value_t rt_add_callback(
     rt_context_pointer context, nn_function_type_t type,
-    rt_return_value_t (*allocate_local_context)(void *function_context));
+    rt_return_value_t (*allocate_local_context)(nn_network_t *net,
+                                                void *function_context));
 
 /// @brief Initialize runtime context with parsing @ref nn_network_t.
 /// Initialize all functions in context and prepare forward calculation.
@@ -236,7 +237,7 @@ int rt_input_shape(rt_context_pointer context, size_t index,
 /// @param[in] context
 /// @param[in] index
 /// @return pointer
-float *rt_input_buffer(rt_context_pointer context, size_t index);
+void *rt_input_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Get number of network outputs.
 /// @param[in] context
@@ -268,7 +269,7 @@ int rt_output_shape(rt_context_pointer context, size_t index,
 /// @param[in] context
 /// @param[in] index
 /// @return pointer
-float *rt_output_buffer(rt_context_pointer context, size_t index);
+void *rt_output_buffer(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
 /// @param[in] context

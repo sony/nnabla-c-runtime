@@ -311,6 +311,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     allocate_mean_subtraction_local_context(&function_context->func);
   } break;
 
+  case NN_FUNCTION_CLIP_GRAD_BY_VALUE: { // ClipGradByValue
+    function_context->func.exec_func = exec_clip_grad_by_value;
+    function_context->func.free_local_context_func =
+        free_clip_grad_by_value_local_context;
+    function_context->func.local_context = 0;
+    allocate_clip_grad_by_value_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_CLIP_GRAD_BY_NORM: { // ClipGradByNorm
+    function_context->func.exec_func = exec_clip_grad_by_norm;
+    function_context->func.free_local_context_func =
+        free_clip_grad_by_norm_local_context;
+    nn_function_clip_grad_by_norm_t *f =
+        (nn_function_clip_grad_by_norm_t *)function;
+    clip_grad_by_norm_local_context_t *ctx =
+        malloc(sizeof(clip_grad_by_norm_local_context_t));
+    ctx->clip_norm = f->clip_norm;
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    function_context->func.local_context = ctx;
+    allocate_clip_grad_by_norm_local_context(&function_context->func);
+  } break;
+
   case NN_FUNCTION_SUM: { // Sum
     function_context->func.exec_func = exec_sum;
     function_context->func.free_local_context_func = free_sum_local_context;
@@ -799,6 +821,83 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.free_local_context_func = free_round_local_context;
     function_context->func.local_context = 0;
     allocate_round_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_SIN: { // Sin
+    function_context->func.exec_func = exec_sin;
+    function_context->func.free_local_context_func = free_sin_local_context;
+    function_context->func.local_context = 0;
+    allocate_sin_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_COS: { // Cos
+    function_context->func.exec_func = exec_cos;
+    function_context->func.free_local_context_func = free_cos_local_context;
+    function_context->func.local_context = 0;
+    allocate_cos_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_TAN: { // Tan
+    function_context->func.exec_func = exec_tan;
+    function_context->func.free_local_context_func = free_tan_local_context;
+    function_context->func.local_context = 0;
+    allocate_tan_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_SINH: { // Sinh
+    function_context->func.exec_func = exec_sinh;
+    function_context->func.free_local_context_func = free_sinh_local_context;
+    function_context->func.local_context = 0;
+    allocate_sinh_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_COSH: { // Cosh
+    function_context->func.exec_func = exec_cosh;
+    function_context->func.free_local_context_func = free_cosh_local_context;
+    function_context->func.local_context = 0;
+    allocate_cosh_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_ASIN: { // ASin
+    function_context->func.exec_func = exec_asin;
+    function_context->func.free_local_context_func = free_asin_local_context;
+    function_context->func.local_context = 0;
+    allocate_asin_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_ACOS: { // ACos
+    function_context->func.exec_func = exec_acos;
+    function_context->func.free_local_context_func = free_acos_local_context;
+    function_context->func.local_context = 0;
+    allocate_acos_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_ATAN: { // ATan
+    function_context->func.exec_func = exec_atan;
+    function_context->func.free_local_context_func = free_atan_local_context;
+    function_context->func.local_context = 0;
+    allocate_atan_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_ASINH: { // ASinh
+    function_context->func.exec_func = exec_asinh;
+    function_context->func.free_local_context_func = free_asinh_local_context;
+    function_context->func.local_context = 0;
+    allocate_asinh_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_ACOSH: { // ACosh
+    function_context->func.exec_func = exec_acosh;
+    function_context->func.free_local_context_func = free_acosh_local_context;
+    function_context->func.local_context = 0;
+    allocate_acosh_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_ATANH: { // ATanh
+    function_context->func.exec_func = exec_atanh;
+    function_context->func.free_local_context_func = free_atanh_local_context;
+    function_context->func.local_context = 0;
+    allocate_atanh_local_context(&function_context->func);
   } break;
 
   case NN_FUNCTION_CONCATENATE: { // Concatenate
@@ -1375,6 +1474,21 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->one_input_grad = f->one_input_grad;
     function_context->func.local_context = ctx;
     allocate_sink_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_NMS_DETECTION2D: { // NmsDetection2d
+    function_context->func.exec_func = exec_nms_detection2d;
+    function_context->func.free_local_context_func =
+        free_nms_detection2d_local_context;
+    nn_function_nms_detection2d_t *f =
+        (nn_function_nms_detection2d_t *)function;
+    nms_detection2d_local_context_t *ctx =
+        malloc(sizeof(nms_detection2d_local_context_t));
+    ctx->thresh = f->thresh;
+    ctx->nms = f->nms;
+    ctx->nms_per_class = f->nms_per_class;
+    function_context->func.local_context = ctx;
+    allocate_nms_detection2d_local_context(&function_context->func);
   } break;
 
   default:
