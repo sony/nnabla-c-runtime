@@ -50,7 +50,7 @@ static inline float var_get(var_t *var, nn_size_t offset) {
 }
 
 static inline void var_set(var_t *var, nn_size_t offset, float v) {
-  return var->set(var->v, offset, v);
+  var->set(var->v, offset, v);
 }
 
 static inline void convnd(var_t *out, var_t *in, var_t *we,

@@ -75,7 +75,7 @@ rt_function_error_t exec_log(rt_function_t *f) {
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    y[i] = log(x[i]);
+    y[i] = (float)log(x[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

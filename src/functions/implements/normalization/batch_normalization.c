@@ -71,7 +71,7 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
       break;
     }
   }
-  if (f->outputs[0] != NN_DATA_TYPE_FLOAT) {
+  if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_batch_normalization_generic;
   }
   return RT_FUNCTION_ERROR_NOERROR;
@@ -131,7 +131,7 @@ static void forward_impl_batch(rt_function_t *f,
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
-      const float stdvar = sqrt(v[i1] + context->eps);
+      const float stdvar = (float)sqrt(v[i1] + context->eps);
       y[i] = (x[i] - m[i1]) * gamma[i1] / stdvar + beta[i1];
     }
   }
@@ -193,7 +193,7 @@ forward_impl_batch_generic(rt_function_t *f,
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
-      const float stdvar = sqrt(v[i1] + context->eps);
+      const float stdvar = (float)sqrt(v[i1] + context->eps);
       float x = get_x(input_x, i);
       float beta = get_beta(input_beta, i1);
       float gamma = get_gamma(input_gamma, i1);
@@ -226,7 +226,7 @@ static void forward_impl_global(rt_function_t *f,
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
       const float mean = rm[i1];
-      const float stdvar = sqrt(rv[i1] + context->eps);
+      const float stdvar = (float)sqrt(rv[i1] + context->eps);
       y[i] = (x[i] - mean) * gamma[i1] / stdvar + beta[i1];
     }
   }
@@ -266,7 +266,7 @@ forward_impl_global_generic(rt_function_t *f,
       float rv = get_rv(input_rv, i1);
       float gamma = get_gamma(input_gamma, i1);
       float beta = get_beta(input_beta, i1);
-      const float stdvar = sqrt(rv + context->eps);
+      const float stdvar = (float)sqrt(rv + context->eps);
       float y = (x - rm) * gamma / stdvar + beta;
       set_output(output, i, y);
     }

@@ -38,7 +38,12 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
 
   for (i = 0; i < rt_num_of_input(context); i++) {
     printf("Input[%d] size:%d\n", i, rt_input_size(context, i));
-    FILE *input = fopen(*argv, "rb");
+    FILE *input = 0;
+#ifdef _MSC_VER
+    fopen_s(&input, *argv, "rb");
+#else
+    input = fopen(*argv, "rb");
+#endif
     argv += 1;
     assert(input);
     fseek(input, 0L, SEEK_END);
@@ -47,8 +52,8 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     assert(input_data_size ==
            rt_input_size(context, i) * sizeof(float)); // TODO float only.
     fseek(input, 0L, SEEK_SET);
-    int read_size = fread(rt_input_buffer(context, i), sizeof(uint8_t),
-                          input_data_size, input);
+    int read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
+                               input_data_size, input);
     assert(read_size == input_data_size);
 
     fclose(input);
@@ -65,19 +70,29 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
 
   for (i = 0; i < rt_num_of_output(context); i++) {
     printf("Output[%d] size:%d\n", i, rt_output_size(context, i));
-
-    char *output_filename = malloc(strlen(*argv) + 10);
+    size_t output_filename_length = strlen(*argv) + 10;
+    char *output_filename = malloc(output_filename_length);
     assert(output_filename);
+#ifdef _MSC_VER
+    sprintf_s(output_filename, output_filename_length, "%s_%d.bin", *argv, i);
+#else
     sprintf(output_filename, "%s_%d.bin", *argv, i);
+#endif
     printf("Output[%d] filename %s\n", i, output_filename);
 
-    FILE *output = fopen(output_filename, "wb");
+    FILE *output = 0;
+#ifdef _MSC_VER
+    fopen_s(&output, output_filename, "wb");
+#else
+    output = fopen(output_filename, "wb");
+#endif
     assert(output);
 
     int output_data_size =
         rt_output_size(context, i) * sizeof(float); // TODO float only.
-    int output_write_size = fwrite(rt_output_buffer(context, i),
-                                   sizeof(uint8_t), output_data_size, output);
+    int output_write_size =
+        (int)fwrite(rt_output_buffer(context, i), sizeof(uint8_t),
+                    output_data_size, output);
     assert(output_write_size == output_data_size);
 
     fclose(output);

@@ -77,7 +77,7 @@ rt_function_error_t exec_abs(rt_function_t *f) {
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    y[i] = fabs(x[i]);
+    y[i] = (float)fabs(x[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -88,7 +88,7 @@ rt_function_error_t exec_abs_generic(rt_function_t *f) {
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
     float x = p->get_input(p->input, i);
-    p->set_output(p->output, i, fabs(x));
+    p->set_output(p->output, i, (float)fabs(x));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

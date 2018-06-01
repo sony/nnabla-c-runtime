@@ -35,14 +35,19 @@ int main(int argc, char *argv[]) {
     argv += 3;
     argc -= 3;
 
-    FILE *nnb = fopen(nnb_filename, "rb");
+    FILE *nnb = 0;
+#ifdef _MSC_VER
+    fopen_s(&nnb, nnb_filename, "rb");
+#else
+    nnb = fopen(nnb_filename, "rb");
+#endif
     assert(nnb);
     fseek(nnb, 0L, SEEK_END);
     size_t nnb_data_size = ftell(nnb);
     fseek(nnb, 0L, SEEK_SET);
     uint8_t *nnb_data = malloc(nnb_data_size);
     assert(nnb_data);
-    int read_size = fread(nnb_data, sizeof(uint8_t), nnb_data_size, nnb);
+    int read_size = (int)fread(nnb_data, sizeof(uint8_t), nnb_data_size, nnb);
     assert(read_size == nnb_data_size);
     fclose(nnb);
 

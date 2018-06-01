@@ -55,7 +55,7 @@ rt_function_error_t allocate_pooling(rt_function_t *f,
                             context->stride.data[i]) +
                       1;
     } else {
-      shape.data[i] = ceil(shape.data[i] * 1.0 / context->stride.data[i]);
+      shape.data[i] = (int)ceil(shape.data[i] * 1.0 / context->stride.data[i]);
     }
   }
   for (i = 0; i < p->input_shape.size; i++) {
@@ -128,13 +128,13 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
       for (jy = 0; jy < wy; jy++) {
         int hstart = iy * hstride - hpad;
         int wstart = jy * wstride - wpad;
-        int hend = fminf(hstart + hkernel, hx + hpad);
-        int wend = fminf(wstart + wkernel, wx + wpad);
+        int hend = (int)fminf((float)(hstart + hkernel), (float)(hx + hpad));
+        int wend = (int)fminf((float)(wstart + wkernel), (float)(wx + wpad));
         p->calc_context.pool_size = (hend - hstart) * (wend - wstart);
-        p->calc_context.hstart = fmaxf(hstart, 0);
-        p->calc_context.wstart = fmaxf(wstart, 0);
-        p->calc_context.hend = fminf(hend, hx);
-        p->calc_context.wend = fminf(wend, wx);
+        p->calc_context.hstart = (int)fmaxf((float)hstart, 0);
+        p->calc_context.wstart = (int)fmaxf((float)wstart, 0);
+        p->calc_context.hend = (int)fminf((float)hend, (float)hx);
+        p->calc_context.wend = (int)fminf((float)wend, (float)wx);
         int k = iy * wy + jy;
         float val = exec(p->calc_context);
         *(y + k + p->calc_context.offset_y) = val;
@@ -169,13 +169,13 @@ rt_function_error_t exec_pooling_generic(rt_function_t *f,
       for (jy = 0; jy < wy; jy++) {
         int hstart = iy * hstride - hpad;
         int wstart = jy * wstride - wpad;
-        int hend = fminf(hstart + hkernel, hx + hpad);
-        int wend = fminf(wstart + wkernel, wx + wpad);
+        int hend = (int)fminf((float)(hstart + hkernel), (float)(hx + hpad));
+        int wend = (int)fminf((float)(wstart + wkernel), (float)(wx + wpad));
         p->calc_context.pool_size = (hend - hstart) * (wend - wstart);
-        p->calc_context.hstart = fmaxf(hstart, 0);
-        p->calc_context.wstart = fmaxf(wstart, 0);
-        p->calc_context.hend = fminf(hend, hx);
-        p->calc_context.wend = fminf(wend, wx);
+        p->calc_context.hstart = (int)fmaxf((float)hstart, 0);
+        p->calc_context.wstart = (int)fmaxf((float)wstart, 0);
+        p->calc_context.hend = (int)fminf((float)hend, (float)hx);
+        p->calc_context.wend = (int)fminf((float)wend, (float)wx);
         int k = iy * wy + jy;
         float val = exec(p->calc_context);
         p->calc_context.set_y(p->calc_context.y, k + p->calc_context.offset_y,

@@ -30,12 +30,13 @@ clean-all:
 PYTHON_VERSION_MAJOR ?= 3
 PYTHON_VERSION_MINOR ?= 5
 BUILD_DIRECTORY_WHEEL_SUFFIX ?= _py$(PYTHON_VERSION_MAJOR)$(PYTHON_VERSION_MINOR)
-NNABLA_DIRECTORY ?= $(shell echo `cd ../nnabla ; pwd`)
-DOCKER_RUN_OPTS += -v $(NNABLA_DIRECTORY):$(NNABLA_DIRECTORY)
 
--include $(NNABLA_DIRECTORY)/build-tools/make/build.mk
--include $(NNABLA_DIRECTORY)/build-tools/make/build-with-docker.mk
-
+ifneq ("$(wildcard ../nnabla)","")
+	NNABLA_DIRECTORY ?= $(shell echo `cd ../nnabla ; pwd`)
+	DOCKER_RUN_OPTS += -v $(NNABLA_DIRECTORY):$(NNABLA_DIRECTORY)
+	-include $(NNABLA_DIRECTORY)/build-tools/make/build.mk
+	-include $(NNABLA_DIRECTORY)/build-tools/make/build-with-docker.mk
+endif
 
 ########################################################################################################################
 # NNabla C Runtime

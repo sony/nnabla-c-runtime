@@ -23,7 +23,7 @@
 #include "dump_function.h"
 
 int dump(nn_network_t *net, int argc, char *argv[]) {
-  int i, j;
+  unsigned int i, j;
 
   printf("NNB: Version: [%d]\n", net->version);
   printf("NNB: Has %d buffers.\n", net->buffers.size);

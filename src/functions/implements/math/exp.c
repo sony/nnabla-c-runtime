@@ -76,7 +76,7 @@ rt_function_error_t exec_exp(rt_function_t *f) {
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    y[i] = exp(x[i]);
+    y[i] = (float)exp(x[i]);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

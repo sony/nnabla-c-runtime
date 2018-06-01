@@ -18,7 +18,7 @@
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 
-static inline float max(float a, float b) { return a < b ? b : a; }
+static inline float local_max(float a, float b) { return a < b ? b : a; }
 
 typedef struct {
   int batch_size;
@@ -88,7 +88,7 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
       for (specified_index = 0; specified_index < specified_axis_size;
            ++specified_index) {
         const int k = specified_index * output_size + j;
-        max_input = max(max_input, x[k]);
+        max_input = local_max(max_input, x[k]);
       }
       // Compute exponential and sum
       float exp_sum = 0;
@@ -135,7 +135,7 @@ rt_function_error_t exec_softmax_generic(rt_function_t *f) {
       for (specified_index = 0; specified_index < specified_axis_size;
            ++specified_index) {
         const int k = specified_index * output_size + j;
-        max_input = max(max_input, get_input(input, k));
+        max_input = local_max(max_input, get_input(input, k));
       }
       // Compute exponential and sum
       float exp_sum = 0;

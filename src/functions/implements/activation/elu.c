@@ -40,7 +40,8 @@ rt_function_error_t exec_elu(rt_function_t *f) {
   const int size = calc_shape_size(f->inputs[0]->shape);
   int s;
   for (s = 0; s < size; s++) {
-    y[s] = x[s] > (float)0 ? x[s] : context->alpha * (exp(x[s]) - (float)1);
+    y[s] = (float)(x[s] > (float)0 ? x[s]
+                                   : context->alpha * (exp(x[s]) - (float)1));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -56,7 +57,8 @@ rt_function_error_t exec_elu_generic(rt_function_t *f) {
   for (s = 0; s < size; s++) {
     float val_x = get_input(input, s);
     float val_y =
-        val_x > (float)0 ? val_x : context->alpha * (exp(val_x) - (float)1);
+        (float)(val_x > (float)0 ? val_x
+                                 : context->alpha * (exp(val_x) - (float)1));
     set_output(output, s, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;
