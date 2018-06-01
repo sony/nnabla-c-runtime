@@ -77,6 +77,9 @@ add_library(nnablart_functions STATIC
   implements/array/matrix_diag.c
   implements/array/matrix_diag_part.c
   implements/array/reshape.c
+  implements/array/concatenate.c
+  implements/array/split.c
+  implements/array/stack.c
   implements/array/shift.c
   implements/array/slice.c
 
