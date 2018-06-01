@@ -124,19 +124,6 @@ rt_function_error_t exec_clip_grad_by_norm(rt_function_t *f) {
 // Reduction
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sum
-rt_function_error_t allocate_sum_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_sum_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_sum(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // Mean
 rt_function_error_t allocate_mean_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;

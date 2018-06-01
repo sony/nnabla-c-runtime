@@ -86,5 +86,7 @@ add_library(nnablart_functions STATIC
 
   implements/normalization/batch_normalization.c
   implements/normalization/mean_subtraction.c
-
+  
+  implements/reduction/sum.c
+  
   implements/unimplemented.c)
