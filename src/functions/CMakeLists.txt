@@ -12,7 +12,6 @@ add_library(nnablart_functions STATIC
   utilities/accessor.c
   utilities/list.c
   utilities/shape.c
-  utilities/vector.c
 
   # Functions
   implements/neural_network/pooling.c

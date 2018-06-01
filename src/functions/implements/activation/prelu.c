@@ -13,16 +13,23 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
-#include "../../utilities/vector.h"
-
-#include <assert.h>
-#include <math.h>
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 
 typedef struct {
-  rt_variable_t weight_param;
-  vector_calc_context_t calc_context;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+  int input_size;
+  rt_variable_t *weight;
+  rt_variable_getter get_weight;
+  int weight_size;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
+  rt_list_t in_shape;
+  rt_list_t in_stride;
 } prelu_private_t;
+
+rt_function_error_t exec_prelu_generic(rt_function_t *f);
 
 // PRelu
 rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
@@ -37,42 +44,79 @@ rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-
-  p->weight_param = *(f->inputs[1]);
-
-  rt_variable_t input = *(f->inputs[0]);
-  rt_variable_t output = *(f->outputs[0]);
-
-  rt_variable_t inputs[] = {input, p->weight_param};
-  p->calc_context = init_vector_calc_context(f->num_of_inputs, inputs, output);
   ((prelu_local_context_t *)(f->local_context))->data = (void *)p;
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
+  p->input_size = calc_shape_size(f->inputs[0]->shape);
+  p->weight = f->inputs[1];
+  p->get_weight = select_getter(p->weight);
+  p->weight_size = calc_shape_size(f->inputs[1]->shape);
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
+  p->in_shape = clone_list(f->inputs[0]->shape);
+  p->in_stride = calc_contiguous_strides(f->inputs[0]->shape);
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->weight->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_prelu;
+  } else {
+    f->exec_func = exec_prelu_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_prelu_local_context(rt_function_t *f) {
   prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
   prelu_private_t *p = (prelu_private_t *)(context->data);
-
-  free_vector_calc_context(p->calc_context);
+  free_list(p->in_shape);
+  free_list(p->in_stride);
   free(p);
   return RT_FUNCTION_ERROR_NOERROR;
-}
-
-static float calc_prelu(int num_of_inputs, float *inputs) {
-  if (inputs[0] > 0) {
-    return inputs[0];
-  }
-  return inputs[0] * inputs[1];
 }
 
 rt_function_error_t exec_prelu(rt_function_t *f) {
   prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
   prelu_private_t *p = (prelu_private_t *)(context->data);
+  float *x = (float *)(p->input->data);
+  float *w = (float *)(p->weight->data);
+  float *y = (float *)(p->output->data);
+  int base_shape = p->in_shape.data[context->base_axis];
+  int base_stride = p->in_stride.data[context->base_axis];
 
-  rt_variable_t input = *(f->inputs[0]);
-  rt_variable_t output = *(f->outputs[0]);
+  if (p->weight_size == 1) {
+    for (int s = 0; s < p->input_size; ++s) {
+      y[s] = (x[s] >= 0) ? x[s] : x[s] * (*w);
+    }
+  } else {
+    for (int s = 0; s < p->input_size; ++s) {
+      int iw = (s / base_stride) % base_shape;
+      y[s] = (x[s] >= 0) ? x[s] : x[s] * w[iw];
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
 
-  rt_variable_t inputs[] = {input, p->weight_param};
-  vector_calc(p->calc_context, f->num_of_inputs, inputs, output, calc_prelu);
+rt_function_error_t exec_prelu_generic(rt_function_t *f) {
+  prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
+  prelu_private_t *p = (prelu_private_t *)(context->data);
+  int base_shape = p->in_shape.data[context->base_axis];
+  int base_stride = p->in_stride.data[context->base_axis];
+
+  if (p->weight_size == 1) {
+    float w = p->get_weight(p->weight, 0);
+    for (int s = 0; s < p->input_size; ++s) {
+      float x = p->get_input(p->input, s);
+      float y = (x >= 0) ? x : x * w;
+      p->set_output(p->output, s, y);
+    }
+  } else {
+    for (int s = 0; s < p->input_size; ++s) {
+      int iw = (s / base_stride) % base_shape;
+      float x = p->get_input(p->input, s);
+      float w = p->get_weight(p->weight, iw);
+      float y = (x >= 0) ? x : x * w;
+      p->set_output(p->output, s, y);
+    }
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
