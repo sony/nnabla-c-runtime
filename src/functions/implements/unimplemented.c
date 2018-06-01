@@ -683,19 +683,6 @@ rt_function_error_t exec_flip(rt_function_t *f) {
 // Stochasticity
 ////////////////////////////////////////////////////////////////////////////////
 
-// Dropout
-rt_function_error_t allocate_dropout_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_dropout_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_dropout(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // TopKData
 rt_function_error_t allocate_top_k_data_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
