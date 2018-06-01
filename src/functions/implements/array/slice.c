@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 #include <string.h>
 
@@ -24,9 +25,13 @@ typedef struct {
   rt_list_t start;
   rt_list_t stop;
   rt_list_t step;
-  float *input;
-  float *output;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
 } slice_private_t;
+
+rt_function_error_t exec_slice_generic(rt_function_t *f);
 
 // Slice
 rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
@@ -50,8 +55,10 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
   p->start = allocate_list(p->input_shape.size);
   p->stop = allocate_list(p->input_shape.size);
   p->step = allocate_list(p->input_shape.size);
-  p->input = (float *)(f->inputs[0]->data);
-  p->output = (float *)(f->outputs[0]->data);
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
 
   int i, j;
   int diff = p->input_shape.size - context->start.size - 1;
@@ -65,7 +72,12 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
     p->stop.data[i] = context->stop.data[j];
     p->step.data[i] = context->step.data[j];
   }
-
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_slice;
+  } else {
+    f->exec_func = exec_slice_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -92,8 +104,8 @@ static void slice_recursive(slice_local_context_t *context, int x_offset,
   const int y_stride = p->output_strides.data[dim];
   current_x_offset += p->input_strides.data[dim] * p->start.data[dim];
   const int size = p->output_shape.data[dim];
-  const float *x = p->input;
-  float *y = p->output;
+  const float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
 
   if (dim == p->input_shape.size - 1) {
     const float *current_x = x + current_x_offset;
@@ -117,9 +129,49 @@ static void slice_recursive(slice_local_context_t *context, int x_offset,
   }
 }
 
+static void slice_recursive_generic(slice_local_context_t *context,
+                                    int x_offset, int y_offset, int dim) {
+  slice_private_t *p = (slice_private_t *)(context->data);
+  int current_x_offset = x_offset;
+  int current_y_offset = y_offset;
+  const int x_stride = p->input_strides.data[dim] * p->step.data[dim];
+  const int y_stride = p->output_strides.data[dim];
+  current_x_offset += p->input_strides.data[dim] * p->start.data[dim];
+  const int size = p->output_shape.data[dim];
+
+  if (dim == p->input_shape.size - 1) {
+    if (x_stride == 1) {
+      for (int i = 0; i < size; i++) {
+        float x = p->get_input(p->input, i + current_x_offset);
+        p->set_output(p->output, i + current_y_offset, x);
+      }
+    } else {
+      for (int i = 0; i < size; i++) {
+        float x = p->get_input(p->input, current_x_offset);
+        p->set_output(p->output, current_y_offset, x);
+        current_x_offset += x_stride;
+        current_y_offset += y_stride;
+      }
+    }
+  } else {
+    for (int i = 0; i < size; i++) {
+      slice_recursive_generic(context, current_x_offset, current_y_offset, dim + 1);
+      current_x_offset += x_stride;
+      current_y_offset += y_stride;
+    }
+  }
+}
+
 rt_function_error_t exec_slice(rt_function_t *f) {
   slice_local_context_t *context = (slice_local_context_t *)(f->local_context);
 
   slice_recursive(context, 0, 0, 0);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_slice_generic(rt_function_t *f) {
+  slice_local_context_t *context = (slice_local_context_t *)(f->local_context);
+
+  slice_recursive_generic(context, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }

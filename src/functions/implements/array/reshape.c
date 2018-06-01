@@ -13,14 +13,19 @@
 // limitations under the License.
 
 #include "../../utilities/shape.h"
+#include "../../utilities/accessor.h"
 #include <nnablart/functions.h>
 
 typedef struct {
-  float *input;
+  rt_variable_t *input;
+  rt_variable_getter get_input;
   int input_size;
-  float *output;
+  rt_variable_t *output;
+  rt_variable_setter set_output;
   int output_size;
 } reshape_private_t;
+
+rt_function_error_t exec_reshape_generic(rt_function_t *f);
 
 // Reshape
 rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
@@ -34,14 +39,22 @@ rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
-  p->input = f->inputs[0]->data;
+  p->input = f->inputs[0];
+  p->get_input = select_getter(p->input);
   p->input_size = calc_shape_size(f->inputs[0]->shape);
-  p->output = f->outputs[0]->data;
+  p->output = f->outputs[0];
+  p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
   if (p->input_size != p->output_size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   ((reshape_local_context_t *)(f->local_context))->data = (void *)p;
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT) {
+    f->exec_func = exec_reshape;
+  } else {
+    f->exec_func = exec_reshape_generic;
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -54,9 +67,25 @@ rt_function_error_t exec_reshape(rt_function_t *f) {
   reshape_local_context_t *context =
       (reshape_local_context_t *)(f->local_context);
   reshape_private_t *p = (reshape_private_t *)(context->data);
+  float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
+
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    p->output[i] = p->input[i];
+    y[i] = x[i];
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_reshape_generic(rt_function_t *f) {
+  reshape_local_context_t *context =
+      (reshape_local_context_t *)(f->local_context);
+  reshape_private_t *p = (reshape_private_t *)(context->data);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    float x = p->get_input(p->input, i);
+    p->set_output(p->output, i, x);
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
