@@ -53,7 +53,7 @@ rt_function_error_t exec_maximum_scalar(rt_function_t *f) {
 
 rt_function_error_t exec_maximum_scalar_generic(rt_function_t *f) {
   maximum_scalar_local_context_t *context =
-		(maximum_scalar_local_context_t *)(f->local_context);
+      (maximum_scalar_local_context_t *)(f->local_context);
   calc_scalar_generic(f, context->val, select_max);
   return RT_FUNCTION_ERROR_NOERROR;
 }

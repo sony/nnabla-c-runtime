@@ -13,14 +13,14 @@
 // limitations under the License.
 
 #include "arithmetic.h"
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 
 void calc_dim_arithmetic_generic(rt_variable_t *output, rt_variable_t *input1,
-                         rt_variable_t *input2, int dim_index, int y_out,
-                         int y_in1, int y_in2,
-                         float (*calc_func)(float, float)) {
+                                 rt_variable_t *input2, int dim_index,
+                                 int y_out, int y_in1, int y_in2,
+                                 float (*calc_func)(float, float)) {
   int dim_size = output->shape.size;
   int x_size_out = output->shape.data[dim_index];
   int x_size_in1 = input1->shape.data[dim_index];
@@ -35,8 +35,8 @@ void calc_dim_arithmetic_generic(rt_variable_t *output, rt_variable_t *input1,
     int z_in1 = y_in1 * x_size_in1 + x_in1;
     int z_in2 = y_in2 * x_size_in2 + x_in2;
     if (dim_index + 1 < dim_size) {
-      calc_dim_arithmetic_generic(output, input1, input2, dim_index + 1, z_out, z_in1,
-                          z_in2, calc_func);
+      calc_dim_arithmetic_generic(output, input1, input2, dim_index + 1, z_out,
+                                  z_in1, z_in2, calc_func);
     } else {
       float data_in1 = get_input1(input1, z_in1);
       float data_in2 = get_input2(input2, z_in2);
@@ -46,9 +46,10 @@ void calc_dim_arithmetic_generic(rt_variable_t *output, rt_variable_t *input1,
 }
 
 // Common algorism for arithmetic calculation between two vectors.
-void calc_arithmetic_generic(rt_function_t *f, float (*calc_func)(float, float)) {
-  calc_dim_arithmetic_generic(f->outputs[0], f->inputs[0], f->inputs[1], 0, 0, 0, 0,
-                      calc_func);
+void calc_arithmetic_generic(rt_function_t *f,
+                             float (*calc_func)(float, float)) {
+  calc_dim_arithmetic_generic(f->outputs[0], f->inputs[0], f->inputs[1], 0, 0,
+                              0, 0, calc_func);
 }
 
 // Common algorism for arithmetic calculation between vector and scalar value.

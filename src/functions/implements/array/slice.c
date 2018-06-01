@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
 #include <string.h>
 
@@ -155,7 +155,8 @@ static void slice_recursive_generic(slice_local_context_t *context,
     }
   } else {
     for (int i = 0; i < size; i++) {
-      slice_recursive_generic(context, current_x_offset, current_y_offset, dim + 1);
+      slice_recursive_generic(context, current_x_offset, current_y_offset,
+                              dim + 1);
       current_x_offset += x_stride;
       current_y_offset += y_stride;
     }

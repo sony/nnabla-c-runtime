@@ -18,7 +18,8 @@
 #include <nnablart/functions.h>
 
 void calc_arithmetic(rt_function_t *f, float (*calc_func)(float, float));
-void calc_arithmetic_generic(rt_function_t *f, float (*calc_func)(float, float));
+void calc_arithmetic_generic(rt_function_t *f,
+                             float (*calc_func)(float, float));
 void calc_scalar(rt_function_t *f, float value,
                  float (*calc_func)(float, float));
 void calc_scalar_generic(rt_function_t *f, float value,

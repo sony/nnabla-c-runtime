@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 51/135
+Total 57/136
 
 
 ## Neural Network Layer
@@ -60,17 +60,17 @@ Count 2/4
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|    BatchNormalization    |     yes      |      -       |      -       |
-|     MeanSubtraction      |     yes      |      -       |      -       |
+|    BatchNormalization    |     yes      |      -       |     yes      |
+|     MeanSubtraction      |     yes      |      -       |     yes      |
 |     ClipGradByValue      |      no      |      -       |      -       |
 |      ClipGradByNorm      |      no      |      -       |      -       |
 
 ## Reduction
-Count 0/7
+Count 1/7
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|           Sum            |      no      |      -       |      -       |
+|           Sum            |     yes      |      -       |     yes      |
 |           Mean           |      no      |      -       |      -       |
 |           Max            |      no      |      -       |      -       |
 |           Min            |      no      |      -       |      -       |
@@ -79,33 +79,33 @@ Count 0/7
 |        ReduceMean        |      no      |      -       |      -       |
 
 ## Arithmetic
-Count 10/12
+Count 11/12
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|           Add2           |      no      |      -       |      -       |
+|           Add2           |     yes      |      -       |     yes      |
 |          BcAdd2          |      no      |      -       |      -       |
-|           Sub2           |     yes      |      -       |      -       |
-|           Mul2           |     yes      |      -       |      -       |
-|           Div2           |     yes      |      -       |      -       |
-|           Pow2           |     yes      |      -       |      -       |
-|        AddScalar         |     yes      |      -       |      -       |
-|        MulScalar         |     yes      |      -       |      -       |
-|        PowScalar         |     yes      |      -       |      -       |
-|        RSubScalar        |     yes      |      -       |      -       |
-|        RDivScalar        |     yes      |      -       |      -       |
-|        RPowScalar        |     yes      |      -       |      -       |
+|           Sub2           |     yes      |      -       |     yes      |
+|           Mul2           |     yes      |      -       |     yes      |
+|           Div2           |     yes      |      -       |     yes      |
+|           Pow2           |     yes      |      -       |     yes      |
+|        AddScalar         |     yes      |      -       |     yes      |
+|        MulScalar         |     yes      |      -       |     yes      |
+|        PowScalar         |     yes      |      -       |     yes      |
+|        RSubScalar        |     yes      |      -       |     yes      |
+|        RDivScalar        |     yes      |      -       |     yes      |
+|        RPowScalar        |     yes      |      -       |     yes      |
 
 ## Logical
 Count 5/24
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|           Sign           |     yes      |      -       |      -       |
-|         Minimum2         |     yes      |      -       |      -       |
-|         Maximum2         |     yes      |      -       |      -       |
-|      MinimumScalar       |     yes      |      -       |      -       |
-|      MaximumScalar       |     yes      |      -       |      -       |
+|           Sign           |     yes      |      -       |     yes      |
+|         Minimum2         |     yes      |      -       |     yes      |
+|         Maximum2         |     yes      |      -       |     yes      |
+|      MinimumScalar       |     yes      |      -       |     yes      |
+|      MaximumScalar       |     yes      |      -       |     yes      |
 |        LogicalAnd        |      no      |      -       |      -       |
 |        LogicalOr         |      no      |      -       |      -       |
 |        LogicalXor        |      no      |      -       |      -       |
@@ -132,12 +132,12 @@ Count 6/18
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |         Constant         |      no      |      -       |      -       |
-|           Abs            |     yes      |      -       |      -       |
-|           Exp            |     yes      |      -       |      -       |
-|           Log            |     yes      |      -       |      -       |
-|         Identity         |     yes      |      -       |      -       |
-|       BatchMatmul        |     yes      |      -       |      -       |
-|          Round           |     yes      |      -       |      -       |
+|           Abs            |     yes      |      -       |     yes      |
+|           Exp            |     yes      |      -       |     yes      |
+|           Log            |     yes      |      -       |     yes      |
+|         Identity         |     yes      |      -       |     yes      |
+|       BatchMatmul        |     yes      |      -       |     yes      |
+|          Round           |     yes      |      -       |     yes      |
 |           Sin            |      no      |      -       |      -       |
 |           Cos            |      no      |      -       |      -       |
 |           Tan            |      no      |      -       |      -       |
@@ -151,29 +151,30 @@ Count 6/18
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 5/12
+Count 8/13
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|       Concatenate        |      no      |      -       |      -       |
-|          Split           |      no      |      -       |      -       |
-|          Stack           |      no      |      -       |      -       |
-|          Slice           |     yes      |      -       |      -       |
+|       Concatenate        |     yes      |      -       |     yes      |
+|          Split           |     yes      |      -       |     yes      |
+|          Stack           |     yes      |      -       |     yes      |
+|          Slice           |     yes      |      -       |     yes      |
+|           Pad            |      no      |      -       |      -       |
 |        Transpose         |      no      |      -       |      -       |
 |        Broadcast         |      no      |      -       |      -       |
 |          OneHot          |      no      |      -       |      -       |
 |           Flip           |      no      |      -       |      -       |
-|          Shift           |     yes      |      -       |      -       |
-|         Reshape          |     yes      |      -       |      -       |
-|        MatrixDiag        |     yes      |      -       |      -       |
-|      MatrixDiagPart      |     yes      |      -       |      -       |
+|          Shift           |     yes      |      -       |     yes      |
+|         Reshape          |     yes      |      -       |     yes      |
+|        MatrixDiag        |     yes      |      -       |     yes      |
+|      MatrixDiagPart      |     yes      |      -       |     yes      |
 
 ## Stochasticity
-Count 0/10
+Count 1/10
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|         Dropout          |      no      |      -       |      -       |
+|         Dropout          |     yes      |      -       |     yes      |
 |         TopKData         |      no      |      -       |      -       |
 |         TopKGrad         |      no      |      -       |      -       |
 |           Rand           |      no      |      -       |      -       |
@@ -204,8 +205,8 @@ Count 6/10
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
-|      BinarySigmoid       |     yes      |      -       |      -       |
-|        BinaryTanh        |     yes      |      -       |      -       |
+|      BinarySigmoid       |     yes      |      -       |     yes      |
+|        BinaryTanh        |     yes      |      -       |     yes      |
 |   BinaryConnectAffine    |     yes      |      -       |      -       |
 | BinaryConnectConvolution |     yes      |      -       |      -       |
 |    BinaryWeightAffine    |     yes      |      -       |      -       |

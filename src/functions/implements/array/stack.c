@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <nnablart/functions.h>
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
+#include <nnablart/functions.h>
 
 typedef struct {
   int num_outputs;
@@ -22,8 +22,7 @@ typedef struct {
   int outer_size;
 } stack_private_t;
 
-static inline int calc_size(rt_list_t shape, int axis)
-{
+static inline int calc_size(rt_list_t shape, int axis) {
   int size = 1;
   for (int i = axis; i < shape.size; i++) {
     size *= shape.data[i];
@@ -63,8 +62,7 @@ rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
 
 rt_function_error_t free_stack_local_context(rt_function_t *f) {
   stack_private_t *p =
-      (stack_private_t *)(((stack_local_context_t *)(f->local_context))
-                                ->data);
+      (stack_private_t *)(((stack_local_context_t *)(f->local_context))->data);
   free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -99,7 +97,8 @@ rt_function_error_t exec_stack_generic(rt_function_t *f) {
       for (int k = 0; k < p->inner_size; k++) {
         float x = get_input(input, j * p->inner_size + k);
         set_output(output,
-          j * (p->inner_size * p->num_outputs) + i * p->inner_size + k, x);
+                   j * (p->inner_size * p->num_outputs) + i * p->inner_size + k,
+                   x);
       }
     }
   }

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 #include <nnablart/functions.h>
 
@@ -85,7 +85,7 @@ rt_function_error_t exec_binary_tanh(rt_function_t *f) {
 
 rt_function_error_t exec_binary_tanh_generic(rt_function_t *f) {
   binary_tanh_private_context_t *p =
-		(binary_tanh_private_context_t *)(f->local_context);
+      (binary_tanh_private_context_t *)(f->local_context);
   int i; // Iterator
   for (i = 0; i < p->input_size; i++) {
     float x = (p->get_input(p->input, i) + 1) / 2;

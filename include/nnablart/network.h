@@ -25,7 +25,7 @@ extern "C" {
 #include <stdlib.h> // for size_t
 
 #define NN_BINARY_FORMAT_VERSION (1)
-#define NN_BINARY_FORMAT_REVISION 3569d137a03b3bf484d6d2ed2889f543
+#define NN_BINARY_FORMAT_REVISION 00445fec0a252af04a38a1057f0dcc17
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -159,6 +159,7 @@ typedef enum {
   NN_FUNCTION_SPLIT = 75,                       ///< Split
   NN_FUNCTION_STACK = 76,                       ///< Stack
   NN_FUNCTION_SLICE = 77,                       ///< Slice
+  NN_FUNCTION_PAD = 123,                        ///< Pad
   NN_FUNCTION_TRANSPOSE = 78,                   ///< Transpose
   NN_FUNCTION_BROADCAST = 79,                   ///< Broadcast
   NN_FUNCTION_ONE_HOT = 80,                     ///< OneHot
@@ -1371,6 +1372,21 @@ typedef struct {
   nn_list_t stop;  ///< Original type is [repeated int64]
   nn_list_t step;  ///< Original type is [repeated int64]
 } nn_function_slice_t;
+
+/// @}
+
+/// @brief Pad function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t pad_width;  ///< Original type is [repeated int64]
+  uint32_t mode;        ///< Original type is [string]
+  float constant_value; ///< Original type is [float]
+} nn_function_pad_t;
 
 /// @}
 

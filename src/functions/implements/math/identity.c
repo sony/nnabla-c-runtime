@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
 
 typedef struct {
@@ -77,7 +77,7 @@ rt_function_error_t exec_identity(rt_function_t *f) {
 
 rt_function_error_t exec_identity_generic(rt_function_t *f) {
   identity_private_context_t *p =
-    (identity_private_context_t *)(f->local_context);
+      (identity_private_context_t *)(f->local_context);
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
     p->set_output(p->output, i, p->get_input(p->input, i));

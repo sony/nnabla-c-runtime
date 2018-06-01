@@ -53,7 +53,7 @@ rt_function_error_t exec_pow_scalar(rt_function_t *f) {
 
 rt_function_error_t exec_pow_scalar_generic(rt_function_t *f) {
   pow_scalar_local_context_t *context =
-		(pow_scalar_local_context_t *)(f->local_context);
+      (pow_scalar_local_context_t *)(f->local_context);
   calc_scalar_generic(f, context->val, calc_pow);
   return RT_FUNCTION_ERROR_NOERROR;
 }

@@ -18,9 +18,9 @@
 #include "../../../utilities/shape.h"
 
 #include <assert.h>
-#include <string.h>
 #include <math.h>
 #include <nnablart/functions.h>
+#include <string.h>
 
 #define _S(p) (sizeof(p) / sizeof(p[0]))
 
@@ -104,8 +104,8 @@ static inline void conv2d(var_t *out, var_t *in, var_t *we,
         for (kx = 0; kx < kernel_shape.data[1]; ++kx) {
           int iky = ky * dilation.data[0] + iy;
           int ikx = kx * dilation.data[1] + ix;
-          if (ikx >= 0 && ikx < input_shape.data[1] &&
-              iky >= 0 && iky < input_shape.data[0]) {
+          if (ikx >= 0 && ikx < input_shape.data[1] && iky >= 0 &&
+              iky < input_shape.data[0]) {
             float x = *(input + in->offset + iky * input_shape.data[1] + ikx);
             float w = *(weight + we->offset + ky * kernel_shape.data[1] + kx);
             sum += x * w;

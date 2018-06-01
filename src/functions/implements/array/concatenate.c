@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include <nnablart/functions.h>
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
+#include <nnablart/functions.h>
 
 typedef struct {
   int outer_size;
@@ -21,8 +21,7 @@ typedef struct {
   rt_list_t *in_shape;
 } concatenate_private_t;
 
-static inline int calc_size(rt_list_t shape, int axis)
-{
+static inline int calc_size(rt_list_t shape, int axis) {
   int size = 1;
   for (int i = axis; i < shape.size; i++) {
     size *= shape.data[i];
@@ -34,7 +33,8 @@ rt_function_error_t exec_concatenate_generic(rt_function_t *f);
 
 // Concatenate
 rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
-  concatenate_local_context_t *c = (concatenate_local_context_t *)(f->local_context);
+  concatenate_local_context_t *c =
+      (concatenate_local_context_t *)(f->local_context);
 
   f->exec_func = exec_concatenate;
 
@@ -47,7 +47,8 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
     f->exec_func = exec_concatenate_generic;
   }
 
-  concatenate_private_t *p = (concatenate_private_t *)malloc(sizeof(concatenate_private_t));
+  concatenate_private_t *p =
+      (concatenate_private_t *)malloc(sizeof(concatenate_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -61,7 +62,8 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
       p->in_shape[0].data[c->axis] += p->in_shape[i].data[c->axis];
     }
   }
-  p->outer_size = calc_shape_size(p->in_shape[0]) / calc_size(p->in_shape[0], c->axis);
+  p->outer_size =
+      calc_shape_size(p->in_shape[0]) / calc_size(p->in_shape[0], c->axis);
 
   ((concatenate_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
@@ -69,8 +71,8 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
 
 rt_function_error_t free_concatenate_local_context(rt_function_t *f) {
   concatenate_private_t *p =
-      (concatenate_private_t *)(((concatenate_local_context_t *)(f->local_context))
-                           ->data);
+      (concatenate_private_t
+           *)(((concatenate_local_context_t *)(f->local_context))->data);
   for (int i = 0; i < f->num_of_inputs; i++) {
     free_list(p->in_shape[i]);
   }
@@ -79,7 +81,8 @@ rt_function_error_t free_concatenate_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_concatenate(rt_function_t *f) {
-  concatenate_local_context_t *c = (concatenate_local_context_t *)(f->local_context);
+  concatenate_local_context_t *c =
+      (concatenate_local_context_t *)(f->local_context);
   concatenate_private_t *p = (concatenate_private_t *)(c->data);
 
   float *y = (float *)(f->outputs[0]->data);
@@ -98,7 +101,8 @@ rt_function_error_t exec_concatenate(rt_function_t *f) {
 }
 
 rt_function_error_t exec_concatenate_generic(rt_function_t *f) {
-  concatenate_local_context_t *c = (concatenate_local_context_t *)(f->local_context);
+  concatenate_local_context_t *c =
+      (concatenate_local_context_t *)(f->local_context);
   concatenate_private_t *p = (concatenate_private_t *)(c->data);
   rt_variable_t *output = f->outputs[0];
   rt_variable_setter set_output = select_setter(output);

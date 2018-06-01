@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include <nnablart/functions.h>
-#include "arithmetic.h"
 #include "../../utilities/shape.h"
+#include "arithmetic.h"
+#include <nnablart/functions.h>
 
 rt_function_error_t exec_add2_generic(rt_function_t *f);
 

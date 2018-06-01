@@ -53,7 +53,7 @@ rt_function_error_t exec_mul_scalar(rt_function_t *f) {
 
 rt_function_error_t exec_mul_scalar_generic(rt_function_t *f) {
   mul_scalar_local_context_t *context =
-		(mul_scalar_local_context_t *)(f->local_context);
+      (mul_scalar_local_context_t *)(f->local_context);
   calc_scalar_generic(f, context->val, calc_mul);
   return RT_FUNCTION_ERROR_NOERROR;
 }

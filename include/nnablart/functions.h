@@ -1659,6 +1659,30 @@ rt_function_error_t free_slice_local_context(rt_function_t *f);
 rt_function_error_t exec_slice(rt_function_t *f);
 /// @}
 
+/// @defgroup Pad Pad
+/// @{
+
+/// Named values for Pad.mode
+typedef enum { PAD_MODE_CONSTANT, END_OF_PAD_MODE } pad_mode_value_t;
+
+/// Local context for Pad
+typedef struct {
+  rt_list_t pad_width;   ///< Original type is [repeated int64]
+  pad_mode_value_t mode; ///< string
+  float constant_value;  ///< float
+  void *data;            ///< General perpose data area
+} pad_local_context_t;
+
+/// Allocate Pad local context
+rt_function_error_t allocate_pad_local_context(rt_function_t *f);
+
+/// Free Pad local context
+rt_function_error_t free_pad_local_context(rt_function_t *f);
+
+/// Exec Pad
+rt_function_error_t exec_pad(rt_function_t *f);
+/// @}
+
 /// @defgroup Transpose Transpose
 /// @{
 

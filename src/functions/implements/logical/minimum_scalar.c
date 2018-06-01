@@ -53,7 +53,7 @@ rt_function_error_t exec_minimum_scalar(rt_function_t *f) {
 
 rt_function_error_t exec_minimum_scalar_generic(rt_function_t *f) {
   minimum_scalar_local_context_t *context =
-		(minimum_scalar_local_context_t *)(f->local_context);
+      (minimum_scalar_local_context_t *)(f->local_context);
   calc_scalar_generic(f, context->val, select_min);
   return RT_FUNCTION_ERROR_NOERROR;
 }

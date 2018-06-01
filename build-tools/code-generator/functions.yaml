@@ -1046,6 +1046,23 @@ Array Manipulation:
       y: {}
     uniq_name: Slice_iIiIiI
     id: 77
+  Pad:
+    snake_name: pad
+    inputs:
+      x: {}
+    arguments:
+      pad_width:
+        type: repeated int64
+      mode:
+        type: string
+        available_values:
+        - constant
+      constant_value:
+        type: float
+    outputs:
+      y: {}
+    uniq_name: Pad_iIif
+    id: 123
   Transpose:
     snake_name: transpose
     inputs:

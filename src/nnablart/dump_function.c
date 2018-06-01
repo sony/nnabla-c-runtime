@@ -303,6 +303,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SLICE: { // Slice
     printf("NNB: Function type:    Slice(77)\n");
   } break;
+  case NN_FUNCTION_PAD: { // Pad
+    printf("NNB: Function type:    Pad(123)\n");
+  } break;
   case NN_FUNCTION_TRANSPOSE: { // Transpose
     printf("NNB: Function type:    Transpose(78)\n");
   } break;
@@ -946,6 +949,17 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+  } break;
+  case NN_FUNCTION_PAD: { // Pad
+    nn_function_pad_t *f = (nn_function_pad_t *)func;
+    printf("NNB: Function argument pad_width: (");
+    list = (int *)NN_GET(net, f->pad_width.list);
+    for (i = 0; i < f->pad_width.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument mode: %d\n", f->mode);
+    printf("NNB: Function argument constant_value: %f\n", f->constant_value);
   } break;
   case NN_FUNCTION_TRANSPOSE: { // Transpose
     nn_function_transpose_t *f = (nn_function_transpose_t *)func;

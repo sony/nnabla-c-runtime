@@ -627,6 +627,17 @@ rt_function_error_t exec_atanh(rt_function_t *f) {
 // Array Manipulation
 ////////////////////////////////////////////////////////////////////////////////
 
+/// Pad
+rt_function_error_t allocate_pad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t free_pad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t exec_pad(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
 // Transpose
 rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;

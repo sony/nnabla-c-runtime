@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
 
 typedef struct {
@@ -88,8 +88,8 @@ rt_function_error_t exec_matrix_diag_part_generic(rt_function_t *f) {
       (matrix_diag_part_local_context_t *)(f->local_context);
 
   for (int i = 0; i < context->output_size; ++i) {
-    float x = context->get_input(context->input,
-      i * context->last_ndim + i % context->last_ndim);
+    float x = context->get_input(context->input, i * context->last_ndim +
+                                                     i % context->last_ndim);
     context->set_output(context->output, i, x);
   }
   return RT_FUNCTION_ERROR_NOERROR;

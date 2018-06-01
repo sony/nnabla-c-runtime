@@ -53,7 +53,7 @@ rt_function_error_t exec_add_scalar(rt_function_t *f) {
 
 rt_function_error_t exec_add_scalar_generic(rt_function_t *f) {
   add_scalar_local_context_t *context =
-		(add_scalar_local_context_t *)(f->local_context);
+      (add_scalar_local_context_t *)(f->local_context);
   calc_scalar_generic(f, context->val, calc_add);
   return RT_FUNCTION_ERROR_NOERROR;
 }

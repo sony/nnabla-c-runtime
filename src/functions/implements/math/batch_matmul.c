@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <nnablart/functions.h>
 #include <stdio.h>
 
@@ -86,8 +86,8 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
   p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (p->output_size != p->row_y * p->col_y ||
-      p->col_a != p->row_b || p->samples != samples_b) {
+  if (p->output_size != p->row_y * p->col_y || p->col_a != p->row_b ||
+      p->samples != samples_b) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (p->input_a->type == NN_DATA_TYPE_FLOAT &&
@@ -179,7 +179,7 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
 
 rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
   batch_matmul_local_context_t *context =
-    (batch_matmul_local_context_t *)(f->local_context);
+      (batch_matmul_local_context_t *)(f->local_context);
   batch_matmul_private_t *p = (batch_matmul_private_t *)(context->data);
   float *input_a = (float *)(p->input_a->data);
   float *input_b = (float *)(p->input_b->data);
@@ -208,12 +208,9 @@ rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
     for (int j = 0; j < row_a; j++) {
       for (int k = 0; k < col_b; k++) {
         for (int l = 0; l < col_a; l++) {
-          float a = p->get_input_a(p->input_a,
-                                   p->offset_y * i + col_a * j + l);
-          float b = p->get_input_b(p->input_b,
-                                   p->offset_b * i + col_b * l + k);
-          float y = p->get_output(p->output,
-                                  p->offset_y * i + col_b * j + k);
+          float a = p->get_input_a(p->input_a, p->offset_y * i + col_a * j + l);
+          float b = p->get_input_b(p->input_b, p->offset_b * i + col_b * l + k);
+          float y = p->get_output(p->output, p->offset_y * i + col_b * j + k);
           y += a * b;
           p->set_output(p->output, p->offset_y * i + col_b * j + k, y);
         }

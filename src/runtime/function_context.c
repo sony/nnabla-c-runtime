@@ -944,6 +944,18 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     allocate_slice_local_context(&function_context->func);
   } break;
 
+  case NN_FUNCTION_PAD: { // Pad
+    function_context->func.exec_func = exec_pad;
+    function_context->func.free_local_context_func = free_pad_local_context;
+    nn_function_pad_t *f = (nn_function_pad_t *)function;
+    pad_local_context_t *ctx = malloc(sizeof(pad_local_context_t));
+    ctx->pad_width = create_rt_list_from_nn_list(n, f->pad_width);
+    ctx->mode = f->mode;
+    ctx->constant_value = f->constant_value;
+    function_context->func.local_context = ctx;
+    allocate_pad_local_context(&function_context->func);
+  } break;
+
   case NN_FUNCTION_TRANSPOSE: { // Transpose
     function_context->func.exec_func = exec_transpose;
     function_context->func.free_local_context_func =

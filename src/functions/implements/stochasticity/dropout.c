@@ -11,9 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include <nnablart/functions.h>
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
+#include <nnablart/functions.h>
 
 typedef struct {
   rt_variable_t *input;
@@ -67,12 +67,12 @@ rt_function_error_t free_dropout_local_context(rt_function_t *f) {
 
 rt_function_error_t exec_dropout(rt_function_t *f) {
   dropout_local_context_t *context =
-    (dropout_local_context_t *)(f->local_context);
+      (dropout_local_context_t *)(f->local_context);
   dropout_private_t *p = (dropout_private_t *)(context->data);
   float *x = (float *)(p->input->data);
   float *y = (float *)(p->output->data);
 
-  for(int i = 0; i < p->output_size; i++) {
+  for (int i = 0; i < p->output_size; i++) {
     y[i] = x[i] * (1 - context->p);
   }
   return RT_FUNCTION_ERROR_NOERROR;
@@ -80,10 +80,10 @@ rt_function_error_t exec_dropout(rt_function_t *f) {
 
 rt_function_error_t exec_dropout_generic(rt_function_t *f) {
   dropout_local_context_t *context =
-    (dropout_local_context_t *)(f->local_context);
+      (dropout_local_context_t *)(f->local_context);
   dropout_private_t *p = (dropout_private_t *)(context->data);
 
-  for(int i = 0; i < p->output_size; i++) {
+  for (int i = 0; i < p->output_size; i++) {
     float x = p->get_input(p->input, i) * (1 - context->p);
     p->set_output(p->output, i, x);
   }

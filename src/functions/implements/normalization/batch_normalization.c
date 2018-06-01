@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../../utilities/shape.h"
 #include "../../utilities/accessor.h"
+#include "../../utilities/shape.h"
 #include <math.h>
 #include <nnablart/functions.h>
 
@@ -137,25 +137,26 @@ static void forward_impl_batch(rt_function_t *f,
   }
 }
 
-static void forward_impl_batch_generic(rt_function_t *f,
-                               batch_normalization_local_context_t *context,
-                               batch_normalization_private_t *p) {
+static void
+forward_impl_batch_generic(rt_function_t *f,
+                           batch_normalization_local_context_t *context,
+                           batch_normalization_private_t *p) {
   rt_variable_t *input_x = f->inputs[0];
   rt_variable_getter get_x = select_getter(input_x);
   rt_variable_t *input_beta = f->inputs[1];
   rt_variable_getter get_beta = select_getter(input_beta);
   rt_variable_t *input_gamma = f->inputs[2];
   rt_variable_getter get_gamma = select_getter(input_gamma);
-  rt_variable_t *input_rm = f->inputs[3];  // running mean
+  rt_variable_t *input_rm = f->inputs[3]; // running mean
   rt_variable_getter get_rm = select_getter(input_rm);
   rt_variable_setter set_rm = select_setter(input_rm);
-  rt_variable_t *input_rv = f->inputs[4];  // running var
+  rt_variable_t *input_rv = f->inputs[4]; // running var
   rt_variable_getter get_rv = select_getter(input_rv);
   rt_variable_setter set_rv = select_setter(input_rv);
   rt_variable_t *output = f->outputs[0];
   rt_variable_setter set_output = select_setter(output);
-  float *m = (float *)p->batch_mean.data;    // batch mean
-  float *v = (float *)p->batch_var.data;     // batch varf
+  float *m = (float *)p->batch_mean.data; // batch mean
+  float *v = (float *)p->batch_var.data;  // batch varf
   const int specified_axis_size = p->specified_axis_size;
   const int output_size = p->output_size;
   const int multiplication_axis_output = p->multiplication_axis_output;
@@ -183,7 +184,7 @@ static void forward_impl_batch_generic(rt_function_t *f,
     rm = context->decay_rate * rm + (1 - context->decay_rate) * m[i1];
     rv = context->decay_rate * rv +
          (1 - context->decay_rate) * v[i1] * multiplication_batch_axis /
-         (multiplication_batch_axis - 1);
+             (multiplication_batch_axis - 1);
     set_rm(input_rm, i1, rm);
     set_rv(input_rv, i1, rv);
 
@@ -231,18 +232,19 @@ static void forward_impl_global(rt_function_t *f,
   }
 }
 
-static void forward_impl_global_generic(rt_function_t *f,
-                                batch_normalization_local_context_t *context,
-                                batch_normalization_private_t *p) {
+static void
+forward_impl_global_generic(rt_function_t *f,
+                            batch_normalization_local_context_t *context,
+                            batch_normalization_private_t *p) {
   rt_variable_t *input_x = f->inputs[0];
   rt_variable_getter get_x = select_getter(input_x);
   rt_variable_t *input_beta = f->inputs[1];
   rt_variable_getter get_beta = select_getter(input_beta);
   rt_variable_t *input_gamma = f->inputs[2];
   rt_variable_getter get_gamma = select_getter(input_gamma);
-  rt_variable_t *input_rm = f->inputs[3];  // running mean
+  rt_variable_t *input_rm = f->inputs[3]; // running mean
   rt_variable_getter get_rm = select_getter(input_rm);
-  rt_variable_t *input_rv = f->inputs[4];  // running var
+  rt_variable_t *input_rv = f->inputs[4]; // running var
   rt_variable_getter get_rv = select_getter(input_rv);
   rt_variable_t *output = f->outputs[0];
   rt_variable_setter set_output = select_setter(output);
