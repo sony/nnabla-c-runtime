@@ -109,7 +109,10 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                 elif isinstance(a, numpy.ndarray):
                     a = a.flatten()
                     if arg['type'] == 'Shape':
-                        exec('param.{}.dim.extend(list(a))'.format(arg_name))
+                        if function['snake_name'] == 'broadcast':
+                            exec('param.{}.dim.extend([1] + list(a))'.format(arg_name))
+                        else:
+                            exec('param.{}.dim.extend(list(a))'.format(arg_name))
                     else:
                         exec('param.{}.extend(a)'.format(arg_name))
                 else:
