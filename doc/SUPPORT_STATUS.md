@@ -53,7 +53,7 @@ Count 11/11
 |           SELU           |     yes      |      -       |     yes      |
 |          CReLU           |     yes      |      -       |     yes      |
 |           CELU           |     yes      |      -       |     yes      |
-|          PReLU           |     yes      |      -       |      -       |
+|          PReLU           |     yes      |      -       |     yes      |
 
 ## Normalization
 Count 2/4

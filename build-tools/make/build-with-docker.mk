@@ -92,7 +92,7 @@ bwd-nnabla-c-runtime-auto-format: nnabla-c-runtime-docker_image_auto_format
 ########################################################################################################################
 # Doc
 .PHONY: bwd-nnabla-c-runtime-doc
-bwd-nnabla-c-runtime-doc: bwd-nnabla-c-runtime-build docker_image_doc
+bwd-nnabla-c-runtime-doc: bwd-nnabla-c-runtime-build nnabla-c-runtime-docker_image_doc
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
 		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC) make nnabla-c-runtime-doc

@@ -1,33 +1,31 @@
 digraph G {
-  nodesep=.05;
+  graph [rankdir = "LR"];
   
-  node [shape=record, width=.1, height=.1];
-  network [label="<v>version|{buffers|{<bs>size|<bl>list}}|{variables|{<vs>size|<vl>list}} | {functions|{<fs>size|<fl>list}}|{inputs|{<is>size|<il>list}}|{outputs|{<os>size|<ol>list}}|{memory|{<indexes>indexes|<data>data}}"];
+  node [fontsize = "16"
+        shape = "ellipse"];
+  
+  edge [  ];
+  
+  "node0" [label = "nn_network_t|version(4)|{buffers|{size(4)|<b> list(4)}}|{variables|{size(4)|<v> list(4)}}|{functions|{size(4)|<f> list(4)}}|{inputs|{size(4)|<i> list(4)}}|{outputs|{size(4)|<o> list(4)}}|{memory|{num_of_data(4)|data_size(4)}}|<d> Data(data_size)"
+           shape = "record"];
+  "node1" [label = "<v> nn_variable_t|id(4)|{shape|{size(4)|<s> list(4)}}|type(0.5)|fp_pos(0.5)|data_index(32)"
+           shape = "record"];
+  "node2" [label = "<f> nn_function_t|type(2)|impl(2)|{inputs|{size(4)|<i> list(4)}}|{outputs|{size(4)|<o> list(4)}}"
+           shape = "record"];
+  "node3" [label = "<v> variable buffer"
+           shape = "record"];
+  "node4" [label = "{<d> Data|{index|<b> buffer}}"
+           shape = "record"];
 
-  indexes [label="DATA_INDEX|{|<i0>i0|<i1>i1|<i2>i2|i3|...}"];
-  data [label="DATA|{|<d0>d0|<d1>d1|<d2>d2|...}"];
-  
-  network:indexes -> indexes;
-  network:data -> data;
-  
-  d0 [label="size0|size1|size2|..."];
-  d1 [label="{variable|{id|{shape|{size|list}}|type|pos|<i>data_index}}|..."];
-  d2 [label="data buffer"];
-  
-  network:bl -> indexes:i0;
-  
-  indexes:i0 -> data:d0;
-  indexes:i1 -> data:d1;
-  indexes:i2 -> data:d2;
-
-  network:vl -> indexes:i1;
-
-  data:d0 -> d0;
-  data:d1 -> d1;
-  data:d2 -> d2;
-  d1:i -> indexes:i2;
-  
-  
+  "node0":v -> "node1":v [id = 0];
+  "node0":f -> "node2":f [id = 1];
+  "node0":i -> "node3":v [id = 2];
+  "node0":o -> "node3":v [id = 3];
+  "node2":i -> "node3":v [id = 4];
+  "node2":o -> "node3":v [id = 5];
+  "node0":d -> "node4":d [id = 6];
+  "node0":b -> "node4":b [id = 7];
+  "node1":s -> "node4":b [id = 8];
+  "node3":v -> "node4":b [id = 9];
 }
-
-
+  
