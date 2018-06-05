@@ -90,7 +90,7 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
             param = eval('func.{}_param'.format(function['snake_name']))
             a = func_args[n]
             if a is not None:
-                if 'axis' in arg_name:
+                if 'axis' == arg_name:
                     a += 1
 
                 if 'axes' in arg_name:
