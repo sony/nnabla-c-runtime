@@ -63,7 +63,15 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
 
                 var.type = 'Buffer'
                 shape = list(i.d.shape)[:]
-                shape = [1] + shape
+                # exclude the cases no need to extend dimension
+                if input_name == 'rmean':
+                    pass
+                elif func.name == 'PReLU' and input_name == "x1":
+                    pass
+                elif func.name == 'Transpose':
+                    pass
+                else:
+                    shape = [1] + shape
                 var.shape.dim.extend(shape)
 
     func.input.extend(func_inputs)
@@ -94,12 +102,14 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                     a += 1
 
                 if 'axes' in arg_name:
-
-                    if isinstance(a, tuple) or isinstance(a, list):
-                        a = list(a)
+                    if func.name == 'Transpose':
+                        pass
                     else:
-                        a = [a]
-                    a = [x + 1 for x in a]
+                        if isinstance(a, tuple) or isinstance(a, list):
+                            a = list(a)
+                        else:
+                            a = [a]
+                        a = [x + 1 for x in a]
 
                 if isinstance(a, tuple) or isinstance(a, list):
                     if arg['type'] == 'Shape':
@@ -110,7 +120,8 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                     a = a.flatten()
                     if arg['type'] == 'Shape':
                         if function['snake_name'] == 'broadcast':
-                            exec('param.{}.dim.extend([1] + list(a))'.format(arg_name))
+                            exec(
+                                'param.{}.dim.extend([1] + list(a))'.format(arg_name))
                         else:
                             exec('param.{}.dim.extend(list(a))'.format(arg_name))
                     else:
