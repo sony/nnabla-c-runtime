@@ -27,6 +27,9 @@ allocate_binary_weight_convolution_local_context(rt_function_t *f) {
          sizeof(binary_weight_convolution_local_context_t));
 
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[2]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[3]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[4]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_binary_weight_convolution;
   } else {

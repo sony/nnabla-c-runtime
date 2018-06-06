@@ -30,6 +30,8 @@
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
+      f->inputs[2]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_convolution;
   } else {
