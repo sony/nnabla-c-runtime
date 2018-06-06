@@ -64,7 +64,7 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                 var.type = 'Buffer'
                 shape = list(i.d.shape)[:]
                 # exclude the cases no need to extend dimension
-                if input_name == 'rmean':
+                if input_name == 'rmean' or input_name == 't':
                     pass
                 elif func.name == 'PReLU' and input_name == "x1":
                     pass
@@ -97,6 +97,10 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
         for n, (arg_name, arg) in enumerate(function['arguments'].items()):
             param = eval('func.{}_param'.format(function['snake_name']))
             a = func_args[n]
+            if a is None: # This is used to fix the problem of flip (axes == None)
+                if 'axes' in arg_name:
+                    a = len(net.variable[0].shape.dim) - 2
+
             if a is not None:
                 if 'axis' == arg_name:
                     a += 1
@@ -135,6 +139,7 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                         if arg_name == 'base_axis':
                             a = a + 1
                         exec('param.{} = {}'.format(arg_name, a))
+
 
     # Prepare executor
     exe = nnp.executor.add()

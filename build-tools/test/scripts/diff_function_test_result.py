@@ -36,7 +36,10 @@ def compare_file(a_file, b_file):
     res = numpy.allclose(data1, data2, atol=1e-4)
     print(a_file, b_file, res)
     if not res:
-        return False
+        print("WARNING: differ with 1e-4, check it again with 1e-2...")
+        res = numpy.allclose(data1, data2, atol=1e-2)
+        if not res:
+            return False
     return True
 
 if len(a_files) == 0 or len(b_files) == 0:
