@@ -17,13 +17,43 @@ import numpy
 import sys
 
 result = True
-for out1, out2 in zip(sorted(glob.glob('{}[0-9]*.bin'.format(sys.argv[1]))),
-                      sorted(glob.glob('{}[0-9]*.bin'.format(sys.argv[2])))):
-    data1 = numpy.fromfile(out1, numpy.float32)
-    data2 = numpy.fromfile(out2, numpy.float32)
+a_files = sorted(glob.glob('{}[0-9]*.bin'.format(sys.argv[1])))
+b_files = sorted(glob.glob('{}[0-9]*.bin'.format(sys.argv[2])))
+
+
+def merge_files(files):
+    if len(files) > 1:
+        with open(files[0], "ab") as base:
+            for x in files[1:]:
+                with open(x, "rb") as append:
+                    base.write(append.read())
+    return files[0]
+
+
+def compare_file(a_file, b_file):
+    data1 = numpy.fromfile(a_file, numpy.float32)
+    data2 = numpy.fromfile(b_file, numpy.float32)
     res = numpy.allclose(data1, data2, atol=1e-4)
-    print(out1, out2, res)
+    print(a_file, b_file, res)
     if not res:
-        result = False
-if not result:
+        print("WARNING: differ with 1e-4, check it again with 1e-2...")
+        res = numpy.allclose(data1, data2, atol=1e-2)
+        if not res:
+            return False
+    return True
+
+if len(a_files) == 0 or len(b_files) == 0:
     sys.exit(255)
+elif len(a_files) == len(b_files):
+    # outputs has same format
+    for out1, out2 in zip(a_files, b_files):
+        if not compare_file(out1, out2):
+            sys.exit(255)
+else:
+    # merge result and then compare them
+    a_file = merge_files(a_files)
+    b_file = merge_files(b_files)
+    if not compare_file(a_file, b_file):
+        sys.exit(255)
+
+sys.exit(0)

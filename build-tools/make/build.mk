@@ -80,7 +80,7 @@ nnabla-c-runtime-generate-function-test: nnabla-install
 	@rm -rf $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
 	@mkdir -p $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
 	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*.nntxt $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
-	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_input_?.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
+	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_input_*.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
 	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_output_?.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
 	@rm -f $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/*_nnabla_cli_output_?.bin
 

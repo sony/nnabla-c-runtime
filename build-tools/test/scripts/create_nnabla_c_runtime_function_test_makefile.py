@@ -75,7 +75,7 @@ with open('{}/nnabla-c-runtime/test_functions.mk'.format(os.environ['NNABLA_C_RU
         f.write('\t@valgrind  --leak-check=full {}/nnabla-c-runtime/csrc/{}/network1_example\\\n'.format(
             os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function))
         f.write(
-            '\t\t{}/functions/{}_input_?.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
+            '\t\t{}/functions/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
         f.write(
             '\t\t{}/nnabla-c-runtime/csrc/{}/network1_example_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, csrclog))
         f.write('\t@mkdir -p {}/nnabla-c-runtime/nnb\n'.format(
@@ -91,7 +91,7 @@ with open('{}/nnabla-c-runtime/test_functions.mk'.format(os.environ['NNABLA_C_RU
         f.write('\t\t{}/nnabla-c-runtime/nnb/{}.nnb\\\n'.format(
             os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function))
         f.write(
-            '\t\t{}/functions/{}_input_?.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
+            '\t\t{}/functions/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
         f.write(
             '\t\t{}/nnabla-c-runtime/nnb/{}_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, nnblog))
         for output in sorted(glob.glob('{}/functions/{}_output_?.bin'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))):

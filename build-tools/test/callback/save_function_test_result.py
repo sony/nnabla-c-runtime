@@ -56,14 +56,22 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                 param.data.extend(i.d.flatten())
 
             else:
-                i.d.flatten().tofile('{}_{:03d}_input_{}.bin'.format(
-                    func_name, result_nums[func_name], n))
+                i.d.flatten().tofile('{}_{:03d}_input_{}_{}.bin'.format(
+                    func_name, result_nums[func_name], i.d.dtype, n))
 
                 data_names.append(input_name)
 
                 var.type = 'Buffer'
                 shape = list(i.d.shape)[:]
-                shape = [1] + shape
+                # exclude the cases no need to extend dimension
+                if input_name == 'rmean' or input_name == 't':
+                    pass
+                elif func.name == 'PReLU' and input_name == "x1":
+                    pass
+                elif func.name == 'Transpose':
+                    pass
+                else:
+                    shape = [1] + shape
                 var.shape.dim.extend(shape)
 
     func.input.extend(func_inputs)
@@ -89,15 +97,23 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
         for n, (arg_name, arg) in enumerate(function['arguments'].items()):
             param = eval('func.{}_param'.format(function['snake_name']))
             a = func_args[n]
+            if a is None: # This is used to fix the problem of flip (axes == None)
+                if 'axes' in arg_name:
+                    a = len(net.variable[0].shape.dim) - 2
+
             if a is not None:
+                if 'axis' == arg_name:
+                    a += 1
 
                 if 'axes' in arg_name:
-
-                    if isinstance(a, tuple) or isinstance(a, list):
-                        a = list(a)
+                    if func.name == 'Transpose':
+                        pass
                     else:
-                        a = [a]
-                    a = [x + 1 for x in a]
+                        if isinstance(a, tuple) or isinstance(a, list):
+                            a = list(a)
+                        else:
+                            a = [a]
+                        a = [x + 1 for x in a]
 
                 if isinstance(a, tuple) or isinstance(a, list):
                     if arg['type'] == 'Shape':
@@ -107,7 +123,11 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                 elif isinstance(a, numpy.ndarray):
                     a = a.flatten()
                     if arg['type'] == 'Shape':
-                        exec('param.{}.dim.extend(list(a))'.format(arg_name))
+                        if function['snake_name'] == 'broadcast':
+                            exec(
+                                'param.{}.dim.extend([1] + list(a))'.format(arg_name))
+                        else:
+                            exec('param.{}.dim.extend(list(a))'.format(arg_name))
                     else:
                         exec('param.{}.extend(a)'.format(arg_name))
                 else:
@@ -119,6 +139,7 @@ def save_result(inputs, outputs, func_name, func_args, func_kwargs):
                         if arg_name == 'base_axis':
                             a = a + 1
                         exec('param.{} = {}'.format(arg_name, a))
+
 
     # Prepare executor
     exe = nnp.executor.add()
