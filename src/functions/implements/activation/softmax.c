@@ -46,7 +46,7 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   p->batch_size = size / size_axis;
-  p->specified_axis_size = size_axis;
+  p->specified_axis_size = f->inputs[0]->shape.data[axis];
   p->output_size = size / p->batch_size / p->specified_axis_size;
   if (p->batch_size * p->specified_axis_size * p->output_size != size) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
