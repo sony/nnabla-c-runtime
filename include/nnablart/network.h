@@ -25,7 +25,7 @@ extern "C" {
 #include <stdlib.h> // for size_t
 
 #define NN_BINARY_FORMAT_VERSION (1)
-#define NN_BINARY_FORMAT_REVISION 00445fec0a252af04a38a1057f0dcc17
+#define NN_BINARY_FORMAT_REVISION 6fdd2ffffd07bc26d5479bea2225668b
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -55,6 +55,7 @@ typedef struct {
   nn_list_t shape;         ///< Shape
   nn_data_type_t type : 4; ///< Type of param values
   unsigned int fp_pos : 4; ///< floating point position.
+  float coefficient;       ///< Coefficient value for convert int to float.
   int32_t data_index;      ///< Location of data. If negative, it means data
                            /// buffer index. Otherwize it means location of data
   /// in memory.
