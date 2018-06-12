@@ -96,7 +96,7 @@ rt_function_error_t exec_celu(rt_function_t *f) {
       float x = *((float *)(p->input->data) + i * s0 + j);
       float *y = (float *)(p->output->data);
       *(y + i * s0 * 2 + j) = x > 0.0f ? x : c->alpha * (expf(x) - 1.0f);
-      *(y + i * s0 * 2 + s0 + j) = x < 0.0f ? -x : c->alpha * (expf(x) - 1.0f);
+      *(y + i * s0 * 2 + s0 + j) = x < 0.0f ? -x : c->alpha * (expf(-x) - 1.0f);
     }
   }
   return RT_FUNCTION_ERROR_NOERROR;
@@ -117,7 +117,7 @@ rt_function_error_t exec_celu_generic(rt_function_t *f) {
       float x = p->get_input(p->input, i * s0 + j);
       float value = x > 0.0f ? x : c->alpha * (expf(x) - 1.0f);
       p->set_output(p->output, i * s0 * 2 + j, value);
-      value = x < 0.0f ? -x : c->alpha * (expf(x) - 1.0f);
+      value = x < 0.0f ? -x : c->alpha * (expf(-x) - 1.0f);
       p->set_output(p->output, i * s0 * 2 + s0 + j, value);
     }
   }
