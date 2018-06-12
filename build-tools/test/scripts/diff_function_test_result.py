@@ -42,6 +42,7 @@ def compare_file(a_file, b_file):
             return False
     return True
 
+
 if len(a_files) == 0 or len(b_files) == 0:
     sys.exit(255)
 elif len(a_files) == len(b_files):

@@ -55,7 +55,6 @@ typedef struct {
     nn_list_t shape;         ///< Shape
     nn_data_type_t type : 4; ///< Type of param values
     unsigned int fp_pos : 4; ///< floating point position.
-    float coefficient;       ///< Coefficient value for convert int to float.
     int32_t data_index;      ///< Location of data. If negative, it means data
                         ///buffer index. Otherwize it means location of data
                         ///in memory.

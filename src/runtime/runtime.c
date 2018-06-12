@@ -116,7 +116,15 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     c->variables[i].shape = create_rt_list_from_nn_list(n, var->shape);
     c->variables[i].type = var->type;
     c->variables[i].fp_pos = var->fp_pos;
-    c->variables[i].coefficient = var->coefficient;
+
+    if (var->type == NN_DATA_TYPE_INT8) {
+      c->variables[i].coefficient = ((float)(1 << var->fp_pos) / 256.0);
+    } else if (var->type == NN_DATA_TYPE_INT16) {
+      c->variables[i].coefficient = ((float)(1 << var->fp_pos) / 65536.0);
+    } else {
+      c->variables[i].coefficient = 0;
+    }
+
     if (var->data_index < 0) {
       int index = (-1 * var->data_index) - 1;
       if (index >= c->num_of_buffers) {

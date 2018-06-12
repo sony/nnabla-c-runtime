@@ -16,7 +16,7 @@ import glob
 import os
 
 functions = {}
-for f in glob.glob('{}/functions/*.nntxt'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'])):
+for f in glob.glob('{}/*.nntxt'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'])):
     name, ext = os.path.splitext(os.path.basename(f))
     functions[name] = f
 
@@ -75,7 +75,7 @@ with open('{}/nnabla-c-runtime/test_functions.mk'.format(os.environ['NNABLA_C_RU
         f.write('\t@valgrind  --leak-check=full {}/nnabla-c-runtime/csrc/{}/network1_example\\\n'.format(
             os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function))
         f.write(
-            '\t\t{}/functions/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
+            '\t\t{}/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
         f.write(
             '\t\t{}/nnabla-c-runtime/csrc/{}/network1_example_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, csrclog))
         f.write('\t@mkdir -p {}/nnabla-c-runtime/nnb\n'.format(
@@ -91,10 +91,10 @@ with open('{}/nnabla-c-runtime/test_functions.mk'.format(os.environ['NNABLA_C_RU
         f.write('\t\t{}/nnabla-c-runtime/nnb/{}.nnb\\\n'.format(
             os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function))
         f.write(
-            '\t\t{}/functions/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
+            '\t\t{}/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
         f.write(
             '\t\t{}/nnabla-c-runtime/nnb/{}_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, nnblog))
-        for output in sorted(glob.glob('{}/functions/{}_output_?.bin'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))):
+        for output in sorted(glob.glob('{}/{}_output_?.bin'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))):
             name, ext = os.path.splitext(output)
             num = name.rsplit('_', 1)[1]
             f.write(

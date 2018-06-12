@@ -17,7 +17,7 @@
 .SILENT:
 
 NNABLA_C_RUNTIME_DIRECTORY ?= $(shell pwd)
-NNABLA_C_RUNTIME_REFERENCE_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/reference
+NNABLA_C_RUNTIME_REFERENCE_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/test/nnabla
 NNABLA_C_RUNTIME_TEST_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/test
 
 export NNABLA_C_RUNTIME_REFERENCE_DIRECTORY
@@ -92,4 +92,4 @@ nnabla-c-runtime-test-all-functions: nnabla-c-runtime-build nnabla-install
 	@python build-tools/test/scripts/create_nnabla_c_runtime_function_test_makefile.py
 	@NNABLA_C_RUNTIME_REFERENCE_DIRECTORY=$(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY) \
 	 NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) \
-		$(MAKE) -j1 -f $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/test_functions.mk
+		$(MAKE) -k -j1 -f $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/test_functions.mk
