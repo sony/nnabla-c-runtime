@@ -67,6 +67,7 @@ nnabla-c-runtime-auto-format:
 ########################################################################################################################
 # With NNabla
 
+ifneq ("$(NNABLA_DIRECTORY)","")
 .PHONY: nnabla-c-runtime-update-function-info
 nnabla-c-runtime-update-function-info: nnabla-install
 	@nnabla_cli function_info $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
@@ -93,3 +94,35 @@ nnabla-c-runtime-test-all-functions: nnabla-c-runtime-build nnabla-install
 	@NNABLA_C_RUNTIME_REFERENCE_DIRECTORY=$(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY) \
 	 NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) \
 		$(MAKE) -k -j1 -f $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/test_functions.mk
+
+ifneq ("$(NNABLA_EXAMPLES_DIRECTORY)","")
+
+.PHONY: nnabla-c-runtime-generate-mnist-test
+nnabla-c-runtime-generate-mnist-test: nnabla-c-runtime-build nnabla-install
+	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist
+	@cd $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist \
+		&& python $(NNABLA_EXAMPLES_DIRECTORY)/mnist-collection/classification.py \
+			--net lenet --max-iter 10
+	@mv $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/tmp.monitor/lenet_result.nnp \
+		$(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/
+	@rm -f $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/lenet_result.nnb
+	@nnabla_cli convert -b 1 $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/lenet_result.nnp \
+		 $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/lenet_result.nnb
+	@for bin in $(NNABLA_C_RUNTIME_DIRECTORY)/examples/data/[49]*.bin ;\
+	do \
+		echo $$bin ;\
+		out=$$(basename $$bin .bin) ;\
+		nnabla_cli infer -b 1 \
+			-o $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/output_$$out \
+			-c $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/lenet_result.nnp \
+			$$bin ;\
+		valgrind $(NNABLA_C_RUNTIME_DIRECTORY)/build/src/nnablart/nnablart \
+			infer \
+				$(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/lenet_result.nnb \
+				$$bin \
+				$(NNABLA_C_RUNTIME_TEST_DIRECTORY)/mnist/nnb_$$out || true ;\
+	done
+
+endif
+
+endif

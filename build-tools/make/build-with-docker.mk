@@ -113,6 +113,8 @@ bwd-nnabla-c-runtime-examples: nnabla-c-runtime-docker_image_build
 	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
 		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD) make nnabla-c-runtime-examples
 
+ifneq ("$(NNABLA_DIRECTORY)","")
+
 ########################################################################################################################
 # Update function definition
 .PHONY: bwd-nnabla-c-runtime-update-function-info
@@ -134,3 +136,15 @@ bwd-nnabla-c-runtime-test-all-functions: nnabla-c-runtime-docker_image_test
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
 		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-test-all-functions
+
+ifneq ("$(NNABLA_EXAMPLES_DIRECTORY)","")
+
+.PHONY: bwd-nnabla-c-runtime-generate-mnist-test
+bwd-nnabla-c-runtime-generate-mnist-test: nnabla-c-runtime-docker_image_test
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-generate-mnist-test
+
+endif
+
+endif
