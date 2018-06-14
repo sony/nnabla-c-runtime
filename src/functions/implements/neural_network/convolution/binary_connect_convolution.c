@@ -26,12 +26,15 @@ allocate_binary_connect_convolution_local_context(rt_function_t *f) {
   assert(sizeof(convolution_local_context_t) ==
          sizeof(binary_connect_convolution_local_context_t));
 
-  if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
-      f->inputs[2]->type == NN_DATA_TYPE_FLOAT &&
-      f->inputs[3]->type == NN_DATA_TYPE_FLOAT &&
-      f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
-    f->exec_func = exec_binary_connect_convolution;
-  } else {
+  f->exec_func = exec_binary_connect_convolution;
+
+  for (int i = 0; i < f->num_of_inputs; i++) {
+    if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
+      f->exec_func = exec_convolution_generic;
+      break;
+    }
+  }
+  if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_convolution_generic;
   }
 

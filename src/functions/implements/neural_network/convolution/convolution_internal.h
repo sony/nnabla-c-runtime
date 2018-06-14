@@ -36,6 +36,11 @@ typedef struct {
   var_t b_var;
   var_t a_var;
   int spatial_dims;
+  rt_list_t input_shape;
+  rt_list_t kernel_shape;
+  rt_list_t output_shape;
+  rt_list_t in_position;
+  rt_list_t out_position;
 } convolution_private_t;
 
 #define B (0) // batch dimension of input or output

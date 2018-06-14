@@ -160,17 +160,6 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   var_t *w_var = &p->w_var;
   var_t *b_var = &p->b_var;
   var_t *a_var = &p->a_var;
-  rt_list_t input_shape = allocate_list(p->spatial_dims);
-  rt_list_t kernel_shape = allocate_list(p->spatial_dims);
-  rt_list_t output_shape = allocate_list(p->spatial_dims);
-  rt_list_t in_position = allocate_list(p->spatial_dims);
-  rt_list_t out_position = allocate_list(p->spatial_dims);
-
-  for (int i = 0; i < p->spatial_dims; i++) {
-    kernel_shape.data[i] = p->w_var.shape.data[i + 3];
-    input_shape.data[i] = p->in_var.shape.data[i + 3];
-    output_shape.data[i] = p->out_var.shape.data[i + 3];
-  }
 
   int output_size = calc_shape_size(p->out_var.shape);
 
@@ -188,9 +177,9 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
             int w_pos[] = {g, om, im};
             var_setpos(in_var, i_pos, _S(i_pos));
             var_setpos(w_var, w_pos, _S(w_pos));
-            conv2d(out_var, in_var, w_var, input_shape, output_shape,
-                   kernel_shape, in_position, out_position, c->pad, c->stride,
-                   c->dilation, p->spatial_dims);
+            conv2d(out_var, in_var, w_var, p->input_shape, p->output_shape,
+                   p->kernel_shape, p->in_position, p->out_position, c->pad,
+                   c->stride, c->dilation, p->spatial_dims);
           }
           {
             int b_pos[] = {g, om};
@@ -217,9 +206,9 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
             int w_pos[] = {g, om, im};
             var_setpos(in_var, i_pos, _S(i_pos));
             var_setpos(w_var, w_pos, _S(w_pos));
-            convnd(out_var, in_var, w_var, input_shape, output_shape,
-                   kernel_shape, in_position, out_position, c->pad, c->stride,
-                   c->dilation, p->spatial_dims);
+            convnd(out_var, in_var, w_var, p->input_shape, p->output_shape,
+                   p->kernel_shape, p->in_position, p->out_position, c->pad,
+                   c->stride, c->dilation, p->spatial_dims);
           }
           {
             int b_pos[] = {g, om};
@@ -236,11 +225,6 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
       }
     }
   }
-  free_list(input_shape);
-  free_list(kernel_shape);
-  free_list(in_position);
-  free_list(out_position);
-  free_list(output_shape);
 
   return RT_FUNCTION_ERROR_NOERROR;
 }

@@ -88,8 +88,9 @@ allocate_convolution_local_context_common(rt_function_t *f, int x, int weight,
   p->w_var.shape.data[KG] = c->group;
   p->w_var.shape.data[KO] = w_shape.data[0] / c->group;
   p->w_var.shape.data[KI] = w_shape.data[1];
-  p->w_var.shape.data[KH] = w_shape.data[2];
-  p->w_var.shape.data[KW] = w_shape.data[3];
+  for (int i = 0; i < spatial_dims; i++) {
+    p->w_var.shape.data[i + 3] = w_shape.data[i + 2];
+  }
   p->w_var.stride = calc_contiguous_strides(p->w_var.shape);
 
   if (f->num_of_inputs > bias) {
@@ -116,6 +117,17 @@ allocate_convolution_local_context_common(rt_function_t *f, int x, int weight,
     p->a_var.v = 0;
   }
   p->spatial_dims = spatial_dims;
+  p->input_shape = allocate_list(p->spatial_dims);
+  p->kernel_shape = allocate_list(p->spatial_dims);
+  p->output_shape = allocate_list(p->spatial_dims);
+  p->in_position = allocate_list(p->spatial_dims);
+  p->out_position = allocate_list(p->spatial_dims);
+
+  for (int i = 0; i < p->spatial_dims; i++) {
+    p->kernel_shape.data[i] = p->w_var.shape.data[i + 3];
+    p->input_shape.data[i] = p->in_var.shape.data[i + 3];
+    p->output_shape.data[i] = p->out_var.shape.data[i + 3];
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -136,5 +148,10 @@ rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
   if (p->a_var.v != 0)
     var_free(&p->a_var);
   free(p);
+  free_list(p->input_shape);
+  free_list(p->kernel_shape);
+  free_list(p->in_position);
+  free_list(p->out_position);
+  free_list(p->output_shape);
   return RT_FUNCTION_ERROR_NOERROR;
 }
