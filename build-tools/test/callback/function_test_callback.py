@@ -9,7 +9,7 @@ from nnabla.utils import nnabla_pb2
 result_nums = {}
 
 
-def save_result(inputs, outputs, func_name, func_args, func_kwargs):
+def callback(inputs, outputs, func_name, func_args, func_kwargs):
     if func_name is None:
         return
 
