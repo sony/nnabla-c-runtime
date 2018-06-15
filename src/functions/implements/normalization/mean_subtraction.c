@@ -64,7 +64,7 @@ rt_function_error_t exec_mean_subtraction(rt_function_t *f) {
   }
   s1 = calc_shape_size(f->inputs[0]->shape) / s0;
   for (i = 0; i < s0; ++i) {
-    for (j = 0; j < s1; ++i) {
+    for (j = 0; j < s1; ++j) {
       int idx = j * s0 + i;
       y[idx] = x[idx] - rm[i];
     }
@@ -90,7 +90,7 @@ rt_function_error_t exec_mean_subtraction_generic(rt_function_t *f) {
   }
   s1 = calc_shape_size(f->inputs[0]->shape) / s0;
   for (i = 0; i < s0; ++i) {
-    for (j = 0; j < s1; ++i) {
+    for (j = 0; j < s1; ++j) {
       int idx = j * s0 + i;
       float x = get_x(input_x, idx);
       float rm = get_rm(input_rm, i);
