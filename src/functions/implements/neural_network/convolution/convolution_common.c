@@ -147,11 +147,11 @@ rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
     var_free(&p->b_var);
   if (p->a_var.v != 0)
     var_free(&p->a_var);
-  free(p);
   free_list(p->input_shape);
   free_list(p->kernel_shape);
   free_list(p->in_position);
   free_list(p->out_position);
   free_list(p->output_shape);
+  free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
