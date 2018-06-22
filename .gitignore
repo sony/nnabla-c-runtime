@@ -1,3 +1,6 @@
+*.exe
+*.pdb
+*.obj
 *.pyc
 /\?
 /build
