@@ -1,681 +1,1098 @@
-// -*- coding:utf-8 -*-
+// Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #include <nnablart/functions.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Layer
 ////////////////////////////////////////////////////////////////////////////////
-
-// Convolution
-void initConvolutionConfig(ConvolutionConfig *config, int32_t base_axis,
-                           rt_list_t pad, rt_list_t stride, rt_list_t dilation, int32_t group) {}
-void initConvolutionLocalContext(Function *f) {}
-void freeConvolutionLocalContext(Function *f) {}
-void execConvolution(Function *f) {}
-
 // DepthwiseConvolution
-void initDepthwiseConvolutionConfig(DepthwiseConvolutionConfig *config,
-                                    int32_t base_axis, rt_list_t pad, rt_list_t stride,
-                                    rt_list_t dilation, int32_t multiplier) {}
-void initDepthwiseConvolutionLocalContext(Function *f) {}
-void freeDepthwiseConvolutionLocalContext(Function *f) {}
-void execDepthwiseConvolution(Function *f) {}
+rt_function_error_t
+allocate_depthwise_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_depthwise_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_depthwise_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Deconvolution
-void initDeconvolutionConfig(DeconvolutionConfig *config, int32_t base_axis,
-                             rt_list_t pad, rt_list_t stride, rt_list_t dilation,
-                             int32_t group) {}
-void initDeconvolutionLocalContext(Function *f) {}
-void freeDeconvolutionLocalContext(Function *f) {}
-void execDeconvolution(Function *f) {}
+rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// MaxPooling
-void initMaxPoolingConfig(MaxPoolingConfig *config, rt_list_t kernel, rt_list_t stride,
-                          uint8_t ignore_border, rt_list_t pad) {}
-void initMaxPoolingLocalContext(Function *f) {}
-void freeMaxPoolingLocalContext(Function *f) {}
-void execMaxPooling(Function *f) {}
+rt_function_error_t free_deconvolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// AveragePooling
-void initAveragePoolingConfig(AveragePoolingConfig *config, rt_list_t kernel,
-                              rt_list_t stride, uint8_t ignore_border, rt_list_t pad,
-                              uint8_t including_pad) {}
-void initAveragePoolingLocalContext(Function *f) {}
-void freeAveragePoolingLocalContext(Function *f) {}
-void execAveragePooling(Function *f) {}
+rt_function_error_t exec_deconvolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// SumPooling
-void initSumPoolingConfig(SumPoolingConfig *config, rt_list_t kernel, rt_list_t stride,
-                          uint8_t ignore_border, rt_list_t pad) {}
-void initSumPoolingLocalContext(Function *f) {}
-void freeSumPoolingLocalContext(Function *f) {}
-void execSumPooling(Function *f) {}
+// DepthwiseDeconvolution
+rt_function_error_t
+allocate_depthwise_deconvolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Unpooling
-void initUnpoolingConfig(UnpoolingConfig *config, rt_list_t kernel) {}
-void initUnpoolingLocalContext(Function *f) {}
-void freeUnpoolingLocalContext(Function *f) {}
-void execUnpooling(Function *f) {}
+rt_function_error_t
+free_depthwise_deconvolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+// GlobalAveragePooling
+rt_function_error_t
+allocate_global_average_pooling_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_global_average_pooling_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_global_average_pooling(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Embed
-void execEmbed(Function *f) {}
+rt_function_error_t allocate_embed_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_embed_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_embed(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sigmoid
-void execSigmoid(Function *f) {}
-
-// Swish
-void execSwish(Function *f) {}
-
-// Tanh
-void execTanh(Function *f) {}
-
-// ReLU
-void initReLUConfig(ReLUConfig *config, uint8_t inplace) {}
-void initReLULocalContext(Function *f) {}
-void freeReLULocalContext(Function *f) {}
-void execReLU(Function *f) {}
-
-// LeakyReLU
-void initLeakyReLUConfig(LeakyReLUConfig *config, float alpha) {}
-void initLeakyReLULocalContext(Function *f) {}
-void freeLeakyReLULocalContext(Function *f) {}
-void execLeakyReLU(Function *f) {}
-
-// Softmax
-void initSoftmaxConfig(SoftmaxConfig *config, int32_t axis) {}
-void initSoftmaxLocalContext(Function *f) {}
-void freeSoftmaxLocalContext(Function *f) {}
-void execSoftmax(Function *f) {}
-
-// ELU
-void initELUConfig(ELUConfig *config, float alpha) {}
-void initELULocalContext(Function *f) {}
-void freeELULocalContext(Function *f) {}
-void execELU(Function *f) {}
-
-// SELU
-void initSELUConfig(SELUConfig *config, float scale, float alpha) {}
-void initSELULocalContext(Function *f) {}
-void freeSELULocalContext(Function *f) {}
-void execSELU(Function *f) {}
-
-// CReLU
-void initCReLUConfig(CReLUConfig *config, int32_t axis) {}
-void initCReLULocalContext(Function *f) {}
-void freeCReLULocalContext(Function *f) {}
-void execCReLU(Function *f) {}
-
-// CELU
-void initCELUConfig(CELUConfig *config, float alpha, int32_t axis) {}
-void initCELULocalContext(Function *f) {}
-void freeCELULocalContext(Function *f) {}
-void execCELU(Function *f) {}
-
-// PReLU
-void initPReLUConfig(PReLUConfig *config, int32_t base_axis) {}
-void initPReLULocalContext(Function *f) {}
-void freePReLULocalContext(Function *f) {}
-void execPReLU(Function *f) {}
-
 ////////////////////////////////////////////////////////////////////////////////
 // Normalization
 ////////////////////////////////////////////////////////////////////////////////
 
-// BatchNormalization
-void initBatchNormalizationConfig(BatchNormalizationConfig *config, rt_list_t axes,
-                                  float decay_rate, float eps,
-                                  uint8_t batch_stat) {}
-void initBatchNormalizationLocalContext(Function *f) {}
-void freeBatchNormalizationLocalContext(Function *f) {}
-void execBatchNormalization(Function *f) {}
+rt_function_error_t
+allocate_clip_grad_by_value_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// MeanSubtraction
-void initMeanSubtractionConfig(MeanSubtractionConfig *config, int32_t base_axis,
-                               uint8_t update_running_mean) {}
-void initMeanSubtractionLocalContext(Function *f) {}
-void freeMeanSubtractionLocalContext(Function *f) {}
-void execMeanSubtraction(Function *f) {}
+rt_function_error_t free_clip_grad_by_value_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_clip_grad_by_value(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_clip_grad_by_norm_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_clip_grad_by_norm_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_clip_grad_by_norm(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Reduction
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sum
-void initSumConfig(SumConfig *config, rt_list_t axes, uint8_t keep_dims) {}
-void initSumLocalContext(Function *f) {}
-void freeSumLocalContext(Function *f) {}
-void execSum(Function *f) {}
-
 // Mean
-void initMeanConfig(MeanConfig *config, rt_list_t axes, uint8_t keep_dims) {}
-void initMeanLocalContext(Function *f) {}
-void freeMeanLocalContext(Function *f) {}
-void execMean(Function *f) {}
+rt_function_error_t allocate_mean_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_mean_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_mean(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Max
-void initMaxConfig(MaxConfig *config, rt_list_t axes, uint8_t keep_dims) {}
-void initMaxLocalContext(Function *f) {}
-void freeMaxLocalContext(Function *f) {}
-void execMax(Function *f) {}
+rt_function_error_t allocate_max_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_max_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_max(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Min
-void initMinConfig(MinConfig *config, rt_list_t axes, uint8_t keep_dims) {}
-void initMinLocalContext(Function *f) {}
-void freeMinLocalContext(Function *f) {}
-void execMin(Function *f) {}
+rt_function_error_t allocate_min_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_min_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_min(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Prod
-void initProdConfig(ProdConfig *config, rt_list_t axes, uint8_t keep_dims) {}
-void initProdLocalContext(Function *f) {}
-void freeProdLocalContext(Function *f) {}
-void execProd(Function *f) {}
+rt_function_error_t allocate_prod_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_prod_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_prod(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // ReduceSum
-void execReduceSum(Function *f) {}
+rt_function_error_t allocate_reduce_sum_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_reduce_sum_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_reduce_sum(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // ReduceMean
-void execReduceMean(Function *f) {}
+rt_function_error_t allocate_reduce_mean_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_reduce_mean_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_reduce_mean(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Arithmetic
 ////////////////////////////////////////////////////////////////////////////////
 
-// Add2
-void initAdd2Config(Add2Config *config, uint8_t inplace) {}
-void initAdd2LocalContext(Function *f) {}
-void freeAdd2LocalContext(Function *f) {}
-void execAdd2(Function *f) {}
-
 // BcAdd2
-void execBcAdd2(Function *f) {}
+rt_function_error_t allocate_bc_add2_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Sub2
-void execSub2(Function *f) {}
+rt_function_error_t free_bc_add2_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Mul2
-void execMul2(Function *f) {}
-
-// Div2
-void execDiv2(Function *f) {}
-
-// Pow2
-void execPow2(Function *f) {}
-
-// AddScalar
-void initAddScalarConfig(AddScalarConfig *config, float val) {}
-void initAddScalarLocalContext(Function *f) {}
-void freeAddScalarLocalContext(Function *f) {}
-void execAddScalar(Function *f) {}
-
-// MulScalar
-void initMulScalarConfig(MulScalarConfig *config, float val) {}
-void initMulScalarLocalContext(Function *f) {}
-void freeMulScalarLocalContext(Function *f) {}
-void execMulScalar(Function *f) {}
-
-// PowScalar
-void initPowScalarConfig(PowScalarConfig *config, float val) {}
-void initPowScalarLocalContext(Function *f) {}
-void freePowScalarLocalContext(Function *f) {}
-void execPowScalar(Function *f) {}
-
-// RSubScalar
-void initRSubScalarConfig(RSubScalarConfig *config, float val) {}
-void initRSubScalarLocalContext(Function *f) {}
-void freeRSubScalarLocalContext(Function *f) {}
-void execRSubScalar(Function *f) {}
-
-// RDivScalar
-void initRDivScalarConfig(RDivScalarConfig *config, float val) {}
-void initRDivScalarLocalContext(Function *f) {}
-void freeRDivScalarLocalContext(Function *f) {}
-void execRDivScalar(Function *f) {}
-
-// RPowScalar
-void initRPowScalarConfig(RPowScalarConfig *config, float val) {}
-void initRPowScalarLocalContext(Function *f) {}
-void freeRPowScalarLocalContext(Function *f) {}
-void execRPowScalar(Function *f) {}
+rt_function_error_t exec_bc_add2(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
 ////////////////////////////////////////////////////////////////////////////////
 
-// Sign
-void initSignConfig(SignConfig *config, float alpha) {}
-void initSignLocalContext(Function *f) {}
-void freeSignLocalContext(Function *f) {}
-void execSign(Function *f) {}
-
-// Minimum2
-void execMinimum2(Function *f) {}
-
-// Maximum2
-void execMaximum2(Function *f) {}
-
-// MinimumScalar
-void initMinimumScalarConfig(MinimumScalarConfig *config, float val) {}
-void initMinimumScalarLocalContext(Function *f) {}
-void freeMinimumScalarLocalContext(Function *f) {}
-void execMinimumScalar(Function *f) {}
-
-// MaximumScalar
-void initMaximumScalarConfig(MaximumScalarConfig *config, float val) {}
-void initMaximumScalarLocalContext(Function *f) {}
-void freeMaximumScalarLocalContext(Function *f) {}
-void execMaximumScalar(Function *f) {}
-
 // LogicalAnd
-void execLogicalAnd(Function *f) {}
+rt_function_error_t allocate_logical_and_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_and_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_and(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LogicalOr
-void execLogicalOr(Function *f) {}
+rt_function_error_t allocate_logical_or_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_or_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_or(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LogicalXor
-void execLogicalXor(Function *f) {}
+rt_function_error_t allocate_logical_xor_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_xor_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_xor(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Equal
-void execEqual(Function *f) {}
+rt_function_error_t allocate_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_equal(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // NotEqual
-void execNotEqual(Function *f) {}
+rt_function_error_t allocate_not_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_not_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_not_equal(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // GreaterEqual
-void execGreaterEqual(Function *f) {}
+rt_function_error_t allocate_greater_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_greater_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_greater_equal(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Greater
-void execGreater(Function *f) {}
+rt_function_error_t allocate_greater_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_greater_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_greater(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LessEqual
-void execLessEqual(Function *f) {}
+rt_function_error_t allocate_less_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_less_equal_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_less_equal(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Less
-void execLess(Function *f) {}
+rt_function_error_t allocate_less_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_less_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_less(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LogicalAndScalar
-void initLogicalAndScalarConfig(LogicalAndScalarConfig *config, uint8_t val) {}
-void initLogicalAndScalarLocalContext(Function *f) {}
-void freeLogicalAndScalarLocalContext(Function *f) {}
-void execLogicalAndScalar(Function *f) {}
+rt_function_error_t
+allocate_logical_and_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_and_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_and_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LogicalOrScalar
-void initLogicalOrScalarConfig(LogicalOrScalarConfig *config, uint8_t val) {}
-void initLogicalOrScalarLocalContext(Function *f) {}
-void freeLogicalOrScalarLocalContext(Function *f) {}
-void execLogicalOrScalar(Function *f) {}
+rt_function_error_t allocate_logical_or_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_or_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_or_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LogicalXorScalar
-void initLogicalXorScalarConfig(LogicalXorScalarConfig *config, uint8_t val) {}
-void initLogicalXorScalarLocalContext(Function *f) {}
-void freeLogicalXorScalarLocalContext(Function *f) {}
-void execLogicalXorScalar(Function *f) {}
+rt_function_error_t
+allocate_logical_xor_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_xor_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_xor_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // EqualScalar
-void initEqualScalarConfig(EqualScalarConfig *config, float val) {}
-void initEqualScalarLocalContext(Function *f) {}
-void freeEqualScalarLocalContext(Function *f) {}
-void execEqualScalar(Function *f) {}
+rt_function_error_t allocate_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_equal_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // NotEqualScalar
-void initNotEqualScalarConfig(NotEqualScalarConfig *config, float val) {}
-void initNotEqualScalarLocalContext(Function *f) {}
-void freeNotEqualScalarLocalContext(Function *f) {}
-void execNotEqualScalar(Function *f) {}
+rt_function_error_t allocate_not_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_not_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_not_equal_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // GreaterEqualScalar
-void initGreaterEqualScalarConfig(GreaterEqualScalarConfig *config, float val) {}
-void initGreaterEqualScalarLocalContext(Function *f) {}
-void freeGreaterEqualScalarLocalContext(Function *f) {}
-void execGreaterEqualScalar(Function *f) {}
+rt_function_error_t
+allocate_greater_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_greater_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_greater_equal_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // GreaterScalar
-void initGreaterScalarConfig(GreaterScalarConfig *config, float val) {}
-void initGreaterScalarLocalContext(Function *f) {}
-void freeGreaterScalarLocalContext(Function *f) {}
-void execGreaterScalar(Function *f) {}
+rt_function_error_t allocate_greater_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_greater_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_greater_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LessEqualScalar
-void initLessEqualScalarConfig(LessEqualScalarConfig *config, float val) {}
-void initLessEqualScalarLocalContext(Function *f) {}
-void freeLessEqualScalarLocalContext(Function *f) {}
-void execLessEqualScalar(Function *f) {}
+rt_function_error_t allocate_less_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_less_equal_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_less_equal_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LessScalar
-void initLessScalarConfig(LessScalarConfig *config, float val) {}
-void initLessScalarLocalContext(Function *f) {}
-void freeLessScalarLocalContext(Function *f) {}
-void execLessScalar(Function *f) {}
+rt_function_error_t allocate_less_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_less_scalar_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_less_scalar(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // LogicalNot
-void execLogicalNot(Function *f) {}
+
+rt_function_error_t allocate_logical_not_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_logical_not_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_logical_not(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Math
 ////////////////////////////////////////////////////////////////////////////////
 
 // Constant
-void initConstantConfig(ConstantConfig *config, float val, rt_list_t shape) {}
-void initConstantLocalContext(Function *f) {}
-void freeConstantLocalContext(Function *f) {}
-void execConstant(Function *f) {}
+rt_function_error_t allocate_constant_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Abs
-void execAbs(Function *f) {}
+rt_function_error_t free_constant_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Exp
-void execExp(Function *f) {}
+rt_function_error_t exec_constant(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Log
-void execLog(Function *f) {}
+rt_function_error_t allocate_sin_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Identity
-void execIdentity(Function *f) {}
+rt_function_error_t free_sin_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// BatchMatmul
-void initBatchMatmulConfig(BatchMatmulConfig *config, uint8_t transpose_a,
-                           uint8_t transpose_b) {}
-void initBatchMatmulLocalContext(Function *f) {}
-void freeBatchMatmulLocalContext(Function *f) {}
-void execBatchMatmul(Function *f) {}
+rt_function_error_t exec_sin(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_cos_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_cos_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_cos(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_tan_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_tan_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_tan(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_sinh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_sinh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_sinh(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_cosh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_cosh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_cosh(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_asin_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_asin_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_asin(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_acos_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_acos_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_acos(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_atan_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_atan_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_atan(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_asinh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_asinh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_asinh(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_acosh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_acosh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_acosh(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_atanh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_atanh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_atanh(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation
 ////////////////////////////////////////////////////////////////////////////////
 
-// Concatenate
-void initConcatenateConfig(ConcatenateConfig *config, int32_t axis) {}
-void initConcatenateLocalContext(Function *f) {}
-void freeConcatenateLocalContext(Function *f) {}
-void execConcatenate(Function *f) {}
-
-// Split
-void initSplitConfig(SplitConfig *config, int32_t axis) {}
-void initSplitLocalContext(Function *f) {}
-void freeSplitLocalContext(Function *f) {}
-void execSplit(Function *f) {}
-
-// Stack
-void initStackConfig(StackConfig *config, int32_t axis) {}
-void initStackLocalContext(Function *f) {}
-void freeStackLocalContext(Function *f) {}
-void execStack(Function *f) {}
-
-// Slice
-void initSliceConfig(SliceConfig *config, rt_list_t start, rt_list_t stop, rt_list_t step) {}
-void initSliceLocalContext(Function *f) {}
-void freeSliceLocalContext(Function *f) {}
-void execSlice(Function *f) {}
+/// Pad
+rt_function_error_t allocate_pad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t free_pad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t exec_pad(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Transpose
-void initTransposeConfig(TransposeConfig *config, rt_list_t axes) {}
-void initTransposeLocalContext(Function *f) {}
-void freeTransposeLocalContext(Function *f) {}
-void execTranspose(Function *f) {}
+rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_transpose_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_transpose(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Broadcast
-void initBroadcastConfig(BroadcastConfig *config, rt_list_t shape) {}
-void initBroadcastLocalContext(Function *f) {}
-void freeBroadcastLocalContext(Function *f) {}
-void execBroadcast(Function *f) {}
+rt_function_error_t allocate_broadcast_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_broadcast_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_broadcast(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // OneHot
-void initOneHotConfig(OneHotConfig *config, rt_list_t shape) {}
-void initOneHotLocalContext(Function *f) {}
-void freeOneHotLocalContext(Function *f) {}
-void execOneHot(Function *f) {}
+rt_function_error_t allocate_one_hot_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_one_hot_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_one_hot(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Flip
-void initFlipConfig(FlipConfig *config, rt_list_t axes) {}
-void initFlipLocalContext(Function *f) {}
-void freeFlipLocalContext(Function *f) {}
-void execFlip(Function *f) {}
+rt_function_error_t allocate_flip_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Shift
-void initShiftConfig(ShiftConfig *config, rt_list_t shifts, uint32_t border_mode) {}
-void initShiftLocalContext(Function *f) {}
-void freeShiftLocalContext(Function *f) {}
-void execShift(Function *f) {}
+rt_function_error_t free_flip_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
-// Reshape
-void initReshapeConfig(ReshapeConfig *config, rt_list_t shape) {}
-void initReshapeLocalContext(Function *f) {}
-void freeReshapeLocalContext(Function *f) {}
-void execReshape(Function *f) {}
-
-// MatrixDiag
-void execMatrixDiag(Function *f) {}
-
-// MatrixDiagPart
-void execMatrixDiagPart(Function *f) {}
+rt_function_error_t exec_flip(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Stochasticity
 ////////////////////////////////////////////////////////////////////////////////
 
-// Dropout
-void initDropoutConfig(DropoutConfig *config, float p, int32_t seed) {}
-void initDropoutLocalContext(Function *f) {}
-void freeDropoutLocalContext(Function *f) {}
-void execDropout(Function *f) {}
+// TopKData
+rt_function_error_t allocate_top_k_data_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t free_top_k_data_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t exec_top_k_data(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+// TopKGrad
+rt_function_error_t allocate_top_k_grad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t free_top_k_grad_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+rt_function_error_t exec_top_k_grad(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Rand
-void initRandConfig(RandConfig *config, float low, float high, rt_list_t shape,
-                    int32_t seed) {}
-void initRandLocalContext(Function *f) {}
-void freeRandLocalContext(Function *f) {}
-void execRand(Function *f) {}
+rt_function_error_t allocate_rand_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Randint
-void initRandintConfig(RandintConfig *config, int32_t low, int32_t high,
-                       rt_list_t shape, int32_t seed) {}
-void initRandintLocalContext(Function *f) {}
-void freeRandintLocalContext(Function *f) {}
-void execRandint(Function *f) {}
+rt_function_error_t allocate_randint_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_randint_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_randint(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Randn
-void initRandnConfig(RandnConfig *config, float mu, float sigma, rt_list_t shape,
-                     int32_t seed) {}
-void initRandnLocalContext(Function *f) {}
-void freeRandnLocalContext(Function *f) {}
-void execRandn(Function *f) {}
+rt_function_error_t allocate_randn_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_randn_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_randn(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // RandomCrop
-void initRandomCropConfig(RandomCropConfig *config, rt_list_t shape,
-                          int32_t base_axis, int32_t seed) {}
-void initRandomCropLocalContext(Function *f) {}
-void freeRandomCropLocalContext(Function *f) {}
-void execRandomCrop(Function *f) {}
+rt_function_error_t allocate_random_crop_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_random_crop_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_random_crop(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // RandomFlip
-void initRandomFlipConfig(RandomFlipConfig *config, rt_list_t axes,
-                          int32_t base_axis, int32_t seed) {}
-void initRandomFlipLocalContext(Function *f) {}
-void freeRandomFlipLocalContext(Function *f) {}
-void execRandomFlip(Function *f) {}
+rt_function_error_t allocate_random_flip_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_random_flip_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_random_flip(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // RandomShift
-void initRandomShiftConfig(RandomShiftConfig *config, rt_list_t shifts,
-                           uint32_t border_mode, int32_t base_axis,
-                           int32_t seed) {}
-void initRandomShiftLocalContext(Function *f) {}
-void freeRandomShiftLocalContext(Function *f) {}
-void execRandomShift(Function *f) {}
+rt_function_error_t allocate_random_shift_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_random_shift_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_random_shift(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // ImageAugmentation
-void initImageAugmentationConfig(ImageAugmentationConfig *config, rt_list_t shape,
-                                 rt_list_t pad, float min_scale, float max_scale,
-                                 float angle, float aspect_ratio,
-                                 float distortion, uint8_t flip_lr,
-                                 uint8_t flip_ud, float brightness,
-                                 uint8_t brightness_each, float contrast,
-                                 float contrast_center, uint8_t contrast_each,
-                                 float noise, int32_t seed) {}
-void initImageAugmentationLocalContext(Function *f) {}
-void freeImageAugmentationLocalContext(Function *f) {}
-void execImageAugmentation(Function *f) {}
+rt_function_error_t
+allocate_image_augmentation_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_image_augmentation_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_image_augmentation(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Loss Functions
 ////////////////////////////////////////////////////////////////////////////////
 
 // SigmoidCrossEntropy
-void execSigmoidCrossEntropy(Function *f) {}
+
+rt_function_error_t
+allocate_sigmoid_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_sigmoid_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_sigmoid_cross_entropy(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // BinaryCrossEntropy
-void execBinaryCrossEntropy(Function *f) {}
+
+rt_function_error_t
+allocate_binary_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_binary_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_binary_cross_entropy(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // SoftmaxCrossEntropy
-void initSoftmaxCrossEntropyConfig(SoftmaxCrossEntropyConfig *config,
-                                   int32_t axis) {}
-void initSoftmaxCrossEntropyLocalContext(Function *f) {}
-void freeSoftmaxCrossEntropyLocalContext(Function *f) {}
-void execSoftmaxCrossEntropy(Function *f) {}
+rt_function_error_t
+allocate_softmax_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_softmax_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_softmax_cross_entropy(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // CategoricalCrossEntropy
-void initCategoricalCrossEntropyConfig(CategoricalCrossEntropyConfig *config,
-                                       int32_t axis) {}
-void initCategoricalCrossEntropyLocalContext(Function *f) {}
-void freeCategoricalCrossEntropyLocalContext(Function *f) {}
-void execCategoricalCrossEntropy(Function *f) {}
+rt_function_error_t
+allocate_categorical_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_categorical_cross_entropy_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_categorical_cross_entropy(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // SquaredError
-void execSquaredError(Function *f) {}
+
+rt_function_error_t allocate_squared_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_squared_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_squared_error(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // AbsoluteError
-void execAbsoluteError(Function *f) {}
+
+rt_function_error_t allocate_absolute_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_absolute_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_absolute_error(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // HuberLoss
-void initHuberLossConfig(HuberLossConfig *config, float delta) {}
-void initHuberLossLocalContext(Function *f) {}
-void freeHuberLossLocalContext(Function *f) {}
-void execHuberLoss(Function *f) {}
+rt_function_error_t allocate_huber_loss_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_huber_loss_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_huber_loss(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // EpsilonInsensitiveLoss
-void initEpsilonInsensitiveLossConfig(EpsilonInsensitiveLossConfig *config,
-                                      float epsilon) {}
-void initEpsilonInsensitiveLossLocalContext(Function *f) {}
-void freeEpsilonInsensitiveLossLocalContext(Function *f) {}
-void execEpsilonInsensitiveLoss(Function *f) {}
+rt_function_error_t
+allocate_epsilon_insensitive_loss_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_epsilon_insensitive_loss_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_epsilon_insensitive_loss(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // KLMultinomial
-void initKLMultinomialConfig(KLMultinomialConfig *config, int32_t base_axis) {}
-void initKLMultinomialLocalContext(Function *f) {}
-void freeKLMultinomialLocalContext(Function *f) {}
-void execKLMultinomial(Function *f) {}
+rt_function_error_t allocate_kl_multinomial_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_kl_multinomial_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
 
-// BinarySigmoid
-void execBinarySigmoid(Function *f) {}
-
-// BinaryTanh
-void execBinaryTanh(Function *f) {}
-
-// BinaryConnectAffine
-void initBinaryConnectAffineConfig(BinaryConnectAffineConfig *config,
-                                   int32_t base_axis) {}
-void initBinaryConnectAffineLocalContext(Function *f) {}
-void freeBinaryConnectAffineLocalContext(Function *f) {}
-void execBinaryConnectAffine(Function *f) {}
-
-// BinaryConnectConvolution
-void initBinaryConnectConvolutionConfig(BinaryConnectConvolutionConfig *config,
-                                        int32_t base_axis, rt_list_t pad,
-                                        rt_list_t stride, rt_list_t dilation,
-                                        int32_t group) {}
-void initBinaryConnectConvolutionLocalContext(Function *f) {}
-void freeBinaryConnectConvolutionLocalContext(Function *f) {}
-void execBinaryConnectConvolution(Function *f) {}
-
-// BinaryWeightAffine
-void initBinaryWeightAffineConfig(BinaryWeightAffineConfig *config,
-                                  int32_t base_axis) {}
-void initBinaryWeightAffineLocalContext(Function *f) {}
-void freeBinaryWeightAffineLocalContext(Function *f) {}
-void execBinaryWeightAffine(Function *f) {}
-
-// BinaryWeightConvolution
-void initBinaryWeightConvolutionConfig(BinaryWeightConvolutionConfig *config,
-                                       int32_t base_axis, rt_list_t pad, rt_list_t stride,
-                                       rt_list_t dilation, int32_t group) {}
-void initBinaryWeightConvolutionLocalContext(Function *f) {}
-void freeBinaryWeightConvolutionLocalContext(Function *f) {}
-void execBinaryWeightConvolution(Function *f) {}
-
 // INQAffine
-void initINQAffineConfig(INQAffineConfig *config, int32_t base_axis,
-                         int32_t num_bits, rt_list_t inq_iterations,
-                         uint32_t selection_algorithm, int32_t seed) {}
-void initINQAffineLocalContext(Function *f) {}
-void freeINQAffineLocalContext(Function *f) {}
-void execINQAffine(Function *f) {}
+rt_function_error_t allocate_inq_affine_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_inq_affine_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_inq_affine(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // INQConvolution
-void initINQConvolutionConfig(INQConvolutionConfig *config, int32_t base_axis,
-                              rt_list_t pad, rt_list_t stride, rt_list_t dilation,
-                              int32_t group, int32_t num_bits,
-                              rt_list_t inq_iterations, uint32_t selection_algorithm,
-                              int32_t seed) {}
-void initINQConvolutionLocalContext(Function *f) {}
-void freeINQConvolutionLocalContext(Function *f) {}
-void execINQConvolution(Function *f) {}
+rt_function_error_t allocate_inq_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_inq_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_inq_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // FixedPointQuantize
-void initFixedPointQuantizeConfig(FixedPointQuantizeConfig *config,
-                                  uint8_t sign, int32_t n, float delta,
-                                  uint8_t ste_fine_grained) {}
-void initFixedPointQuantizeLocalContext(Function *f) {}
-void freeFixedPointQuantizeLocalContext(Function *f) {}
-void execFixedPointQuantize(Function *f) {}
+rt_function_error_t
+allocate_fixed_point_quantize_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_fixed_point_quantize_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_fixed_point_quantize(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Pow2Quantize
-void initPow2QuantizeConfig(Pow2QuantizeConfig *config, uint8_t sign,
-                            uint8_t with_zero, int32_t n, int32_t m,
-                            uint8_t ste_fine_grained) {}
-void initPow2QuantizeLocalContext(Function *f) {}
-void freePow2QuantizeLocalContext(Function *f) {}
-void execPow2Quantize(Function *f) {}
+rt_function_error_t allocate_pow2_quantize_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_pow2_quantize_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_pow2_quantize(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Validation
 ////////////////////////////////////////////////////////////////////////////////
 
 // TopNError
-void initTopNErrorConfig(TopNErrorConfig *config, int32_t axis, int32_t n) {}
-void initTopNErrorLocalContext(Function *f) {}
-void freeTopNErrorLocalContext(Function *f) {}
-void execTopNError(Function *f) {}
+rt_function_error_t allocate_top_n_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_top_n_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_top_n_error(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // BinaryError
-void execBinaryError(Function *f) {}
+
+rt_function_error_t allocate_binary_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_binary_error_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_binary_error(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // ConfusionMatrix
-void initConfusionMatrixConfig(ConfusionMatrixConfig *config, int32_t axis) {}
-void initConfusionMatrixLocalContext(Function *f) {}
-void freeConfusionMatrixLocalContext(Function *f) {}
-void execConfusionMatrix(Function *f) {}
+rt_function_error_t allocate_confusion_matrix_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_confusion_matrix_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_confusion_matrix(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Unsupported, Special Use
 ////////////////////////////////////////////////////////////////////////////////
 
 // VATNoise
-void initVATNoiseConfig(VATNoiseConfig *config, int32_t base_axis, float eps) {}
-void initVATNoiseLocalContext(Function *f) {}
-void freeVATNoiseLocalContext(Function *f) {}
-void execVATNoise(Function *f) {}
+rt_function_error_t allocate_vat_noise_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_vat_noise_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_vat_noise(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Unlink
-void execUnlink(Function *f) {}
+
+rt_function_error_t allocate_unlink_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_unlink_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_unlink(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
 
 // Sink
-void initSinkConfig(SinkConfig *config, uint8_t one_input_grad) {}
-void initSinkLocalContext(Function *f) {}
-void freeSinkLocalContext(Function *f) {}
-void execSink(Function *f) {}
+rt_function_error_t allocate_sink_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_sink_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_sink(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t allocate_nms_detection2d_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_nms_detection2d_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_nms_detection2d(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}

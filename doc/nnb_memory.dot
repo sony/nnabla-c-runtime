@@ -1,0 +1,22 @@
+digraph G {
+  graph [rankdir = "LR"];
+  
+  node [fontsize = "10"
+        shape = "ellipse"];
+  
+  edge [ spline=ortho ];
+  
+  "node1" [label = "{Data|{indexes||<i> index[n]||||buffers||<d> data[n]|||}}"
+           shape = "record"];
+
+  "node2" [label = "id[n]"];
+  "node3" [label = "" shape="none" height=0 width=0];
+
+  "node1":i -> "node3"[arrowhead="none", splines=line];
+  "node3" -> "node1":d[splines=line];
+  "node3" -> "node2":d[color=transparent];
+  
+  "node2" -> "node1":i;
+
+}
+  
