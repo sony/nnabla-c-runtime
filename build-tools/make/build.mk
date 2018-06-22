@@ -42,7 +42,7 @@ nnabla-c-runtime-compile:
 	@make -C $(NNABLA_C_RUNTIME_DIRECTORY)/build
 
 .PHONY: nnabla-c-runtime-examples
-nnabla-c-runtime-examples: build
+nnabla-c-runtime-examples: nnabla-c-runtime-build
 	@make -C $(NNABLA_C_RUNTIME_DIRECTORY)/examples/callback
 
 .PHONY: nnabla-c-runtime-clean
