@@ -91,8 +91,6 @@ rt_function_error_t allocate_pooling(rt_function_t *f,
   p->calc_context.get_x = select_getter(p->calc_context.x);
   p->calc_context.y = f->outputs[0];
   p->calc_context.set_y = select_setter(p->calc_context.y);
-  p->calc_context.offset_x = 0;
-  p->calc_context.offset_y = 0;
   p->calc_context.including_pad = context->including_pad;
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -121,6 +119,8 @@ rt_function_error_t exec_pooling(rt_function_t *f, pooling_context_t *context,
   const int wpad = context->pad.data[1];
   const int n_map = calc_shape_size(f->inputs[0]->shape) / p->x_stride;
   int n;
+  p->calc_context.offset_x = 0;
+  p->calc_context.offset_y = 0;
   for (n = 0; n < n_map; n++) {
     int iy;
     for (iy = 0; iy < hy; iy++) {
