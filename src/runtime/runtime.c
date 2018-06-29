@@ -21,7 +21,7 @@
 #include "runtime_internal.h"
 
 rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
-  rt_context_t *c = malloc(sizeof(rt_context_t));
+  rt_context_t *c = calloc(1, sizeof(rt_context_t));
   if (c == 0) {
     return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
