@@ -17,7 +17,6 @@
 #include <nnablart/functions.h>
 
 typedef struct {
-  int num_outputs;
   int inner_size;
   int outer_size;
 } stack_private_t;
@@ -53,10 +52,9 @@ rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
   }
 
   ((stack_local_context_t *)(f->local_context))->data = (void *)p;
-  p->num_outputs = f->inputs[0]->shape.data[c->axis];
 
-  p->inner_size = calc_size(f->outputs[0]->shape, c->axis);
-  p->outer_size = calc_shape_size(f->outputs[0]->shape) / p->inner_size;
+  p->inner_size = calc_size(f->inputs[0]->shape, c->axis);
+  p->outer_size = calc_shape_size(f->inputs[0]->shape) / p->inner_size;
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -72,11 +70,11 @@ rt_function_error_t exec_stack(rt_function_t *f) {
   stack_private_t *p = (stack_private_t *)(c->data);
 
   float *y = (float *)(f->outputs[0]->data);
-  for (int i = 0; i < p->num_outputs; i++) {
+  for (int i = 0; i < f->num_of_inputs; i++) {
     const float *x = (float *)(f->inputs[i]->data);
     for (int j = 0; j < p->outer_size; j++) {
       for (int k = 0; k < p->inner_size; k++) {
-        y[j * (p->inner_size * p->num_outputs) + i * p->inner_size + k] =
+        y[j * (p->inner_size * f->num_of_inputs) + i * p->inner_size + k] =
             x[j * p->inner_size + k];
       }
     }
@@ -90,14 +88,14 @@ rt_function_error_t exec_stack_generic(rt_function_t *f) {
   rt_variable_t *output = f->outputs[0];
   rt_variable_setter set_output = select_setter(output);
 
-  for (int i = 0; i < p->num_outputs; i++) {
+  for (int i = 0; i < f->num_of_inputs; i++) {
     rt_variable_t *input = f->inputs[i];
     rt_variable_getter get_input = select_getter(input);
     for (int j = 0; j < p->outer_size; j++) {
       for (int k = 0; k < p->inner_size; k++) {
         float x = get_input(input, j * p->inner_size + k);
-        set_output(output,
-                   j * (p->inner_size * p->num_outputs) + i * p->inner_size + k,
+        set_output(output, j * (p->inner_size * f->num_of_inputs) +
+                               i * p->inner_size + k,
                    x);
       }
     }

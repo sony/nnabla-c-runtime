@@ -18,7 +18,6 @@
 typedef struct {
   int outer_size;
   int inner_total_size;
-  rt_list_t *in_shape;
 } concatenate_private_t;
 
 static inline int calc_size(rt_list_t shape, int axis) {
@@ -53,17 +52,13 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
+  p->inner_total_size = 0;
   for (int i = 0; i < f->num_of_inputs; i++) {
-    p->in_shape[i] = clone_list(f->inputs[i]->shape);
-    const int inner_size = calc_size(p->in_shape[i], c->axis);
+    const int inner_size = calc_size(f->inputs[i]->shape, c->axis);
     p->inner_total_size += inner_size;
-
-    if (i >= 1) {
-      p->in_shape[0].data[c->axis] += p->in_shape[i].data[c->axis];
-    }
   }
-  p->outer_size =
-      calc_shape_size(p->in_shape[0]) / calc_size(p->in_shape[0], c->axis);
+  p->outer_size = calc_shape_size(f->inputs[0]->shape) /
+                  calc_size(f->inputs[0]->shape, c->axis);
 
   ((concatenate_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
@@ -73,9 +68,6 @@ rt_function_error_t free_concatenate_local_context(rt_function_t *f) {
   concatenate_private_t *p =
       (concatenate_private_t
            *)(((concatenate_local_context_t *)(f->local_context))->data);
-  for (int i = 0; i < f->num_of_inputs; i++) {
-    free_list(p->in_shape[i]);
-  }
   free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -89,7 +81,7 @@ rt_function_error_t exec_concatenate(rt_function_t *f) {
   int inner_offset = 0;
   for (int i = 0; i < f->num_of_inputs; i++) {
     const float *x = (float *)(f->inputs[i]->data);
-    const int inner_size = calc_size(p->in_shape[i], c->axis);
+    const int inner_size = calc_size(f->inputs[i]->shape, c->axis);
     for (int j = 0; j < p->outer_size; ++j) {
       for (int k = 0; k < inner_size; k++) {
         y[j * p->inner_total_size + inner_offset + k] = x[j * inner_size + k];
@@ -111,7 +103,7 @@ rt_function_error_t exec_concatenate_generic(rt_function_t *f) {
   for (int i = 0; i < f->num_of_inputs; i++) {
     rt_variable_t *input = f->inputs[i];
     rt_variable_getter get_input = select_getter(input);
-    const int inner_size = calc_size(p->in_shape[i], c->axis);
+    const int inner_size = calc_size(f->inputs[i]->shape, c->axis);
     for (int j = 0; j < p->outer_size; ++j) {
       for (int k = 0; k < inner_size; k++) {
         const float x = get_input(input, j * inner_size + k);
