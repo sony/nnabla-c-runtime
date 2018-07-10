@@ -60,21 +60,21 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     switch (variable->type) {
     case NN_DATA_TYPE_FLOAT:
       assert(input_data_size ==
-             rt_input_size(context, i) * sizeof(float)); // TODO float only.
+             rt_input_size(context, i) * sizeof(float));
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
       break;
     case NN_DATA_TYPE_INT8:
       assert(input_data_size ==
-             rt_input_size(context, i) * sizeof(uint8_t)); // TODO float only.
+             rt_input_size(context, i) * sizeof(uint8_t));
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
       break;
     case NN_DATA_TYPE_INT16:
       assert(input_data_size ==
-             rt_input_size(context, i) * sizeof(uint16_t)); // TODO float only.
+             rt_input_size(context, i) * sizeof(uint16_t));
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
