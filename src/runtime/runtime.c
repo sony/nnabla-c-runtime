@@ -163,6 +163,8 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     }
   }
 
+  c->network = n;
+
   return RT_RET_NOERROR;
 }
 
