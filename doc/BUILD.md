@@ -84,6 +84,9 @@ $ make
 - nnabla-c-runtime-test-all-functions
 - bwd-nnabla-c-runtime-test-all-functions
 
+#### Development in docker container (Needs `nnabla` directory)
+- bwd-nnabla-c-runtime-shell
+
 ### Targets for NNabla
 
 - nnabla-auto-format
