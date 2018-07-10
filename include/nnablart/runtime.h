@@ -265,11 +265,29 @@ int rt_output_shape(rt_context_pointer context, size_t index,
                     size_t shape_index);
 
 /// @brief Get output buffer at index
-/// NOTE: This function may use for debug perpose.
+/// NOTE: This function may use for debug purpose.
 /// @param[in] context
 /// @param[in] index
 /// @return pointer
 void *rt_output_buffer(rt_context_pointer context, size_t index);
+
+/// @brief Get input variable description at index
+/// This function obtains variable description such as data type,
+/// floating point position(e.g.0.5 means fp=1), and so on.
+/// NOTE: This function may use for debug purpose.
+/// @param[in] context
+/// @param[in] index
+/// @return pointer to variable description.
+nn_variable_t *rt_input_variable(rt_context_pointer context, size_t index);
+
+/// @brief Get output variable description at index
+/// This function obtains variable description such as data type,
+/// floating point position(e.g.0.5 means fp=1), and so on.
+/// NOTE: This function may use for debug purpose.
+/// @param[in] context
+/// @param[in] index
+/// @return pointer to variable description.
+nn_variable_t *rt_output_variable(rt_context_pointer context, size_t index);
 
 /// @brief Execute feed forward calculation.
 /// @param[in] context

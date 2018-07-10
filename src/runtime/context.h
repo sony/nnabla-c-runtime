@@ -52,6 +52,8 @@ typedef struct {
   int num_of_callbacks;
   rt_function_callback_t *callbacks;
 
+  nn_network_t *network;
+
 } rt_context_t;
 
 #endif // H_CONTEXT_H_171220164849_

@@ -274,6 +274,22 @@ void *rt_output_buffer(rt_context_pointer context, size_t index) {
   return c->variables[c->output_variable_ids[index]].data;
 }
 
+nn_variable_t *rt_input_variable(rt_context_pointer context, size_t index) {
+  rt_context_t *c = context;
+  const nn_network_t *n = c->network;
+  int *list = (int *)NN_GET(n, n->variables.list);
+  int i = c->input_variable_ids[index];
+  return (nn_variable_t *)(NN_GET(n, *(list + i)));
+}
+
+nn_variable_t *rt_output_variable(rt_context_pointer context, size_t index) {
+  rt_context_t *c = context;
+  const nn_network_t *n = c->network;
+  int *list = (int *)NN_GET(n, n->variables.list);
+  int i = c->output_variable_ids[index];
+  return (nn_variable_t *)(NN_GET(n, *(list + i)));
+}
+
 rt_return_value_t rt_forward(rt_context_pointer context) {
   int i; // Iterator
   rt_context_t *c = context;

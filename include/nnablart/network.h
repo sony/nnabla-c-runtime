@@ -25,7 +25,7 @@ extern "C" {
 #include <stdlib.h> // for size_t
 
 #define NN_BINARY_FORMAT_VERSION (1)
-#define NN_BINARY_FORMAT_REVISION 6fdd2ffffd07bc26d5479bea2225668b
+#define NN_BINARY_FORMAT_REVISION 6f9013b927259e22f315cccff98b5c81
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
