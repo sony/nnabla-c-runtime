@@ -77,7 +77,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
                              input_data_size, input);
       break;
     case NN_DATA_TYPE_SIGN:
-      assert(input_data_size == rt_input_size(context, i) / 8);
+      assert(input_data_size == (rt_input_size(context, i) >> 3));
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
