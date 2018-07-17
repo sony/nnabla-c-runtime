@@ -128,3 +128,7 @@ nnabla-c-runtime-generate-mnist-test: nnabla-c-runtime-build nnabla-install
 endif
 
 endif
+
+.PHONY: build-shell
+build-shell: nnabla-install
+	PS1="compile-nnablart: " bash --norc -i

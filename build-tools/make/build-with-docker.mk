@@ -148,3 +148,9 @@ bwd-nnabla-c-runtime-generate-mnist-test: nnabla-c-runtime-docker_image_test
 endif
 
 endif
+
+.PHONY: bwd-nnabla-c-runtime-shell
+bwd-nnabla-c-runtime-shell:
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run -it $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make build-shell
