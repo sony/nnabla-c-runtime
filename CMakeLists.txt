@@ -17,8 +17,23 @@ cmake_minimum_required(VERSION 2.8)
 set(project_root "${CMAKE_CURRENT_SOURCE_DIR}")
 include(${project_root}/build-tools/cmake/common.cmake)
 
-project(nnablart)
+project(nnabla-c-runtime)
 
 add_subdirectory(src/runtime)
 add_subdirectory(src/functions)
 add_subdirectory(src/nnablart)
+
+
+set(CPACK_GENERATOR "ZIP")
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set(CPACK_PACKAGE_VENDOR "Sony")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Neural Network Libraries C runtime.")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Yukio.Oobuchi@sony.com")
+
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-Source-${CPACK_PACKAGE_VERSION})
+
+install(FILES PACKAGE_README.md DESTINATION . RENAME README.md)
+install(FILES doc/SUPPORT_STATUS.md DESTINATION doc)
+
+include(CPack)

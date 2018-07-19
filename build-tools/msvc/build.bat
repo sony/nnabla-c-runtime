@@ -39,7 +39,7 @@ CD %NNABLACRUNTIMEBUILDFOLDER%
 ECHO OFF
 cmake -G "%GENERATETARGET%" %NNABLACRUNTIMEROOT% || GOTO :ERROR
 
-cmake --build . --config %BUILDTYPE% || GOTO :ERROR
+cmake --build . --config %BUILDTYPE% --target package|| GOTO :ERROR
 
 ENDLOCAL
 EXIT /b

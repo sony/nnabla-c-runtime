@@ -91,3 +91,6 @@ add_library(nnablart_functions STATIC
   implements/reduction/sum.c
   
   implements/unimplemented.c)
+
+install(FILES ../../include/nnablart/functions.h DESTINATION include/nnablart)
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
