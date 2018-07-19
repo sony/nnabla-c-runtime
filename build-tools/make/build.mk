@@ -39,7 +39,7 @@ nnabla-c-runtime-generate:
 nnabla-c-runtime-compile:
 	@mkdir -p $(NNABLA_C_RUNTIME_DIRECTORY)/build
 	@cd $(NNABLA_C_RUNTIME_DIRECTORY)/build && cmake ..
-	@make -C $(NNABLA_C_RUNTIME_DIRECTORY)/build
+	@cd $(NNABLA_C_RUNTIME_DIRECTORY)/build && cmake --build . --target package
 
 .PHONY: nnabla-c-runtime-examples
 nnabla-c-runtime-examples: nnabla-c-runtime-build
