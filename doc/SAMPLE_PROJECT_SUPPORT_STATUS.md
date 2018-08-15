@@ -1,0 +1,40 @@
+# Sample Project Support Status
+|             Network              | nnabla_cli infer |  nnablart infer  |      Result      |
+|----------------------------------|------------------|------------------|------------------|
+|    01_logistic_regression_017    |        OK        |        OK        |       True       |
+|    01_logistic_regression_018    |        OK        |        OK        |       True       |
+|        02_binary_cnn_009         |        OK        |        OK        |       True       |
+|        02_binary_cnn_010         |        OK        |        OK        |       True       |
+|       06_auto_encoder_011        |        OK        |        OK        |       True       |
+|       06_auto_encoder_012        |        OK        |        OK        |       True       |
+|         10_deep_mlp_007          |        OK        |        OK        |       True       |
+|         10_deep_mlp_008          |        OK        |        OK        |       True       |
+|       11_deconvolution_015       |        OK        |        OK        |       True       |
+|       11_deconvolution_016       |        OK        |        OK        |       True       |
+|     12_residual_learning_013     |        OK        |        OK        |       True       |
+|     12_residual_learning_014     |        OK        |        OK        |       True       |
+|      LSTM_auto_encoder_031       |        OK        |        OK        |       True       |
+|      LSTM_auto_encoder_032       |        OK        |        OK        |       True       |
+|            LeNet_004             |        OK        |        OK        |       True       |
+|            LeNet_005             |        OK        |        OK        |       True       |
+|   bidirectional_elman_net_029    |        OK        |        OK        |       True       |
+|   bidirectional_elman_net_030    |        OK        |        OK        |       True       |
+|  binary_connect_mnist_LeNet_035  |        OK        |        OK        |       True       |
+|   binary_connect_mnist_MLP_033   |        OK        |        OK        |       True       |
+|    binary_net_mnist_LeNet_036    |        OK        |        OK        |       True       |
+|     binary_net_mnist_MLP_034     |        OK        |        OK        |       True       |
+|   binary_weight_mnist_MLP_037    |        OK        |        OK        |       True       |
+|          elman_net_027           |        OK        |        OK        |       True       |
+|          elman_net_028           |        OK        |        OK        |       True       |
+|   elman_net_with_attention_021   |        OK        |        OK        |      False       |
+|   elman_net_with_attention_022   |        OK        |        OK        |       True       |
+|  gated_recurrent_unit(GRU)_019   |        OK        |        OK        |      False       |
+|  gated_recurrent_unit(GRU)_020   |        OK        |        OK        |       True       |
+| long_short_term_memory(LSTM)_025 |        OK        |        OK        |       True       |
+| long_short_term_memory(LSTM)_026 |        OK        |        OK        |      False       |
+|    mnist_dcgan_with_label_002    |        NG        |        NG        |      False       |
+|    mnist_dcgan_with_label_003    |        OK        |        NG        |      False       |
+|          mnist_vae_001           |        OK        |        OK        |       True       |
+| semi_supervised_learning_VAT_006 |        NG        |        NG        |      False       |
+|         stacked_GRU_023          |        OK        |        OK        |      False       |
+|         stacked_GRU_024          |        OK        |        OK        |       True       |
