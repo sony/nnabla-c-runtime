@@ -54,7 +54,7 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
   }
 
   p->inner_total_size = 0;
-  p->in_shape = (rt_list_t*)malloc(sizeof(rt_list_t)*f->num_of_inputs);
+  p->in_shape = (rt_list_t *)malloc(sizeof(rt_list_t) * f->num_of_inputs);
   for (int i = 0; i < f->num_of_inputs; i++) {
     p->in_shape[i] = clone_list(f->inputs[i]->shape);
     const int inner_size = calc_size(p->in_shape[i], c->axis);
