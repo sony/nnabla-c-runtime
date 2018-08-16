@@ -39,7 +39,7 @@ nnabla-c-runtime-generate:
 nnabla-c-runtime-compile:
 	@mkdir -p $(NNABLA_C_RUNTIME_DIRECTORY)/build
 	@cd $(NNABLA_C_RUNTIME_DIRECTORY)/build && cmake ..
-	@make -C $(NNABLA_C_RUNTIME_DIRECTORY)/build
+	@cd $(NNABLA_C_RUNTIME_DIRECTORY)/build && cmake --build . --target package
 
 .PHONY: nnabla-c-runtime-examples
 nnabla-c-runtime-examples: nnabla-c-runtime-build
@@ -78,9 +78,11 @@ nnabla-c-runtime-generate-function-test: nnabla-install
 	@cd $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla && PYTHONPATH=$$(cd ../../../build-tools/test/callback && pwd) \
 		python -m pytest ../../../../nnabla/python/test
 	@NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/test/scripts/exec_all_functions.sh
+	@python build-tools/test/scripts/generate_yaml.py
 	@rm -rf $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
 	@mkdir -p $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
 	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*.nntxt $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
+	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*.yaml $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
 	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_input_*.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
 	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_output_?.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
 	@rm -f $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/*_nnabla_cli_output_?.bin
@@ -126,3 +128,7 @@ nnabla-c-runtime-generate-mnist-test: nnabla-c-runtime-build nnabla-install
 endif
 
 endif
+
+.PHONY: build-shell
+build-shell: nnabla-install
+	PS1="compile-nnablart: " bash --norc -i

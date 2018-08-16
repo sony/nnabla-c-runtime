@@ -81,20 +81,6 @@ with open('{}/nnabla-c-runtime/test_functions.mk'.format(os.environ['NNABLA_C_RU
             '\t\t{}/nnabla-c-runtime/csrc/{}/network1_example_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, csrclog))
         f.write('\t@mkdir -p {}/nnabla-c-runtime/nnb\n'.format(
             os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY']))
-        f.write('\t@nnabla_cli convert {} {}/nnabla-c-runtime/nnb/{}.nnb >>{} 2>&1\n'.format(
-            nntxt, os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, nnblog))
-        f.write(
-            '\t@valgrind  --leak-check=full ./build/src/nnablart/nnablart dump\\\n')
-        f.write(
-            '\t\t{}/nnabla-c-runtime/nnb/{}.nnb >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, nnblog))
-        f.write(
-            '\t@valgrind  --leak-check=full ./build/src/nnablart/nnablart infer\\\n')
-        f.write('\t\t{}/nnabla-c-runtime/nnb/{}.nnb\\\n'.format(
-            os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function))
-        f.write(
-            '\t\t{}/functions/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
-        f.write(
-            '\t\t{}/nnabla-c-runtime/nnb/{}_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, nnblog))
         for output in sorted(glob.glob('{}/functions/{}_output_?.bin'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))):
             name, ext = os.path.splitext(output)
             num = name.rsplit('_', 1)[1]
@@ -103,11 +89,30 @@ with open('{}/nnabla-c-runtime/test_functions.mk'.format(os.environ['NNABLA_C_RU
             f.write('\t\t{}\\\n'.format(output))
             f.write(
                 '\t\t{}/nnabla-c-runtime/csrc/{}/network1_example_output_{}.bin >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, num, csrclog))
+        for o in sorted(glob.glob('{}/functions/{}_*.yaml'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))):
+            name, ext = os.path.splitext(os.path.basename(o))
+            f.write('\t@nnabla_cli convert {} {}/nnabla-c-runtime/nnb/{}.nnb -s {} >>{} 2>&1\n'.format(
+                nntxt, os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], name, o, nnblog))
             f.write(
-                '\t@python build-tools/test/scripts/diff_result.py\\\n'.format(output))
-            f.write('\t\t{}\\\n'.format(output))
+                '\t@valgrind  --leak-check=full ./build/src/nnablart/nnablart dump\\\n')
             f.write(
-                '\t\t{}/nnabla-c-runtime/nnb/{}_output_{}.bin >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], function, num, nnblog))
+                '\t\t{}/nnabla-c-runtime/nnb/{}.nnb >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], name, nnblog))
+            f.write(
+                '\t@valgrind  --leak-check=full ./build/src/nnablart/nnablart infer\\\n')
+            f.write('\t\t{}/nnabla-c-runtime/nnb/{}.nnb\\\n'.format(
+                os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], name))
+            f.write(
+                '\t\t{}/functions/{}_input_*.bin\\\n'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))
+            f.write(
+                '\t\t{}/nnabla-c-runtime/nnb/{}_output >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], name, nnblog))
+            for output in sorted(glob.glob('{}/functions/{}_output_?.bin'.format(os.environ['NNABLA_C_RUNTIME_REFERENCE_DIRECTORY'], function))):
+                n, ext = os.path.splitext(output)
+                num = n.rsplit('_', 1)[1]
+                f.write(
+                    '\t@python build-tools/test/scripts/diff_result.py\\\n'.format(output))
+                f.write('\t\t{}\\\n'.format(output))
+                f.write(
+                    '\t\t{}/nnabla-c-runtime/nnb/{}_output_{}.bin >>{} 2>&1\n'.format(os.environ['NNABLA_C_RUNTIME_TEST_DIRECTORY'], name, num, nnblog))
         f.write('')
         f.write('')
         f.write('\n')

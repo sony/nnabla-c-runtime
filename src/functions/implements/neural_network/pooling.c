@@ -162,6 +162,8 @@ rt_function_error_t exec_pooling_generic(rt_function_t *f,
   const int wpad = context->pad.data[1];
   const int n_map = calc_shape_size(f->inputs[0]->shape) / p->x_stride;
   int n;
+  p->calc_context.offset_x = 0;
+  p->calc_context.offset_y = 0;
   for (n = 0; n < n_map; n++) {
     int iy;
     for (iy = 0; iy < hy; iy++) {

@@ -18,18 +18,18 @@
 
 # Implement status
 
-Total 57/136
+Total 59/136
 
 
 ## Neural Network Layer
-Count 6/11
+Count 7/11
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |          Affine          |     yes      |      -       |     yes      |
 |       Convolution        |     yes      |     yes      |     yes      |
 |   DepthwiseConvolution   |      no      |      -       |      -       |
-|      Deconvolution       |      no      |      -       |      -       |
+|      Deconvolution       |     yes      |      -       |     yes      |
 |  DepthwiseDeconvolution  |      no      |      -       |      -       |
 |        MaxPooling        |     yes      |      -       |      -       |
 |      AveragePooling      |     yes      |      -       |      -       |
@@ -151,7 +151,7 @@ Count 6/18
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 8/13
+Count 9/13
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -163,7 +163,7 @@ Count 8/13
 |        Transpose         |      no      |      -       |      -       |
 |        Broadcast         |      no      |      -       |      -       |
 |          OneHot          |      no      |      -       |      -       |
-|           Flip           |      no      |      -       |      -       |
+|           Flip           |     yes      |      -       |     yes      |
 |          Shift           |     yes      |      -       |     yes      |
 |         Reshape          |     yes      |      -       |     yes      |
 |        MatrixDiag        |     yes      |      -       |     yes      |

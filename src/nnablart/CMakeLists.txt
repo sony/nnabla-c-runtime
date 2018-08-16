@@ -21,3 +21,4 @@ add_executable(nnablart
   dump.c
   dump_function.c)
 
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)

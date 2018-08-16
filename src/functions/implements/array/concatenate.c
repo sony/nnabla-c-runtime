@@ -53,6 +53,8 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
+  p->inner_total_size = 0;
+  p->in_shape = (rt_list_t *)malloc(sizeof(rt_list_t) * f->num_of_inputs);
   for (int i = 0; i < f->num_of_inputs; i++) {
     p->in_shape[i] = clone_list(f->inputs[i]->shape);
     const int inner_size = calc_size(p->in_shape[i], c->axis);
@@ -76,6 +78,7 @@ rt_function_error_t free_concatenate_local_context(rt_function_t *f) {
   for (int i = 0; i < f->num_of_inputs; i++) {
     free_list(p->in_shape[i]);
   }
+  free(p->in_shape);
   free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -89,7 +92,7 @@ rt_function_error_t exec_concatenate(rt_function_t *f) {
   int inner_offset = 0;
   for (int i = 0; i < f->num_of_inputs; i++) {
     const float *x = (float *)(f->inputs[i]->data);
-    const int inner_size = calc_size(p->in_shape[i], c->axis);
+    const int inner_size = calc_size(f->inputs[i]->shape, c->axis);
     for (int j = 0; j < p->outer_size; ++j) {
       for (int k = 0; k < inner_size; k++) {
         y[j * p->inner_total_size + inner_offset + k] = x[j * inner_size + k];

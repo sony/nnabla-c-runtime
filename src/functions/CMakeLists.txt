@@ -27,6 +27,7 @@ add_library(nnablart_functions STATIC
   implements/neural_network/convolution/convolution_common.c
   implements/neural_network/convolution/binary_connect_convolution.c
   implements/neural_network/convolution/binary_weight_convolution.c
+  implements/neural_network/deconvolution.c
 
   implements/activation/sigmoid.c
   implements/activation/relu.c
@@ -82,6 +83,7 @@ add_library(nnablart_functions STATIC
   implements/array/stack.c
   implements/array/shift.c
   implements/array/slice.c
+  implements/array/flip.c
 
   implements/normalization/batch_normalization.c
   implements/normalization/mean_subtraction.c
@@ -90,3 +92,6 @@ add_library(nnablart_functions STATIC
   implements/reduction/sum.c
   
   implements/unimplemented.c)
+
+install(FILES ../../include/nnablart/functions.h DESTINATION include/nnablart)
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)

@@ -23,6 +23,9 @@
 int infer(nn_network_t *net, int argc, char *argv[]) {
   int i, j; // Iterator
   rt_return_value_t ret;
+  const char *data_type[] = {"NN_DATA_TYPE_FLOAT", "NN_DATA_TYPE_INT16",
+                             "NN_DATA_TYPE_INT8", "NN_DATA_TYPE_SIGN",
+                             "END_OF_NN_DATA_TYPE"};
 
   for (i = 0; i < argc; i++) {
     printf("     %d: %s\n", i, argv[i]);
@@ -48,14 +51,44 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     assert(input);
     fseek(input, 0L, SEEK_END);
     size_t input_data_size = ftell(input);
+    int read_size = 0;
 
-    assert(input_data_size ==
-           rt_input_size(context, i) * sizeof(float)); // TODO float only.
-    fseek(input, 0L, SEEK_SET);
-    int read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
-                               input_data_size, input);
+    nn_variable_t *variable = rt_input_variable(context, i);
+    printf("Input[%d] data type:%s, fp:%d\n", i, data_type[variable->type],
+           variable->fp_pos);
+
+    switch (variable->type) {
+    case NN_DATA_TYPE_FLOAT:
+      assert(input_data_size == rt_input_size(context, i) * sizeof(float));
+      fseek(input, 0L, SEEK_SET);
+      read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
+                             input_data_size, input);
+      break;
+    case NN_DATA_TYPE_INT8:
+      assert(input_data_size == rt_input_size(context, i) * sizeof(uint8_t));
+      fseek(input, 0L, SEEK_SET);
+      read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
+                             input_data_size, input);
+      break;
+    case NN_DATA_TYPE_INT16:
+      assert(input_data_size == rt_input_size(context, i) * sizeof(uint16_t));
+      fseek(input, 0L, SEEK_SET);
+      read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
+                             input_data_size, input);
+      break;
+    case NN_DATA_TYPE_SIGN:
+      assert(input_data_size == (rt_input_size(context, i) >> 3));
+      fseek(input, 0L, SEEK_SET);
+      read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
+                             input_data_size, input);
+      break;
+    default:
+      printf("NN_DATA_TYPE_SIGN is not yet supported.");
+      assert(0);
+      break;
+    }
+
     assert(read_size == input_data_size);
-
     fclose(input);
 
     printf("Input[%d] Shape (", i);
@@ -103,6 +136,10 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
       printf(" %d", rt_output_shape(context, i, j));
     }
     printf(" )\n");
+
+    nn_variable_t *variable = rt_output_variable(context, i);
+    printf("Output[%d] data type:%s, fp:%d\n", i, data_type[variable->type],
+           variable->fp_pos);
   }
   ret = rt_free_context(&context);
   assert(ret == RT_RET_NOERROR);

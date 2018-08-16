@@ -14,4 +14,6 @@ add_library(nnablart_runtime STATIC
   function_context.c)
 
 
-
+install(FILES ../../include/nnablart/network.h DESTINATION include/nnablart)
+install(FILES ../../include/nnablart/runtime.h DESTINATION include/nnablart)
+install(TARGETS ${PROJECT_NAME} DESTINATION lib)
