@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 59/136
+Total 59/141
 
 
 ## Neural Network Layer
@@ -127,7 +127,7 @@ Count 5/24
 |        LogicalNot        |      no      |      -       |      -       |
 
 ## Math
-Count 6/18
+Count 6/20
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -138,6 +138,8 @@ Count 6/18
 |         Identity         |     yes      |      -       |     yes      |
 |       BatchMatmul        |     yes      |      -       |     yes      |
 |          Round           |     yes      |      -       |     yes      |
+|           Ceil           |      no      |      -       |      -       |
+|          Floor           |      no      |      -       |      -       |
 |           Sin            |      no      |      -       |      -       |
 |           Cos            |      no      |      -       |      -       |
 |           Tan            |      no      |      -       |      -       |
@@ -151,7 +153,7 @@ Count 6/18
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 9/13
+Count 9/14
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -162,6 +164,7 @@ Count 9/13
 |           Pad            |      no      |      -       |      -       |
 |        Transpose         |      no      |      -       |      -       |
 |        Broadcast         |      no      |      -       |      -       |
+|       BroadcastTo        |      no      |      -       |      -       |
 |          OneHot          |      no      |      -       |      -       |
 |           Flip           |     yes      |      -       |     yes      |
 |          Shift           |     yes      |      -       |     yes      |
@@ -215,6 +218,14 @@ Count 6/10
 |      INQConvolution      |      no      |      -       |      -       |
 |    FixedPointQuantize    |      no      |      -       |      -       |
 |       Pow2Quantize       |      no      |      -       |      -       |
+
+## Spectral Operation
+Count 0/2
+
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|           FFT            |      no      |      -       |      -       |
+|           IFFT           |      no      |      -       |      -       |
 
 ## Validation
 Count 0/3
