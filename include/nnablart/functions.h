@@ -1432,6 +1432,32 @@ rt_function_error_t free_round_local_context(rt_function_t *f);
 rt_function_error_t exec_round(rt_function_t *f);
 /// @}
 
+/// @defgroup Ceil Ceil
+/// @{
+
+/// Allocate Ceil local context
+rt_function_error_t allocate_ceil_local_context(rt_function_t *f);
+
+/// Free Ceil local context
+rt_function_error_t free_ceil_local_context(rt_function_t *f);
+
+/// Exec Ceil
+rt_function_error_t exec_ceil(rt_function_t *f);
+/// @}
+
+/// @defgroup Floor Floor
+/// @{
+
+/// Allocate Floor local context
+rt_function_error_t allocate_floor_local_context(rt_function_t *f);
+
+/// Free Floor local context
+rt_function_error_t free_floor_local_context(rt_function_t *f);
+
+/// Exec Floor
+rt_function_error_t exec_floor(rt_function_t *f);
+/// @}
+
 /// @defgroup Sin Sin
 /// @{
 
@@ -1721,6 +1747,25 @@ rt_function_error_t free_broadcast_local_context(rt_function_t *f);
 rt_function_error_t exec_broadcast(rt_function_t *f);
 /// @}
 
+/// @defgroup BroadcastTo BroadcastTo
+/// @{
+
+/// Local context for BroadcastTo
+typedef struct {
+  int32_t axis; ///< int64
+  void *data;   ///< General perpose data area
+} broadcast_to_local_context_t;
+
+/// Allocate BroadcastTo local context
+rt_function_error_t allocate_broadcast_to_local_context(rt_function_t *f);
+
+/// Free BroadcastTo local context
+rt_function_error_t free_broadcast_to_local_context(rt_function_t *f);
+
+/// Exec BroadcastTo
+rt_function_error_t exec_broadcast_to(rt_function_t *f);
+/// @}
+
 /// @defgroup OneHot OneHot
 /// @{
 
@@ -1792,6 +1837,7 @@ rt_function_error_t exec_shift(rt_function_t *f);
 /// Local context for Reshape
 typedef struct {
   rt_list_t shape; ///< Original type is [Shape]
+  uint8_t inplace; ///< bool
   void *data;      ///< General perpose data area
 } reshape_local_context_t;
 
@@ -2461,6 +2507,52 @@ rt_function_error_t free_pow2_quantize_local_context(rt_function_t *f);
 
 /// Exec Pow2Quantize
 rt_function_error_t exec_pow2_quantize(rt_function_t *f);
+/// @}
+
+/// @}
+
+////////////////////////////////////////////////////////////////////////////////
+/// @defgroup SpectralOperation Spectral Operation
+/// @{
+
+/// @defgroup FFT FFT
+/// @{
+
+/// Local context for FFT
+typedef struct {
+  int32_t signal_ndim; ///< int64
+  uint8_t normalized;  ///< bool
+  void *data;          ///< General perpose data area
+} fft_local_context_t;
+
+/// Allocate FFT local context
+rt_function_error_t allocate_fft_local_context(rt_function_t *f);
+
+/// Free FFT local context
+rt_function_error_t free_fft_local_context(rt_function_t *f);
+
+/// Exec FFT
+rt_function_error_t exec_fft(rt_function_t *f);
+/// @}
+
+/// @defgroup IFFT IFFT
+/// @{
+
+/// Local context for IFFT
+typedef struct {
+  int32_t signal_ndim; ///< int64
+  uint8_t normalized;  ///< bool
+  void *data;          ///< General perpose data area
+} ifft_local_context_t;
+
+/// Allocate IFFT local context
+rt_function_error_t allocate_ifft_local_context(rt_function_t *f);
+
+/// Free IFFT local context
+rt_function_error_t free_ifft_local_context(rt_function_t *f);
+
+/// Exec IFFT
+rt_function_error_t exec_ifft(rt_function_t *f);
 /// @}
 
 /// @}
