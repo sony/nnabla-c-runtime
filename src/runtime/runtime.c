@@ -145,9 +145,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
 
     int callback_registered_flag = 0;
     for (j = 0; j < c->num_of_callbacks; j++) {
-      if (((c->callbacks + j)->type == func->type) &&
-          c->functions[i].info->impl >
-              NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) {
+      if ((c->callbacks + j)->type == func->type) {
         rt_return_value_t ret =
             (c->callbacks +
              j)->allocate_local_context(n, (void *)(&(c->functions[i])));
