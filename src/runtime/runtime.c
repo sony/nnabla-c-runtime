@@ -149,11 +149,10 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
         rt_return_value_t ret =
             (c->callbacks +
              j)->allocate_local_context(n, (void *)(&(c->functions[i])));
-        if (ret != RT_RET_FUNCTION_MATCH) {
-          return RT_RET_ERROR_NO_MATCHING_FUNCTION;
+        if (ret == RT_RET_FUNCTION_MATCH) {
+          callback_registered_flag = 1;
+          break;
         }
-        callback_registered_flag = 1;
-        break;
       }
     }
     if (!callback_registered_flag) {
