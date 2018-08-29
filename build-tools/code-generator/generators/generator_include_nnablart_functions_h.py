@@ -66,7 +66,7 @@ def generate(filename, info):
                         defines.append(
                             '{0}_{1}_value_t {1}; ///< {2}'.format(name, an, arg['type']))
 
-                defines.append('  void* data; ///< General perpose data area')
+                defines.append('  void* data; ///< General purpose data area')
                 defines.append('}} {}_local_context_t;'.format(name))
             defines.append('')
             defines.append('/// Allocate {} local context'.format(fn))

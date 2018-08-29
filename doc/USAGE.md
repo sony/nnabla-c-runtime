@@ -18,7 +18,7 @@
 
 NNabla C Runtime depends `File Format Converter` that is included in `NNabla`.
 
-## Use with C source code conveted from NNP file.
+## Use with C source code converted from NNP file.
 
 ```
 $ nnabla_cli convert input.nnp output.nnb

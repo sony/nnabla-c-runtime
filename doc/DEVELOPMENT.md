@@ -2,10 +2,10 @@
 
 Here is some rules and notes for implementation.
 
-## Coding convensions.
+## Coding conventions.
 
 Since the code is automatically formatted at compile time, user does
-not have to mension about the indentation depth, parenthesis position
+not have to mention about the indentation depth, parenthesis position
 and so on.
 
 
@@ -31,7 +31,7 @@ exception.
 `exec_XXX` with no suffix means `float` exec function.
 It only allows input/output variable with FLOAT32, and do all internal calculation with float.
 
-`exec_XXX_generic` is general implementatoin.
+`exec_XXX_generic` is general implementation.
 It allows any type of input/output and do all internal calculation with float.
 But it is very slow.
 

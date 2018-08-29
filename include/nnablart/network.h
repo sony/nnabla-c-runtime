@@ -56,7 +56,7 @@ typedef struct {
   nn_data_type_t type : 4; ///< Type of param values
   unsigned int fp_pos : 4; ///< floating point position.
   int32_t data_index;      ///< Location of data. If negative, it means data
-                           /// buffer index. Otherwize it means location of data
+                           /// buffer index. Otherwise it means location of data
   /// in memory.
 } nn_variable_t;
 
@@ -207,12 +207,12 @@ typedef enum {
   NN_FUNCTION_IMPLEMENT_FIXED16, ///< Calculate with 16bit fixed point.
   NN_FUNCTION_IMPLEMENT_FIXED8,  ///< Calculate with 8bit fixed point.
   NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT =
-      99,                     ///< End of official implement calcuration type
+      99,                     ///< End of official implement calculation type
   NN_END_OF_IMPLEMENT = 65535 // Ensure this type has 16bits
 } nn_function_implement_t;
 
 /// @brief Common definition of Function.
-/// This type is to be used for the function does not have arguements.
+/// This type is to be used for the function does not have arguments.
 
 typedef struct {
   nn_function_type_t type : 16;      ///< Common: type of function.
@@ -222,7 +222,7 @@ typedef struct {
 } nn_function_t;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @defgroup IndividualFunctions IndividualFunctions
+/// @defgroup IndividualFunctions Individual Functions
 /// @brief Individual function definitions
 /// @{
 
@@ -2037,7 +2037,7 @@ typedef struct {
 ///
 /// @{
 #ifndef WHOAMI
-/// Print specified message and positon itself.
+/// Print specified message and position itself.
 #define WHOAMI(...)                                                            \
   {                                                                            \
     printf("%s:%d: ", __FILE__, __LINE__);                                     \

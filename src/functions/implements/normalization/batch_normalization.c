@@ -96,7 +96,7 @@ static void forward_impl_batch(rt_function_t *f,
   const float *gamma = (float *)(f->inputs[2]->data);
   float *y = (float *)(f->outputs[0]->data);
   float *m = (float *)p->batch_mean.data;    // batch mean
-  float *v = (float *)p->batch_var.data;     // batch varf
+  float *v = (float *)p->batch_var.data;     // batch var
   float *rm = (float *)(f->inputs[3]->data); // running mean
   float *rv = (float *)(f->inputs[4]->data); // running var
   const int specified_axis_size = p->specified_axis_size;
@@ -156,7 +156,7 @@ forward_impl_batch_generic(rt_function_t *f,
   rt_variable_t *output = f->outputs[0];
   rt_variable_setter set_output = select_setter(output);
   float *m = (float *)p->batch_mean.data; // batch mean
-  float *v = (float *)p->batch_var.data;  // batch varf
+  float *v = (float *)p->batch_var.data;  // batch var
   const int specified_axis_size = p->specified_axis_size;
   const int output_size = p->output_size;
   const int multiplication_axis_output = p->multiplication_axis_output;

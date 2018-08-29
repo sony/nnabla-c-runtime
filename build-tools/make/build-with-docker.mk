@@ -64,7 +64,7 @@ nnabla-c-runtime-docker_image_doc:
 	docker pull ubuntu:16.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC) \
-		-f build-tools/docker/Dockerfile.doc .
+		-f build-tools/docker/Dockerfile.document .
 
 .PHONY: nnabla-c-runtime-docker_image_build
 nnabla-c-runtime-docker_image_build:
