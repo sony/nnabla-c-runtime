@@ -16,20 +16,6 @@ import re
 from os.path import basename, abspath, dirname, join, splitext
 from os import walk
 
-
-def search_function_ancestor(func_name, functions):
-    ancestor = None
-    matched = []
-    for fn in functions:
-        fn_s = fn.split('_')
-        func_name_s = func_name.split('_')
-        if fn_s == func_name_s[:len(fn_s)]:
-            matched.append(fn)
-    if len(matched) > 0:
-        ancestor = sorted(matched).pop()
-        return ancestor, func_name_s[len(ancestor.split('_')):]
-
-
 def generate(filename, info):
 
     functions = []
@@ -53,32 +39,25 @@ def generate(filename, info):
                 unimplemented.append(m.groups(0)[0])
 
     implemented = {}
-    implement_types = []
+    implement_types = ['float', 'generic']
     impl_length = 14
     for root, dirs, files in walk(abspath(join(dirname(abspath(__file__)),
                                                '..', '..', '..', 'src'))):
         for fn in files:
             if splitext(fn)[1] == '.c':
                 with open(join(root, fn), encoding='utf-8') as f:
-                    for l in f.readlines():
-                        l = l.rstrip()
-                        m = re.search(
-                            '^rt_function_error_t exec_([0-9a-z_]+)', l)
-                        if m:
-                            method_name = m.groups(0)[0]
-                            if method_name != 'func':
-                                aa = search_function_ancestor(
-                                    method_name, functions)
-                                if aa:
-                                    ancestor, implements = aa
-                                    if ancestor not in implemented:
-                                        implemented[ancestor] = []
-                                    for impl in implements:
-                                        if impl not in implement_types:
-                                            implement_types.append(impl)
-                                            if impl_length < len(impl):
-                                                impl_length = len(impl)
-                                        implemented[ancestor].append(impl)
+                    code = f.read()
+                    m = re.findall('allocate_([0-9a-z_]+)_local_context', code)
+                    if m:
+                        func_name = m[0]
+                        if func_name not in implemented:
+                            implemented[func_name] = []
+                        func_f = re.findall('exec_{}'.format(func_name), code)
+                        if func_f:
+                            implemented[func_name].append('float')
+                        func_g = re.findall('([0-9a-z_]+)_generic', code)
+                        if func_g:
+                            implemented[func_name].append('generic')
 
     count = 0
     count_impl = 0
