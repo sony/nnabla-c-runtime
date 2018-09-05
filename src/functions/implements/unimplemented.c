@@ -17,20 +17,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Layer
 ////////////////////////////////////////////////////////////////////////////////
-// DepthwiseConvolution
-rt_function_error_t
-allocate_depthwise_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_depthwise_convolution_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_depthwise_convolution(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
 // DepthwiseDeconvolution
 rt_function_error_t
 allocate_depthwise_deconvolution_local_context(rt_function_t *f) {

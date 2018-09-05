@@ -18,17 +18,17 @@
 
 # Implement status
 
-Total 59/141
+Total 60/141
 
 
 ## Neural Network Layer
-Count 7/11
+Count 8/11
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |          Affine          |     yes      |     yes      |     yes      |
 |       Convolution        |     yes      |     yes      |     yes      |
-|   DepthwiseConvolution   |      no      |      -       |      -       |
+|   DepthwiseConvolution   |     yes      |     yes      |     yes      |
 |      Deconvolution       |     yes      |     yes      |     yes      |
 |  DepthwiseDeconvolution  |      no      |      -       |      -       |
 |        MaxPooling        |     yes      |     yes      |     yes      |
