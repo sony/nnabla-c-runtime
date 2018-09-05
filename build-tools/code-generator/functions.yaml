@@ -904,6 +904,24 @@ Math:
       y: {}
     uniq_name: Round_
     id: 73
+  Ceil:
+    snake_name: ceil
+    inputs:
+      x: {}
+    arguments: {}
+    outputs:
+      y: {}
+    uniq_name: Ceil_
+    id: 124
+  Floor:
+    snake_name: floor
+    inputs:
+      x: {}
+    arguments: {}
+    outputs:
+      y: {}
+    uniq_name: Floor_
+    id: 125
   Sin:
     snake_name: sin
     inputs:
@@ -1084,6 +1102,18 @@ Array Manipulation:
       y: {}
     uniq_name: Broadcast_iI
     id: 79
+  BroadcastTo:
+    snake_name: broadcast_to
+    inputs:
+      x: {}
+      y: {}
+    arguments:
+      axis:
+        type: int64
+    outputs:
+      z: {}
+    uniq_name: BroadcastTo_i
+    id: 184
   OneHot:
     snake_name: one_hot
     inputs:
@@ -1130,10 +1160,12 @@ Array Manipulation:
     arguments:
       shape:
         type: Shape
+      inplace:
+        type: bool
     outputs:
       y: {}
-    uniq_name: Reshape_iI
-    id: 83
+    uniq_name: Reshape_iIB
+    id: 126
   MatrixDiag:
     snake_name: matrix_diag
     inputs:
@@ -1655,6 +1687,33 @@ Quantization Neural Network Layers:
       y: {}
     uniq_name: Pow2Quantize_BBiiB
     id: 114
+Spectral Operation:
+  FFT:
+    snake_name: fft
+    inputs:
+      x: {}
+    arguments:
+      signal_ndim:
+        type: int64
+      normalized:
+        type: bool
+    outputs:
+      y: {}
+    uniq_name: FFT_iB
+    id: 158
+  IFFT:
+    snake_name: ifft
+    inputs:
+      x: {}
+    arguments:
+      signal_ndim:
+        type: int64
+      normalized:
+        type: bool
+    outputs:
+      y: {}
+    uniq_name: IFFT_iB
+    id: 159
 Validation:
   TopNError:
     snake_name: top_n_error

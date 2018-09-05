@@ -25,7 +25,7 @@ extern "C" {
 #include <stdlib.h> // for size_t
 
 #define NN_BINARY_FORMAT_VERSION (1)
-#define NN_BINARY_FORMAT_REVISION 6f9013b927259e22f315cccff98b5c81
+#define NN_BINARY_FORMAT_REVISION 8cdffdfa4ba17271d1d3843fa96273b6
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -138,6 +138,8 @@ typedef enum {
   NN_FUNCTION_IDENTITY = 71,                    ///< Identity
   NN_FUNCTION_BATCH_MATMUL = 72,                ///< BatchMatmul
   NN_FUNCTION_ROUND = 73,                       ///< Round
+  NN_FUNCTION_CEIL = 124,                       ///< Ceil
+  NN_FUNCTION_FLOOR = 125,                      ///< Floor
   NN_FUNCTION_SIN = 173,                        ///< Sin
   NN_FUNCTION_COS = 174,                        ///< Cos
   NN_FUNCTION_TAN = 175,                        ///< Tan
@@ -156,10 +158,11 @@ typedef enum {
   NN_FUNCTION_PAD = 123,                        ///< Pad
   NN_FUNCTION_TRANSPOSE = 78,                   ///< Transpose
   NN_FUNCTION_BROADCAST = 79,                   ///< Broadcast
+  NN_FUNCTION_BROADCAST_TO = 184,               ///< BroadcastTo
   NN_FUNCTION_ONE_HOT = 80,                     ///< OneHot
   NN_FUNCTION_FLIP = 81,                        ///< Flip
   NN_FUNCTION_SHIFT = 82,                       ///< Shift
-  NN_FUNCTION_RESHAPE = 83,                     ///< Reshape
+  NN_FUNCTION_RESHAPE = 126,                    ///< Reshape
   NN_FUNCTION_MATRIX_DIAG = 84,                 ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85,            ///< MatrixDiagPart
   NN_FUNCTION_DROPOUT = 86,                     ///< Dropout
@@ -191,6 +194,8 @@ typedef enum {
   NN_FUNCTION_INQ_CONVOLUTION = 112,            ///< INQConvolution
   NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,       ///< FixedPointQuantize
   NN_FUNCTION_POW2_QUANTIZE = 114,              ///< Pow2Quantize
+  NN_FUNCTION_FFT = 158,                        ///< FFT
+  NN_FUNCTION_IFFT = 159,                       ///< IFFT
   NN_FUNCTION_TOP_N_ERROR = 115,                ///< TopNError
   NN_FUNCTION_BINARY_ERROR = 116,               ///< BinaryError
   NN_FUNCTION_CONFUSION_MATRIX = 117,           ///< ConfusionMatrix
@@ -1194,6 +1199,28 @@ typedef struct {
 
 /// @}
 
+/// @brief Ceil function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_ceil_t;
+
+/// @}
+
+/// @brief Floor function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_floor_t;
+
+/// @}
+
 /// @brief Sin function.
 /// @{
 typedef struct {
@@ -1410,6 +1437,19 @@ typedef struct {
 
 /// @}
 
+/// @brief BroadcastTo function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis; ///< Original type is [int64]
+} nn_function_broadcast_to_t;
+
+/// @}
+
 /// @brief OneHot function.
 /// @{
 typedef struct {
@@ -1459,6 +1499,7 @@ typedef struct {
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape; ///< Original type is [Shape]
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_reshape_t;
 
 /// @}
@@ -1911,6 +1952,34 @@ typedef struct {
   int32_t m;                ///< Original type is [int64]
   uint8_t ste_fine_grained; ///< Original type is [bool]
 } nn_function_pow2_quantize_t;
+
+/// @}
+
+/// @brief FFT function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t signal_ndim; ///< Original type is [int64]
+  uint8_t normalized;  ///< Original type is [bool]
+} nn_function_fft_t;
+
+/// @}
+
+/// @brief IFFT function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t signal_ndim; ///< Original type is [int64]
+  uint8_t normalized;  ///< Original type is [bool]
+} nn_function_ifft_t;
 
 /// @}
 

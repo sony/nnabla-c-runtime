@@ -18,8 +18,8 @@
 #include <nnablart/functions.h>
 
 typedef struct {
-  rt_list_t batch_mean;
-  rt_list_t batch_var;
+  rt_variable_t batch_mean;
+  rt_variable_t batch_var;
   int batch_size;
   int specified_axis_size;
   int output_size;
@@ -59,8 +59,12 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
 
-  p->batch_mean = clone_list(f->inputs[1]->shape);
-  p->batch_var = clone_list(f->inputs[2]->shape);
+  p->batch_mean.shape = clone_list(f->inputs[1]->shape);
+  p->batch_var.shape = clone_list(f->inputs[2]->shape);
+  p->batch_mean.data =
+      malloc(sizeof(float) * calc_shape_size(p->batch_mean.shape));
+  p->batch_var.data =
+      malloc(sizeof(float) * calc_shape_size(p->batch_var.shape));
   free_list(input_shape);
   ((batch_normalization_local_context_t *)(f->local_context))->data = (void *)p;
 
@@ -82,8 +86,10 @@ rt_function_error_t free_batch_normalization_local_context(rt_function_t *f) {
       (batch_normalization_private_t
            *)(((batch_normalization_local_context_t *)(f->local_context))
                   ->data);
-  free_list(p->batch_mean);
-  free_list(p->batch_var);
+  free_list(p->batch_mean.shape);
+  free_list(p->batch_var.shape);
+  free(p->batch_mean.data);
+  free(p->batch_var.data);
   free(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -103,6 +109,11 @@ static void forward_impl_batch(rt_function_t *f,
   const int output_size = p->output_size;
   const int multiplication_axis_output = p->multiplication_axis_output;
   const int multiplication_batch_axis = p->multiplication_batch_axis;
+
+  if (f->num_of_outputs == 3) {
+    m = (float *)(f->outputs[1]->data);
+    v = (float *)(f->outputs[2]->data);
+  }
 
   int i1;
   for (i1 = 0; i1 < specified_axis_size; i1++) {
@@ -161,6 +172,11 @@ forward_impl_batch_generic(rt_function_t *f,
   const int output_size = p->output_size;
   const int multiplication_axis_output = p->multiplication_axis_output;
   const int multiplication_batch_axis = p->multiplication_batch_axis;
+
+  if (f->num_of_outputs == 3) {
+    m = (float *)(f->outputs[1]->data);
+    v = (float *)(f->outputs[2]->data);
+  }
 
   int i1;
   for (i1 = 0; i1 < specified_axis_size; i1++) {
