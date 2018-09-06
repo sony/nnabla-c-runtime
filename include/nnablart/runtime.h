@@ -174,14 +174,13 @@ rt_return_value_t rt_add_callback(
 /// skinparam monochrome true
 /// start
 ///
-/// if (num_of_callbacks > 0) then (yes)
-///   if (Found callback->type is same as func->type
-///       and impl > NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) then (yes)
+/// if (impl <= NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) then (yes)
+///   if (Found callback->type is same as func->type) then (yes)
 ///     :Call user defined allocator;
 ///     if (return value == RT_RET_FUNCTION_MATCH) then (yes)
 ///       stop
 ///     else (no)
-///       :return RT_RET_ERROR_NO_MATCHING_FUNCTION;
+///       :Call default allocator;
 ///       stop
 ///     endif
 ///   else (no)

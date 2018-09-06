@@ -144,14 +144,16 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     c->functions[i] = allocate_function_io(n, c, func);
 
     int callback_registered_flag = 0;
-    for (j = 0; j < c->num_of_callbacks; j++) {
-      if ((c->callbacks + j)->type == func->type) {
-        rt_return_value_t ret =
-            (c->callbacks +
-             j)->allocate_local_context(n, (void *)(&(c->functions[i])));
-        if (ret == RT_RET_FUNCTION_MATCH) {
-          callback_registered_flag = 1;
-          break;
+    if (func->impl <= NN_END_OF_USER_DEFINED_FUNCTION_IMPLEMENT) {
+      for (j = 0; j < c->num_of_callbacks; j++) {
+        if ((c->callbacks + j)->type == func->type) {
+          rt_return_value_t ret =
+              (c->callbacks +
+               j)->allocate_local_context(n, (void *)(&(c->functions[i])));
+          if (ret == RT_RET_FUNCTION_MATCH) {
+            callback_registered_flag = 1;
+            break;
+          }
         }
       }
     }
