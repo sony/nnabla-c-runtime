@@ -104,21 +104,17 @@ rt_function_error_t exec_affine(rt_function_t *f) {
   for (k = 0; k < p->base_loop_size; k++) {
     int output_offset = k * p->output_loop_size;
     int input_offset = k * p->input_loop_size;
+    float *o_addr = output + output_offset;
 
-    // Weight
-    for (j = 0; j < p->input_loop_size; j++) {
-      int ipos = input_offset + j;
-      int weight_offset = j * p->output_loop_size;
+    for (j = 0; j < p->output_loop_size; ++j) {
+      int weight_offset = j * p->input_loop_size;
 
-      float u = *(input + ipos);
-      for (i = 0; i < p->output_loop_size; i++) {
-        int opos = output_offset + i;
-        int wpos = weight_offset + i;
-
-        float w = *(weight + wpos);
-        float value = *(output + opos);
-        *(output + opos) = value + u * w;
+      float *i_addr = input + input_offset;
+      float *w_addr = weight + weight_offset;
+      for (i = 0; i < p->input_loop_size; ++i) {
+        *o_addr += (*i_addr++) * (*w_addr++);
       }
+      ++o_addr;
     }
 
     // Bias

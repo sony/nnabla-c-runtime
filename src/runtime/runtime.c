@@ -59,6 +59,12 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   int i, j; // Iterator
 
   //////////////////////////////////////////////////////////////////////////////
+  // Binary format version check
+  if (n->version != NN_BINARY_FORMAT_VERSION) {
+    return RT_RET_ERROR_VERSION_UNMATCH;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
   // Buffer list
   c->num_of_buffers = n->buffers.size;
   c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);

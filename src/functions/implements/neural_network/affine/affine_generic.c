@@ -32,19 +32,21 @@ rt_function_error_t exec_affine_generic(rt_function_t *f) {
     int input_offset = k * p->input_loop_size;
 
     // Weight
-    for (j = 0; j < p->input_loop_size; j++) {
-      int ipos = input_offset + j;
-      int weight_offset = j * p->output_loop_size;
+    for (j = 0; j < p->output_loop_size; ++j) {
+      int opos = output_offset + j;
+      int weight_offset = j * p->input_loop_size;
+      float y0 = p->get_output(p->output, opos);
 
-      float u = p->get_input(p->input, ipos);
-      for (i = 0; i < p->output_loop_size; i++) {
-        int opos = output_offset + i;
+      for (i = 0; i < p->input_loop_size; ++i) {
+        int ipos = input_offset + i;
         int wpos = weight_offset + i;
 
         float w = p->get_weight(p->weight, wpos);
-        float value = p->get_output(p->output, opos);
-        p->set_output(p->output, opos, value + u * w);
+        float x = p->get_input(p->input, ipos);
+        y0 += x * w;
       }
+
+      p->set_output(p->output, opos, y0);
     }
 
     // Bias
@@ -57,5 +59,6 @@ rt_function_error_t exec_affine_generic(rt_function_t *f) {
       }
     }
   }
+
   return RT_FUNCTION_ERROR_NOERROR;
 }

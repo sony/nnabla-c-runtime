@@ -24,7 +24,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION  (1)
+#define NN_BINARY_FORMAT_VERSION  (2)
 #define NN_BINARY_FORMAT_REVISION ${BINARY_VERSION}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,7 +104,8 @@ typedef struct {
 /// @brief Definition of Network.
 ///
 typedef struct {
-  uint32_t version;    ///< nnablart version.
+  uint32_t version;    ///< binary format version
+  uint32_t revision;   ///< function-level compatibility revision
   nn_list_t buffers;   ///< list of nn_variable_buffer_t
   nn_list_t variables; ///< list of nn_variable_t
   nn_list_t functions; ///< list of nn_function_t
