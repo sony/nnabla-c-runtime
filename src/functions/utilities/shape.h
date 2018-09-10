@@ -21,7 +21,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// @ingroup Utilities
 
-/// @defgroup ShapeFunction ShapeFunction
+/// @defgroup ShapeFunction Shape Function
 /// @{
 
 /// Calc vector axis at specified data pos.
@@ -33,7 +33,7 @@ int shape_to_pos(rt_list_t s, rt_list_t pos);
 /// If s has specified num, return position. Otherwise return -1.
 int find_num_in_shape(rt_list_t s, int num);
 
-/// Calclate data size with shape
+/// Calculate data size with shape
 int calc_shape_size(rt_list_t shape);
 
 /// Calculate multiplication result of variable->shape from shape_begin to

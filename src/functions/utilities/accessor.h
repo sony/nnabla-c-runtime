@@ -42,4 +42,4 @@ rt_variable_getter select_getter(rt_variable_t *variable);
 typedef void (*rt_variable_setter)(rt_variable_t *, nn_size_t, float);
 rt_variable_setter select_setter(rt_variable_t *variable);
 
-#endif // H_ACCESOR_H_171210064532_
+#endif // H_ACCESSOR_H_171210064532_

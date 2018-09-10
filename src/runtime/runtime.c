@@ -59,6 +59,12 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   int i, j; // Iterator
 
   //////////////////////////////////////////////////////////////////////////////
+  // Binary format version check
+  if (n->version != NN_BINARY_FORMAT_VERSION) {
+    return RT_RET_ERROR_VERSION_UNMATCH;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
   // Buffer list
   c->num_of_buffers = n->buffers.size;
   c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
@@ -144,18 +150,17 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     c->functions[i] = allocate_function_io(n, c, func);
 
     int callback_registered_flag = 0;
-    for (j = 0; j < c->num_of_callbacks; j++) {
-      if (((c->callbacks + j)->type == func->type) &&
-          c->functions[i].info->impl >
-              NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) {
-        rt_return_value_t ret =
-            (c->callbacks +
-             j)->allocate_local_context(n, (void *)(&(c->functions[i])));
-        if (ret != RT_RET_FUNCTION_MATCH) {
-          return RT_RET_ERROR_NO_MATCHING_FUNCTION;
+    if (func->impl <= NN_END_OF_USER_DEFINED_FUNCTION_IMPLEMENT) {
+      for (j = 0; j < c->num_of_callbacks; j++) {
+        if ((c->callbacks + j)->type == func->type) {
+          rt_return_value_t ret =
+              (c->callbacks +
+               j)->allocate_local_context(n, (void *)(&(c->functions[i])));
+          if (ret == RT_RET_FUNCTION_MATCH) {
+            callback_registered_flag = 1;
+            break;
+          }
         }
-        callback_registered_flag = 1;
-        break;
       }
     }
     if (!callback_registered_flag) {
