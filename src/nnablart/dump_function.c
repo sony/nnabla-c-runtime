@@ -258,6 +258,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ROUND: { // Round
     printf("NNB: Function type:    Round(73)\n");
   } break;
+  case NN_FUNCTION_CEIL: { // Ceil
+    printf("NNB: Function type:    Ceil(124)\n");
+  } break;
+  case NN_FUNCTION_FLOOR: { // Floor
+    printf("NNB: Function type:    Floor(125)\n");
+  } break;
   case NN_FUNCTION_SIN: { // Sin
     printf("NNB: Function type:    Sin(173)\n");
   } break;
@@ -312,6 +318,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BROADCAST: { // Broadcast
     printf("NNB: Function type:    Broadcast(79)\n");
   } break;
+  case NN_FUNCTION_BROADCAST_TO: { // BroadcastTo
+    printf("NNB: Function type:    BroadcastTo(184)\n");
+  } break;
   case NN_FUNCTION_ONE_HOT: { // OneHot
     printf("NNB: Function type:    OneHot(80)\n");
   } break;
@@ -322,7 +331,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    Shift(82)\n");
   } break;
   case NN_FUNCTION_RESHAPE: { // Reshape
-    printf("NNB: Function type:    Reshape(83)\n");
+    printf("NNB: Function type:    Reshape(126)\n");
   } break;
   case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
     printf("NNB: Function type:    MatrixDiag(84)\n");
@@ -416,6 +425,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
     printf("NNB: Function type:    Pow2Quantize(114)\n");
+  } break;
+  case NN_FUNCTION_FFT: { // FFT
+    printf("NNB: Function type:    FFT(158)\n");
+  } break;
+  case NN_FUNCTION_IFFT: { // IFFT
+    printf("NNB: Function type:    IFFT(159)\n");
   } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     printf("NNB: Function type:    TopNError(115)\n");
@@ -895,6 +910,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_ROUND: { // Round
   } break;
+  case NN_FUNCTION_CEIL: { // Ceil
+  } break;
+  case NN_FUNCTION_FLOOR: { // Floor
+  } break;
   case NN_FUNCTION_SIN: { // Sin
   } break;
   case NN_FUNCTION_COS: { // Cos
@@ -979,6 +998,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
   } break;
+  case NN_FUNCTION_BROADCAST_TO: { // BroadcastTo
+    nn_function_broadcast_to_t *f = (nn_function_broadcast_to_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
+  } break;
   case NN_FUNCTION_ONE_HOT: { // OneHot
     nn_function_one_hot_t *f = (nn_function_one_hot_t *)func;
     printf("NNB: Function argument shape: (");
@@ -1015,6 +1038,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
   } break;
@@ -1295,6 +1319,16 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument m: %d\n", f->m);
     printf("NNB: Function argument ste_fine_grained: %d\n",
            f->ste_fine_grained);
+  } break;
+  case NN_FUNCTION_FFT: { // FFT
+    nn_function_fft_t *f = (nn_function_fft_t *)func;
+    printf("NNB: Function argument signal_ndim: %d\n", f->signal_ndim);
+    printf("NNB: Function argument normalized: %d\n", f->normalized);
+  } break;
+  case NN_FUNCTION_IFFT: { // IFFT
+    nn_function_ifft_t *f = (nn_function_ifft_t *)func;
+    printf("NNB: Function argument signal_ndim: %d\n", f->signal_ndim);
+    printf("NNB: Function argument normalized: %d\n", f->normalized);
   } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     nn_function_top_n_error_t *f = (nn_function_top_n_error_t *)func;

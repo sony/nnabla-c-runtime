@@ -38,12 +38,25 @@ void set_float(rt_variable_t *variable, nn_size_t pos, float value) {
 }
 
 void set_int16(rt_variable_t *variable, nn_size_t pos, float value) {
-  *((int16_t *)(variable->data) + pos) =
-      (int16_t)(value / variable->coefficient);
+  value /= variable->coefficient;
+  if (value >= INT16_MAX) {
+    *((int16_t *)(variable->data) + pos) = INT16_MAX;
+  } else if (value <= INT16_MIN) {
+    *((int16_t *)(variable->data) + pos) = INT16_MIN;
+  } else {
+    *((int16_t *)(variable->data) + pos) = (int16_t)value;
+  }
 }
 
 void set_int8(rt_variable_t *variable, nn_size_t pos, float value) {
-  *((int8_t *)(variable->data) + pos) = (int8_t)(value / variable->coefficient);
+  value /= variable->coefficient;
+  if (value >= INT8_MAX) {
+    *((int8_t *)(variable->data) + pos) = INT8_MAX;
+  } else if (value <= INT8_MIN) {
+    *((int8_t *)(variable->data) + pos) = INT8_MIN;
+  } else {
+    *((int8_t *)(variable->data) + pos) = (int8_t)value;
+  }
 }
 
 void set_sign(rt_variable_t *variable, nn_size_t pos, float value) {

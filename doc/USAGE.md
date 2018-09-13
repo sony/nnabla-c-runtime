@@ -18,13 +18,11 @@
 
 NNabla C Runtime depends `File Format Converter` that is included in `NNabla`.
 
-## Use with C source code conveted from NNP file.
+## Use with C source code converted from NNP file.
 
 ```
 $ nnabla_cli convert input.nnp output.nnb
 ```
-
-
 
 ## Use with NNB file converted from NNP file.
 
@@ -46,3 +44,17 @@ The function that the user should prepare is
 that 3 types.
 
 Please see (examples/callback/callback.c) for details.
+
+## Meaning of `nn_function_implement_t`
+
+- `0 to 99`
+  - Callback allocater will called when initialize context if it was registered, 
+    impl number is used by user.
+- `NN_FUNCTION_IMPLEMENT_AUTO(100)`
+  - Implementation is automatically selected.
+- `NN_FUNCTION_IMPLEMENT_FLOAT(101)`
+  - NOT IMPLEMENTED: force use float function.
+- `NN_FUNCTION_IMPLEMENT_FIXED16(102)`
+  - NOT IMPLEMENTED: force use fixed16 function.
+- `NN_FUNCTION_IMPLEMENT_FIXED8(103)`
+  - NOT IMPLEMENTED: force use fixed8 function.

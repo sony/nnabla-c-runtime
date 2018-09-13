@@ -28,6 +28,10 @@
 
 /// @brief NNB format binary data from Affine_000.nntxt
 ///
+/// By default just call @ref rt_add_callback to use call back function.
+///
+/// But here is some modification to use callback more flexible.
+///
 /// To use callback, you must set 'function implement flag' in NNB file.
 /// You can get template setting file with following command.
 /// @code{.sh}
@@ -51,8 +55,10 @@
 /// @code{.yaml}
 /// functions:
 ///   Affine:
-///     implement: 100
+///     implement: 1
 /// @endcode
+///
+/// NOTE: If you DONT want to use callback, set implements to 100.
 ///
 /// And convert nntxt to nnb again with settings.yaml.
 /// @code{.sh}
@@ -117,7 +123,7 @@ static unsigned char affine_nnb[] = {
     0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x04, 0x00, 0x00, 0x00,
     0x07, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00,
-    0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, 0x00, 0x03, 0x00, 0x00, 0x00,
+    0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x03, 0x00, 0x00, 0x00,
     0x0e, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00,
     0x02, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00};
 
@@ -142,7 +148,7 @@ static rt_function_error_t cb_free(rt_function_t *f) {
 
 /// @brief Example callback for allocate function local context.
 /// It just does followings.
-/// - check func->imple == 100
+/// - check func->impl == 1
 /// - register @ref cb_exec as function executtor.
 /// - register @ref cb_free as function local context de-allocator.
 ///
@@ -150,7 +156,7 @@ static rt_function_error_t cb_free(rt_function_t *f) {
 static rt_return_value_t cb_alloc(nn_network_t *net, void *function_context) {
   WHOAMI("%s", __func__);
   rt_function_context_t *func = (rt_function_context_t *)function_context;
-  if ((int)func->info->impl != 100) {
+  if ((int)func->info->impl != 1) {
     return RT_RET_FUNCTION_DONT_MATCH;
   }
 

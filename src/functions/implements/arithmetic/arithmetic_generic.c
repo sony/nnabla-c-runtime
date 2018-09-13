@@ -45,14 +45,14 @@ void calc_dim_arithmetic_generic(rt_variable_t *output, rt_variable_t *input1,
   }
 }
 
-// Common algorism for arithmetic calculation between two vectors.
+// Common algorithm for arithmetic calculation between two vectors.
 void calc_arithmetic_generic(rt_function_t *f,
                              float (*calc_func)(float, float)) {
   calc_dim_arithmetic_generic(f->outputs[0], f->inputs[0], f->inputs[1], 0, 0,
                               0, 0, calc_func);
 }
 
-// Common algorism for arithmetic calculation between vector and scalar value.
+// Common algorithm for arithmetic calculation between vector and scalar value.
 void calc_scalar_generic(rt_function_t *f, float value,
                          float (*calc_func)(float, float)) {
   int out_size = calc_shape_size(f->outputs[0]->shape);

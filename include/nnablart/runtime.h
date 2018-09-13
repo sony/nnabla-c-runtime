@@ -21,9 +21,9 @@ extern "C" {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Runtime Runtime APIs
-/// @brief Calcurate feed forward neural network with @ref Network
+/// @brief Calculate feed forward neural network with @ref Network
 ///
-/// - Sequence to use Rutime API.
+/// - Sequence to use Runtime API.
 ///   - Initialization
 /// @li Initialize runtime context with @ref rt_initialize_context()
 /// @li Allocate I/O buffers in size get from @ref rt_num_of_input(), @ref
@@ -101,7 +101,7 @@ extern "C" {
 ///
 /// UserApplication -> Runtime: rt_forward(context)
 /// activate Runtime
-/// Runtime -> Runtime: (Execute feedforward neural network)
+/// Runtime -> Runtime: (Execute feed forward neural network)
 /// activate Runtime
 /// deactivate Runtime
 /// Runtime --> UserApplication: (Output stored into output_buffer)
@@ -174,14 +174,13 @@ rt_return_value_t rt_add_callback(
 /// skinparam monochrome true
 /// start
 ///
-/// if (num_of_callbacks > 0) then (yes)
-///   if (Found callback->type is same as func->type
-///       and impl > NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) then (yes)
-///     :Call user defined allocatior;
+/// if (impl <= NN_END_OF_SYSTEM_DEFINED_FUNCTION_IMPLEMENT) then (yes)
+///   if (Found callback->type is same as func->type) then (yes)
+///     :Call user defined allocator;
 ///     if (return value == RT_RET_FUNCTION_MATCH) then (yes)
 ///       stop
 ///     else (no)
-///       :return RT_RET_ERROR_NO_MATCHING_FUNCTION;
+///       :Call default allocator;
 ///       stop
 ///     endif
 ///   else (no)
@@ -218,7 +217,7 @@ int rt_num_of_input(rt_context_pointer context);
 /// @return Size of data
 int rt_input_size(rt_context_pointer context, size_t index);
 
-/// @brief Get dimention of input data at index
+/// @brief Get dimension of input data at index
 /// @param[in] context
 /// @param[in] index
 /// @return Dimension size
@@ -233,7 +232,7 @@ int rt_input_shape(rt_context_pointer context, size_t index,
                    size_t shape_index);
 
 /// @brief Get input buffer at index
-/// NOTE: This function may use for debug perpose.
+/// NOTE: This function may use for debug purpose.
 /// @param[in] context
 /// @param[in] index
 /// @return pointer
@@ -250,7 +249,7 @@ int rt_num_of_output(rt_context_pointer context);
 /// @return Size of data
 int rt_output_size(rt_context_pointer context, size_t index);
 
-/// @brief Get dimention of output data at index
+/// @brief Get dimension of output data at index
 /// @param[in] context
 /// @param[in] index
 /// @return Dimension size
