@@ -39,7 +39,7 @@
 /// $ nnabla_cli nnb_template Affine_000.nntxt Affine_000.yaml
 /// @endcode
 ///
-/// Then you should be got followint 'Affine_000.yaml'.
+/// Then you should be got following 'Affine_000.yaml'.
 /// @code{.yaml}
 /// functions:
 ///   Affine:
@@ -58,7 +58,7 @@
 ///     implement: 1
 /// @endcode
 ///
-/// NOTE: If you DONT want to use callback, set implements to 100.
+/// NOTE: If you DON'T want to use callback, set implements to 100.
 ///
 /// And convert nntxt to nnb again with settings.yaml.
 /// @code{.sh}
@@ -149,7 +149,7 @@ static rt_function_error_t cb_free(rt_function_t *f) {
 /// @brief Example callback for allocate function local context.
 /// It just does followings.
 /// - check func->impl == 1
-/// - register @ref cb_exec as function executtor.
+/// - register @ref cb_exec as function executor.
 /// - register @ref cb_free as function local context de-allocator.
 ///
 /// See also @ref rt_initialize_context

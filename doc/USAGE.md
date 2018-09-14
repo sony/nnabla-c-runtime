@@ -48,7 +48,7 @@ Please see (examples/callback/callback.c) for details.
 ## Meaning of `nn_function_implement_t`
 
 - `0 to 99`
-  - Callback allocater will called when initialize context if it was registered, 
+  - Callback allocator will called when initialize context if it was registered, 
     impl number is used by user.
 - `NN_FUNCTION_IMPLEMENT_AUTO(100)`
   - Implementation is automatically selected.
