@@ -137,12 +137,12 @@ static void forward_impl_batch(rt_function_t *f,
              (1 - context->decay_rate) * v[i1] * multiplication_batch_axis /
                  (multiplication_batch_axis - 1);
 
+    const float stdvar = (float)sqrt(v[i1] + context->eps);
     // Subtract mean and divide by std, and apply beta and gamma.
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
-      const float stdvar = (float)sqrt(v[i1] + context->eps);
       y[i] = (x[i] - m[i1]) * gamma[i1] / stdvar + beta[i1];
     }
   }
