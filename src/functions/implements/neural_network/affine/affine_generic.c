@@ -46,6 +46,10 @@ rt_function_error_t exec_affine_generic(rt_function_t *f) {
         y0 += x * w;
       }
 
+      if (p->alpha) {
+        y0 *= p->get_alpha(p->alpha, j);
+      }
+
       p->set_output(p->output, opos, y0);
     }
 
