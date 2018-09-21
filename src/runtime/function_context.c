@@ -215,6 +215,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     leaky_relu_local_context_t *ctx =
         malloc(sizeof(leaky_relu_local_context_t));
     ctx->alpha = f->alpha;
+    ctx->inplace = f->inplace;
     function_context->func.local_context = ctx;
     allocate_leaky_relu_local_context(&function_context->func);
   } break;
@@ -1062,6 +1063,42 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     allocate_matrix_diag_part_local_context(&function_context->func);
   } break;
 
+  case NN_FUNCTION_INTERPOLATE: { // Interpolate
+    function_context->func.exec_func = exec_interpolate;
+    function_context->func.free_local_context_func =
+        free_interpolate_local_context;
+    nn_function_interpolate_t *f = (nn_function_interpolate_t *)function;
+    interpolate_local_context_t *ctx =
+        malloc(sizeof(interpolate_local_context_t));
+    ctx->output_size = create_rt_list_from_nn_list(n, f->output_size);
+    ctx->mode = f->mode;
+    ctx->align_corners = f->align_corners;
+    function_context->func.local_context = ctx;
+    allocate_interpolate_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_FFT: { // FFT
+    function_context->func.exec_func = exec_fft;
+    function_context->func.free_local_context_func = free_fft_local_context;
+    nn_function_fft_t *f = (nn_function_fft_t *)function;
+    fft_local_context_t *ctx = malloc(sizeof(fft_local_context_t));
+    ctx->signal_ndim = f->signal_ndim;
+    ctx->normalized = f->normalized;
+    function_context->func.local_context = ctx;
+    allocate_fft_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_IFFT: { // IFFT
+    function_context->func.exec_func = exec_ifft;
+    function_context->func.free_local_context_func = free_ifft_local_context;
+    nn_function_ifft_t *f = (nn_function_ifft_t *)function;
+    ifft_local_context_t *ctx = malloc(sizeof(ifft_local_context_t));
+    ctx->signal_ndim = f->signal_ndim;
+    ctx->normalized = f->normalized;
+    function_context->func.local_context = ctx;
+    allocate_ifft_local_context(&function_context->func);
+  } break;
+
   case NN_FUNCTION_DROPOUT: { // Dropout
     function_context->func.exec_func = exec_dropout;
     function_context->func.free_local_context_func = free_dropout_local_context;
@@ -1450,28 +1487,6 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->ste_fine_grained = f->ste_fine_grained;
     function_context->func.local_context = ctx;
     allocate_pow2_quantize_local_context(&function_context->func);
-  } break;
-
-  case NN_FUNCTION_FFT: { // FFT
-    function_context->func.exec_func = exec_fft;
-    function_context->func.free_local_context_func = free_fft_local_context;
-    nn_function_fft_t *f = (nn_function_fft_t *)function;
-    fft_local_context_t *ctx = malloc(sizeof(fft_local_context_t));
-    ctx->signal_ndim = f->signal_ndim;
-    ctx->normalized = f->normalized;
-    function_context->func.local_context = ctx;
-    allocate_fft_local_context(&function_context->func);
-  } break;
-
-  case NN_FUNCTION_IFFT: { // IFFT
-    function_context->func.exec_func = exec_ifft;
-    function_context->func.free_local_context_func = free_ifft_local_context;
-    nn_function_ifft_t *f = (nn_function_ifft_t *)function;
-    ifft_local_context_t *ctx = malloc(sizeof(ifft_local_context_t));
-    ctx->signal_ndim = f->signal_ndim;
-    ctx->normalized = f->normalized;
-    function_context->func.local_context = ctx;
-    allocate_ifft_local_context(&function_context->func);
   } break;
 
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
