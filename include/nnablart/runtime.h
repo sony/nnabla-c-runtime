@@ -147,6 +147,12 @@ typedef enum {
 
 typedef void *rt_context_pointer;
 
+extern void *(*rt_variable_malloc_func)(size_t size);
+extern void (*rt_variable_free_func)(void *ptr);
+
+extern void *(*rt_malloc_func)(size_t size);
+extern void (*rt_free_func)(void *ptr);
+
 /// @brief Create runtime context.
 /// In this function only allocates runtime context.
 /// You must initialize context with @ref rt_initialize_context
@@ -292,6 +298,22 @@ nn_variable_t *rt_output_variable(rt_context_pointer context, size_t index);
 /// @param[in] context
 /// @return @ref rt_return_value_t
 rt_return_value_t rt_forward(rt_context_pointer context);
+
+/// @brief user set variable malloc func.
+/// @param[in] user_malloc
+void rt_set_variable_malloc(void *(*user_malloc)(size_t size));
+
+/// @brief user set variable free func.
+/// @param[in] user_free
+void rt_set_variable_free(void (*user_free)(void *ptr));
+
+/// @brief user set malloc func.
+/// @param[in] user_malloc
+void rt_set_malloc(void *(*user_malloc)(size_t size));
+
+/// @brief user set free func.
+/// @param[in] user_free
+void rt_set_free(void (*user_free)(void *ptr));
 
 /// @}
 

@@ -20,6 +20,12 @@
 
 #include "runtime_internal.h"
 
+void *(*rt_variable_malloc_func)(size_t size);
+void (*rt_variable_free_func)(void *ptr);
+
+void *(*rt_malloc_func)(size_t size);
+void (*rt_free_func)(void *ptr);
+
 rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
   rt_context_t *c = calloc(1, sizeof(rt_context_t));
   if (c == 0) {
@@ -27,8 +33,44 @@ rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
   }
   c->callbacks = 0;
   c->num_of_callbacks = 0;
+  rt_variable_malloc_func = malloc;
+  rt_variable_free_func = free;
+  rt_malloc_func = malloc;
+  rt_free_func = free;
   *context = c;
   return RT_RET_NOERROR;
+}
+
+void rt_set_variable_malloc(void *(*user_malloc)(size_t size)) {
+  if (user_malloc == 0) {
+    rt_variable_malloc_func = malloc;
+  } else {
+    rt_variable_malloc_func = user_malloc;
+  }
+}
+
+void rt_set_variable_free(void (*user_free)(void *ptr)) {
+  if (user_free == 0) {
+    rt_variable_free_func = free;
+  } else {
+    rt_variable_free_func = user_free;
+  }
+}
+
+void rt_set_malloc(void *(*user_malloc)(size_t size)) {
+  if (user_malloc == 0) {
+    rt_malloc_func = malloc;
+  } else {
+    rt_malloc_func = user_malloc;
+  }
+}
+
+void rt_set_free(void (*user_free)(void *ptr)) {
+  if (user_free == 0) {
+    rt_free_func = free;
+  } else {
+    rt_free_func = user_free;
+  }
 }
 
 rt_return_value_t rt_add_callback(
@@ -67,7 +109,8 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   //////////////////////////////////////////////////////////////////////////////
   // Buffer list
   c->num_of_buffers = n->buffers.size;
-  c->buffers = malloc(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
+  c->buffers =
+      rt_malloc_func(sizeof(rt_variable_buffer_context_t) * c->num_of_buffers);
 
   if (c->buffers == 0) {
     return RT_RET_ERROR_ALLOCATE_CONTEXT;
@@ -80,7 +123,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   // Inputs
   rt_list_t inputs = create_rt_list_from_nn_list(n, n->inputs);
   c->num_of_inputs = inputs.size;
-  c->input_variable_ids = malloc(sizeof(int *) * c->num_of_inputs);
+  c->input_variable_ids = rt_malloc_func(sizeof(int *) * c->num_of_inputs);
   for (i = 0; i < c->num_of_inputs; i++) {
     c->input_variable_ids[i] = inputs.data[i];
   }
@@ -89,7 +132,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   // Outputs
   rt_list_t outputs = create_rt_list_from_nn_list(n, n->outputs);
   c->num_of_outputs = outputs.size;
-  c->output_variable_ids = malloc(sizeof(int *) * c->num_of_outputs);
+  c->output_variable_ids = rt_malloc_func(sizeof(int *) * c->num_of_outputs);
   for (i = 0; i < c->num_of_outputs; i++) {
     c->output_variable_ids[i] = outputs.data[i];
   }
@@ -100,8 +143,9 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   for (i = 0; i < c->num_of_buffers; i++) {
     if (c->buffers[i].allocate_type == RT_BUFFER_ALLOCATE_TYPE_INITIAL) {
       c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_MALLOC;
-      c->buffers[i].buffer =
-          calloc(*(list + i) * sizeof(float), 1); // TODO float only.
+      c->buffers[i].buffer = rt_variable_malloc_func(
+          *(list + i) * sizeof(float)); // TODO float only.
+      memset(c->buffers[i].buffer, 0, *(list + i) * sizeof(float));
       if (c->buffers[i].buffer == 0) {
         return RT_RET_ERROR_ALLOCATE_CONTEXT;
       }
@@ -111,7 +155,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   //////////////////////////////////////////////////////////////////////////////
   // Variables
   c->num_of_variables = n->variables.size;
-  c->variables = malloc(sizeof(rt_variable_t) * c->num_of_variables);
+  c->variables = rt_malloc_func(sizeof(rt_variable_t) * c->num_of_variables);
   if (c->variables == 0) {
     return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
@@ -143,7 +187,8 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   //////////////////////////////////////////////////////////////////////////////
   // Functions
   c->num_of_functions = n->functions.size;
-  c->functions = malloc(sizeof(rt_function_context_t) * c->num_of_functions);
+  c->functions =
+      rt_malloc_func(sizeof(rt_function_context_t) * c->num_of_functions);
   list = (int *)NN_GET(n, n->functions.list);
   for (i = 0; i < c->num_of_functions; i++) {
     nn_function_t *func = (nn_function_t *)(NN_GET(n, *(list + i)));
@@ -181,28 +226,28 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
   // Buffers
   for (i = 0; i < c->num_of_buffers; i++) {
     if (c->buffers[i].allocate_type == RT_BUFFER_ALLOCATE_TYPE_MALLOC) {
-      free(c->buffers[i].buffer);
+      rt_variable_free_func(c->buffers[i].buffer);
     }
   }
-  free(c->buffers);
+  rt_free_func(c->buffers);
 
   // Variables
-  free(c->variables);
+  rt_free_func(c->variables);
 
   // Functions
   for (i = 0; i < c->num_of_functions; i++) {
-    free(c->functions[i].func.inputs);
-    free(c->functions[i].func.outputs);
+    rt_free_func(c->functions[i].func.inputs);
+    rt_free_func(c->functions[i].func.outputs);
 
     c->functions[i].func.free_local_context_func(&(c->functions[i].func));
     if (c->functions[i].func.local_context != 0) {
-      free(c->functions[i].func.local_context);
+      rt_free_func(c->functions[i].func.local_context);
     }
   }
-  free(c->functions);
+  rt_free_func(c->functions);
 
-  free(c->input_variable_ids);
-  free(c->output_variable_ids);
+  rt_free_func(c->input_variable_ids);
+  rt_free_func(c->output_variable_ids);
 
   // Callback
   if (c->callbacks) {

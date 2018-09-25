@@ -27,7 +27,7 @@ def generate(filename, info):
                 l.append(
                     '      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snake_name']))
                 l.append(
-                    '      {0}_local_context_t *ctx = malloc(sizeof({0}_local_context_t));'.format(func['snake_name']))
+                    '      {0}_local_context_t *ctx = rt_malloc_func(sizeof({0}_local_context_t));'.format(func['snake_name']))
 
                 for an, arg in func['arguments'].items():
                     if arg['type'] == 'bool':
