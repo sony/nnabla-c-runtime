@@ -1000,6 +1000,19 @@ rt_function_error_t exec_pow2_quantize(rt_function_t *f) {
 // Spectral Operation
 ////////////////////////////////////////////////////////////////////////////////
 
+// Interpolate
+rt_function_error_t allocate_interpolate_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_interpolate_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_interpolate(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
 // FFT
 rt_function_error_t allocate_fft_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;

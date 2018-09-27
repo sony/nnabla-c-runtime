@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 60/141
+Total 60/142
 
 
 ## Neural Network Layer
@@ -172,6 +172,15 @@ Count 9/14
 |        MatrixDiag        |     yes      |     yes      |     yes      |
 |      MatrixDiagPart      |     yes      |     yes      |     yes      |
 
+## Signal Processing
+Count 0/3
+
+|         Function         |  Available   |    float     |   generic    |
+|--------------------------|--------------|--------------|--------------|
+|       Interpolate        |      no      |      -       |      -       |
+|           FFT            |      no      |      -       |      -       |
+|           IFFT           |      no      |      -       |      -       |
+
 ## Stochasticity
 Count 1/10
 
@@ -218,14 +227,6 @@ Count 6/10
 |      INQConvolution      |      no      |      -       |      -       |
 |    FixedPointQuantize    |      no      |      -       |      -       |
 |       Pow2Quantize       |      no      |      -       |      -       |
-
-## Spectral Operation
-Count 0/2
-
-|         Function         |  Available   |    float     |   generic    |
-|--------------------------|--------------|--------------|--------------|
-|           FFT            |      no      |      -       |      -       |
-|           IFFT           |      no      |      -       |      -       |
 
 ## Validation
 Count 0/3

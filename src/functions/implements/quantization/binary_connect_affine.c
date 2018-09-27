@@ -54,6 +54,8 @@ allocate_binary_connect_affine_local_context(rt_function_t *f) {
   int base_axis = ((affine_local_context_t *)(f->local_context))->base_axis;
   int i; // Iterator
 
+  p->alpha = 0;
+
   p->base_loop_size = 1;
   for (i = 0; i < base_axis; i++) {
     p->base_loop_size *= p->input->shape.data[i];

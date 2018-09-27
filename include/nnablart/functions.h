@@ -382,8 +382,9 @@ rt_function_error_t exec_relu(rt_function_t *f);
 
 /// Local context for LeakyReLU
 typedef struct {
-  float alpha; ///< float
-  void *data;  ///< General purpose data area
+  float alpha;     ///< float
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
 } leaky_relu_local_context_t;
 
 /// Allocate LeakyReLU local context
@@ -1880,6 +1881,80 @@ rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
+/// @defgroup SignalProcessing Signal Processing
+/// @{
+
+/// @defgroup Interpolate Interpolate
+/// @{
+
+/// Named values for Interpolate.mode
+typedef enum {
+  INTERPOLATE_MODE_NEAREST,
+  INTERPOLATE_MODE_LINEAR,
+  END_OF_INTERPOLATE_MODE
+} interpolate_mode_value_t;
+
+/// Local context for Interpolate
+typedef struct {
+  rt_list_t output_size;         ///< Original type is [repeated int64]
+  interpolate_mode_value_t mode; ///< string
+  uint8_t align_corners;         ///< bool
+  void *data;                    ///< General purpose data area
+} interpolate_local_context_t;
+
+/// Allocate Interpolate local context
+rt_function_error_t allocate_interpolate_local_context(rt_function_t *f);
+
+/// Free Interpolate local context
+rt_function_error_t free_interpolate_local_context(rt_function_t *f);
+
+/// Exec Interpolate
+rt_function_error_t exec_interpolate(rt_function_t *f);
+/// @}
+
+/// @defgroup FFT FFT
+/// @{
+
+/// Local context for FFT
+typedef struct {
+  int32_t signal_ndim; ///< int64
+  uint8_t normalized;  ///< bool
+  void *data;          ///< General purpose data area
+} fft_local_context_t;
+
+/// Allocate FFT local context
+rt_function_error_t allocate_fft_local_context(rt_function_t *f);
+
+/// Free FFT local context
+rt_function_error_t free_fft_local_context(rt_function_t *f);
+
+/// Exec FFT
+rt_function_error_t exec_fft(rt_function_t *f);
+/// @}
+
+/// @defgroup IFFT IFFT
+/// @{
+
+/// Local context for IFFT
+typedef struct {
+  int32_t signal_ndim; ///< int64
+  uint8_t normalized;  ///< bool
+  void *data;          ///< General purpose data area
+} ifft_local_context_t;
+
+/// Allocate IFFT local context
+rt_function_error_t allocate_ifft_local_context(rt_function_t *f);
+
+/// Free IFFT local context
+rt_function_error_t free_ifft_local_context(rt_function_t *f);
+
+/// Exec IFFT
+rt_function_error_t exec_ifft(rt_function_t *f);
+/// @}
+
+/// @}
+
+////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Stochasticity Stochasticity
 /// @{
 
@@ -2507,52 +2582,6 @@ rt_function_error_t free_pow2_quantize_local_context(rt_function_t *f);
 
 /// Exec Pow2Quantize
 rt_function_error_t exec_pow2_quantize(rt_function_t *f);
-/// @}
-
-/// @}
-
-////////////////////////////////////////////////////////////////////////////////
-/// @defgroup SpectralOperation Spectral Operation
-/// @{
-
-/// @defgroup FFT FFT
-/// @{
-
-/// Local context for FFT
-typedef struct {
-  int32_t signal_ndim; ///< int64
-  uint8_t normalized;  ///< bool
-  void *data;          ///< General purpose data area
-} fft_local_context_t;
-
-/// Allocate FFT local context
-rt_function_error_t allocate_fft_local_context(rt_function_t *f);
-
-/// Free FFT local context
-rt_function_error_t free_fft_local_context(rt_function_t *f);
-
-/// Exec FFT
-rt_function_error_t exec_fft(rt_function_t *f);
-/// @}
-
-/// @defgroup IFFT IFFT
-/// @{
-
-/// Local context for IFFT
-typedef struct {
-  int32_t signal_ndim; ///< int64
-  uint8_t normalized;  ///< bool
-  void *data;          ///< General purpose data area
-} ifft_local_context_t;
-
-/// Allocate IFFT local context
-rt_function_error_t allocate_ifft_local_context(rt_function_t *f);
-
-/// Free IFFT local context
-rt_function_error_t free_ifft_local_context(rt_function_t *f);
-
-/// Exec IFFT
-rt_function_error_t exec_ifft(rt_function_t *f);
 /// @}
 
 /// @}

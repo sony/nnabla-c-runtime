@@ -28,6 +28,9 @@ typedef struct {
   rt_variable_t *bias;
   rt_variable_getter get_bias;
 
+  rt_variable_t *alpha;
+  rt_variable_getter get_alpha;
+
   rt_variable_t *output;
   int output_size;
   rt_variable_setter set_output;

@@ -51,6 +51,8 @@ rt_function_error_t allocate_affine_local_context(rt_function_t *f) {
     p->bias = 0;
   }
 
+  p->alpha = 0;
+
   p->output_size = calc_shape_size(p->output->shape);
 
   int base_axis = ((affine_local_context_t *)(f->local_context))->base_axis;
@@ -97,6 +99,11 @@ rt_function_error_t exec_affine(rt_function_t *f) {
   float *input = (float *)(p->input->data);
   float *weight = (float *)(p->weight->data);
   float *output = (float *)(p->output->data);
+  float *alpha = 0;
+
+  if (p->alpha) {
+    alpha = (float *)p->alpha->data;
+  }
 
   // Clear output
   memset(output, 0, sizeof(float) * p->output_size);
@@ -105,6 +112,7 @@ rt_function_error_t exec_affine(rt_function_t *f) {
     int output_offset = k * p->output_loop_size;
     int input_offset = k * p->input_loop_size;
     float *o_addr = output + output_offset;
+    float *alpha_addr = alpha;
 
     for (j = 0; j < p->output_loop_size; ++j) {
       int weight_offset = j * p->input_loop_size;
@@ -113,6 +121,9 @@ rt_function_error_t exec_affine(rt_function_t *f) {
       float *w_addr = weight + weight_offset;
       for (i = 0; i < p->input_loop_size; ++i) {
         *o_addr += (*i_addr++) * (*w_addr++);
+      }
+      if (alpha) {
+        *o_addr *= *alpha_addr++;
       }
       ++o_addr;
     }

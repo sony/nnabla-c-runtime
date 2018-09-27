@@ -92,7 +92,7 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
   p->w_var.shape.data[KG] = group;
   p->w_var.shape.data[KO] = multiplier;
   p->w_var.shape.data[KI] = 1;
-  for (int i = 0; i < spatial_dims; i++) {
+  for (i = 0; i < spatial_dims; i++) {
     p->w_var.shape.data[i + 3] = w_shape.data[i + 1];
   }
   p->w_var.stride = calc_contiguous_strides(p->w_var.shape);
@@ -117,7 +117,7 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
   p->in_position = allocate_list(p->spatial_dims);
   p->out_position = allocate_list(p->spatial_dims);
 
-  for (int i = 0; i < p->spatial_dims; i++) {
+  for (i = 0; i < p->spatial_dims; i++) {
     p->kernel_shape.data[i] = p->w_var.shape.data[i + 3];
     p->input_shape.data[i] = p->in_var.shape.data[i + 3];
     p->output_shape.data[i] = p->out_var.shape.data[i + 3];
@@ -125,7 +125,7 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
 
   f->exec_func = exec_convolution;
 
-  for (int i = 0; i < f->num_of_inputs; i++) {
+  for (i = 0; i < f->num_of_inputs; i++) {
     if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
       f->exec_func = exec_convolution_generic;
       break;
