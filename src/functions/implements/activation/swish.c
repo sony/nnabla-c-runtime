@@ -67,7 +67,6 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_swish_local_context(rt_function_t *f) {
-  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
