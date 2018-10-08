@@ -51,7 +51,7 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
 
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
-  batch_matmul_private_t *p = malloc(sizeof(batch_matmul_private_t));
+  batch_matmul_private_t *p = rt_malloc_func(sizeof(batch_matmul_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -101,7 +101,7 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_batch_matmul_local_context(rt_function_t *f) {
-  free(((batch_matmul_local_context_t *)(f->local_context))->data);
+  rt_free_func(((batch_matmul_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

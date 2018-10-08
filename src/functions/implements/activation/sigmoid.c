@@ -39,7 +39,7 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  sigmoid_local_context_t *c = malloc(sizeof(sigmoid_local_context_t));
+  sigmoid_local_context_t *c = rt_malloc_func(sizeof(sigmoid_local_context_t));
   if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -68,6 +68,7 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_sigmoid_local_context(rt_function_t *f) {
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

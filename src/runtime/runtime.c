@@ -20,23 +20,20 @@
 
 #include "runtime_internal.h"
 
-void *(*rt_variable_malloc_func)(size_t size);
-void (*rt_variable_free_func)(void *ptr);
+void *(*rt_variable_malloc_func)(size_t size) = malloc;
+void (*rt_variable_free_func)(void *ptr) = free;
 
-void *(*rt_malloc_func)(size_t size);
-void (*rt_free_func)(void *ptr);
+void *(*rt_malloc_func)(size_t size) = malloc;
+void (*rt_free_func)(void *ptr) = free;
 
 rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
-  rt_context_t *c = calloc(1, sizeof(rt_context_t));
+  rt_context_t *c = rt_malloc_func(sizeof(rt_context_t));
+  memset(c, 0, sizeof(rt_context_t));
   if (c == 0) {
     return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
   c->callbacks = 0;
   c->num_of_callbacks = 0;
-  rt_variable_malloc_func = malloc;
-  rt_variable_free_func = free;
-  rt_malloc_func = malloc;
-  rt_free_func = free;
   *context = c;
   return RT_RET_NOERROR;
 }
@@ -254,7 +251,7 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
     free(c->callbacks);
   }
 
-  free(*context);
+  rt_free_func(*context);
   return RT_RET_NOERROR;
 }
 

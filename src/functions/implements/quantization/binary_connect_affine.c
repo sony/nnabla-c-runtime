@@ -27,7 +27,7 @@ allocate_binary_connect_affine_local_context(rt_function_t *f) {
   if (f->num_of_outputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
-  affine_private_t *p = malloc(sizeof(affine_private_t));
+  affine_private_t *p = rt_malloc_func(sizeof(affine_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -78,7 +78,7 @@ allocate_binary_connect_affine_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f) {
-  free((((affine_local_context_t *)(f->local_context))->data));
+  rt_free_func((((affine_local_context_t *)(f->local_context))->data));
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

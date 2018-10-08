@@ -40,7 +40,7 @@ allocate_convolution_local_context_common(rt_function_t *f, int x, int weight,
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS;
   }
 
-  convolution_private_t *p = malloc(sizeof(convolution_private_t));
+  convolution_private_t *p = rt_malloc_func(sizeof(convolution_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -152,6 +152,6 @@ rt_function_error_t free_convolution_local_context_common(rt_function_t *f) {
   free_list(p->in_position);
   free_list(p->out_position);
   free_list(p->output_shape);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }

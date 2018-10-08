@@ -38,7 +38,7 @@ rt_function_error_t allocate_tanh_local_context(rt_function_t *f) {
   if (f->num_of_outputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
-  tanh_local_context_t *c = malloc(sizeof(tanh_local_context_t));
+  tanh_local_context_t *c = rt_malloc_func(sizeof(tanh_local_context_t));
   if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -62,6 +62,7 @@ rt_function_error_t allocate_tanh_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_tanh_local_context(rt_function_t *f) {
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

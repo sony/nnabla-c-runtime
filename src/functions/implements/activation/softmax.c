@@ -31,7 +31,7 @@ rt_function_error_t exec_softmax_generic(rt_function_t *f);
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
-  softmax_private_t *p = malloc(sizeof(softmax_private_t));
+  softmax_private_t *p = rt_malloc_func(sizeof(softmax_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -62,7 +62,7 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_softmax_local_context(rt_function_t *f) {
-  free(((softmax_local_context_t *)(f->local_context))->data);
+  rt_free_func(((softmax_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

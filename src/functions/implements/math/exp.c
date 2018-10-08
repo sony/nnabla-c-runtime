@@ -39,7 +39,7 @@ rt_function_error_t allocate_exp_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  exp_private_t *p = malloc(sizeof(exp_private_t));
+  exp_private_t *p = rt_malloc_func(sizeof(exp_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -66,6 +66,7 @@ rt_function_error_t allocate_exp_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_exp_local_context(rt_function_t *f) {
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

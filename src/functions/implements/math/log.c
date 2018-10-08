@@ -38,7 +38,7 @@ rt_function_error_t allocate_log_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  log_private_t *p = malloc(sizeof(log_private_t));
+  log_private_t *p = rt_malloc_func(sizeof(log_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -65,6 +65,7 @@ rt_function_error_t allocate_log_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_log_local_context(rt_function_t *f) {
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

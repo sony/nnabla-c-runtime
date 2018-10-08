@@ -147,12 +147,6 @@ typedef enum {
 
 typedef void *rt_context_pointer;
 
-extern void *(*rt_variable_malloc_func)(size_t size);
-extern void (*rt_variable_free_func)(void *ptr);
-
-extern void *(*rt_malloc_func)(size_t size);
-extern void (*rt_free_func)(void *ptr);
-
 /// @brief Create runtime context.
 /// In this function only allocates runtime context.
 /// You must initialize context with @ref rt_initialize_context

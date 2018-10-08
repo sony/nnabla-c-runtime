@@ -39,7 +39,7 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  swish_local_context_t *c = malloc(sizeof(swish_local_context_t));
+  swish_local_context_t *c = rt_malloc_func(sizeof(swish_local_context_t));
   if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -54,7 +54,7 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
   c->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (c->input_size != c->output_size) {
-    free(c);
+    rt_free_func(c);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (c->input->type == NN_DATA_TYPE_FLOAT &&
@@ -67,6 +67,7 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_swish_local_context(rt_function_t *f) {
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

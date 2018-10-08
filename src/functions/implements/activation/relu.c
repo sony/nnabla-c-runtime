@@ -39,7 +39,7 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  relu_private_t *p = malloc(sizeof(relu_private_t));
+  relu_private_t *p = rt_malloc_func(sizeof(relu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -53,7 +53,7 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
   p->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (p->input_size != p->output_size) {
-    free(p);
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   ((relu_local_context_t *)(f->local_context))->data = (void *)p;
@@ -67,7 +67,7 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_relu_local_context(rt_function_t *f) {
-  free(((relu_local_context_t *)(f->local_context))->data);
+  rt_free_func(((relu_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

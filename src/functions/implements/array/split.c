@@ -47,7 +47,8 @@ rt_function_error_t allocate_split_local_context(rt_function_t *f) {
     f->exec_func = exec_split_generic;
   }
 
-  split_private_t *p = (split_private_t *)malloc(sizeof(split_private_t));
+  split_private_t *p =
+      (split_private_t *)rt_malloc_func(sizeof(split_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -63,7 +64,7 @@ rt_function_error_t allocate_split_local_context(rt_function_t *f) {
 rt_function_error_t free_split_local_context(rt_function_t *f) {
   split_private_t *p =
       (split_private_t *)(((split_local_context_t *)(f->local_context))->data);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

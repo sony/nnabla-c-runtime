@@ -35,7 +35,7 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
   batch_normalization_local_context_t *context =
       (batch_normalization_local_context_t *)(f->local_context);
   batch_normalization_private_t *p =
-      malloc(sizeof(batch_normalization_private_t));
+      rt_malloc_func(sizeof(batch_normalization_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -62,9 +62,9 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
   p->batch_mean.shape = clone_list(f->inputs[1]->shape);
   p->batch_var.shape = clone_list(f->inputs[2]->shape);
   p->batch_mean.data =
-      malloc(sizeof(float) * calc_shape_size(p->batch_mean.shape));
+      rt_malloc_func(sizeof(float) * calc_shape_size(p->batch_mean.shape));
   p->batch_var.data =
-      malloc(sizeof(float) * calc_shape_size(p->batch_var.shape));
+      rt_malloc_func(sizeof(float) * calc_shape_size(p->batch_var.shape));
   free_list(input_shape);
   ((batch_normalization_local_context_t *)(f->local_context))->data = (void *)p;
 
@@ -88,9 +88,9 @@ rt_function_error_t free_batch_normalization_local_context(rt_function_t *f) {
                   ->data);
   free_list(p->batch_mean.shape);
   free_list(p->batch_var.shape);
-  free(p->batch_mean.data);
-  free(p->batch_var.data);
-  free(p);
+  rt_free_func(p->batch_mean.data);
+  rt_free_func(p->batch_var.data);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

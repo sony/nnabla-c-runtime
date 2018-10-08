@@ -99,7 +99,7 @@ rt_function_error_t allocate_pooling(rt_function_t *f,
 rt_function_error_t free_pooling(pooling_private_t *p) {
   free_list(p->input_shape);
   free_list(p->output_shape);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

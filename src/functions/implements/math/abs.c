@@ -40,7 +40,7 @@ rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  abs_private_t *p = malloc(sizeof(abs_private_t));
+  abs_private_t *p = rt_malloc_func(sizeof(abs_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -67,6 +67,7 @@ rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_abs_local_context(rt_function_t *f) {
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
