@@ -77,12 +77,20 @@ rt_return_value_t rt_add_callback(
   rt_context_t *c = context;
 
   rt_function_callback_t *callbacks;
-  callbacks = realloc(c->callbacks, (c->num_of_callbacks + 1) *
-                                        sizeof(rt_function_callback_t));
+  callbacks = rt_malloc_func((c->num_of_callbacks + 1) *
+                             sizeof(rt_function_callback_t));
   if (callbacks == 0) {
     return RT_RET_ERROR_ALLOCATE_CALLBACK_BUFFER;
   }
-  c->callbacks = callbacks;
+
+  if (c->callbacks == 0) {
+    c->callbacks = callbacks;
+  } else {
+    memcpy(callbacks, c->callbacks,
+           c->num_of_callbacks * sizeof(rt_function_callback_t));
+    rt_free_func(c->callbacks);
+    c->callbacks = callbacks;
+  }
 
   (c->callbacks + c->num_of_callbacks)->type = type;
   (c->callbacks + c->num_of_callbacks)->allocate_local_context =
@@ -248,7 +256,7 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
 
   // Callback
   if (c->callbacks) {
-    free(c->callbacks);
+    rt_free_func(c->callbacks);
   }
 
   rt_free_func(*context);
