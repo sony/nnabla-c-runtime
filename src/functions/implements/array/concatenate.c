@@ -48,13 +48,14 @@ rt_function_error_t allocate_concatenate_local_context(rt_function_t *f) {
   }
 
   concatenate_private_t *p =
-      (concatenate_private_t *)malloc(sizeof(concatenate_private_t));
+      (concatenate_private_t *)rt_malloc_func(sizeof(concatenate_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
 
   p->inner_total_size = 0;
-  p->in_shape = (rt_list_t *)malloc(sizeof(rt_list_t) * f->num_of_inputs);
+  p->in_shape =
+      (rt_list_t *)rt_malloc_func(sizeof(rt_list_t) * f->num_of_inputs);
   for (int i = 0; i < f->num_of_inputs; i++) {
     p->in_shape[i] = clone_list(f->inputs[i]->shape);
     const int inner_size = calc_size(p->in_shape[i], c->axis);
@@ -78,8 +79,8 @@ rt_function_error_t free_concatenate_local_context(rt_function_t *f) {
   for (int i = 0; i < f->num_of_inputs; i++) {
     free_list(p->in_shape[i]);
   }
-  free(p->in_shape);
-  free(p);
+  rt_free_func(p->in_shape);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

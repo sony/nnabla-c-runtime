@@ -37,7 +37,7 @@ rt_function_error_t allocate_binary_sigmoid_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
   binary_sigmoid_private_context_t *p =
-      malloc(sizeof(binary_sigmoid_private_context_t));
+      rt_malloc_func(sizeof(binary_sigmoid_private_context_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }

@@ -80,6 +80,12 @@ struct st_rt_function_t {
   void *local_context;     ///< General purpose context
 };
 
+extern void *(*rt_variable_malloc_func)(size_t size);  ///< Variable malloc function pointer
+extern void (*rt_variable_free_func)(void *ptr);       ///< Variable free function pointer
+
+extern void *(*rt_malloc_func)(size_t size);           ///< malloc function pointer
+extern void (*rt_free_func)(void *ptr);                ///< free function pointer
+
 ${FUNCTION_DEFINES}
 
 /// @}

@@ -35,7 +35,7 @@ typedef struct {
 rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
   unpooling_local_context_t *context =
       (unpooling_local_context_t *)(f->local_context);
-  unpooling_private_t *p = malloc(sizeof(unpooling_private_t));
+  unpooling_private_t *p = rt_malloc_func(sizeof(unpooling_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -82,7 +82,7 @@ rt_function_error_t free_unpooling_local_context(rt_function_t *f) {
   free_list(p->input_strides);
   free_list(p->output_strides);
   free_list(p->kernel);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

@@ -38,7 +38,7 @@ rt_function_error_t allocate_round_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  round_private_t *p = malloc(sizeof(round_private_t));
+  round_private_t *p = rt_malloc_func(sizeof(round_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }

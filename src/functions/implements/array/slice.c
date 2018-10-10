@@ -42,7 +42,7 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  slice_private_t *p = malloc(sizeof(slice_private_t));
+  slice_private_t *p = rt_malloc_func(sizeof(slice_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -91,7 +91,7 @@ rt_function_error_t free_slice_local_context(rt_function_t *f) {
   free_list(p->start);
   free_list(p->stop);
   free_list(p->step);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

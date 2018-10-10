@@ -37,7 +37,8 @@ rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  matrix_diag_local_context_t *c = malloc(sizeof(matrix_diag_local_context_t));
+  matrix_diag_local_context_t *c =
+      rt_malloc_func(sizeof(matrix_diag_local_context_t));
   if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -66,7 +67,7 @@ rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_matrix_diag_local_context(rt_function_t *f) {
-  free(f->local_context);
+  rt_free_func(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

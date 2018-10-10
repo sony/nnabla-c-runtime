@@ -40,7 +40,7 @@ rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  prelu_private_t *p = malloc(sizeof(prelu_private_t));
+  prelu_private_t *p = rt_malloc_func(sizeof(prelu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -70,7 +70,7 @@ rt_function_error_t free_prelu_local_context(rt_function_t *f) {
   prelu_private_t *p = (prelu_private_t *)(context->data);
   free_list(p->in_shape);
   free_list(p->in_stride);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

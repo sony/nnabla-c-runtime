@@ -35,7 +35,7 @@ rt_function_error_t allocate_dropout_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  dropout_private_t *p = malloc(sizeof(dropout_private_t));
+  dropout_private_t *p = rt_malloc_func(sizeof(dropout_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -62,7 +62,7 @@ rt_function_error_t allocate_dropout_local_context(rt_function_t *f) {
 
 rt_function_error_t free_dropout_local_context(rt_function_t *f) {
   if (f->local_context) {
-    free(f->local_context);
+    rt_free_func(f->local_context);
     f->local_context = NULL;
   }
   return RT_FUNCTION_ERROR_NOERROR;

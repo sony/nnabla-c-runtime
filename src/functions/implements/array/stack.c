@@ -46,7 +46,8 @@ rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
     f->exec_func = exec_stack_generic;
   }
 
-  stack_private_t *p = (stack_private_t *)malloc(sizeof(stack_private_t));
+  stack_private_t *p =
+      (stack_private_t *)rt_malloc_func(sizeof(stack_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -61,7 +62,7 @@ rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
 rt_function_error_t free_stack_local_context(rt_function_t *f) {
   stack_private_t *p =
       (stack_private_t *)(((stack_local_context_t *)(f->local_context))->data);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

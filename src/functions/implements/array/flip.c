@@ -38,12 +38,12 @@ rt_function_error_t allocate_flip_local_context(rt_function_t *f) {
     f->exec_func = exec_flip_generic;
   }
 
-  flip_private_t *p = malloc(sizeof(flip_private_t));
+  flip_private_t *p = rt_malloc_func(sizeof(flip_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
   ((flip_local_context_t *)(f->local_context))->data = (void *)p;
-  p->flip = malloc(sizeof(uint8_t) * (f->inputs[0]->shape.size - 1));
+  p->flip = rt_malloc_func(sizeof(uint8_t) * (f->inputs[0]->shape.size - 1));
   memset(p->flip, 0, sizeof(uint8_t) * (f->inputs[0]->shape.size - 1));
   p->input = f->inputs[0];
   p->get_input = select_getter(p->input);
@@ -61,8 +61,8 @@ rt_function_error_t free_flip_local_context(rt_function_t *f) {
   flip_private_t *p =
       (flip_private_t *)(((flip_local_context_t *)(f->local_context))->data);
   free_list(p->input_strides);
-  free(p->flip);
-  free(p);
+  rt_free_func(p->flip);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

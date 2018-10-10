@@ -21,7 +21,7 @@
 rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
   max_pooling_local_context_t *context =
       (max_pooling_local_context_t *)(f->local_context);
-  pooling_private_t *p = malloc(sizeof(pooling_private_t));
+  pooling_private_t *p = rt_malloc_func(sizeof(pooling_private_t));
   rt_function_error_t ret =
       allocate_pooling(f, (pooling_context_t *)context, p);
   ((max_pooling_local_context_t *)(f->local_context))->data = (void *)p;

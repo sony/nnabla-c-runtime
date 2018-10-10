@@ -40,7 +40,7 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  celu_private_t *p = (celu_private_t *)malloc(sizeof(celu_private_t));
+  celu_private_t *p = (celu_private_t *)rt_malloc_func(sizeof(celu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -56,7 +56,7 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
 
   if (p->input_size * 2 != p->output_size) {
     free_list(p->in_shape);
-    free(p);
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
@@ -72,7 +72,7 @@ rt_function_error_t free_celu_local_context(rt_function_t *f) {
   celu_local_context_t *c = (celu_local_context_t *)(f->local_context);
   celu_private_t *p = (celu_private_t *)(c->data);
   free_list(p->in_shape);
-  free(c->data);
+  rt_free_func(c->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

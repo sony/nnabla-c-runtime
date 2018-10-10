@@ -35,7 +35,8 @@ rt_function_error_t allocate_identity_local_context(rt_function_t *f) {
   if (f->num_of_outputs != 1) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
-  identity_private_context_t *p = malloc(sizeof(identity_private_context_t));
+  identity_private_context_t *p =
+      rt_malloc_func(sizeof(identity_private_context_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }

@@ -39,7 +39,7 @@ rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  transpose_private_t *p = malloc(sizeof(transpose_private_t));
+  transpose_private_t *p = rt_malloc_func(sizeof(transpose_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -72,7 +72,7 @@ rt_function_error_t free_transpose_local_context(rt_function_t *f) {
   free_list(p->output_shape);
   free_list(p->input_strides);
   free_list(p->output_strides);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 

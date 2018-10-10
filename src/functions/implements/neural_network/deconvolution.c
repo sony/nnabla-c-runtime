@@ -57,7 +57,7 @@ rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  deconvolution_private_t *p = malloc(sizeof(deconvolution_private_t));
+  deconvolution_private_t *p = rt_malloc_func(sizeof(deconvolution_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -117,7 +117,7 @@ rt_function_error_t free_deconvolution_local_context(rt_function_t *f) {
   free_list(p->kernel_shape);
   free_list(p->in_position);
   free_list(p->out_position);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
