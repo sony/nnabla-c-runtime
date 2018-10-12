@@ -39,6 +39,8 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   ret = rt_initialize_context(context, net);
   assert(ret == RT_RET_NOERROR);
 
+  assert(argc == rt_num_of_input(context) + 1);
+
   for (i = 0; i < rt_num_of_input(context); i++) {
     printf("Input[%d] size:%d\n", i, rt_input_size(context, i));
     FILE *input = 0;
@@ -109,7 +111,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
 #ifdef _MSC_VER
     sprintf_s(output_filename, output_filename_length, "%s_%d.bin", *argv, i);
 #else
-    sprintf(output_filename, "%s_%d.bin", *argv, i);
+    snprintf(output_filename, output_filename_length, "%s_%d.bin", *argv, i);
 #endif
     printf("Output[%d] filename %s\n", i, output_filename);
 
