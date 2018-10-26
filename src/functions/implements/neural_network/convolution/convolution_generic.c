@@ -161,9 +161,7 @@ rt_function_error_t exec_convolution_generic(rt_function_t *f) {
   var_t *b_var = &p->b_var;
   var_t *a_var = &p->a_var;
 
-  int output_size = calc_shape_size(p->out_var.shape);
-
-  memset(out_var->v->data, 0, sizeof(float) * output_size);
+  fill_variable_with(f->outputs[0], 0);
 
   batch_size = p->in_var.shape.data[0];
   if (p->spatial_dims == 2) {

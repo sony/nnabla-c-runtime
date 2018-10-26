@@ -113,7 +113,7 @@ rt_function_error_t exec_sum_generic(rt_function_t *f) {
   sum_local_context_t *context = (sum_local_context_t *)(f->local_context);
   sum_private_t *p = (sum_private_t *)(context->data);
 
-  memset(p->output->data, 0, sizeof(float) * calc_shape_size(p->output->shape));
+  fill_variable_with(f->outputs[0], 0);
   for (int i = 0; i < p->input_size; i++) {
     int o = 0;
     int prev = -1;

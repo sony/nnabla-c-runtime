@@ -203,7 +203,7 @@ rt_function_error_t exec_deconvolution_generic(rt_function_t *f) {
   int kernel_size = calc_shape_size(p->kernel_shape);
   int input_size = calc_shape_size(p->input_shape);
 
-  memset(p->output->data, 0, sizeof(float) * calc_shape_size(p->output->shape));
+  fill_variable_with(f->outputs[0], 0);
 
   for (int b = 0; b < p->base_loop_size; b++) {
     for (int g = 0; g < c->group; g++) {
