@@ -61,10 +61,6 @@ rt_function_error_t allocate_dropout_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t free_dropout_local_context(rt_function_t *f) {
-  if (f->local_context) {
-    rt_free_func(f->local_context);
-    f->local_context = NULL;
-  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
