@@ -247,6 +247,7 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
     c->functions[i].func.free_local_context_func(&(c->functions[i].func));
     if (c->functions[i].func.local_context != 0) {
       rt_free_func(c->functions[i].func.local_context);
+      c->functions[i].func.local_context = NULL;
     }
   }
   rt_free_func(c->functions);
