@@ -17,7 +17,10 @@
 
 #include <assert.h>
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_CELU
 
 typedef struct {
   rt_variable_t *input;
@@ -61,9 +64,13 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_CELU_FLOAT32
     f->exec_func = exec_celu;
+#endif /* CONFIG_CELU_FLOAT32 */
   } else {
+#ifdef CONFIG_CELU_GENERIC
     f->exec_func = exec_celu_generic;
+#endif /* CONFIG_CELU_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -76,6 +83,7 @@ rt_function_error_t free_celu_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_CELU_FLOAT32
 /**
  * https://arxiv.org/pdf/1603.05201.pdf
  * Definition 2.1. CReLU activation, denoted by ρc : R →R2
@@ -101,7 +109,9 @@ rt_function_error_t exec_celu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_CELU_FLOAT32 */
 
+#ifdef CONFIG_CELU_GENERIC
 rt_function_error_t exec_celu_generic(rt_function_t *f) {
   celu_local_context_t *c = (celu_local_context_t *)(f->local_context);
   celu_private_t *p = (celu_private_t *)(c->data);
@@ -123,3 +133,6 @@ rt_function_error_t exec_celu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_CELU_GENERIC */
+
+#endif /* CONFIG_CELU */

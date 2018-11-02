@@ -14,11 +14,14 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <assert.h>
 
 #include <math.h>
+
+#ifdef CONFIG_ABS
 
 typedef struct {
   rt_variable_t *input;
@@ -59,9 +62,13 @@ rt_function_error_t allocate_abs_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_ABS_FLOAT32
     f->exec_func = exec_abs;
+#endif /* CONFIG_ABS_FLOAT32 */
   } else {
+#ifdef CONFIG_ABS_GENERIC
     f->exec_func = exec_abs_generic;
+#endif /* CONFIG_ABS_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -70,6 +77,7 @@ rt_function_error_t free_abs_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_ABS_FLOAT32
 rt_function_error_t exec_abs(rt_function_t *f) {
   abs_private_t *p = (abs_private_t *)(f->local_context);
   float *x = (float *)(p->input->data);
@@ -81,7 +89,9 @@ rt_function_error_t exec_abs(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ABS_FLOAT32 */
 
+#ifdef CONFIG_ABS_GENERIC
 rt_function_error_t exec_abs_generic(rt_function_t *f) {
   abs_private_t *p = (abs_private_t *)(f->local_context);
 
@@ -92,3 +102,6 @@ rt_function_error_t exec_abs_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ABS_GENERIC */
+
+#endif /* CONFIG_ABS */

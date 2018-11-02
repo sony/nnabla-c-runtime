@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_IDENTITY
 
 typedef struct {
   rt_variable_t *input;
@@ -52,9 +55,13 @@ rt_function_error_t allocate_identity_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_IDENTITY_FLOAT32
     f->exec_func = exec_identity;
+#endif /* CONFIG_IDENTITY_FLOAT32 */
   } else {
+#ifdef CONFIG_IDENTITY_GENERIC
     f->exec_func = exec_identity_generic;
+#endif /* CONFIG_IDENTITY_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -63,6 +70,7 @@ rt_function_error_t free_identity_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_IDENTITY_FLOAT32
 rt_function_error_t exec_identity(rt_function_t *f) {
   identity_private_context_t *p =
       (identity_private_context_t *)(f->local_context);
@@ -75,7 +83,9 @@ rt_function_error_t exec_identity(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_IDENTITY_FLOAT32 */
 
+#ifdef CONFIG_IDENTITY_GENERIC
 rt_function_error_t exec_identity_generic(rt_function_t *f) {
   identity_private_context_t *p =
       (identity_private_context_t *)(f->local_context);
@@ -85,3 +95,6 @@ rt_function_error_t exec_identity_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_IDENTITY_GENERIC */
+
+#endif /* CONFIG_IDENTITY */

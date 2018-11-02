@@ -13,7 +13,10 @@
 // limitations under the License.
 #include "../../utilities/shape.h"
 #include "arithmetic.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_ADD2
 
 rt_function_error_t exec_add2_generic(rt_function_t *f);
 
@@ -35,9 +38,13 @@ rt_function_error_t allocate_add2_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_ADD2_FLOAT32
     f->exec_func = exec_add2;
+#endif /* CONFIG_ADD2_FLOAT32 */
   } else {
+#ifdef CONFIG_ADD2_GENERIC
     f->exec_func = exec_add2_generic;
+#endif /* CONFIG_ADD2_GENERIC */
   }
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -47,12 +54,18 @@ rt_function_error_t free_add2_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
+#ifdef CONFIG_ADD2_FLOAT32
 rt_function_error_t exec_add2(rt_function_t *f) {
   calc_arithmetic(f, calc_add);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ADD_FLOAT32 */
 
+#ifdef CONFIG_ADD2_GENERIC
 rt_function_error_t exec_add2_generic(rt_function_t *f) {
   calc_arithmetic_generic(f, calc_add);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ADD2_GENERIC */
+
+#endif /* CONFIG_ADD2 */

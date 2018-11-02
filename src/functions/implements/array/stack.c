@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_STACK
 
 typedef struct {
   int inner_size;
@@ -35,8 +38,11 @@ rt_function_error_t exec_stack_generic(rt_function_t *f);
 rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
   stack_local_context_t *c = (stack_local_context_t *)(f->local_context);
 
+#ifdef CONFIG_STACK_FLOAT32
   f->exec_func = exec_stack;
+#endif /* CONFIG_STACK_FLOAT32 */
 
+#ifdef CONFIG_STACK_GENERIC
   for (int i = 0; i < f->num_of_inputs; i++) {
     if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
       f->exec_func = exec_stack_generic;
@@ -45,6 +51,7 @@ rt_function_error_t allocate_stack_local_context(rt_function_t *f) {
   if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_stack_generic;
   }
+#endif /* CONFIG_STACK_GENERIC */
 
   stack_private_t *p =
       (stack_private_t *)rt_malloc_func(sizeof(stack_private_t));
@@ -66,6 +73,7 @@ rt_function_error_t free_stack_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_STACK_FLOAT32
 rt_function_error_t exec_stack(rt_function_t *f) {
   stack_local_context_t *c = (stack_local_context_t *)(f->local_context);
   stack_private_t *p = (stack_private_t *)(c->data);
@@ -82,7 +90,9 @@ rt_function_error_t exec_stack(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_STACK_FLOAT32 */
 
+#ifdef CONFIG_STACK_GENERIC
 rt_function_error_t exec_stack_generic(rt_function_t *f) {
   stack_local_context_t *c = (stack_local_context_t *)(f->local_context);
   stack_private_t *p = (stack_private_t *)(c->data);
@@ -103,3 +113,6 @@ rt_function_error_t exec_stack_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_STACK_GENERIC */
+
+#endif /* CONFIG_STACK */

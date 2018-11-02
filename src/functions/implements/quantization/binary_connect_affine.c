@@ -15,7 +15,10 @@
 #include "../../utilities/shape.h"
 #include "../neural_network/affine/affine_generic.h"
 #include "../neural_network/affine/affine_internal.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_BINARYCONNECTAFFINE
 
 // BinaryConnectAffine
 rt_function_error_t
@@ -71,7 +74,18 @@ allocate_binary_connect_affine_local_context(rt_function_t *f) {
     p->output_loop_size *= p->output->shape.data[i];
   }
 
-  f->exec_func = exec_affine_generic;
+  if (p->input->type == NN_DATA_TYPE_FLOAT &&
+      p->output->type == NN_DATA_TYPE_FLOAT &&
+      p->weight->type == NN_DATA_TYPE_FLOAT &&
+      ((p->bias && p->bias->type == NN_DATA_TYPE_FLOAT) || !p->bias)) {
+#ifdef CONFIG_BINARYCONNECTAFFINE_FLOAT32
+    f->exec_func = exec_affine;
+#endif /* CONFIG_BINARYCONNECTAFFINE_FLOAT32 */
+  } else {
+#ifdef CONFIG_BINARYCONNECTAFFINE_GENERIC
+    f->exec_func = exec_affine_generic;
+#endif /* CONFIG_BINARYCONNECTAFFINE_GENERIC */
+  }
 
   ((affine_local_context_t *)(f->local_context))->data = (void *)p;
   return RT_FUNCTION_ERROR_NOERROR;
@@ -82,7 +96,10 @@ rt_function_error_t free_binary_connect_affine_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_BINARYCONNECTAFFINE_FLOAT32
 rt_function_error_t exec_binary_connect_affine(rt_function_t *f) {
-  // Float implementation does not exist.
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+  return exec_affine(f);
 }
+#endif /* CONFIG_BINARYCONNECTAFFINE_FLOAT32 */
+
+#endif /* CONFIG_BINARYCONNECTAFFINE */

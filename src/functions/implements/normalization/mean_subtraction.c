@@ -16,7 +16,10 @@
 #include "../../utilities/shape.h"
 #include <assert.h>
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_MEANSUBTRACTION
 
 rt_function_error_t exec_mean_subtraction_generic(rt_function_t *f);
 
@@ -35,9 +38,13 @@ rt_function_error_t allocate_mean_subtraction_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_MEANSUBTRACTION_FLOAT32
     f->exec_func = exec_mean_subtraction;
+#endif /* #ifdef CONFIG_MEANSUBTRACTION_FLOAT32 */
   } else {
+#ifdef CONFIG_MEANSUBTRACTION_GENERIC
     f->exec_func = exec_mean_subtraction_generic;
+#endif /* #ifdef CONFIG_MEANSUBTRACTION_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -46,6 +53,7 @@ rt_function_error_t free_mean_subtraction_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_MEANSUBTRACTION_FLOAT32
 /*
  * ctx->update_running_mean is omitted, since in inferring time,
  * we do not update running mean any more.
@@ -72,7 +80,9 @@ rt_function_error_t exec_mean_subtraction(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_MEANSUBTRACTION_FLOAT32 */
 
+#ifdef CONFIG_MEANSUBTRACTION_GENERIC
 rt_function_error_t exec_mean_subtraction_generic(rt_function_t *f) {
   mean_subtraction_local_context_t *ctx =
       (mean_subtraction_local_context_t *)f->local_context;
@@ -100,3 +110,6 @@ rt_function_error_t exec_mean_subtraction_generic(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_MEANSUBTRACTION_GENERIC */
+
+#endif /* CONFIG_MEANSUBTRACTION */

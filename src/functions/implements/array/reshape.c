@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_RESHAPE
 
 typedef struct {
   rt_variable_t *input;
@@ -51,9 +54,13 @@ rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
   ((reshape_local_context_t *)(f->local_context))->data = (void *)p;
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_RESHAPE_FLOAT32
     f->exec_func = exec_reshape;
+#endif /* CONFIG_RESHAPE_FLOAT32 */
   } else {
+#ifdef CONFIG_RESHAPE_GENERIC
     f->exec_func = exec_reshape_generic;
+#endif /* CONFIG_RESHAPE_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -63,6 +70,7 @@ rt_function_error_t free_reshape_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_RESHAPE_FLOAT32
 rt_function_error_t exec_reshape(rt_function_t *f) {
   reshape_local_context_t *context =
       (reshape_local_context_t *)(f->local_context);
@@ -76,7 +84,9 @@ rt_function_error_t exec_reshape(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_RESHAPE_FLOAT32 */
 
+#ifdef CONFIG_RESHAPE_GENERIC
 rt_function_error_t exec_reshape_generic(rt_function_t *f) {
   reshape_local_context_t *context =
       (reshape_local_context_t *)(f->local_context);
@@ -89,3 +99,6 @@ rt_function_error_t exec_reshape_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_RESHAPE_GENERIC */
+
+#endif /* CONFIG_RESHAPE */

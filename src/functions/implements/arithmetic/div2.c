@@ -14,7 +14,10 @@
 
 #include "../../utilities/shape.h"
 #include "arithmetic.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_DIV2
 
 rt_function_error_t exec_div2_generic(rt_function_t *f);
 
@@ -35,9 +38,13 @@ rt_function_error_t allocate_div2_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_DIV2_FLOAT32
     f->exec_func = exec_div2;
+#endif /* CONFIG_DIV2_FLOAT32 */
   } else {
+#ifdef CONFIG_DIV2_GENERIC
     f->exec_func = exec_div2_generic;
+#endif /* CONFIG_DIV2_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -46,12 +53,18 @@ rt_function_error_t free_div2_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_DIV2_FLOAT32
 rt_function_error_t exec_div2(rt_function_t *f) {
   calc_arithmetic(f, calc_div);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_DIV2_FLOAT32 */
 
+#ifdef CONFIG_DIV2_GENERIC
 rt_function_error_t exec_div2_generic(rt_function_t *f) {
   calc_arithmetic_generic(f, calc_div);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_DIV2_GENERIC */
+
+#endif /* CONFIG_DIV2 */

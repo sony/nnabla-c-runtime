@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 #include <string.h>
+
+#ifdef CONFIG_DECONVOLUTION
 
 typedef struct {
   rt_variable_t *input;
@@ -101,9 +104,13 @@ rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f) {
       p->output->type == NN_DATA_TYPE_FLOAT &&
       p->weight->type == NN_DATA_TYPE_FLOAT &&
       ((p->bias && p->bias->type == NN_DATA_TYPE_FLOAT) || !p->bias)) {
+#ifdef CONFIG_DECONVOLUTION_FLOAT32
     f->exec_func = exec_deconvolution;
+#endif /* CONFIG_DECONVOLUTION_FLOAT32 */
   } else {
+#ifdef CONFIG_DECONVOLUTION_GENERIC
     f->exec_func = exec_deconvolution_generic;
+#endif /* CONFIG_DECONVOLUTION_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -121,6 +128,7 @@ rt_function_error_t free_deconvolution_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_DECONVOLUTION_FLOAT32
 rt_function_error_t exec_deconvolution(rt_function_t *f) {
   deconvolution_local_context_t *c =
       (deconvolution_local_context_t *)(f->local_context);
@@ -193,7 +201,9 @@ rt_function_error_t exec_deconvolution(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_DECONVOLUTION_FLOAT32 */
 
+#ifdef CONFIG_DECONVOLUTION_GENERIC
 rt_function_error_t exec_deconvolution_generic(rt_function_t *f) {
   deconvolution_local_context_t *c =
       (deconvolution_local_context_t *)(f->local_context);
@@ -272,3 +282,6 @@ rt_function_error_t exec_deconvolution_generic(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_DECONVOLUTION_GENERIC */
+
+#endif /* CONFIG_DECONVOLUTION */

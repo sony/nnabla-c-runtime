@@ -16,9 +16,12 @@
 #include "../../utilities/shape.h"
 #include "pooling.h"
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <string.h>
+
+#ifdef CONFIG_UNPOOLING
 
 typedef struct {
   rt_list_t input_shape;
@@ -70,6 +73,8 @@ rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
 
   ((unpooling_local_context_t *)(f->local_context))->data = (void *)p;
 
+  f->exec_func = exec_unpooling;
+
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -86,6 +91,7 @@ rt_function_error_t free_unpooling_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_UNPOOLING_GENERIC
 static void unpooling_forward_recursive_generic(unpooling_private_t *p,
                                                 int x_offset, int y_offset,
                                                 int dim) {
@@ -128,7 +134,9 @@ static void unpooling_forward_recursive_generic(unpooling_private_t *p,
     }
   }
 }
+#endif /* CONFIG_UNPOOLING_GENERIC */
 
+#ifdef CONFIG_UNPOOLING_FLOAT32
 static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
                                         int y_offset, int dim) {
   int current_x_offset = x_offset;
@@ -171,6 +179,7 @@ static void unpooling_forward_recursive(unpooling_private_t *p, int x_offset,
     }
   }
 }
+#endif /* CONFIG_UNPOOLING_FLOAT32 */
 
 rt_function_error_t exec_unpooling(rt_function_t *f) {
   unpooling_private_t *p =
@@ -178,9 +187,15 @@ rt_function_error_t exec_unpooling(rt_function_t *f) {
                                   ->data);
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_UNPOOLING_FLOAT32
     unpooling_forward_recursive(p, 0, 0, 0);
+#endif /* CONFIG_UNPOOLING_FLOAT32 */
   } else {
+#ifdef CONFIG_UNPOOLING_GENERIC
     unpooling_forward_recursive_generic(p, 0, 0, 0);
+#endif /* CONFIG_UNPOOLING_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+
+#endif /* CONFIG_UNPOOLING */
