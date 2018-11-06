@@ -87,7 +87,7 @@ rt_function_error_t exec_exp_generic(rt_function_t *f) {
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
     float x = p->get_input(p->input, i);
-    p->set_output(p->output, i, x);
+    p->set_output(p->output, i, (float)exp(x));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }

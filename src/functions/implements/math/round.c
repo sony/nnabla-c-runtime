@@ -85,7 +85,8 @@ rt_function_error_t exec_round_generic(rt_function_t *f) {
 
   int i; // Iterator
   for (i = 0; i < p->output_size; i++) {
-    p->set_output(p->output, i, p->get_input(p->input, i));
+    float x = p->get_input(p->input, i);
+    p->set_output(p->output, i, (float)round(x));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
