@@ -309,6 +309,15 @@ void rt_set_malloc(void *(*user_malloc)(size_t size));
 /// @param[in] user_free
 void rt_set_free(void (*user_free)(void *ptr));
 
+/// @brief return c runtime version string
+const char *const rt_c_runtime_version(void);
+
+/// @brief return nnb version number
+const int rt_nnb_version(void);
+
+/// @brief return nnb revision
+const char *const rt_nnb_revision(void);
+
 /// @}
 
 #ifdef __cplusplus

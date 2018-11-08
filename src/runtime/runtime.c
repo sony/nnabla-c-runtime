@@ -358,3 +358,9 @@ rt_return_value_t rt_forward(rt_context_pointer context) {
 
   return RT_RET_NOERROR;
 }
+
+const char *const rt_c_runtime_version(void) { return NN_C_RUNTIME_VERSION; }
+
+const int rt_nnb_version(void) { return NN_BINARY_FORMAT_VERSION; }
+
+const char *const rt_nnb_revision(void) { return NN_BINARY_FORMAT_REVISION; }
