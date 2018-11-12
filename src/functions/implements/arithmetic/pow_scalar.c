@@ -14,7 +14,10 @@
 
 #include "../../utilities/shape.h"
 #include "arithmetic.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_POWSCALAR
 
 rt_function_error_t exec_pow_scalar_generic(rt_function_t *f);
 
@@ -33,9 +36,13 @@ rt_function_error_t allocate_pow_scalar_local_context(rt_function_t *f) {
   }
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_POWSCALAR_FLOAT32
     f->exec_func = exec_pow_scalar;
+#endif /* CONFIG_POWSCALAR_FLOAT32 */
   } else {
+#ifdef CONFIG_POWSCALAR_GENERIC
     f->exec_func = exec_pow_scalar_generic;
+#endif /* CONFIG_POWSCALAR_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -44,16 +51,22 @@ rt_function_error_t free_pow_scalar_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_POWSCALAR_FLOAT32
 rt_function_error_t exec_pow_scalar(rt_function_t *f) {
   pow_scalar_local_context_t *context =
       (pow_scalar_local_context_t *)(f->local_context);
   calc_scalar(f, context->val, calc_pow);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_POWSCALAR_FLOAT32 */
 
+#ifdef CONFIG_POWSCALAR_GENERIC
 rt_function_error_t exec_pow_scalar_generic(rt_function_t *f) {
   pow_scalar_local_context_t *context =
       (pow_scalar_local_context_t *)(f->local_context);
   calc_scalar_generic(f, context->val, calc_pow);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_POWSCALAR_GENERIC */
+
+#endif /* CONFIG_POWSCALAR */

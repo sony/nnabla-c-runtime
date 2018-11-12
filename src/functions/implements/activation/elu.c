@@ -15,16 +15,23 @@
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_ELU
 
 rt_function_error_t exec_elu_generic(rt_function_t *f);
 
 rt_function_error_t allocate_elu_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_ELU_FLOAT32
     f->exec_func = exec_elu;
+#endif /* CONFIG_ELU_FLOAT32 */
   } else {
+#ifdef CONFIG_ELU_GENERIC
     f->exec_func = exec_elu_generic;
+#endif /* CONFIG_ELU_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -33,6 +40,7 @@ rt_function_error_t free_elu_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_ELU_FLOAT32
 rt_function_error_t exec_elu(rt_function_t *f) {
   elu_local_context_t *context = (elu_local_context_t *)(f->local_context);
   const float *x = (float *)(f->inputs[0]->data);
@@ -45,7 +53,9 @@ rt_function_error_t exec_elu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ELU_FLOAT32 */
 
+#ifdef CONFIG_ELU_GENERIC
 rt_function_error_t exec_elu_generic(rt_function_t *f) {
   elu_local_context_t *context = (elu_local_context_t *)(f->local_context);
   rt_variable_t *input = f->inputs[0];
@@ -63,3 +73,6 @@ rt_function_error_t exec_elu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ELU_GENERIC */
+
+#endif /* CONFIG_ELU */

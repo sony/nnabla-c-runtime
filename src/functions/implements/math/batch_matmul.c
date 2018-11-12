@@ -14,8 +14,11 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 #include <stdio.h>
+
+#ifdef CONFIG_BATCHMATMUL
 
 typedef struct {
   int samples;
@@ -93,9 +96,13 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
   if (p->input_a->type == NN_DATA_TYPE_FLOAT &&
       p->input_b->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_BATCHMATMUL_FLOAT32
     f->exec_func = exec_batch_matmul;
+#endif /* CONFIG_BATCHMATMUL_FLOAT32 */
   } else {
+#ifdef CONFIG_BATCHMATMUL_GENERIC
     f->exec_func = exec_batch_matmul_generic;
+#endif /* CONFIG_BATCHMATMUL_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -131,6 +138,7 @@ static void transpose(float *mtx, int m, int n) {
   }
 }
 
+#ifdef CONFIG_BATCHMATMUL_FLOAT32
 rt_function_error_t exec_batch_matmul(rt_function_t *f) {
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
@@ -176,7 +184,9 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_BATCHMATMUL_FLOAT32 */
 
+#ifdef CONFIG_BATCHMATMUL_GENERIC
 rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
@@ -220,3 +230,6 @@ rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_BATCHMATMUL_GENERIC */
+
+#endif /* CONFIG_BATCHMATMUL */

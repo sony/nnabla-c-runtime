@@ -13,9 +13,12 @@
 // limitations under the License.
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 #include <stdint.h>
 #include <string.h>
+
+#ifdef CONFIG_FLIP
 
 typedef struct {
   rt_variable_t *input;
@@ -33,9 +36,13 @@ rt_function_error_t allocate_flip_local_context(rt_function_t *f) {
   flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_FLIP_FLOAT32
     f->exec_func = exec_flip;
+#endif /* CONFIG_FLIP_FLOAT32 */
   } else {
+#ifdef CONFIG_FLIP_GENERIC
     f->exec_func = exec_flip_generic;
+#endif /* CONFIG_FLIP_GENERIC */
   }
 
   flip_private_t *p = rt_malloc_func(sizeof(flip_private_t));
@@ -66,6 +73,7 @@ rt_function_error_t free_flip_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_FLIP_FLOAT32
 static void flip_recursive(flip_local_context_t *c, int x_offset, int y_offset,
                            int dim) {
   flip_private_t *p = (flip_private_t *)(c->data);
@@ -101,6 +109,15 @@ static void flip_recursive(flip_local_context_t *c, int x_offset, int y_offset,
   }
 }
 
+rt_function_error_t exec_flip(rt_function_t *f) {
+  flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
+
+  flip_recursive(c, 0, 0, 0);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_FLIP_FLOAT32 */
+
+#ifdef CONFIG_FLIP_GENERIC
 static void flip_recursive_generic(flip_local_context_t *c, int x_offset,
                                    int y_offset, int dim) {
   flip_private_t *p = (flip_private_t *)(c->data);
@@ -135,16 +152,12 @@ static void flip_recursive_generic(flip_local_context_t *c, int x_offset,
   }
 }
 
-rt_function_error_t exec_flip(rt_function_t *f) {
-  flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
-
-  flip_recursive(c, 0, 0, 0);
-  return RT_FUNCTION_ERROR_NOERROR;
-}
-
 rt_function_error_t exec_flip_generic(rt_function_t *f) {
   flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
 
   flip_recursive_generic(c, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_FLIP_GENERIC */
+
+#endif /* CONFIG_FLIP */

@@ -14,9 +14,12 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <math.h>
+
+#ifdef CONFIG_ROUND
 
 typedef struct {
   rt_variable_t *input;
@@ -57,9 +60,13 @@ rt_function_error_t allocate_round_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_ROUND_FLOAT32
     f->exec_func = exec_round;
+#endif /* CONFIG_ROUND_FLOAT32 */
   } else {
+#ifdef CONFIG_ROUND_GENERIC
     f->exec_func = exec_round_generic;
+#endif /* CONFIG_ROUND_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -68,6 +75,7 @@ rt_function_error_t free_round_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_ROUND_FLOAT32
 rt_function_error_t exec_round(rt_function_t *f) {
   round_private_t *p = (round_private_t *)(f->local_context);
   float *x = (float *)(p->input->data);
@@ -79,7 +87,9 @@ rt_function_error_t exec_round(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ROUND_FLOAT32 */
 
+#ifdef CONFIG_ROUND_GENERIC
 rt_function_error_t exec_round_generic(rt_function_t *f) {
   round_private_t *p = (round_private_t *)(f->local_context);
 
@@ -90,3 +100,6 @@ rt_function_error_t exec_round_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_ROUND_GENERIC */
+
+#endif /* CONFIG_ROUND */

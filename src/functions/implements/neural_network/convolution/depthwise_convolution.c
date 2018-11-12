@@ -15,7 +15,10 @@
 #include "convolution_internal.h"
 #include <assert.h>
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_DEPTHWISECONVOLUTION
 
 rt_function_error_t
 allocate_depthwise_convolution_local_context(rt_function_t *f) {
@@ -123,8 +126,11 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
     p->output_shape.data[i] = p->out_var.shape.data[i + 3];
   }
 
-  f->exec_func = exec_convolution;
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FLOAT32
+  f->exec_func = exec_depthwise_convolution;
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FLOAT32 */
 
+#ifdef CONFIG_DEPTHWISECONVOLUTION_GENERIC
   for (i = 0; i < f->num_of_inputs; i++) {
     if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
       f->exec_func = exec_convolution_generic;
@@ -134,6 +140,7 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
   if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_convolution_generic;
   }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_GENERIC */
 
   c->multiplier = group;
 
@@ -165,6 +172,10 @@ rt_function_error_t free_depthwise_convolution_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FLOAT32
 rt_function_error_t exec_depthwise_convolution(rt_function_t *f) {
   return exec_convolution_float(f);
 }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FLOAT32 */
+
+#endif /* CONFIG_DEPTHWISECONVOLUTION */

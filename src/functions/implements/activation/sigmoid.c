@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 #include <assert.h>
 #include <math.h>
+
+#ifdef CONFIG_SIGMOID
 
 typedef struct {
   rt_variable_t *input;
@@ -59,9 +62,13 @@ rt_function_error_t allocate_sigmoid_local_context(rt_function_t *f) {
 
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SIGMOID_FLOAT32
     f->exec_func = exec_sigmoid;
+#endif /* CONFIG_SIGMOID_FLOAT32 */
   } else {
+#ifdef CONFIG_SIGMOID_GENERIC
     f->exec_func = exec_sigmoid_generic;
+#endif /* CONFIG_SIGMOID_GENERIC */
   }
 
   return RT_FUNCTION_ERROR_NOERROR;
@@ -71,6 +78,7 @@ rt_function_error_t free_sigmoid_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SIGMOID_FLOAT32
 rt_function_error_t exec_sigmoid(rt_function_t *f) {
   sigmoid_local_context_t *c = (sigmoid_local_context_t *)(f->local_context);
   float *x = (float *)(c->input->data);
@@ -82,7 +90,9 @@ rt_function_error_t exec_sigmoid(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SIGMOID_FLOAT32 */
 
+#ifdef CONFIG_SIGMOID_GENERIC
 rt_function_error_t exec_sigmoid_generic(rt_function_t *f) {
   sigmoid_local_context_t *c = (sigmoid_local_context_t *)(f->local_context);
 
@@ -94,3 +104,6 @@ rt_function_error_t exec_sigmoid_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SIGMOID_GENERIC */
+
+#endif /* CONFIG_SIGMOID */

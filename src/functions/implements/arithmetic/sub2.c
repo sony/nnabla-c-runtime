@@ -14,7 +14,10 @@
 
 #include "../../utilities/shape.h"
 #include "arithmetic.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_SUB2
 
 rt_function_error_t exec_sub2_generic(rt_function_t *f);
 
@@ -35,9 +38,13 @@ rt_function_error_t allocate_sub2_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SUB2_FLOAT32
     f->exec_func = exec_sub2;
+#endif /* CONFIG_SUB2_FLOAT32 */
   } else {
+#ifdef CONFIG_SUB2_GENERIC
     f->exec_func = exec_sub2_generic;
+#endif /* CONFIG_SUB2_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -46,12 +53,18 @@ rt_function_error_t free_sub2_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SUB2_FLOAT32
 rt_function_error_t exec_sub2(rt_function_t *f) {
   calc_arithmetic(f, calc_sub);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SUB2_FLOAT32 */
 
+#ifdef CONFIG_SUB2_GENERIC
 rt_function_error_t exec_sub2_generic(rt_function_t *f) {
   calc_arithmetic_generic(f, calc_sub);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SUB2_GENERIC */
+
+#endif /* CONFIG_SUB2 */

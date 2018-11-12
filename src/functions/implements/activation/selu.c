@@ -15,16 +15,23 @@
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_SELU
 
 rt_function_error_t exec_selu_generic(rt_function_t *f);
 
 rt_function_error_t allocate_selu_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SELU_FLOAT32
     f->exec_func = exec_selu;
+#endif /* CONFIG_SELU_FLOAT32 */
   } else {
+#ifdef CONFIG_SELU_GENERIC
     f->exec_func = exec_selu_generic;
+#endif /* CONFIG_SELU_GENERCI */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -33,6 +40,7 @@ rt_function_error_t free_selu_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SELU_FLOAT32
 rt_function_error_t exec_selu(rt_function_t *f) {
   selu_local_context_t *context = (selu_local_context_t *)(f->local_context);
   const float *x = (float *)(f->inputs[0]->data);
@@ -46,7 +54,9 @@ rt_function_error_t exec_selu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SELU_FLOAT32 */
 
+#ifdef CONFIG_SELU_GENERIC
 rt_function_error_t exec_selu_generic(rt_function_t *f) {
   selu_local_context_t *context = (selu_local_context_t *)(f->local_context);
   rt_variable_t *input = f->inputs[0];
@@ -64,3 +74,6 @@ rt_function_error_t exec_selu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SELU_GENERIC */
+
+#endif /* CONFIG_SELU */

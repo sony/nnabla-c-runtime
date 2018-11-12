@@ -14,10 +14,13 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <assert.h>
 #include <math.h>
+
+#ifdef CONFIG_SWISH
 
 typedef struct {
   rt_variable_t *input;
@@ -59,9 +62,13 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
   }
   if (c->input->type == NN_DATA_TYPE_FLOAT &&
       c->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SWISH_FLOAT32
     f->exec_func = exec_swish;
+#endif /* CONFIG_SWISH_FLOAT32 */
   } else {
+#ifdef CONFIG_SWISH_GENERIC
     f->exec_func = exec_swish_generic;
+#endif /* CONFIG_SWISH_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -70,6 +77,7 @@ rt_function_error_t free_swish_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SWISH_FLOAT32
 rt_function_error_t exec_swish(rt_function_t *f) {
   swish_local_context_t *c = (swish_local_context_t *)(f->local_context);
   float *x = (float *)(c->input->data);
@@ -81,7 +89,9 @@ rt_function_error_t exec_swish(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SWISH_FLOAT32 */
 
+#ifdef CONFIG_SWISH_GENERIC
 rt_function_error_t exec_swish_generic(rt_function_t *f) {
   swish_local_context_t *c = (swish_local_context_t *)(f->local_context);
 
@@ -93,3 +103,6 @@ rt_function_error_t exec_swish_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SWISH_GENERIC */
+
+#endif /* CONFIG_SWISH */

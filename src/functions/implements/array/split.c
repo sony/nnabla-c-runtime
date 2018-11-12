@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_SPLIT
 
 typedef struct {
   int num_outputs;
@@ -36,16 +39,21 @@ rt_function_error_t exec_split_generic(rt_function_t *f);
 rt_function_error_t allocate_split_local_context(rt_function_t *f) {
   split_local_context_t *c = (split_local_context_t *)(f->local_context);
 
+#ifdef CONFIG_SPLIT_FLOAT32
   f->exec_func = exec_split;
+#endif /* CONFIG_SPLIT_FLOAT32 */
 
+#ifdef CONFIG_SPLIT_GENERIC
   for (int i = 0; i < f->inputs[0]->shape.data[c->axis]; i++) {
     if (f->outputs[i]->type != NN_DATA_TYPE_FLOAT) {
+
       f->exec_func = exec_split_generic;
     }
   }
   if (f->inputs[0]->type != NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_split_generic;
   }
+#endif /* CONFIG_SPLIT_GENERIC */
 
   split_private_t *p =
       (split_private_t *)rt_malloc_func(sizeof(split_private_t));
@@ -68,6 +76,7 @@ rt_function_error_t free_split_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SPLIT_FLOAT32
 rt_function_error_t exec_split(rt_function_t *f) {
   split_local_context_t *c = (split_local_context_t *)(f->local_context);
   split_private_t *p = (split_private_t *)(c->data);
@@ -84,7 +93,9 @@ rt_function_error_t exec_split(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SPLIT_FLOAT32 */
 
+#ifdef CONFIG_SPLIT_GENERIC
 rt_function_error_t exec_split_generic(rt_function_t *f) {
   split_local_context_t *c = (split_local_context_t *)(f->local_context);
   split_private_t *p = (split_private_t *)(c->data);
@@ -104,3 +115,6 @@ rt_function_error_t exec_split_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SPLIT_GENERIC */
+
+#endif /* CONFIG_SPLIT */

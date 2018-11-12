@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 
 #include <math.h>
+
+#ifdef CONFIG_RELU
 
 typedef struct {
   rt_variable_t *input;
@@ -59,9 +62,13 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
   ((relu_local_context_t *)(f->local_context))->data = (void *)p;
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_RELU_FLOAT32
     f->exec_func = exec_relu;
+#endif /* CONFIG_RELU_FLOAT32 */
   } else {
+#ifdef CONFIG_RELU_GENERIC
     f->exec_func = exec_relu_generic;
+#endif /* CONFIG_RELU_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -71,6 +78,7 @@ rt_function_error_t free_relu_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_RELU_FLOAT32
 rt_function_error_t exec_relu(rt_function_t *f) {
   relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
   relu_private_t *p = (relu_private_t *)(context->data);
@@ -83,7 +91,9 @@ rt_function_error_t exec_relu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_RELU_FLOAT32 */
 
+#ifdef CONFIG_RELU_GENERIC
 rt_function_error_t exec_relu_generic(rt_function_t *f) {
   relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
   relu_private_t *p = (relu_private_t *)(context->data);
@@ -95,3 +105,6 @@ rt_function_error_t exec_relu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_RELU_GENERIC */
+
+#endif /* CONFIG_RELU */

@@ -15,7 +15,10 @@
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_BINARYTANH
 
 typedef struct {
   rt_variable_t *input;
@@ -53,9 +56,13 @@ rt_function_error_t allocate_binary_tanh_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_BINARYTANH_FLOAT32
     f->exec_func = exec_binary_tanh;
+#endif /* CONFIG_BINARYTANH_FLOAT32 */
   } else {
+#ifdef CONFIG_BINARYTANH_GENERIC
     f->exec_func = exec_binary_tanh_generic;
+#endif /* CONFIG_BINARYTANH_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -64,6 +71,7 @@ rt_function_error_t free_binary_tanh_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_BINARYTANH_FLOAT32
 rt_function_error_t exec_binary_tanh(rt_function_t *f) {
   binary_tanh_private_context_t *p =
       (binary_tanh_private_context_t *)(f->local_context);
@@ -82,7 +90,9 @@ rt_function_error_t exec_binary_tanh(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_BINARYTANH_FLOAT32 */
 
+#ifdef CONFIG_BINARYTANH_GENERIC
 rt_function_error_t exec_binary_tanh_generic(rt_function_t *f) {
   binary_tanh_private_context_t *p =
       (binary_tanh_private_context_t *)(f->local_context);
@@ -99,3 +109,6 @@ rt_function_error_t exec_binary_tanh_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_BINARYTANH_GENERIC */
+
+#endif /* CONFIG_BINARYTANH */

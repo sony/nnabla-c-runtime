@@ -14,7 +14,10 @@
 
 #include "../../utilities/shape.h"
 #include "arithmetic.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_POW2
 
 rt_function_error_t exec_pow2_generic(rt_function_t *f);
 
@@ -35,9 +38,13 @@ rt_function_error_t allocate_pow2_local_context(rt_function_t *f) {
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->inputs[1]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_POW2_FLOAT32
     f->exec_func = exec_pow2;
+#endif /* CONFIG_POW2_FLOAT32 */
   } else {
+#ifdef CONFIG_POW2_GENERIC
     f->exec_func = exec_pow2_generic;
+#endif /* CONFIG_POW2_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -46,12 +53,18 @@ rt_function_error_t free_pow2_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_POW2_FLOAT32
 rt_function_error_t exec_pow2(rt_function_t *f) {
   calc_arithmetic(f, calc_pow);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_POW2_FLOAT32 */
 
+#ifdef CONFIG_POW2_GENERIC
 rt_function_error_t exec_pow2_generic(rt_function_t *f) {
   calc_arithmetic_generic(f, calc_pow);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_POW2_GENERIC */
+
+#endif /* CONFIG_POW2 */
