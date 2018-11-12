@@ -428,10 +428,14 @@ Reduction:
         type: repeated int64
       keep_dims:
         type: bool
+      with_index:
+        type: bool
+      only_index:
+        type: bool
     outputs:
       y: {}
-    uniq_name: Max_iIB
-    id: 26
+    uniq_name: Max_iIBBB
+    id: 132
   Min:
     snake_name: min
     inputs:
@@ -441,10 +445,14 @@ Reduction:
         type: repeated int64
       keep_dims:
         type: bool
+      with_index:
+        type: bool
+      only_index:
+        type: bool
     outputs:
       y: {}
-    uniq_name: Min_iIB
-    id: 27
+    uniq_name: Min_iIBBB
+    id: 130
   Prod:
     snake_name: prod
     inputs:
@@ -851,6 +859,20 @@ Math:
       y: {}
     uniq_name: Constant_fiI
     id: 67
+  Arange:
+    snake_name: arange
+    inputs: {}
+    arguments:
+      start:
+        type: float
+      stop:
+        type: float
+      step:
+        type: float
+    outputs:
+      y: {}
+    uniq_name: Arange_fff
+    id: 131
   Abs:
     snake_name: abs
     inputs:
@@ -1076,6 +1098,7 @@ Array Manipulation:
         type: string
         available_values:
         - constant
+        - reflect
       constant_value:
         type: float
     outputs:
@@ -1155,6 +1178,25 @@ Array Manipulation:
       y: {}
     uniq_name: Shift_iIi
     id: 82
+  Sort:
+    snake_name: sort
+    inputs:
+      x: {}
+    arguments:
+      axis:
+        type: int64
+      reverse:
+        type: bool
+      with_index:
+        type: bool
+      only_index:
+        type: bool
+    outputs:
+      y:
+        variadic: true
+        parameter: true
+    uniq_name: Sort_iBBB
+    id: 129
   Reshape:
     snake_name: reshape
     inputs:
@@ -1734,6 +1776,17 @@ Quantization Neural Network Layers:
       y: {}
     uniq_name: Pow2Quantize_BBiiB
     id: 114
+  Prune:
+    snake_name: prune
+    inputs:
+      x: {}
+    arguments:
+      rate:
+        type: float
+    outputs:
+      y: {}
+    uniq_name: Prune_f
+    id: 135
 Validation:
   TopNError:
     snake_name: top_n_error

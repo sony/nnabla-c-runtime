@@ -366,6 +366,8 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     max_local_context_t *ctx = rt_malloc_func(sizeof(max_local_context_t));
     ctx->axes = create_rt_list_from_nn_list(n, f->axes);
     ctx->keep_dims = f->keep_dims;
+    ctx->with_index = f->with_index;
+    ctx->only_index = f->only_index;
     function_context->func.local_context = ctx;
     allocate_max_local_context(&function_context->func);
   } break;
@@ -377,6 +379,8 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     min_local_context_t *ctx = rt_malloc_func(sizeof(min_local_context_t));
     ctx->axes = create_rt_list_from_nn_list(n, f->axes);
     ctx->keep_dims = f->keep_dims;
+    ctx->with_index = f->with_index;
+    ctx->only_index = f->only_index;
     function_context->func.local_context = ctx;
     allocate_min_local_context(&function_context->func);
   } break;
@@ -779,6 +783,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     allocate_constant_local_context(&function_context->func);
   } break;
 
+  case NN_FUNCTION_ARANGE: { // Arange
+    function_context->func.exec_func = exec_arange;
+    function_context->func.free_local_context_func = free_arange_local_context;
+    nn_function_arange_t *f = (nn_function_arange_t *)function;
+    arange_local_context_t *ctx =
+        rt_malloc_func(sizeof(arange_local_context_t));
+    ctx->start = f->start;
+    ctx->stop = f->stop;
+    ctx->step = f->step;
+    function_context->func.local_context = ctx;
+    allocate_arange_local_context(&function_context->func);
+  } break;
+
   case NN_FUNCTION_ABS: { // Abs
     function_context->func.exec_func = exec_abs;
     function_context->func.free_local_context_func = free_abs_local_context;
@@ -1041,6 +1058,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->border_mode = f->border_mode;
     function_context->func.local_context = ctx;
     allocate_shift_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_SORT: { // Sort
+    function_context->func.exec_func = exec_sort;
+    function_context->func.free_local_context_func = free_sort_local_context;
+    nn_function_sort_t *f = (nn_function_sort_t *)function;
+    sort_local_context_t *ctx = rt_malloc_func(sizeof(sort_local_context_t));
+    ctx->axis = f->axis;
+    ctx->reverse = f->reverse;
+    ctx->with_index = f->with_index;
+    ctx->only_index = f->only_index;
+    function_context->func.local_context = ctx;
+    allocate_sort_local_context(&function_context->func);
   } break;
 
   case NN_FUNCTION_RESHAPE: { // Reshape
@@ -1497,6 +1527,16 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->ste_fine_grained = f->ste_fine_grained;
     function_context->func.local_context = ctx;
     allocate_pow2_quantize_local_context(&function_context->func);
+  } break;
+
+  case NN_FUNCTION_PRUNE: { // Prune
+    function_context->func.exec_func = exec_prune;
+    function_context->func.free_local_context_func = free_prune_local_context;
+    nn_function_prune_t *f = (nn_function_prune_t *)function;
+    prune_local_context_t *ctx = rt_malloc_func(sizeof(prune_local_context_t));
+    ctx->rate = f->rate;
+    function_context->func.local_context = ctx;
+    allocate_prune_local_context(&function_context->func);
   } break;
 
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
