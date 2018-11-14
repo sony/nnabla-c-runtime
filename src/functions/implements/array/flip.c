@@ -145,7 +145,7 @@ static void flip_recursive_generic(flip_local_context_t *c, int x_offset,
     }
   } else {
     for (int i = 0; i < size; i++) {
-      flip_recursive(c, current_x_offset, current_y_offset, dim + 1);
+      flip_recursive_generic(c, current_x_offset, current_y_offset, dim + 1);
       current_x_offset += x_stride;
       current_y_offset += y_stride;
     }
