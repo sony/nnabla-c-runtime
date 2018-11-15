@@ -63,20 +63,17 @@ def generate(filename, info):
             defines.append('')
 
     versions = {}
-    with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'VERSION.md')) as f:
+    with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'VERSION.txt')) as f:
         for l in f.readlines():
             ls = l.rstrip().split(': ')
             if len(ls) == 2:
                 versions[ls[0]] = ls[1]
 
-    c_runtime_version = '{}.{}.{}'.format(
-        versions['C_RUNTIME_VERSION_MAJOR'], versions['C_RUNTIME_VERSION_MINOR'], versions['C_RUNTIME_VERSION_PATCH'])
-
     from mako.template import Template
     from mako import exceptions
     try:
         tmpl = Template(filename=filename)
-        output = tmpl.render(C_RUNTIME_VERSION=c_runtime_version,
+        output = tmpl.render(C_RUNTIME_VERSION=versions['C_RUNTIME_VERSION'],
                              NNB_VERSION=versions['NNB_VERSION'],
                              BINARY_VERSION=m.hexdigest(),
                              FUNCTION_ENUMS='\n'.join(enums),
