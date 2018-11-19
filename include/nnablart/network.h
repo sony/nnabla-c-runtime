@@ -26,7 +26,7 @@ extern "C" {
 
 #define NN_C_RUNTIME_VERSION ("1.0.10.dev1")
 #define NN_BINARY_FORMAT_VERSION (2)
-#define NN_BINARY_FORMAT_REVISION ("9b73e3db6111f659ea50d9f440d2853a")
+#define NN_BINARY_FORMAT_REVISION ("7fc932d5b7611c02cb08dfbf991e2f7a")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -91,8 +91,8 @@ typedef enum {
   NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,          ///< ClipGradByNorm
   NN_FUNCTION_SUM = 24,                         ///< Sum
   NN_FUNCTION_MEAN = 25,                        ///< Mean
-  NN_FUNCTION_MAX = 26,                         ///< Max
-  NN_FUNCTION_MIN = 27,                         ///< Min
+  NN_FUNCTION_MAX = 132,                        ///< Max
+  NN_FUNCTION_MIN = 130,                        ///< Min
   NN_FUNCTION_PROD = 28,                        ///< Prod
   NN_FUNCTION_REDUCE_SUM = 29,                  ///< ReduceSum
   NN_FUNCTION_REDUCE_MEAN = 30,                 ///< ReduceMean
@@ -133,6 +133,7 @@ typedef enum {
   NN_FUNCTION_LESS_SCALAR = 65,                 ///< LessScalar
   NN_FUNCTION_LOGICAL_NOT = 66,                 ///< LogicalNot
   NN_FUNCTION_CONSTANT = 67,                    ///< Constant
+  NN_FUNCTION_ARANGE = 131,                     ///< Arange
   NN_FUNCTION_ABS = 68,                         ///< Abs
   NN_FUNCTION_EXP = 69,                         ///< Exp
   NN_FUNCTION_LOG = 70,                         ///< Log
@@ -163,6 +164,7 @@ typedef enum {
   NN_FUNCTION_ONE_HOT = 80,                     ///< OneHot
   NN_FUNCTION_FLIP = 81,                        ///< Flip
   NN_FUNCTION_SHIFT = 82,                       ///< Shift
+  NN_FUNCTION_SORT = 129,                       ///< Sort
   NN_FUNCTION_RESHAPE = 126,                    ///< Reshape
   NN_FUNCTION_MATRIX_DIAG = 84,                 ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85,            ///< MatrixDiagPart
@@ -198,6 +200,7 @@ typedef enum {
   NN_FUNCTION_INQ_CONVOLUTION = 112,            ///< INQConvolution
   NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,       ///< FixedPointQuantize
   NN_FUNCTION_POW2_QUANTIZE = 114,              ///< Pow2Quantize
+  NN_FUNCTION_PRUNE = 135,                      ///< Prune
   NN_FUNCTION_TOP_N_ERROR = 115,                ///< TopNError
   NN_FUNCTION_BINARY_ERROR = 116,               ///< BinaryError
   NN_FUNCTION_CONFUSION_MATRIX = 117,           ///< ConfusionMatrix
@@ -635,8 +638,10 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  nn_list_t axes;    ///< Original type is [repeated int64]
-  uint8_t keep_dims; ///< Original type is [bool]
+  nn_list_t axes;     ///< Original type is [repeated int64]
+  uint8_t keep_dims;  ///< Original type is [bool]
+  uint8_t with_index; ///< Original type is [bool]
+  uint8_t only_index; ///< Original type is [bool]
 } nn_function_max_t;
 
 /// @}
@@ -649,8 +654,10 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  nn_list_t axes;    ///< Original type is [repeated int64]
-  uint8_t keep_dims; ///< Original type is [bool]
+  nn_list_t axes;     ///< Original type is [repeated int64]
+  uint8_t keep_dims;  ///< Original type is [bool]
+  uint8_t with_index; ///< Original type is [bool]
+  uint8_t only_index; ///< Original type is [bool]
 } nn_function_min_t;
 
 /// @}
@@ -1139,6 +1146,21 @@ typedef struct {
 
 /// @}
 
+/// @brief Arange function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float start; ///< Original type is [float]
+  float stop;  ///< Original type is [float]
+  float step;  ///< Original type is [float]
+} nn_function_arange_t;
+
+/// @}
+
 /// @brief Abs function.
 /// @{
 typedef struct {
@@ -1496,6 +1518,22 @@ typedef struct {
   nn_list_t shifts;     ///< Original type is [repeated int64]
   uint32_t border_mode; ///< Original type is [string]
 } nn_function_shift_t;
+
+/// @}
+
+/// @brief Sort function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis;       ///< Original type is [int64]
+  uint8_t reverse;    ///< Original type is [bool]
+  uint8_t with_index; ///< Original type is [bool]
+  uint8_t only_index; ///< Original type is [bool]
+} nn_function_sort_t;
 
 /// @}
 
@@ -2004,6 +2042,19 @@ typedef struct {
   int32_t m;                ///< Original type is [int64]
   uint8_t ste_fine_grained; ///< Original type is [bool]
 } nn_function_pow2_quantize_t;
+
+/// @}
+
+/// @brief Prune function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float rate; ///< Original type is [float]
+} nn_function_prune_t;
 
 /// @}
 

@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 61/142
+Total 61/145
 
 
 ## Neural Network Layer
@@ -127,11 +127,12 @@ Count 5/24
 |        LogicalNot        |      no      |      -       |      -       |
 
 ## Math
-Count 6/20
+Count 6/21
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |         Constant         |      no      |      -       |      -       |
+|          Arange          |      no      |      -       |      -       |
 |           Abs            |     yes      |     yes      |     yes      |
 |           Exp            |     yes      |     yes      |     yes      |
 |           Log            |     yes      |     yes      |     yes      |
@@ -153,7 +154,7 @@ Count 6/20
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 10/14
+Count 10/15
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -168,6 +169,7 @@ Count 10/14
 |          OneHot          |      no      |      -       |      -       |
 |           Flip           |     yes      |     yes      |     yes      |
 |          Shift           |     yes      |     yes      |     yes      |
+|           Sort           |      no      |      -       |      -       |
 |         Reshape          |     yes      |     yes      |     yes      |
 |        MatrixDiag        |     yes      |     yes      |     yes      |
 |      MatrixDiagPart      |     yes      |     yes      |     yes      |
@@ -213,7 +215,7 @@ Count 0/9
 |      KLMultinomial       |      no      |      -       |      -       |
 
 ## Quantization Neural Network Layers
-Count 6/10
+Count 6/11
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -227,6 +229,7 @@ Count 6/10
 |      INQConvolution      |      no      |      -       |      -       |
 |    FixedPointQuantize    |      no      |      -       |      -       |
 |       Pow2Quantize       |      no      |      -       |      -       |
+|          Prune           |      no      |      -       |      -       |
 
 ## Validation
 Count 0/3

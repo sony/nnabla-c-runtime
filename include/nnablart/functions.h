@@ -654,9 +654,11 @@ rt_function_error_t exec_mean(rt_function_t *f);
 
 /// Local context for Max
 typedef struct {
-  rt_list_t axes;    ///< Original type is [repeated int64]
-  uint8_t keep_dims; ///< bool
-  void *data;        ///< General purpose data area
+  rt_list_t axes;     ///< Original type is [repeated int64]
+  uint8_t keep_dims;  ///< bool
+  uint8_t with_index; ///< bool
+  uint8_t only_index; ///< bool
+  void *data;         ///< General purpose data area
 } max_local_context_t;
 
 /// Allocate Max local context
@@ -674,9 +676,11 @@ rt_function_error_t exec_max(rt_function_t *f);
 
 /// Local context for Min
 typedef struct {
-  rt_list_t axes;    ///< Original type is [repeated int64]
-  uint8_t keep_dims; ///< bool
-  void *data;        ///< General purpose data area
+  rt_list_t axes;     ///< Original type is [repeated int64]
+  uint8_t keep_dims;  ///< bool
+  uint8_t with_index; ///< bool
+  uint8_t only_index; ///< bool
+  void *data;         ///< General purpose data area
 } min_local_context_t;
 
 /// Allocate Min local context
@@ -1356,6 +1360,27 @@ rt_function_error_t free_constant_local_context(rt_function_t *f);
 rt_function_error_t exec_constant(rt_function_t *f);
 /// @}
 
+/// @defgroup Arange Arange
+/// @{
+
+/// Local context for Arange
+typedef struct {
+  float start; ///< float
+  float stop;  ///< float
+  float step;  ///< float
+  void *data;  ///< General purpose data area
+} arange_local_context_t;
+
+/// Allocate Arange local context
+rt_function_error_t allocate_arange_local_context(rt_function_t *f);
+
+/// Free Arange local context
+rt_function_error_t free_arange_local_context(rt_function_t *f);
+
+/// Exec Arange
+rt_function_error_t exec_arange(rt_function_t *f);
+/// @}
+
 /// @defgroup Abs Abs
 /// @{
 
@@ -1698,7 +1723,11 @@ rt_function_error_t exec_slice(rt_function_t *f);
 /// @{
 
 /// Named values for Pad.mode
-typedef enum { PAD_MODE_CONSTANT, END_OF_PAD_MODE } pad_mode_value_t;
+typedef enum {
+  PAD_MODE_CONSTANT,
+  PAD_MODE_REFLECT,
+  END_OF_PAD_MODE
+} pad_mode_value_t;
 
 /// Local context for Pad
 typedef struct {
@@ -1838,6 +1867,28 @@ rt_function_error_t free_shift_local_context(rt_function_t *f);
 
 /// Exec Shift
 rt_function_error_t exec_shift(rt_function_t *f);
+/// @}
+
+/// @defgroup Sort Sort
+/// @{
+
+/// Local context for Sort
+typedef struct {
+  int32_t axis;       ///< int64
+  uint8_t reverse;    ///< bool
+  uint8_t with_index; ///< bool
+  uint8_t only_index; ///< bool
+  void *data;         ///< General purpose data area
+} sort_local_context_t;
+
+/// Allocate Sort local context
+rt_function_error_t allocate_sort_local_context(rt_function_t *f);
+
+/// Free Sort local context
+rt_function_error_t free_sort_local_context(rt_function_t *f);
+
+/// Exec Sort
+rt_function_error_t exec_sort(rt_function_t *f);
 /// @}
 
 /// @defgroup Reshape Reshape
@@ -2590,6 +2641,25 @@ rt_function_error_t free_pow2_quantize_local_context(rt_function_t *f);
 
 /// Exec Pow2Quantize
 rt_function_error_t exec_pow2_quantize(rt_function_t *f);
+/// @}
+
+/// @defgroup Prune Prune
+/// @{
+
+/// Local context for Prune
+typedef struct {
+  float rate; ///< float
+  void *data; ///< General purpose data area
+} prune_local_context_t;
+
+/// Allocate Prune local context
+rt_function_error_t allocate_prune_local_context(rt_function_t *f);
+
+/// Free Prune local context
+rt_function_error_t free_prune_local_context(rt_function_t *f);
+
+/// Exec Prune
+rt_function_error_t exec_prune(rt_function_t *f);
 /// @}
 
 /// @}
