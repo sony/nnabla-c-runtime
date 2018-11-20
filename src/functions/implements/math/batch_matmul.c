@@ -89,8 +89,7 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
   p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (p->output_size != p->row_y * p->col_y || p->col_a != p->row_b ||
-      p->samples != samples_b) {
+  if (p->samples != samples_b) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (p->input_a->type == NN_DATA_TYPE_FLOAT &&
