@@ -226,6 +226,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_LEAKYRELU
+  case NN_FUNCTION_LEAKY_RELU_0: { // LeakyReLU
+    function_context->func.free_local_context_func =
+        free_leaky_relu_local_context;
+    nn_function_leaky_relu_t *f = (nn_function_leaky_relu_t *)function;
+    leaky_relu_local_context_t *ctx =
+        rt_malloc_func(sizeof(leaky_relu_local_context_t));
+    ctx->alpha = f->alpha;
+    ctx->inplace = 0;
+    function_context->func.local_context = ctx;
+    allocate_leaky_relu_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_LEAKY_RELU: { // LeakyReLU
     function_context->func.free_local_context_func =
         free_leaky_relu_local_context;
@@ -389,6 +400,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_MAX
+  case NN_FUNCTION_MAX_0: { // Max
+    function_context->func.free_local_context_func = free_max_local_context;
+    nn_function_max_t *f = (nn_function_max_t *)function;
+    max_local_context_t *ctx = rt_malloc_func(sizeof(max_local_context_t));
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    ctx->keep_dims = f->keep_dims;
+    ctx->with_index = 0;
+    ctx->only_index = 0;
+    function_context->func.local_context = ctx;
+    allocate_max_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_MAX: { // Max
     function_context->func.free_local_context_func = free_max_local_context;
     nn_function_max_t *f = (nn_function_max_t *)function;
@@ -403,6 +425,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_MIN
+  case NN_FUNCTION_MIN_0: { // Min
+    function_context->func.free_local_context_func = free_min_local_context;
+    nn_function_min_t *f = (nn_function_min_t *)function;
+    min_local_context_t *ctx = rt_malloc_func(sizeof(min_local_context_t));
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    ctx->keep_dims = f->keep_dims;
+    ctx->with_index = 0;
+    ctx->only_index = 0;
+    function_context->func.local_context = ctx;
+    allocate_min_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_MIN: { // Min
     function_context->func.free_local_context_func = free_min_local_context;
     nn_function_min_t *f = (nn_function_min_t *)function;
@@ -1177,6 +1210,16 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_RESHAPE
+  case NN_FUNCTION_RESHAPE_0: { // Reshape
+    function_context->func.free_local_context_func = free_reshape_local_context;
+    nn_function_reshape_t *f = (nn_function_reshape_t *)function;
+    reshape_local_context_t *ctx =
+        rt_malloc_func(sizeof(reshape_local_context_t));
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->inplace = 1;
+    function_context->func.local_context = ctx;
+    allocate_reshape_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_RESHAPE: { // Reshape
     function_context->func.free_local_context_func = free_reshape_local_context;
     nn_function_reshape_t *f = (nn_function_reshape_t *)function;

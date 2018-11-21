@@ -24,6 +24,13 @@ def generate(filename, info):
     enums = []
     for cn, cat in info.items():
         for fn, func in cat.items():
+            if len(func['function_ids']) > 1:
+                for n in range(len(func['function_ids'])-1):
+                    arg_fmt = list(func['function_ids'].items())[n][0]
+                    fid = list(func['function_ids'].items())[n][1]
+                    enums.append(
+                        '  NN_FUNCTION_{}_{} = {},    ///< Recent version of {} has arg [{}]'.format(func['snake_name'].upper(), n, fid, fn, arg_fmt))
+
             enums.append(
                 '  NN_FUNCTION_{} = {},    ///< {}'.format(func['snake_name'].upper(), func['id'], fn))
 

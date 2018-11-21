@@ -29,8 +29,11 @@ Neural Network Layer:
     arguments:
       base_axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      i: 0
     uniq_name: Affine_i
     id: 0
   Convolution:
@@ -45,16 +48,23 @@ Neural Network Layer:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       group:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIi: 1
     uniq_name: Convolution_iiIiIiIi
     id: 1
   DepthwiseConvolution:
@@ -69,16 +79,23 @@ Neural Network Layer:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       multiplier:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIi: 2
     uniq_name: DepthwiseConvolution_iiIiIiIi
     id: 2
   Deconvolution:
@@ -93,16 +110,23 @@ Neural Network Layer:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       group:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIi: 3
     uniq_name: Deconvolution_iiIiIiIi
     id: 3
   DepthwiseDeconvolution:
@@ -117,16 +141,23 @@ Neural Network Layer:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       divisor:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIi: 4
     uniq_name: DepthwiseDeconvolution_iiIiIiIi
     id: 4
   MaxPooling:
@@ -138,12 +169,17 @@ Neural Network Layer:
         type: Shape
       stride:
         type: Shape
+        default: kernel
       ignore_border:
         type: bool
+        default: 'True'
       pad:
         type: Shape
+        default: (0,) * len(kernel)
     outputs:
       y: {}
+    function_ids:
+      iIiIBiI: 5
     uniq_name: MaxPooling_iIiIBiI
     id: 5
   AveragePooling:
@@ -155,14 +191,20 @@ Neural Network Layer:
         type: Shape
       stride:
         type: Shape
+        default: kernel
       ignore_border:
         type: bool
+        default: 'True'
       pad:
         type: Shape
+        default: (0,) * len(kernel)
       including_pad:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      iIiIBiIB: 6
     uniq_name: AveragePooling_iIiIBiIB
     id: 6
   GlobalAveragePooling:
@@ -171,6 +213,8 @@ Neural Network Layer:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 7
     uniq_name: GlobalAveragePooling
     id: 7
   SumPooling:
@@ -182,12 +226,17 @@ Neural Network Layer:
         type: Shape
       stride:
         type: Shape
+        default: kernel
       ignore_border:
         type: bool
+        default: 'True'
       pad:
         type: Shape
+        default: (0,) * len(kernel)
     outputs:
       y: {}
+    function_ids:
+      iIiIBiI: 8
     uniq_name: SumPooling_iIiIBiI
     id: 8
   Unpooling:
@@ -199,6 +248,8 @@ Neural Network Layer:
         type: Shape
     outputs:
       y: {}
+    function_ids:
+      iI: 9
     uniq_name: Unpooling_iI
     id: 9
   Embed:
@@ -210,6 +261,8 @@ Neural Network Layer:
         parameter: true
     outputs:
       y: {}
+    function_ids:
+      Empty: 10
     uniq_name: Embed
     id: 10
 Neural Network Activation Functions:
@@ -219,6 +272,8 @@ Neural Network Activation Functions:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 11
     uniq_name: Sigmoid
     id: 11
   Swish:
@@ -227,6 +282,8 @@ Neural Network Activation Functions:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 12
     uniq_name: Swish
     id: 12
   Tanh:
@@ -235,6 +292,8 @@ Neural Network Activation Functions:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 13
     uniq_name: Tanh
     id: 13
   ReLU:
@@ -244,8 +303,11 @@ Neural Network Activation Functions:
     arguments:
       inplace:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      B: 14
     uniq_name: ReLU_B
     id: 14
   LeakyReLU:
@@ -255,10 +317,15 @@ Neural Network Activation Functions:
     arguments:
       alpha:
         type: float
+        default: '0.1'
       inplace:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      f: 15
+      fB: 128
     uniq_name: LeakyReLU_fB
     id: 128
   Softmax:
@@ -268,8 +335,11 @@ Neural Network Activation Functions:
     arguments:
       axis:
         type: int64
+        default: len(x.shape) - 1
     outputs:
       y: {}
+    function_ids:
+      i: 16
     uniq_name: Softmax_i
     id: 16
   ELU:
@@ -279,8 +349,11 @@ Neural Network Activation Functions:
     arguments:
       alpha:
         type: double
+        default: '1.0'
     outputs:
       y: {}
+    function_ids:
+      f: 17
     uniq_name: ELU_f
     id: 17
   SELU:
@@ -290,10 +363,14 @@ Neural Network Activation Functions:
     arguments:
       scale:
         type: double
+        default: '1.05070098735548'
       alpha:
         type: double
+        default: '1.673263242354377'
     outputs:
       y: {}
+    function_ids:
+      ff: 18
     uniq_name: SELU_ff
     id: 18
   CReLU:
@@ -303,8 +380,11 @@ Neural Network Activation Functions:
     arguments:
       axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      i: 19
     uniq_name: CReLU_i
     id: 19
   CELU:
@@ -314,10 +394,14 @@ Neural Network Activation Functions:
     arguments:
       alpha:
         type: double
+        default: '1.0'
       axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      fi: 20
     uniq_name: CELU_fi
     id: 20
   PReLU:
@@ -328,8 +412,11 @@ Neural Network Activation Functions:
     arguments:
       base_axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      i: 21
     uniq_name: PReLU_i
     id: 21
 Normalization:
@@ -344,14 +431,20 @@ Normalization:
     arguments:
       axes:
         type: repeated int64
+        default: (1,)
       decay_rate:
         type: float
+        default: '0.9'
       eps:
         type: float
+        default: 1e-05
       batch_stat:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      iIffB: 22
     uniq_name: BatchNormalization_iIffB
     id: 22
   MeanSubtraction:
@@ -363,10 +456,14 @@ Normalization:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       update_running_mean:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      iB: 23
     uniq_name: MeanSubtraction_iB
     id: 23
   ClipGradByValue:
@@ -377,6 +474,8 @@ Normalization:
       max: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 121
     uniq_name: ClipGradByValue
     id: 121
   ClipGradByNorm:
@@ -386,10 +485,14 @@ Normalization:
     arguments:
       clip_norm:
         type: float
+        default: 1.0
       axes:
         type: repeated int64
+        default: range(x.ndim)
     outputs:
       y: {}
+    function_ids:
+      fiI: 122
     uniq_name: ClipGradByNorm_fiI
     id: 122
 Reduction:
@@ -400,10 +503,14 @@ Reduction:
     arguments:
       axes:
         type: repeated int64
+        default: range(x.ndim)
       keep_dims:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iIB: 24
     uniq_name: Sum_iIB
     id: 24
   Mean:
@@ -413,10 +520,14 @@ Reduction:
     arguments:
       axes:
         type: repeated int64
+        default: range(x.ndim)
       keep_dims:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iIB: 25
     uniq_name: Mean_iIB
     id: 25
   Max:
@@ -426,14 +537,21 @@ Reduction:
     arguments:
       axes:
         type: repeated int64
+        default: range(x.ndim)
       keep_dims:
         type: bool
+        default: 'False'
       with_index:
         type: bool
+        default: 'False'
       only_index:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iIB: 26
+      iIBBB: 132
     uniq_name: Max_iIBBB
     id: 132
   Min:
@@ -443,14 +561,21 @@ Reduction:
     arguments:
       axes:
         type: repeated int64
+        default: range(x.ndim)
       keep_dims:
         type: bool
+        default: 'False'
       with_index:
         type: bool
+        default: 'False'
       only_index:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iIB: 27
+      iIBBB: 130
     uniq_name: Min_iIBBB
     id: 130
   Prod:
@@ -460,10 +585,14 @@ Reduction:
     arguments:
       axes:
         type: repeated int64
+        default: range(x.ndim)
       keep_dims:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iIB: 28
     uniq_name: Prod_iIB
     id: 28
   ReduceSum:
@@ -472,6 +601,8 @@ Reduction:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 29
     uniq_name: ReduceSum
     id: 29
   ReduceMean:
@@ -480,6 +611,8 @@ Reduction:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 30
     uniq_name: ReduceMean
     id: 30
 Arithmetic:
@@ -491,8 +624,11 @@ Arithmetic:
     arguments:
       inplace:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      B: 31
     uniq_name: Add2_B
     id: 31
   BcAdd2:
@@ -502,6 +638,8 @@ Arithmetic:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 32
     uniq_name: BcAdd2
     id: 32
   Sub2:
@@ -511,6 +649,8 @@ Arithmetic:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 33
     uniq_name: Sub2
     id: 33
   Mul2:
@@ -520,6 +660,8 @@ Arithmetic:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 34
     uniq_name: Mul2
     id: 34
   Div2:
@@ -529,6 +671,8 @@ Arithmetic:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 35
     uniq_name: Div2
     id: 35
   Pow2:
@@ -538,6 +682,8 @@ Arithmetic:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 36
     uniq_name: Pow2
     id: 36
   AddScalar:
@@ -547,8 +693,11 @@ Arithmetic:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 37
     uniq_name: AddScalar_f
     id: 37
   MulScalar:
@@ -558,8 +707,11 @@ Arithmetic:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 38
     uniq_name: MulScalar_f
     id: 38
   PowScalar:
@@ -569,8 +721,11 @@ Arithmetic:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 39
     uniq_name: PowScalar_f
     id: 39
   RSubScalar:
@@ -580,8 +735,11 @@ Arithmetic:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 40
     uniq_name: RSubScalar_f
     id: 40
   RDivScalar:
@@ -591,8 +749,11 @@ Arithmetic:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 41
     uniq_name: RDivScalar_f
     id: 41
   RPowScalar:
@@ -602,8 +763,11 @@ Arithmetic:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 42
     uniq_name: RPowScalar_f
     id: 42
 Logical:
@@ -614,8 +778,11 @@ Logical:
     arguments:
       alpha:
         type: float
+        default: '0.0'
     outputs:
       y: {}
+    function_ids:
+      f: 43
     uniq_name: Sign_f
     id: 43
   Minimum2:
@@ -625,6 +792,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 44
     uniq_name: Minimum2
     id: 44
   Maximum2:
@@ -634,6 +803,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 45
     uniq_name: Maximum2
     id: 45
   MinimumScalar:
@@ -643,8 +814,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1.0'
     outputs:
       y: {}
+    function_ids:
+      f: 46
     uniq_name: MinimumScalar_f
     id: 46
   MaximumScalar:
@@ -654,8 +828,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1.0'
     outputs:
       y: {}
+    function_ids:
+      f: 47
     uniq_name: MaximumScalar_f
     id: 47
   LogicalAnd:
@@ -665,6 +842,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 48
     uniq_name: LogicalAnd
     id: 48
   LogicalOr:
@@ -674,6 +853,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 49
     uniq_name: LogicalOr
     id: 49
   LogicalXor:
@@ -683,6 +864,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 50
     uniq_name: LogicalXor
     id: 50
   Equal:
@@ -692,6 +875,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 51
     uniq_name: Equal
     id: 51
   NotEqual:
@@ -701,6 +886,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 52
     uniq_name: NotEqual
     id: 52
   GreaterEqual:
@@ -710,6 +897,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 53
     uniq_name: GreaterEqual
     id: 53
   Greater:
@@ -719,6 +908,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 54
     uniq_name: Greater
     id: 54
   LessEqual:
@@ -728,6 +919,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 55
     uniq_name: LessEqual
     id: 55
   Less:
@@ -737,6 +930,8 @@ Logical:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 56
     uniq_name: Less
     id: 56
   LogicalAndScalar:
@@ -748,6 +943,8 @@ Logical:
         type: bool
     outputs:
       y: {}
+    function_ids:
+      B: 57
     uniq_name: LogicalAndScalar_B
     id: 57
   LogicalOrScalar:
@@ -759,6 +956,8 @@ Logical:
         type: bool
     outputs:
       y: {}
+    function_ids:
+      B: 58
     uniq_name: LogicalOrScalar_B
     id: 58
   LogicalXorScalar:
@@ -770,6 +969,8 @@ Logical:
         type: bool
     outputs:
       y: {}
+    function_ids:
+      B: 59
     uniq_name: LogicalXorScalar_B
     id: 59
   EqualScalar:
@@ -779,8 +980,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 60
     uniq_name: EqualScalar_f
     id: 60
   NotEqualScalar:
@@ -790,8 +994,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 61
     uniq_name: NotEqualScalar_f
     id: 61
   GreaterEqualScalar:
@@ -801,8 +1008,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 62
     uniq_name: GreaterEqualScalar_f
     id: 62
   GreaterScalar:
@@ -812,8 +1022,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 63
     uniq_name: GreaterScalar_f
     id: 63
   LessEqualScalar:
@@ -823,8 +1036,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 64
     uniq_name: LessEqualScalar_f
     id: 64
   LessScalar:
@@ -834,8 +1050,11 @@ Logical:
     arguments:
       val:
         type: double
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      f: 65
     uniq_name: LessScalar_f
     id: 65
   LogicalNot:
@@ -844,6 +1063,8 @@ Logical:
       x0: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 66
     uniq_name: LogicalNot
     id: 66
 Math:
@@ -853,10 +1074,14 @@ Math:
     arguments:
       val:
         type: float
+        default: '0'
       shape:
         type: Shape
+        default: '[]'
     outputs:
       y: {}
+    function_ids:
+      fiI: 67
     uniq_name: Constant_fiI
     id: 67
   Arange:
@@ -869,8 +1094,11 @@ Math:
         type: float
       step:
         type: float
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      fff: 131
     uniq_name: Arange_fff
     id: 131
   Abs:
@@ -879,6 +1107,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 68
     uniq_name: Abs
     id: 68
   Exp:
@@ -887,6 +1117,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 69
     uniq_name: Exp
     id: 69
   Log:
@@ -895,6 +1127,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 70
     uniq_name: Log
     id: 70
   Identity:
@@ -903,6 +1137,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 71
     uniq_name: Identity
     id: 71
   BatchMatmul:
@@ -913,10 +1149,14 @@ Math:
     arguments:
       transpose_a:
         type: bool
+        default: 'False'
       transpose_b:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      BB: 72
     uniq_name: BatchMatmul_BB
     id: 72
   Round:
@@ -926,6 +1166,8 @@ Math:
     arguments: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 73
     uniq_name: Round_
     id: 73
   Ceil:
@@ -935,6 +1177,8 @@ Math:
     arguments: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 124
     uniq_name: Ceil_
     id: 124
   Floor:
@@ -944,6 +1188,8 @@ Math:
     arguments: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 125
     uniq_name: Floor_
     id: 125
   Sin:
@@ -952,6 +1198,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 173
     uniq_name: Sin
     id: 173
   Cos:
@@ -960,6 +1208,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 174
     uniq_name: Cos
     id: 174
   Tan:
@@ -968,6 +1218,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 175
     uniq_name: Tan
     id: 175
   Sinh:
@@ -976,6 +1228,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 176
     uniq_name: Sinh
     id: 176
   Cosh:
@@ -984,6 +1238,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 177
     uniq_name: Cosh
     id: 177
   ASin:
@@ -992,6 +1248,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 178
     uniq_name: ASin
     id: 178
   ACos:
@@ -1000,6 +1258,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 179
     uniq_name: ACos
     id: 179
   ATan:
@@ -1008,6 +1268,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 180
     uniq_name: ATan
     id: 180
   ASinh:
@@ -1016,6 +1278,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 181
     uniq_name: ASinh
     id: 181
   ACosh:
@@ -1024,6 +1288,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 182
     uniq_name: ACosh
     id: 182
   ATanh:
@@ -1032,6 +1298,8 @@ Math:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 183
     uniq_name: ATanh
     id: 183
 Array Manipulation:
@@ -1043,8 +1311,11 @@ Array Manipulation:
     arguments:
       axis:
         type: int64
+        default: len(x[0].shape) - 1
     outputs:
       y: {}
+    function_ids:
+      i: 74
     uniq_name: Concatenate_i
     id: 74
   Split:
@@ -1054,10 +1325,13 @@ Array Manipulation:
     arguments:
       axis:
         type: int64
+        default: '0'
     outputs:
       y:
         variadic: true
         parameter: true
+    function_ids:
+      i: 75
     uniq_name: Split_i
     id: 75
   Stack:
@@ -1068,8 +1342,11 @@ Array Manipulation:
     arguments:
       axis:
         type: int64
+        default: '0'
     outputs:
       y: {}
+    function_ids:
+      i: 76
     uniq_name: Stack_i
     id: 76
   Slice:
@@ -1079,12 +1356,17 @@ Array Manipulation:
     arguments:
       start:
         type: repeated int64
+        default: (0,) * len(x.shape)
       stop:
         type: repeated int64
+        default: tuple(x.shape)
       step:
         type: repeated int64
+        default: (1,) * len(x.shape)
     outputs:
       y: {}
+    function_ids:
+      iIiIiI: 77
     uniq_name: Slice_iIiIiI
     id: 77
   Pad:
@@ -1099,10 +1381,14 @@ Array Manipulation:
         available_values:
         - constant
         - reflect
+        default: '''constant'''
       constant_value:
         type: float
+        default: '0'
     outputs:
       y: {}
+    function_ids:
+      iIif: 123
     uniq_name: Pad_iIif
     id: 123
   Transpose:
@@ -1114,6 +1400,8 @@ Array Manipulation:
         type: repeated int64
     outputs:
       y: {}
+    function_ids:
+      iI: 78
     uniq_name: Transpose_iI
     id: 78
   Broadcast:
@@ -1125,6 +1413,8 @@ Array Manipulation:
         type: Shape
     outputs:
       y: {}
+    function_ids:
+      iI: 79
     uniq_name: Broadcast_iI
     id: 79
   BroadcastTo:
@@ -1135,8 +1425,11 @@ Array Manipulation:
     arguments:
       axis:
         type: int64
+        default: -1
     outputs:
       z: {}
+    function_ids:
+      i: 184
     uniq_name: BroadcastTo_i
     id: 184
   OneHot:
@@ -1149,6 +1442,8 @@ Array Manipulation:
         type: Shape
     outputs:
       output: {}
+    function_ids:
+      iI: 80
     uniq_name: OneHot_iI
     id: 80
   Flip:
@@ -1158,8 +1453,11 @@ Array Manipulation:
     arguments:
       axes:
         type: repeated int64
+        default: '[len(x.shape) - 1]'
     outputs:
       y: {}
+    function_ids:
+      iI: 81
     uniq_name: Flip_iI
     id: 81
   Shift:
@@ -1169,13 +1467,17 @@ Array Manipulation:
     arguments:
       shifts:
         type: repeated int64
+        default: (0,) * len(x.shape)
       border_mode:
         type: string
         available_values:
         - nearest
         - reflect
+        default: '''nearest'''
     outputs:
       y: {}
+    function_ids:
+      iIi: 82
     uniq_name: Shift_iIi
     id: 82
   Sort:
@@ -1185,16 +1487,22 @@ Array Manipulation:
     arguments:
       axis:
         type: int64
+        default: '-1'
       reverse:
         type: bool
+        default: 'False'
       with_index:
         type: bool
+        default: 'False'
       only_index:
         type: bool
+        default: 'False'
     outputs:
       y:
         variadic: true
         parameter: true
+    function_ids:
+      iBBB: 129
     uniq_name: Sort_iBBB
     id: 129
   Reshape:
@@ -1206,8 +1514,12 @@ Array Manipulation:
         type: Shape
       inplace:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      iI: 83
+      iIB: 126
     uniq_name: Reshape_iIB
     id: 126
   MatrixDiag:
@@ -1216,6 +1528,8 @@ Array Manipulation:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 84
     uniq_name: MatrixDiag
     id: 84
   MatrixDiagPart:
@@ -1224,6 +1538,8 @@ Array Manipulation:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 85
     uniq_name: MatrixDiagPart
     id: 85
 Signal Processing:
@@ -1241,8 +1557,11 @@ Signal Processing:
         - linear
       align_corners:
         type: bool
+        default: False if mode == 'nearest' else True
     outputs:
       y: {}
+    function_ids:
+      iIiB: 127
     uniq_name: Interpolate_iIiB
     id: 127
   FFT:
@@ -1254,8 +1573,11 @@ Signal Processing:
         type: int64
       normalized:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iB: 158
     uniq_name: FFT_iB
     id: 158
   IFFT:
@@ -1267,8 +1589,11 @@ Signal Processing:
         type: int64
       normalized:
         type: bool
+        default: 'False'
     outputs:
       y: {}
+    function_ids:
+      iB: 159
     uniq_name: IFFT_iB
     id: 159
 Stochasticity:
@@ -1279,10 +1604,14 @@ Stochasticity:
     arguments:
       p:
         type: double
+        default: '0.5'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      fi: 86
     uniq_name: Dropout_fi
     id: 86
   TopKData:
@@ -1294,12 +1623,17 @@ Stochasticity:
         type: int64
       abs:
         type: bool
+        default: 'False'
       reduce:
         type: bool
+        default: 'True'
       base_axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iBBi: 87
     uniq_name: TopKData_iBBi
     id: 87
   TopKGrad:
@@ -1311,10 +1645,14 @@ Stochasticity:
         type: int64
       abs:
         type: bool
+        default: 'False'
       base_axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iBi: 88
     uniq_name: TopKGrad_iBi
     id: 88
   Rand:
@@ -1323,14 +1661,20 @@ Stochasticity:
     arguments:
       low:
         type: float
+        default: '0'
       high:
         type: float
+        default: '1'
       shape:
         type: Shape
+        default: '[]'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      ffiIi: 89
     uniq_name: Rand_ffiIi
     id: 89
   Randint:
@@ -1339,15 +1683,21 @@ Stochasticity:
     arguments:
       low:
         type: int64
+        default: '0'
       high:
         type: int64
+        default: '1'
       shape:
         type: Shape
+        default: '[]'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y:
         template: TI
+    function_ids:
+      iiiIi: 90
     uniq_name: Randint_iiiIi
     id: 90
   Randn:
@@ -1356,14 +1706,20 @@ Stochasticity:
     arguments:
       mu:
         type: float
+        default: '0'
       sigma:
         type: float
+        default: '1'
       shape:
         type: Shape
+        default: '[]'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      ffiIi: 91
     uniq_name: Randn_ffiIi
     id: 91
   RandomCrop:
@@ -1373,12 +1729,17 @@ Stochasticity:
     arguments:
       shape:
         type: Shape
+        default: x.shape
       base_axis:
         type: int64
+        default: '1'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      iIii: 92
     uniq_name: RandomCrop_iIii
     id: 92
   RandomFlip:
@@ -1388,12 +1749,17 @@ Stochasticity:
     arguments:
       axes:
         type: repeated int64
+        default: '[len(x.shape) - 1]'
       base_axis:
         type: int64
+        default: '1'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      iIii: 93
     uniq_name: RandomFlip_iIii
     id: 93
   RandomShift:
@@ -1403,17 +1769,23 @@ Stochasticity:
     arguments:
       shifts:
         type: repeated int64
+        default: (0,) * len(x.shape)
       border_mode:
         type: string
         available_values:
         - nearest
         - reflect
+        default: '''nearest'''
       base_axis:
         type: int64
+        default: '1'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      iIiii: 94
     uniq_name: RandomShift_iIiii
     id: 94
   ImageAugmentation:
@@ -1423,38 +1795,56 @@ Stochasticity:
     arguments:
       shape:
         type: Shape
+        default: x.shape
       pad:
         type: Shape
+        default: (0, 0)
       min_scale:
         type: float
+        default: '1.0'
       max_scale:
         type: float
+        default: '1.0'
       angle:
         type: float
+        default: '0.0'
       aspect_ratio:
         type: float
+        default: '1.0'
       distortion:
         type: float
+        default: '0.0'
       flip_lr:
         type: bool
+        default: 'False'
       flip_ud:
         type: bool
+        default: 'False'
       brightness:
         type: float
+        default: '0.0'
       brightness_each:
         type: bool
+        default: 'False'
       contrast:
         type: float
+        default: '1.0'
       contrast_center:
         type: float
+        default: '0.0'
       contrast_each:
         type: bool
+        default: 'False'
       noise:
         type: float
+        default: '0.0'
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      iIiIfffffBBfBffBfi: 95
     uniq_name: ImageAugmentation_iIiIfffffBBfBffBfi
     id: 95
 Loss Functions:
@@ -1468,6 +1858,8 @@ Loss Functions:
         parameter: true
     outputs:
       y: {}
+    function_ids:
+      Empty: 96
     uniq_name: SigmoidCrossEntropy
     id: 96
   BinaryCrossEntropy:
@@ -1477,6 +1869,8 @@ Loss Functions:
       target: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 97
     uniq_name: BinaryCrossEntropy
     id: 97
   SoftmaxCrossEntropy:
@@ -1490,8 +1884,11 @@ Loss Functions:
     arguments:
       axis:
         type: int64
+        default: len(x.shape) - 1
     outputs:
       y: {}
+    function_ids:
+      i: 98
     uniq_name: SoftmaxCrossEntropy_i
     id: 98
   CategoricalCrossEntropy:
@@ -1505,8 +1902,11 @@ Loss Functions:
     arguments:
       axis:
         type: int64
+        default: len(x.shape) - 1
     outputs:
       y: {}
+    function_ids:
+      i: 99
     uniq_name: CategoricalCrossEntropy_i
     id: 99
   SquaredError:
@@ -1516,6 +1916,8 @@ Loss Functions:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 100
     uniq_name: SquaredError
     id: 100
   AbsoluteError:
@@ -1525,6 +1927,8 @@ Loss Functions:
       x1: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 101
     uniq_name: AbsoluteError
     id: 101
   HuberLoss:
@@ -1535,8 +1939,11 @@ Loss Functions:
     arguments:
       delta:
         type: float
+        default: '1.0'
     outputs:
       y: {}
+    function_ids:
+      f: 102
     uniq_name: HuberLoss_f
     id: 102
   EpsilonInsensitiveLoss:
@@ -1549,6 +1956,8 @@ Loss Functions:
         type: float
     outputs:
       y: {}
+    function_ids:
+      f: 103
     uniq_name: EpsilonInsensitiveLoss_f
     id: 103
   KLMultinomial:
@@ -1559,8 +1968,11 @@ Loss Functions:
     arguments:
       base_axis:
         type: int64
+        default: '1'
     outputs:
       D: {}
+    function_ids:
+      i: 104
     uniq_name: KLMultinomial_i
     id: 104
 Quantization Neural Network Layers:
@@ -1570,6 +1982,8 @@ Quantization Neural Network Layers:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 105
     uniq_name: BinarySigmoid
     id: 105
   BinaryTanh:
@@ -1578,6 +1992,8 @@ Quantization Neural Network Layers:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 106
     uniq_name: BinaryTanh
     id: 106
   BinaryConnectAffine:
@@ -1594,8 +2010,11 @@ Quantization Neural Network Layers:
     arguments:
       base_axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      i: 107
     uniq_name: BinaryConnectAffine_i
     id: 107
   BinaryConnectConvolution:
@@ -1612,16 +2031,23 @@ Quantization Neural Network Layers:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       group:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIi: 108
     uniq_name: BinaryConnectConvolution_iiIiIiIi
     id: 108
   BinaryWeightAffine:
@@ -1640,8 +2066,11 @@ Quantization Neural Network Layers:
     arguments:
       base_axis:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      i: 109
     uniq_name: BinaryWeightAffine_i
     id: 109
   BinaryWeightConvolution:
@@ -1660,16 +2089,23 @@ Quantization Neural Network Layers:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       group:
         type: int64
+        default: '1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIi: 110
     uniq_name: BinaryWeightConvolution_iiIiIiIi
     id: 110
   INQAffine:
@@ -1687,19 +2123,26 @@ Quantization Neural Network Layers:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       num_bits:
         type: int64
+        default: '4'
       inq_iterations:
         type: repeated int64
+        default: ()
       selection_algorithm:
         type: string
         available_values:
         - largest_abs
         - random
+        default: '''largest_abs'''
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      iiiIii: 111
     uniq_name: INQAffine_iiiIii
     id: 111
   INQConvolution:
@@ -1717,27 +2160,38 @@ Quantization Neural Network Layers:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       pad:
         type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
       stride:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       dilation:
         type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
       group:
         type: int64
+        default: '1'
       num_bits:
         type: int64
+        default: '4'
       inq_iterations:
         type: repeated int64
+        default: ()
       selection_algorithm:
         type: string
         available_values:
         - largest_abs
         - random
+        default: '''largest_abs'''
       seed:
         type: int64
+        default: '-1'
     outputs:
       y: {}
+    function_ids:
+      iiIiIiIiiiIii: 112
     uniq_name: INQConvolution_iiIiIiIiiiIii
     id: 112
   FixedPointQuantize:
@@ -1747,14 +2201,20 @@ Quantization Neural Network Layers:
     arguments:
       sign:
         type: bool
+        default: 'True'
       n:
         type: int64
+        default: '8'
       delta:
         type: float
+        default: '0.0625'
       ste_fine_grained:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      BifB: 113
     uniq_name: FixedPointQuantize_BifB
     id: 113
   Pow2Quantize:
@@ -1764,16 +2224,23 @@ Quantization Neural Network Layers:
     arguments:
       sign:
         type: bool
+        default: 'True'
       with_zero:
         type: bool
+        default: 'True'
       n:
         type: int64
+        default: '8'
       m:
         type: int64
+        default: '1'
       ste_fine_grained:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      BBiiB: 114
     uniq_name: Pow2Quantize_BBiiB
     id: 114
   Prune:
@@ -1783,8 +2250,11 @@ Quantization Neural Network Layers:
     arguments:
       rate:
         type: float
+        default: '0.9'
     outputs:
       y: {}
+    function_ids:
+      f: 135
     uniq_name: Prune_f
     id: 135
 Validation:
@@ -1797,10 +2267,14 @@ Validation:
     arguments:
       axis:
         type: int64
+        default: len(x.shape) - 1
       n:
         type: int64
+        default: '1'
     outputs:
       output: {}
+    function_ids:
+      ii: 115
     uniq_name: TopNError_ii
     id: 115
   BinaryError:
@@ -1810,6 +2284,8 @@ Validation:
       target: {}
     outputs:
       output: {}
+    function_ids:
+      Empty: 116
     uniq_name: BinaryError
     id: 116
   ConfusionMatrix:
@@ -1821,8 +2297,11 @@ Validation:
     arguments:
       axis:
         type: int64
+        default: len(x.shape) - 1
     outputs:
       output: {}
+    function_ids:
+      i: 117
     uniq_name: ConfusionMatrix_i
     id: 117
 Unsupported, Special Use:
@@ -1834,10 +2313,14 @@ Unsupported, Special Use:
     arguments:
       base_axis:
         type: int64
+        default: '1'
       eps:
         type: float
+        default: '1.0'
     outputs:
       y: {}
+    function_ids:
+      if: 118
     uniq_name: VATNoise_if
     id: 118
   Unlink:
@@ -1846,6 +2329,8 @@ Unsupported, Special Use:
       x: {}
     outputs:
       y: {}
+    function_ids:
+      Empty: 119
     uniq_name: Unlink
     id: 119
   Sink:
@@ -1856,8 +2341,11 @@ Unsupported, Special Use:
     arguments:
       one_input_grad:
         type: bool
+        default: 'True'
     outputs:
       y: {}
+    function_ids:
+      B: 120
     uniq_name: Sink_B
     id: 120
   NmsDetection2d:
@@ -1867,11 +2355,16 @@ Unsupported, Special Use:
     arguments:
       thresh:
         type: float
+        default: 0.5
       nms:
         type: float
+        default: 0.45
       nms_per_class:
         type: bool
+        default: true
     outputs:
       y: {}
+    function_ids:
+      ffB: 231
     uniq_name: NmsDetection2d_ffB
     id: 231
