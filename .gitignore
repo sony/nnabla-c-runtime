@@ -1,4 +1,8 @@
 *.exe
+*.nntxt
+*.bin
+*.h5
+*.protobuf
 *.pdb
 *.obj
 *.pyc
