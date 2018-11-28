@@ -85,7 +85,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
                              input_data_size, input);
       break;
     default:
-      printf("NN_DATA_TYPE_SIGN is not yet supported.");
+      printf("Type: %d is not yet supported.", variable->type);
       assert(0);
       break;
     }

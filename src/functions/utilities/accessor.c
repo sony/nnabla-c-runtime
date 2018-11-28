@@ -99,7 +99,7 @@ void fill_variable_with(rt_variable_t *variable, int8_t value) {
     break;
 
   case NN_DATA_TYPE_SIGN:
-    // size *= 1;
+    size >>= 3;
     break;
 
   default:; // Do nothing
