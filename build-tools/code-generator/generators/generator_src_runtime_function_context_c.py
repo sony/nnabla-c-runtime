@@ -21,7 +21,7 @@ def _generate_context_code(fn, func, fid_num, arg_fmt, fid):
         l.append(
             '    case NN_FUNCTION_{}: {{ // {}'.format(func['snake_name'].upper(), fn))
     else:
-        if arg_fmt != default_arg[:len(arg_fmt)]:
+        if arg_fmt != default_arg[:len(arg_fmt)] and arg_fmt != "Empty":
             print('Cannot handle not incremental args on {} [{} {}]'.format(
                 fn, default_arg, arg_fmt))
             return []
@@ -31,7 +31,7 @@ def _generate_context_code(fn, func, fid_num, arg_fmt, fid):
     l.append(
         '      function_context->func.free_local_context_func = free_{}_local_context;'.format(func['snake_name']))
 
-    if 'arguments' in func and len(func['arguments']) > 0:
+    if 'arguments' in func and len(func['arguments']) > 0 and arg_fmt != "Empty":
         l.append(
             '      nn_function_{0}_t *f = (nn_function_{0}_t*)function;'.format(func['snake_name']))
         l.append(
