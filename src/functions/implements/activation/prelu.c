@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_PRELU
 
 typedef struct {
   rt_variable_t *input;
@@ -40,7 +43,7 @@ rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  prelu_private_t *p = malloc(sizeof(prelu_private_t));
+  prelu_private_t *p = rt_malloc_func(sizeof(prelu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -58,9 +61,13 @@ rt_function_error_t allocate_prelu_local_context(rt_function_t *f) {
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->weight->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_PRELU_FLOAT32
     f->exec_func = exec_prelu;
+#endif /* CONFIG_PRELU_FLOAT32 */
   } else {
+#ifdef CONFIG_PRELU_GENERIC
     f->exec_func = exec_prelu_generic;
+#endif /* CONFIG_PRELU_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -70,10 +77,11 @@ rt_function_error_t free_prelu_local_context(rt_function_t *f) {
   prelu_private_t *p = (prelu_private_t *)(context->data);
   free_list(p->in_shape);
   free_list(p->in_stride);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_PRELU_FLOAT32
 rt_function_error_t exec_prelu(rt_function_t *f) {
   prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
   prelu_private_t *p = (prelu_private_t *)(context->data);
@@ -95,7 +103,9 @@ rt_function_error_t exec_prelu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_PRELU_FLOAT32 */
 
+#ifdef CONFIG_PRELU_GENERIC
 rt_function_error_t exec_prelu_generic(rt_function_t *f) {
   prelu_local_context_t *context = (prelu_local_context_t *)(f->local_context);
   prelu_private_t *p = (prelu_private_t *)(context->data);
@@ -120,3 +130,6 @@ rt_function_error_t exec_prelu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_PRELU_GENERIC */
+
+#endif /* CONFIG_PRELU */

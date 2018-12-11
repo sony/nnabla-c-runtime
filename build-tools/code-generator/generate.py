@@ -82,9 +82,13 @@ class CodeGenerator:
                 subprocess.run(
                     ['diff', '-q', output_filename_tmp, output_filename], check=True, stdout=subprocess.PIPE)
             except subprocess.CalledProcessError:
+                print('Generated [{}].'.format(basename(output_filename)))
+                for l in subprocess.run(
+                        ['diff', output_filename_tmp, output_filename], check=False, stdout=subprocess.PIPE).stdout.decode('utf-8').split('\n'):
+                    if l:
+                        print(l)
                 os.unlink(output_filename)
                 os.rename(output_filename_tmp, output_filename)
-                print('Generated [{}].'.format(basename(output_filename)))
             finally:
                 if os.path.exists(output_filename_tmp):
                     os.unlink(output_filename_tmp)

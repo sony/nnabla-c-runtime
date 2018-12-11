@@ -22,46 +22,56 @@
 #include "dump.h"
 #include "infer.h"
 
-static void usage(const char *err) { printf("Error [%s]\n", err); }
-
 int main(int argc, char *argv[]) {
   int ret = -1;
+  char *subcmd;
 
-  if (argc < 3) {
-    usage("No subcommand.");
-  } else {
-    char *subcmd = argv[1];
-    char *nnb_filename = argv[2];
-    argv += 3;
-    argc -= 3;
+  if (argc >= 2) {
+    subcmd = argv[1];
 
-    FILE *nnb = 0;
+    if (strncmp("version", subcmd, 7) == 0) {
+      printf("  C Runtime Version [%s]\n", rt_c_runtime_version());
+      printf("  NNB Version       [%d]\n", rt_nnb_version());
+      printf("  NNB Revision      [%s]\n", rt_nnb_revision());
+    } else if (argc >= 3) {
+      char *nnb_filename = argv[2];
+      argv += 3;
+      argc -= 3;
+
+      FILE *nnb = 0;
 #ifdef _MSC_VER
-    fopen_s(&nnb, nnb_filename, "rb");
+      fopen_s(&nnb, nnb_filename, "rb");
 #else
-    nnb = fopen(nnb_filename, "rb");
+      nnb = fopen(nnb_filename, "rb");
 #endif
-    assert(nnb);
-    fseek(nnb, 0L, SEEK_END);
-    size_t nnb_data_size = ftell(nnb);
-    fseek(nnb, 0L, SEEK_SET);
-    uint8_t *nnb_data = malloc(nnb_data_size);
-    assert(nnb_data);
-    int read_size = (int)fread(nnb_data, sizeof(uint8_t), nnb_data_size, nnb);
-    assert(read_size == nnb_data_size);
-    fclose(nnb);
+      assert(nnb);
+      fseek(nnb, 0L, SEEK_END);
+      size_t nnb_data_size = ftell(nnb);
+      fseek(nnb, 0L, SEEK_SET);
+      uint8_t *nnb_data = malloc(nnb_data_size);
+      assert(nnb_data);
+      int read_size = (int)fread(nnb_data, sizeof(uint8_t), nnb_data_size, nnb);
+      assert(read_size == nnb_data_size);
+      fclose(nnb);
 
-    nn_network_t *net = (nn_network_t *)nnb_data;
+      nn_network_t *net = (nn_network_t *)nnb_data;
 
-    if (strncmp("dump", subcmd, 4) == 0) {
-      ret = dump(net, argc, argv);
-    } else if (strncmp("infer", subcmd, 5) == 0) {
-      ret = infer(net, argc, argv);
+      if (strncmp("dump", subcmd, 4) == 0) {
+        ret = dump(net, argc, argv);
+      } else if (strncmp("infer", subcmd, 5) == 0) {
+        ret = infer(net, argc, argv);
+      } else {
+        printf("Unknown subcommand [%s]\n", subcmd);
+      }
+
+      free(nnb_data);
     } else {
-      usage("Unknown subcommand");
+      printf("Unknown subcommand [%s]\n", subcmd);
     }
 
-    free(nnb_data);
+  } else {
+    printf("No subcommand.\n");
+    printf("Please specify sub command `dump`, `infer` or `version`.\n");
   }
   return ret;
 }

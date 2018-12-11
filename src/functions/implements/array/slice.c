@@ -14,8 +14,11 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 #include <string.h>
+
+#ifdef CONFIG_SLICE
 
 typedef struct {
   rt_list_t input_shape;
@@ -42,7 +45,7 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  slice_private_t *p = malloc(sizeof(slice_private_t));
+  slice_private_t *p = rt_malloc_func(sizeof(slice_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -74,9 +77,13 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SLICE_FLOAT32
     f->exec_func = exec_slice;
+#endif /* CONFIG_SLICE_FLOAT32 */
   } else {
+#ifdef CONFIG_SLICE_GENERIC
     f->exec_func = exec_slice_generic;
+#endif /* CONFIG_SLICE_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -91,10 +98,11 @@ rt_function_error_t free_slice_local_context(rt_function_t *f) {
   free_list(p->start);
   free_list(p->stop);
   free_list(p->step);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SLICE_FLOAT32
 static void slice_recursive(slice_local_context_t *context, int x_offset,
                             int y_offset, int dim) {
   slice_private_t *p = (slice_private_t *)(context->data);
@@ -129,6 +137,15 @@ static void slice_recursive(slice_local_context_t *context, int x_offset,
   }
 }
 
+rt_function_error_t exec_slice(rt_function_t *f) {
+  slice_local_context_t *context = (slice_local_context_t *)(f->local_context);
+
+  slice_recursive(context, 0, 0, 0);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_SLICE_FLOAT32 */
+
+#ifdef CONFIG_SLICE_GENERIC
 static void slice_recursive_generic(slice_local_context_t *context,
                                     int x_offset, int y_offset, int dim) {
   slice_private_t *p = (slice_private_t *)(context->data);
@@ -163,16 +180,12 @@ static void slice_recursive_generic(slice_local_context_t *context,
   }
 }
 
-rt_function_error_t exec_slice(rt_function_t *f) {
-  slice_local_context_t *context = (slice_local_context_t *)(f->local_context);
-
-  slice_recursive(context, 0, 0, 0);
-  return RT_FUNCTION_ERROR_NOERROR;
-}
-
 rt_function_error_t exec_slice_generic(rt_function_t *f) {
   slice_local_context_t *context = (slice_local_context_t *)(f->local_context);
 
   slice_recursive_generic(context, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SLICE_GENERIC */
+
+#endif /* CONFIG_SLICE */

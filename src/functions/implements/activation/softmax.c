@@ -13,10 +13,13 @@
 // limitations under the License.
 
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+
+#ifdef CONFIG_SOFTMAX
 
 static inline float local_max(float a, float b) { return a < b ? b : a; }
 
@@ -31,7 +34,7 @@ rt_function_error_t exec_softmax_generic(rt_function_t *f);
 rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
-  softmax_private_t *p = malloc(sizeof(softmax_private_t));
+  softmax_private_t *p = rt_malloc_func(sizeof(softmax_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -54,18 +57,23 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   ((softmax_local_context_t *)(f->local_context))->data = (void *)p;
   if (f->inputs[0]->type == NN_DATA_TYPE_FLOAT &&
       f->outputs[0]->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SOFTMAX_FLOAT32
     f->exec_func = exec_softmax;
+#endif /* CONFIG_SOFTMAX_FLOAT32 */
   } else {
+#ifdef CONFIG_SOFTMAX_GENERIC
     f->exec_func = exec_softmax_generic;
+#endif /* CONFIG_SOFTMAX_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_softmax_local_context(rt_function_t *f) {
-  free(((softmax_local_context_t *)(f->local_context))->data);
+  rt_free_func(((softmax_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SOFTMAX_FLOAT32
 rt_function_error_t exec_softmax(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
@@ -109,7 +117,9 @@ rt_function_error_t exec_softmax(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SOFTMAX_FLOAT32 */
 
+#ifdef CONFIG_SOFTMAX_GENERIC
 rt_function_error_t exec_softmax_generic(rt_function_t *f) {
   softmax_local_context_t *context =
       (softmax_local_context_t *)(f->local_context);
@@ -156,3 +166,6 @@ rt_function_error_t exec_softmax_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SOFTMAX_GENERIC */
+
+#endif /* CONFIG_SOFTMAX */

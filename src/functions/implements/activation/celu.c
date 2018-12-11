@@ -17,7 +17,10 @@
 
 #include <assert.h>
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_CELU
 
 typedef struct {
   rt_variable_t *input;
@@ -40,7 +43,7 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  celu_private_t *p = (celu_private_t *)malloc(sizeof(celu_private_t));
+  celu_private_t *p = (celu_private_t *)rt_malloc_func(sizeof(celu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -56,14 +59,18 @@ rt_function_error_t allocate_celu_local_context(rt_function_t *f) {
 
   if (p->input_size * 2 != p->output_size) {
     free_list(p->in_shape);
-    free(p);
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_CELU_FLOAT32
     f->exec_func = exec_celu;
+#endif /* CONFIG_CELU_FLOAT32 */
   } else {
+#ifdef CONFIG_CELU_GENERIC
     f->exec_func = exec_celu_generic;
+#endif /* CONFIG_CELU_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -72,10 +79,11 @@ rt_function_error_t free_celu_local_context(rt_function_t *f) {
   celu_local_context_t *c = (celu_local_context_t *)(f->local_context);
   celu_private_t *p = (celu_private_t *)(c->data);
   free_list(p->in_shape);
-  free(c->data);
+  rt_free_func(c->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_CELU_FLOAT32
 /**
  * https://arxiv.org/pdf/1603.05201.pdf
  * Definition 2.1. CReLU activation, denoted by ρc : R →R2
@@ -101,7 +109,9 @@ rt_function_error_t exec_celu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_CELU_FLOAT32 */
 
+#ifdef CONFIG_CELU_GENERIC
 rt_function_error_t exec_celu_generic(rt_function_t *f) {
   celu_local_context_t *c = (celu_local_context_t *)(f->local_context);
   celu_private_t *p = (celu_private_t *)(c->data);
@@ -123,3 +133,6 @@ rt_function_error_t exec_celu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_CELU_GENERIC */
+
+#endif /* CONFIG_CELU */

@@ -13,16 +13,20 @@
 // limitations under the License.
 
 #include "pooling.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_AVERAGEPOOLING
 
 rt_function_error_t allocate_average_pooling_local_context(rt_function_t *f) {
   average_pooling_local_context_t *context =
       (average_pooling_local_context_t *)(f->local_context);
-  pooling_private_t *p = malloc(sizeof(pooling_private_t));
+  pooling_private_t *p = rt_malloc_func(sizeof(pooling_private_t));
   rt_function_error_t ret =
       allocate_pooling(f, (pooling_context_t *)context, p);
 
   ((average_pooling_local_context_t *)(f->local_context))->data = (void *)p;
+  f->exec_func = exec_average_pooling;
   return ret;
 }
 
@@ -41,9 +45,16 @@ rt_function_error_t exec_average_pooling(rt_function_t *f) {
            *)(((average_pooling_local_context_t *)(f->local_context))->data);
   if (p->calc_context.x->type == NN_DATA_TYPE_FLOAT &&
       p->calc_context.y->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_AVERAGEPOOLING_FLOAT32
     return exec_pooling(f, (pooling_context_t *)context, p, calc_average);
+#endif /* CONFIG_AVERAGEPOOLING_FLOAT32 */
   } else {
+#ifdef CONFIG_AVERAGEPOOLING_GENERIC
     return exec_pooling_generic(f, (pooling_context_t *)context, p,
                                 calc_average_generic);
+#endif /* CONFIG_AVERAGEPOOLING_GENERIC */
   }
+  return RT_FUNCTION_ERROR_NOERROR;
 }
+
+#endif /* CONFIG_AVERAGEPOOLING */

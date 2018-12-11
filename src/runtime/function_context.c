@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 #include <nnablart/network.h>
 #include <nnablart/runtime.h>
@@ -27,8 +28,8 @@
 void allocate_function_context(nn_network_t *n, nn_function_t *function,
                                rt_function_context_t *function_context) {
   switch (function_context->info->type) {
+#ifdef CONFIG_AFFINE
   case NN_FUNCTION_AFFINE: { // Affine
-    function_context->func.exec_func = exec_affine;
     function_context->func.free_local_context_func = free_affine_local_context;
     nn_function_affine_t *f = (nn_function_affine_t *)function;
     affine_local_context_t *ctx =
@@ -37,9 +38,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_affine_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CONVOLUTION
   case NN_FUNCTION_CONVOLUTION: { // Convolution
-    function_context->func.exec_func = exec_convolution;
     function_context->func.free_local_context_func =
         free_convolution_local_context;
     nn_function_convolution_t *f = (nn_function_convolution_t *)function;
@@ -53,9 +55,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_convolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_DEPTHWISECONVOLUTION
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
-    function_context->func.exec_func = exec_depthwise_convolution;
     function_context->func.free_local_context_func =
         free_depthwise_convolution_local_context;
     nn_function_depthwise_convolution_t *f =
@@ -70,9 +73,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_depthwise_convolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_DECONVOLUTION
   case NN_FUNCTION_DECONVOLUTION: { // Deconvolution
-    function_context->func.exec_func = exec_deconvolution;
     function_context->func.free_local_context_func =
         free_deconvolution_local_context;
     nn_function_deconvolution_t *f = (nn_function_deconvolution_t *)function;
@@ -86,9 +90,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_deconvolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_DEPTHWISEDECONVOLUTION
   case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
-    function_context->func.exec_func = exec_depthwise_deconvolution;
     function_context->func.free_local_context_func =
         free_depthwise_deconvolution_local_context;
     nn_function_depthwise_deconvolution_t *f =
@@ -103,9 +108,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_depthwise_deconvolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MAXPOOLING
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
-    function_context->func.exec_func = exec_max_pooling;
     function_context->func.free_local_context_func =
         free_max_pooling_local_context;
     nn_function_max_pooling_t *f = (nn_function_max_pooling_t *)function;
@@ -118,9 +124,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_max_pooling_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_AVERAGEPOOLING
   case NN_FUNCTION_AVERAGE_POOLING: { // AveragePooling
-    function_context->func.exec_func = exec_average_pooling;
     function_context->func.free_local_context_func =
         free_average_pooling_local_context;
     nn_function_average_pooling_t *f =
@@ -135,17 +142,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_average_pooling_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_GLOBALAVERAGEPOOLING
   case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
-    function_context->func.exec_func = exec_global_average_pooling;
     function_context->func.free_local_context_func =
         free_global_average_pooling_local_context;
     function_context->func.local_context = 0;
     allocate_global_average_pooling_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SUMPOOLING
   case NN_FUNCTION_SUM_POOLING: { // SumPooling
-    function_context->func.exec_func = exec_sum_pooling;
     function_context->func.free_local_context_func =
         free_sum_pooling_local_context;
     nn_function_sum_pooling_t *f = (nn_function_sum_pooling_t *)function;
@@ -158,9 +167,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_sum_pooling_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_UNPOOLING
   case NN_FUNCTION_UNPOOLING: { // Unpooling
-    function_context->func.exec_func = exec_unpooling;
     function_context->func.free_local_context_func =
         free_unpooling_local_context;
     nn_function_unpooling_t *f = (nn_function_unpooling_t *)function;
@@ -170,37 +180,42 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_unpooling_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_EMBED
   case NN_FUNCTION_EMBED: { // Embed
-    function_context->func.exec_func = exec_embed;
     function_context->func.free_local_context_func = free_embed_local_context;
     function_context->func.local_context = 0;
     allocate_embed_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SIGMOID
   case NN_FUNCTION_SIGMOID: { // Sigmoid
-    function_context->func.exec_func = exec_sigmoid;
     function_context->func.free_local_context_func = free_sigmoid_local_context;
     function_context->func.local_context = 0;
     allocate_sigmoid_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SWISH
   case NN_FUNCTION_SWISH: { // Swish
-    function_context->func.exec_func = exec_swish;
     function_context->func.free_local_context_func = free_swish_local_context;
     function_context->func.local_context = 0;
     allocate_swish_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_TANH
   case NN_FUNCTION_TANH: { // Tanh
-    function_context->func.exec_func = exec_tanh;
     function_context->func.free_local_context_func = free_tanh_local_context;
     function_context->func.local_context = 0;
     allocate_tanh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RELU
   case NN_FUNCTION_RELU: { // ReLU
-    function_context->func.exec_func = exec_relu;
     function_context->func.free_local_context_func = free_relu_local_context;
     nn_function_relu_t *f = (nn_function_relu_t *)function;
     relu_local_context_t *ctx = rt_malloc_func(sizeof(relu_local_context_t));
@@ -208,9 +223,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_relu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LEAKYRELU
   case NN_FUNCTION_LEAKY_RELU: { // LeakyReLU
-    function_context->func.exec_func = exec_leaky_relu;
     function_context->func.free_local_context_func =
         free_leaky_relu_local_context;
     nn_function_leaky_relu_t *f = (nn_function_leaky_relu_t *)function;
@@ -221,9 +237,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_leaky_relu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SOFTMAX
   case NN_FUNCTION_SOFTMAX: { // Softmax
-    function_context->func.exec_func = exec_softmax;
     function_context->func.free_local_context_func = free_softmax_local_context;
     nn_function_softmax_t *f = (nn_function_softmax_t *)function;
     softmax_local_context_t *ctx =
@@ -232,9 +249,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_softmax_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ELU
   case NN_FUNCTION_ELU: { // ELU
-    function_context->func.exec_func = exec_elu;
     function_context->func.free_local_context_func = free_elu_local_context;
     nn_function_elu_t *f = (nn_function_elu_t *)function;
     elu_local_context_t *ctx = rt_malloc_func(sizeof(elu_local_context_t));
@@ -242,9 +260,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_elu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SELU
   case NN_FUNCTION_SELU: { // SELU
-    function_context->func.exec_func = exec_selu;
     function_context->func.free_local_context_func = free_selu_local_context;
     nn_function_selu_t *f = (nn_function_selu_t *)function;
     selu_local_context_t *ctx = rt_malloc_func(sizeof(selu_local_context_t));
@@ -253,9 +272,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_selu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CRELU
   case NN_FUNCTION_CRELU: { // CReLU
-    function_context->func.exec_func = exec_crelu;
     function_context->func.free_local_context_func = free_crelu_local_context;
     nn_function_crelu_t *f = (nn_function_crelu_t *)function;
     crelu_local_context_t *ctx = rt_malloc_func(sizeof(crelu_local_context_t));
@@ -263,9 +283,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_crelu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CELU
   case NN_FUNCTION_CELU: { // CELU
-    function_context->func.exec_func = exec_celu;
     function_context->func.free_local_context_func = free_celu_local_context;
     nn_function_celu_t *f = (nn_function_celu_t *)function;
     celu_local_context_t *ctx = rt_malloc_func(sizeof(celu_local_context_t));
@@ -274,9 +295,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_celu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_PRELU
   case NN_FUNCTION_PRELU: { // PReLU
-    function_context->func.exec_func = exec_prelu;
     function_context->func.free_local_context_func = free_prelu_local_context;
     nn_function_prelu_t *f = (nn_function_prelu_t *)function;
     prelu_local_context_t *ctx = rt_malloc_func(sizeof(prelu_local_context_t));
@@ -284,9 +306,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_prelu_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BATCHNORMALIZATION
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
-    function_context->func.exec_func = exec_batch_normalization;
     function_context->func.free_local_context_func =
         free_batch_normalization_local_context;
     nn_function_batch_normalization_t *f =
@@ -300,9 +323,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_batch_normalization_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MEANSUBTRACTION
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
-    function_context->func.exec_func = exec_mean_subtraction;
     function_context->func.free_local_context_func =
         free_mean_subtraction_local_context;
     nn_function_mean_subtraction_t *f =
@@ -314,17 +338,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_mean_subtraction_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CLIPGRADBYVALUE
   case NN_FUNCTION_CLIP_GRAD_BY_VALUE: { // ClipGradByValue
-    function_context->func.exec_func = exec_clip_grad_by_value;
     function_context->func.free_local_context_func =
         free_clip_grad_by_value_local_context;
     function_context->func.local_context = 0;
     allocate_clip_grad_by_value_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CLIPGRADBYNORM
   case NN_FUNCTION_CLIP_GRAD_BY_NORM: { // ClipGradByNorm
-    function_context->func.exec_func = exec_clip_grad_by_norm;
     function_context->func.free_local_context_func =
         free_clip_grad_by_norm_local_context;
     nn_function_clip_grad_by_norm_t *f =
@@ -336,9 +362,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_clip_grad_by_norm_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SUM
   case NN_FUNCTION_SUM: { // Sum
-    function_context->func.exec_func = exec_sum;
     function_context->func.free_local_context_func = free_sum_local_context;
     nn_function_sum_t *f = (nn_function_sum_t *)function;
     sum_local_context_t *ctx = rt_malloc_func(sizeof(sum_local_context_t));
@@ -347,9 +374,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_sum_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MEAN
   case NN_FUNCTION_MEAN: { // Mean
-    function_context->func.exec_func = exec_mean;
     function_context->func.free_local_context_func = free_mean_local_context;
     nn_function_mean_t *f = (nn_function_mean_t *)function;
     mean_local_context_t *ctx = rt_malloc_func(sizeof(mean_local_context_t));
@@ -358,31 +386,38 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_mean_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MAX
   case NN_FUNCTION_MAX: { // Max
-    function_context->func.exec_func = exec_max;
     function_context->func.free_local_context_func = free_max_local_context;
     nn_function_max_t *f = (nn_function_max_t *)function;
     max_local_context_t *ctx = rt_malloc_func(sizeof(max_local_context_t));
     ctx->axes = create_rt_list_from_nn_list(n, f->axes);
     ctx->keep_dims = f->keep_dims;
+    ctx->with_index = f->with_index;
+    ctx->only_index = f->only_index;
     function_context->func.local_context = ctx;
     allocate_max_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MIN
   case NN_FUNCTION_MIN: { // Min
-    function_context->func.exec_func = exec_min;
     function_context->func.free_local_context_func = free_min_local_context;
     nn_function_min_t *f = (nn_function_min_t *)function;
     min_local_context_t *ctx = rt_malloc_func(sizeof(min_local_context_t));
     ctx->axes = create_rt_list_from_nn_list(n, f->axes);
     ctx->keep_dims = f->keep_dims;
+    ctx->with_index = f->with_index;
+    ctx->only_index = f->only_index;
     function_context->func.local_context = ctx;
     allocate_min_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_PROD
   case NN_FUNCTION_PROD: { // Prod
-    function_context->func.exec_func = exec_prod;
     function_context->func.free_local_context_func = free_prod_local_context;
     nn_function_prod_t *f = (nn_function_prod_t *)function;
     prod_local_context_t *ctx = rt_malloc_func(sizeof(prod_local_context_t));
@@ -391,25 +426,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_prod_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_REDUCESUM
   case NN_FUNCTION_REDUCE_SUM: { // ReduceSum
-    function_context->func.exec_func = exec_reduce_sum;
     function_context->func.free_local_context_func =
         free_reduce_sum_local_context;
     function_context->func.local_context = 0;
     allocate_reduce_sum_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_REDUCEMEAN
   case NN_FUNCTION_REDUCE_MEAN: { // ReduceMean
-    function_context->func.exec_func = exec_reduce_mean;
     function_context->func.free_local_context_func =
         free_reduce_mean_local_context;
     function_context->func.local_context = 0;
     allocate_reduce_mean_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ADD2
   case NN_FUNCTION_ADD2: { // Add2
-    function_context->func.exec_func = exec_add2;
     function_context->func.free_local_context_func = free_add2_local_context;
     nn_function_add2_t *f = (nn_function_add2_t *)function;
     add2_local_context_t *ctx = rt_malloc_func(sizeof(add2_local_context_t));
@@ -417,44 +455,50 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_add2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BCADD2
   case NN_FUNCTION_BC_ADD2: { // BcAdd2
-    function_context->func.exec_func = exec_bc_add2;
     function_context->func.free_local_context_func = free_bc_add2_local_context;
     function_context->func.local_context = 0;
     allocate_bc_add2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SUB2
   case NN_FUNCTION_SUB2: { // Sub2
-    function_context->func.exec_func = exec_sub2;
     function_context->func.free_local_context_func = free_sub2_local_context;
     function_context->func.local_context = 0;
     allocate_sub2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MUL2
   case NN_FUNCTION_MUL2: { // Mul2
-    function_context->func.exec_func = exec_mul2;
     function_context->func.free_local_context_func = free_mul2_local_context;
     function_context->func.local_context = 0;
     allocate_mul2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_DIV2
   case NN_FUNCTION_DIV2: { // Div2
-    function_context->func.exec_func = exec_div2;
     function_context->func.free_local_context_func = free_div2_local_context;
     function_context->func.local_context = 0;
     allocate_div2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_POW2
   case NN_FUNCTION_POW2: { // Pow2
-    function_context->func.exec_func = exec_pow2;
     function_context->func.free_local_context_func = free_pow2_local_context;
     function_context->func.local_context = 0;
     allocate_pow2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ADDSCALAR
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
-    function_context->func.exec_func = exec_add_scalar;
     function_context->func.free_local_context_func =
         free_add_scalar_local_context;
     nn_function_add_scalar_t *f = (nn_function_add_scalar_t *)function;
@@ -464,9 +508,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_add_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MULSCALAR
   case NN_FUNCTION_MUL_SCALAR: { // MulScalar
-    function_context->func.exec_func = exec_mul_scalar;
     function_context->func.free_local_context_func =
         free_mul_scalar_local_context;
     nn_function_mul_scalar_t *f = (nn_function_mul_scalar_t *)function;
@@ -476,9 +521,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_mul_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_POWSCALAR
   case NN_FUNCTION_POW_SCALAR: { // PowScalar
-    function_context->func.exec_func = exec_pow_scalar;
     function_context->func.free_local_context_func =
         free_pow_scalar_local_context;
     nn_function_pow_scalar_t *f = (nn_function_pow_scalar_t *)function;
@@ -488,9 +534,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_pow_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RSUBSCALAR
   case NN_FUNCTION_R_SUB_SCALAR: { // RSubScalar
-    function_context->func.exec_func = exec_r_sub_scalar;
     function_context->func.free_local_context_func =
         free_r_sub_scalar_local_context;
     nn_function_r_sub_scalar_t *f = (nn_function_r_sub_scalar_t *)function;
@@ -500,9 +547,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_r_sub_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RDIVSCALAR
   case NN_FUNCTION_R_DIV_SCALAR: { // RDivScalar
-    function_context->func.exec_func = exec_r_div_scalar;
     function_context->func.free_local_context_func =
         free_r_div_scalar_local_context;
     nn_function_r_div_scalar_t *f = (nn_function_r_div_scalar_t *)function;
@@ -512,9 +560,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_r_div_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RPOWSCALAR
   case NN_FUNCTION_R_POW_SCALAR: { // RPowScalar
-    function_context->func.exec_func = exec_r_pow_scalar;
     function_context->func.free_local_context_func =
         free_r_pow_scalar_local_context;
     nn_function_r_pow_scalar_t *f = (nn_function_r_pow_scalar_t *)function;
@@ -524,9 +573,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_r_pow_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SIGN
   case NN_FUNCTION_SIGN: { // Sign
-    function_context->func.exec_func = exec_sign;
     function_context->func.free_local_context_func = free_sign_local_context;
     nn_function_sign_t *f = (nn_function_sign_t *)function;
     sign_local_context_t *ctx = rt_malloc_func(sizeof(sign_local_context_t));
@@ -534,25 +584,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_sign_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MINIMUM2
   case NN_FUNCTION_MINIMUM2: { // Minimum2
-    function_context->func.exec_func = exec_minimum2;
     function_context->func.free_local_context_func =
         free_minimum2_local_context;
     function_context->func.local_context = 0;
     allocate_minimum2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MAXIMUM2
   case NN_FUNCTION_MAXIMUM2: { // Maximum2
-    function_context->func.exec_func = exec_maximum2;
     function_context->func.free_local_context_func =
         free_maximum2_local_context;
     function_context->func.local_context = 0;
     allocate_maximum2_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MINIMUMSCALAR
   case NN_FUNCTION_MINIMUM_SCALAR: { // MinimumScalar
-    function_context->func.exec_func = exec_minimum_scalar;
     function_context->func.free_local_context_func =
         free_minimum_scalar_local_context;
     nn_function_minimum_scalar_t *f = (nn_function_minimum_scalar_t *)function;
@@ -562,9 +615,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_minimum_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MAXIMUMSCALAR
   case NN_FUNCTION_MAXIMUM_SCALAR: { // MaximumScalar
-    function_context->func.exec_func = exec_maximum_scalar;
     function_context->func.free_local_context_func =
         free_maximum_scalar_local_context;
     nn_function_maximum_scalar_t *f = (nn_function_maximum_scalar_t *)function;
@@ -574,78 +628,88 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_maximum_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALAND
   case NN_FUNCTION_LOGICAL_AND: { // LogicalAnd
-    function_context->func.exec_func = exec_logical_and;
     function_context->func.free_local_context_func =
         free_logical_and_local_context;
     function_context->func.local_context = 0;
     allocate_logical_and_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALOR
   case NN_FUNCTION_LOGICAL_OR: { // LogicalOr
-    function_context->func.exec_func = exec_logical_or;
     function_context->func.free_local_context_func =
         free_logical_or_local_context;
     function_context->func.local_context = 0;
     allocate_logical_or_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALXOR
   case NN_FUNCTION_LOGICAL_XOR: { // LogicalXor
-    function_context->func.exec_func = exec_logical_xor;
     function_context->func.free_local_context_func =
         free_logical_xor_local_context;
     function_context->func.local_context = 0;
     allocate_logical_xor_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_EQUAL
   case NN_FUNCTION_EQUAL: { // Equal
-    function_context->func.exec_func = exec_equal;
     function_context->func.free_local_context_func = free_equal_local_context;
     function_context->func.local_context = 0;
     allocate_equal_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_NOTEQUAL
   case NN_FUNCTION_NOT_EQUAL: { // NotEqual
-    function_context->func.exec_func = exec_not_equal;
     function_context->func.free_local_context_func =
         free_not_equal_local_context;
     function_context->func.local_context = 0;
     allocate_not_equal_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_GREATEREQUAL
   case NN_FUNCTION_GREATER_EQUAL: { // GreaterEqual
-    function_context->func.exec_func = exec_greater_equal;
     function_context->func.free_local_context_func =
         free_greater_equal_local_context;
     function_context->func.local_context = 0;
     allocate_greater_equal_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_GREATER
   case NN_FUNCTION_GREATER: { // Greater
-    function_context->func.exec_func = exec_greater;
     function_context->func.free_local_context_func = free_greater_local_context;
     function_context->func.local_context = 0;
     allocate_greater_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LESSEQUAL
   case NN_FUNCTION_LESS_EQUAL: { // LessEqual
-    function_context->func.exec_func = exec_less_equal;
     function_context->func.free_local_context_func =
         free_less_equal_local_context;
     function_context->func.local_context = 0;
     allocate_less_equal_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LESS
   case NN_FUNCTION_LESS: { // Less
-    function_context->func.exec_func = exec_less;
     function_context->func.free_local_context_func = free_less_local_context;
     function_context->func.local_context = 0;
     allocate_less_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALANDSCALAR
   case NN_FUNCTION_LOGICAL_AND_SCALAR: { // LogicalAndScalar
-    function_context->func.exec_func = exec_logical_and_scalar;
     function_context->func.free_local_context_func =
         free_logical_and_scalar_local_context;
     nn_function_logical_and_scalar_t *f =
@@ -656,9 +720,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_logical_and_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALORSCALAR
   case NN_FUNCTION_LOGICAL_OR_SCALAR: { // LogicalOrScalar
-    function_context->func.exec_func = exec_logical_or_scalar;
     function_context->func.free_local_context_func =
         free_logical_or_scalar_local_context;
     nn_function_logical_or_scalar_t *f =
@@ -669,9 +734,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_logical_or_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALXORSCALAR
   case NN_FUNCTION_LOGICAL_XOR_SCALAR: { // LogicalXorScalar
-    function_context->func.exec_func = exec_logical_xor_scalar;
     function_context->func.free_local_context_func =
         free_logical_xor_scalar_local_context;
     nn_function_logical_xor_scalar_t *f =
@@ -682,9 +748,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_logical_xor_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_EQUALSCALAR
   case NN_FUNCTION_EQUAL_SCALAR: { // EqualScalar
-    function_context->func.exec_func = exec_equal_scalar;
     function_context->func.free_local_context_func =
         free_equal_scalar_local_context;
     nn_function_equal_scalar_t *f = (nn_function_equal_scalar_t *)function;
@@ -694,9 +761,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_equal_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_NOTEQUALSCALAR
   case NN_FUNCTION_NOT_EQUAL_SCALAR: { // NotEqualScalar
-    function_context->func.exec_func = exec_not_equal_scalar;
     function_context->func.free_local_context_func =
         free_not_equal_scalar_local_context;
     nn_function_not_equal_scalar_t *f =
@@ -707,9 +775,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_not_equal_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_GREATEREQUALSCALAR
   case NN_FUNCTION_GREATER_EQUAL_SCALAR: { // GreaterEqualScalar
-    function_context->func.exec_func = exec_greater_equal_scalar;
     function_context->func.free_local_context_func =
         free_greater_equal_scalar_local_context;
     nn_function_greater_equal_scalar_t *f =
@@ -720,9 +789,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_greater_equal_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_GREATERSCALAR
   case NN_FUNCTION_GREATER_SCALAR: { // GreaterScalar
-    function_context->func.exec_func = exec_greater_scalar;
     function_context->func.free_local_context_func =
         free_greater_scalar_local_context;
     nn_function_greater_scalar_t *f = (nn_function_greater_scalar_t *)function;
@@ -732,9 +802,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_greater_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LESSEQUALSCALAR
   case NN_FUNCTION_LESS_EQUAL_SCALAR: { // LessEqualScalar
-    function_context->func.exec_func = exec_less_equal_scalar;
     function_context->func.free_local_context_func =
         free_less_equal_scalar_local_context;
     nn_function_less_equal_scalar_t *f =
@@ -745,9 +816,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_less_equal_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LESSSCALAR
   case NN_FUNCTION_LESS_SCALAR: { // LessScalar
-    function_context->func.exec_func = exec_less_scalar;
     function_context->func.free_local_context_func =
         free_less_scalar_local_context;
     nn_function_less_scalar_t *f = (nn_function_less_scalar_t *)function;
@@ -757,17 +829,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_less_scalar_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOGICALNOT
   case NN_FUNCTION_LOGICAL_NOT: { // LogicalNot
-    function_context->func.exec_func = exec_logical_not;
     function_context->func.free_local_context_func =
         free_logical_not_local_context;
     function_context->func.local_context = 0;
     allocate_logical_not_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CONSTANT
   case NN_FUNCTION_CONSTANT: { // Constant
-    function_context->func.exec_func = exec_constant;
     function_context->func.free_local_context_func =
         free_constant_local_context;
     nn_function_constant_t *f = (nn_function_constant_t *)function;
@@ -778,38 +852,57 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_constant_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ARANGE
+  case NN_FUNCTION_ARANGE: { // Arange
+    function_context->func.free_local_context_func = free_arange_local_context;
+    nn_function_arange_t *f = (nn_function_arange_t *)function;
+    arange_local_context_t *ctx =
+        rt_malloc_func(sizeof(arange_local_context_t));
+    ctx->start = f->start;
+    ctx->stop = f->stop;
+    ctx->step = f->step;
+    function_context->func.local_context = ctx;
+    allocate_arange_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_ABS
   case NN_FUNCTION_ABS: { // Abs
-    function_context->func.exec_func = exec_abs;
     function_context->func.free_local_context_func = free_abs_local_context;
     function_context->func.local_context = 0;
     allocate_abs_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_EXP
   case NN_FUNCTION_EXP: { // Exp
-    function_context->func.exec_func = exec_exp;
     function_context->func.free_local_context_func = free_exp_local_context;
     function_context->func.local_context = 0;
     allocate_exp_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_LOG
   case NN_FUNCTION_LOG: { // Log
-    function_context->func.exec_func = exec_log;
     function_context->func.free_local_context_func = free_log_local_context;
     function_context->func.local_context = 0;
     allocate_log_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_IDENTITY
   case NN_FUNCTION_IDENTITY: { // Identity
-    function_context->func.exec_func = exec_identity;
     function_context->func.free_local_context_func =
         free_identity_local_context;
     function_context->func.local_context = 0;
     allocate_identity_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BATCHMATMUL
   case NN_FUNCTION_BATCH_MATMUL: { // BatchMatmul
-    function_context->func.exec_func = exec_batch_matmul;
     function_context->func.free_local_context_func =
         free_batch_matmul_local_context;
     nn_function_batch_matmul_t *f = (nn_function_batch_matmul_t *)function;
@@ -820,107 +913,122 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_batch_matmul_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ROUND
   case NN_FUNCTION_ROUND: { // Round
-    function_context->func.exec_func = exec_round;
     function_context->func.free_local_context_func = free_round_local_context;
     function_context->func.local_context = 0;
     allocate_round_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CEIL
   case NN_FUNCTION_CEIL: { // Ceil
-    function_context->func.exec_func = exec_ceil;
     function_context->func.free_local_context_func = free_ceil_local_context;
     function_context->func.local_context = 0;
     allocate_ceil_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_FLOOR
   case NN_FUNCTION_FLOOR: { // Floor
-    function_context->func.exec_func = exec_floor;
     function_context->func.free_local_context_func = free_floor_local_context;
     function_context->func.local_context = 0;
     allocate_floor_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SIN
   case NN_FUNCTION_SIN: { // Sin
-    function_context->func.exec_func = exec_sin;
     function_context->func.free_local_context_func = free_sin_local_context;
     function_context->func.local_context = 0;
     allocate_sin_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_COS
   case NN_FUNCTION_COS: { // Cos
-    function_context->func.exec_func = exec_cos;
     function_context->func.free_local_context_func = free_cos_local_context;
     function_context->func.local_context = 0;
     allocate_cos_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_TAN
   case NN_FUNCTION_TAN: { // Tan
-    function_context->func.exec_func = exec_tan;
     function_context->func.free_local_context_func = free_tan_local_context;
     function_context->func.local_context = 0;
     allocate_tan_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SINH
   case NN_FUNCTION_SINH: { // Sinh
-    function_context->func.exec_func = exec_sinh;
     function_context->func.free_local_context_func = free_sinh_local_context;
     function_context->func.local_context = 0;
     allocate_sinh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_COSH
   case NN_FUNCTION_COSH: { // Cosh
-    function_context->func.exec_func = exec_cosh;
     function_context->func.free_local_context_func = free_cosh_local_context;
     function_context->func.local_context = 0;
     allocate_cosh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ASIN
   case NN_FUNCTION_ASIN: { // ASin
-    function_context->func.exec_func = exec_asin;
     function_context->func.free_local_context_func = free_asin_local_context;
     function_context->func.local_context = 0;
     allocate_asin_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ACOS
   case NN_FUNCTION_ACOS: { // ACos
-    function_context->func.exec_func = exec_acos;
     function_context->func.free_local_context_func = free_acos_local_context;
     function_context->func.local_context = 0;
     allocate_acos_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ATAN
   case NN_FUNCTION_ATAN: { // ATan
-    function_context->func.exec_func = exec_atan;
     function_context->func.free_local_context_func = free_atan_local_context;
     function_context->func.local_context = 0;
     allocate_atan_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ASINH
   case NN_FUNCTION_ASINH: { // ASinh
-    function_context->func.exec_func = exec_asinh;
     function_context->func.free_local_context_func = free_asinh_local_context;
     function_context->func.local_context = 0;
     allocate_asinh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ACOSH
   case NN_FUNCTION_ACOSH: { // ACosh
-    function_context->func.exec_func = exec_acosh;
     function_context->func.free_local_context_func = free_acosh_local_context;
     function_context->func.local_context = 0;
     allocate_acosh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ATANH
   case NN_FUNCTION_ATANH: { // ATanh
-    function_context->func.exec_func = exec_atanh;
     function_context->func.free_local_context_func = free_atanh_local_context;
     function_context->func.local_context = 0;
     allocate_atanh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CONCATENATE
   case NN_FUNCTION_CONCATENATE: { // Concatenate
-    function_context->func.exec_func = exec_concatenate;
     function_context->func.free_local_context_func =
         free_concatenate_local_context;
     nn_function_concatenate_t *f = (nn_function_concatenate_t *)function;
@@ -930,9 +1038,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_concatenate_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SPLIT
   case NN_FUNCTION_SPLIT: { // Split
-    function_context->func.exec_func = exec_split;
     function_context->func.free_local_context_func = free_split_local_context;
     nn_function_split_t *f = (nn_function_split_t *)function;
     split_local_context_t *ctx = rt_malloc_func(sizeof(split_local_context_t));
@@ -940,9 +1049,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_split_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_STACK
   case NN_FUNCTION_STACK: { // Stack
-    function_context->func.exec_func = exec_stack;
     function_context->func.free_local_context_func = free_stack_local_context;
     nn_function_stack_t *f = (nn_function_stack_t *)function;
     stack_local_context_t *ctx = rt_malloc_func(sizeof(stack_local_context_t));
@@ -950,9 +1060,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_stack_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SLICE
   case NN_FUNCTION_SLICE: { // Slice
-    function_context->func.exec_func = exec_slice;
     function_context->func.free_local_context_func = free_slice_local_context;
     nn_function_slice_t *f = (nn_function_slice_t *)function;
     slice_local_context_t *ctx = rt_malloc_func(sizeof(slice_local_context_t));
@@ -962,9 +1073,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_slice_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_PAD
   case NN_FUNCTION_PAD: { // Pad
-    function_context->func.exec_func = exec_pad;
     function_context->func.free_local_context_func = free_pad_local_context;
     nn_function_pad_t *f = (nn_function_pad_t *)function;
     pad_local_context_t *ctx = rt_malloc_func(sizeof(pad_local_context_t));
@@ -974,9 +1086,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_pad_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_TRANSPOSE
   case NN_FUNCTION_TRANSPOSE: { // Transpose
-    function_context->func.exec_func = exec_transpose;
     function_context->func.free_local_context_func =
         free_transpose_local_context;
     nn_function_transpose_t *f = (nn_function_transpose_t *)function;
@@ -986,9 +1099,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_transpose_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BROADCAST
   case NN_FUNCTION_BROADCAST: { // Broadcast
-    function_context->func.exec_func = exec_broadcast;
     function_context->func.free_local_context_func =
         free_broadcast_local_context;
     nn_function_broadcast_t *f = (nn_function_broadcast_t *)function;
@@ -998,9 +1112,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_broadcast_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BROADCASTTO
   case NN_FUNCTION_BROADCAST_TO: { // BroadcastTo
-    function_context->func.exec_func = exec_broadcast_to;
     function_context->func.free_local_context_func =
         free_broadcast_to_local_context;
     nn_function_broadcast_to_t *f = (nn_function_broadcast_to_t *)function;
@@ -1010,9 +1125,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_broadcast_to_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ONEHOT
   case NN_FUNCTION_ONE_HOT: { // OneHot
-    function_context->func.exec_func = exec_one_hot;
     function_context->func.free_local_context_func = free_one_hot_local_context;
     nn_function_one_hot_t *f = (nn_function_one_hot_t *)function;
     one_hot_local_context_t *ctx =
@@ -1021,9 +1137,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_one_hot_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_FLIP
   case NN_FUNCTION_FLIP: { // Flip
-    function_context->func.exec_func = exec_flip;
     function_context->func.free_local_context_func = free_flip_local_context;
     nn_function_flip_t *f = (nn_function_flip_t *)function;
     flip_local_context_t *ctx = rt_malloc_func(sizeof(flip_local_context_t));
@@ -1031,9 +1148,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_flip_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SHIFT
   case NN_FUNCTION_SHIFT: { // Shift
-    function_context->func.exec_func = exec_shift;
     function_context->func.free_local_context_func = free_shift_local_context;
     nn_function_shift_t *f = (nn_function_shift_t *)function;
     shift_local_context_t *ctx = rt_malloc_func(sizeof(shift_local_context_t));
@@ -1042,9 +1160,24 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_shift_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SORT
+  case NN_FUNCTION_SORT: { // Sort
+    function_context->func.free_local_context_func = free_sort_local_context;
+    nn_function_sort_t *f = (nn_function_sort_t *)function;
+    sort_local_context_t *ctx = rt_malloc_func(sizeof(sort_local_context_t));
+    ctx->axis = f->axis;
+    ctx->reverse = f->reverse;
+    ctx->with_index = f->with_index;
+    ctx->only_index = f->only_index;
+    function_context->func.local_context = ctx;
+    allocate_sort_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_RESHAPE
   case NN_FUNCTION_RESHAPE: { // Reshape
-    function_context->func.exec_func = exec_reshape;
     function_context->func.free_local_context_func = free_reshape_local_context;
     nn_function_reshape_t *f = (nn_function_reshape_t *)function;
     reshape_local_context_t *ctx =
@@ -1054,25 +1187,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_reshape_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MATRIXDIAG
   case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
-    function_context->func.exec_func = exec_matrix_diag;
     function_context->func.free_local_context_func =
         free_matrix_diag_local_context;
     function_context->func.local_context = 0;
     allocate_matrix_diag_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_MATRIXDIAGPART
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
-    function_context->func.exec_func = exec_matrix_diag_part;
     function_context->func.free_local_context_func =
         free_matrix_diag_part_local_context;
     function_context->func.local_context = 0;
     allocate_matrix_diag_part_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_INTERPOLATE
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
-    function_context->func.exec_func = exec_interpolate;
     function_context->func.free_local_context_func =
         free_interpolate_local_context;
     nn_function_interpolate_t *f = (nn_function_interpolate_t *)function;
@@ -1084,9 +1220,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_interpolate_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_FFT
   case NN_FUNCTION_FFT: { // FFT
-    function_context->func.exec_func = exec_fft;
     function_context->func.free_local_context_func = free_fft_local_context;
     nn_function_fft_t *f = (nn_function_fft_t *)function;
     fft_local_context_t *ctx = rt_malloc_func(sizeof(fft_local_context_t));
@@ -1095,9 +1232,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_fft_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_IFFT
   case NN_FUNCTION_IFFT: { // IFFT
-    function_context->func.exec_func = exec_ifft;
     function_context->func.free_local_context_func = free_ifft_local_context;
     nn_function_ifft_t *f = (nn_function_ifft_t *)function;
     ifft_local_context_t *ctx = rt_malloc_func(sizeof(ifft_local_context_t));
@@ -1106,9 +1244,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_ifft_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_DROPOUT
   case NN_FUNCTION_DROPOUT: { // Dropout
-    function_context->func.exec_func = exec_dropout;
     function_context->func.free_local_context_func = free_dropout_local_context;
     nn_function_dropout_t *f = (nn_function_dropout_t *)function;
     dropout_local_context_t *ctx =
@@ -1118,9 +1257,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_dropout_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_TOPKDATA
   case NN_FUNCTION_TOP_K_DATA: { // TopKData
-    function_context->func.exec_func = exec_top_k_data;
     function_context->func.free_local_context_func =
         free_top_k_data_local_context;
     nn_function_top_k_data_t *f = (nn_function_top_k_data_t *)function;
@@ -1133,9 +1273,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_top_k_data_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_TOPKGRAD
   case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
-    function_context->func.exec_func = exec_top_k_grad;
     function_context->func.free_local_context_func =
         free_top_k_grad_local_context;
     nn_function_top_k_grad_t *f = (nn_function_top_k_grad_t *)function;
@@ -1147,9 +1288,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_top_k_grad_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RAND
   case NN_FUNCTION_RAND: { // Rand
-    function_context->func.exec_func = exec_rand;
     function_context->func.free_local_context_func = free_rand_local_context;
     nn_function_rand_t *f = (nn_function_rand_t *)function;
     rand_local_context_t *ctx = rt_malloc_func(sizeof(rand_local_context_t));
@@ -1160,9 +1302,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_rand_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RANDINT
   case NN_FUNCTION_RANDINT: { // Randint
-    function_context->func.exec_func = exec_randint;
     function_context->func.free_local_context_func = free_randint_local_context;
     nn_function_randint_t *f = (nn_function_randint_t *)function;
     randint_local_context_t *ctx =
@@ -1174,9 +1317,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_randint_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RANDN
   case NN_FUNCTION_RANDN: { // Randn
-    function_context->func.exec_func = exec_randn;
     function_context->func.free_local_context_func = free_randn_local_context;
     nn_function_randn_t *f = (nn_function_randn_t *)function;
     randn_local_context_t *ctx = rt_malloc_func(sizeof(randn_local_context_t));
@@ -1187,9 +1331,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_randn_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RANDOMCROP
   case NN_FUNCTION_RANDOM_CROP: { // RandomCrop
-    function_context->func.exec_func = exec_random_crop;
     function_context->func.free_local_context_func =
         free_random_crop_local_context;
     nn_function_random_crop_t *f = (nn_function_random_crop_t *)function;
@@ -1201,9 +1346,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_random_crop_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RANDOMFLIP
   case NN_FUNCTION_RANDOM_FLIP: { // RandomFlip
-    function_context->func.exec_func = exec_random_flip;
     function_context->func.free_local_context_func =
         free_random_flip_local_context;
     nn_function_random_flip_t *f = (nn_function_random_flip_t *)function;
@@ -1215,9 +1361,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_random_flip_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_RANDOMSHIFT
   case NN_FUNCTION_RANDOM_SHIFT: { // RandomShift
-    function_context->func.exec_func = exec_random_shift;
     function_context->func.free_local_context_func =
         free_random_shift_local_context;
     nn_function_random_shift_t *f = (nn_function_random_shift_t *)function;
@@ -1230,9 +1377,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_random_shift_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_IMAGEAUGMENTATION
   case NN_FUNCTION_IMAGE_AUGMENTATION: { // ImageAugmentation
-    function_context->func.exec_func = exec_image_augmentation;
     function_context->func.free_local_context_func =
         free_image_augmentation_local_context;
     nn_function_image_augmentation_t *f =
@@ -1258,25 +1406,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_image_augmentation_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SIGMOIDCROSSENTROPY
   case NN_FUNCTION_SIGMOID_CROSS_ENTROPY: { // SigmoidCrossEntropy
-    function_context->func.exec_func = exec_sigmoid_cross_entropy;
     function_context->func.free_local_context_func =
         free_sigmoid_cross_entropy_local_context;
     function_context->func.local_context = 0;
     allocate_sigmoid_cross_entropy_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYCROSSENTROPY
   case NN_FUNCTION_BINARY_CROSS_ENTROPY: { // BinaryCrossEntropy
-    function_context->func.exec_func = exec_binary_cross_entropy;
     function_context->func.free_local_context_func =
         free_binary_cross_entropy_local_context;
     function_context->func.local_context = 0;
     allocate_binary_cross_entropy_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SOFTMAXCROSSENTROPY
   case NN_FUNCTION_SOFTMAX_CROSS_ENTROPY: { // SoftmaxCrossEntropy
-    function_context->func.exec_func = exec_softmax_cross_entropy;
     function_context->func.free_local_context_func =
         free_softmax_cross_entropy_local_context;
     nn_function_softmax_cross_entropy_t *f =
@@ -1287,9 +1438,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_softmax_cross_entropy_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CATEGORICALCROSSENTROPY
   case NN_FUNCTION_CATEGORICAL_CROSS_ENTROPY: { // CategoricalCrossEntropy
-    function_context->func.exec_func = exec_categorical_cross_entropy;
     function_context->func.free_local_context_func =
         free_categorical_cross_entropy_local_context;
     nn_function_categorical_cross_entropy_t *f =
@@ -1300,25 +1452,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_categorical_cross_entropy_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SQUAREDERROR
   case NN_FUNCTION_SQUARED_ERROR: { // SquaredError
-    function_context->func.exec_func = exec_squared_error;
     function_context->func.free_local_context_func =
         free_squared_error_local_context;
     function_context->func.local_context = 0;
     allocate_squared_error_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_ABSOLUTEERROR
   case NN_FUNCTION_ABSOLUTE_ERROR: { // AbsoluteError
-    function_context->func.exec_func = exec_absolute_error;
     function_context->func.free_local_context_func =
         free_absolute_error_local_context;
     function_context->func.local_context = 0;
     allocate_absolute_error_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_HUBERLOSS
   case NN_FUNCTION_HUBER_LOSS: { // HuberLoss
-    function_context->func.exec_func = exec_huber_loss;
     function_context->func.free_local_context_func =
         free_huber_loss_local_context;
     nn_function_huber_loss_t *f = (nn_function_huber_loss_t *)function;
@@ -1328,9 +1483,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_huber_loss_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_EPSILONINSENSITIVELOSS
   case NN_FUNCTION_EPSILON_INSENSITIVE_LOSS: { // EpsilonInsensitiveLoss
-    function_context->func.exec_func = exec_epsilon_insensitive_loss;
     function_context->func.free_local_context_func =
         free_epsilon_insensitive_loss_local_context;
     nn_function_epsilon_insensitive_loss_t *f =
@@ -1341,9 +1497,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_epsilon_insensitive_loss_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_KLMULTINOMIAL
   case NN_FUNCTION_KL_MULTINOMIAL: { // KLMultinomial
-    function_context->func.exec_func = exec_kl_multinomial;
     function_context->func.free_local_context_func =
         free_kl_multinomial_local_context;
     nn_function_kl_multinomial_t *f = (nn_function_kl_multinomial_t *)function;
@@ -1353,25 +1510,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_kl_multinomial_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYSIGMOID
   case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
-    function_context->func.exec_func = exec_binary_sigmoid;
     function_context->func.free_local_context_func =
         free_binary_sigmoid_local_context;
     function_context->func.local_context = 0;
     allocate_binary_sigmoid_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYTANH
   case NN_FUNCTION_BINARY_TANH: { // BinaryTanh
-    function_context->func.exec_func = exec_binary_tanh;
     function_context->func.free_local_context_func =
         free_binary_tanh_local_context;
     function_context->func.local_context = 0;
     allocate_binary_tanh_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYCONNECTAFFINE
   case NN_FUNCTION_BINARY_CONNECT_AFFINE: { // BinaryConnectAffine
-    function_context->func.exec_func = exec_binary_connect_affine;
     function_context->func.free_local_context_func =
         free_binary_connect_affine_local_context;
     nn_function_binary_connect_affine_t *f =
@@ -1382,9 +1542,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_binary_connect_affine_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYCONNECTCONVOLUTION
   case NN_FUNCTION_BINARY_CONNECT_CONVOLUTION: { // BinaryConnectConvolution
-    function_context->func.exec_func = exec_binary_connect_convolution;
     function_context->func.free_local_context_func =
         free_binary_connect_convolution_local_context;
     nn_function_binary_connect_convolution_t *f =
@@ -1399,9 +1560,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_binary_connect_convolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYWEIGHTAFFINE
   case NN_FUNCTION_BINARY_WEIGHT_AFFINE: { // BinaryWeightAffine
-    function_context->func.exec_func = exec_binary_weight_affine;
     function_context->func.free_local_context_func =
         free_binary_weight_affine_local_context;
     nn_function_binary_weight_affine_t *f =
@@ -1412,9 +1574,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_binary_weight_affine_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYWEIGHTCONVOLUTION
   case NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION: { // BinaryWeightConvolution
-    function_context->func.exec_func = exec_binary_weight_convolution;
     function_context->func.free_local_context_func =
         free_binary_weight_convolution_local_context;
     nn_function_binary_weight_convolution_t *f =
@@ -1429,9 +1592,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_binary_weight_convolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_INQAFFINE
   case NN_FUNCTION_INQ_AFFINE: { // INQAffine
-    function_context->func.exec_func = exec_inq_affine;
     function_context->func.free_local_context_func =
         free_inq_affine_local_context;
     nn_function_inq_affine_t *f = (nn_function_inq_affine_t *)function;
@@ -1445,9 +1609,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_inq_affine_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_INQCONVOLUTION
   case NN_FUNCTION_INQ_CONVOLUTION: { // INQConvolution
-    function_context->func.exec_func = exec_inq_convolution;
     function_context->func.free_local_context_func =
         free_inq_convolution_local_context;
     nn_function_inq_convolution_t *f =
@@ -1466,9 +1631,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_inq_convolution_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_FIXEDPOINTQUANTIZE
   case NN_FUNCTION_FIXED_POINT_QUANTIZE: { // FixedPointQuantize
-    function_context->func.exec_func = exec_fixed_point_quantize;
     function_context->func.free_local_context_func =
         free_fixed_point_quantize_local_context;
     nn_function_fixed_point_quantize_t *f =
@@ -1482,9 +1648,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_fixed_point_quantize_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_POW2QUANTIZE
   case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
-    function_context->func.exec_func = exec_pow2_quantize;
     function_context->func.free_local_context_func =
         free_pow2_quantize_local_context;
     nn_function_pow2_quantize_t *f = (nn_function_pow2_quantize_t *)function;
@@ -1498,9 +1665,21 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_pow2_quantize_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_PRUNE
+  case NN_FUNCTION_PRUNE: { // Prune
+    function_context->func.free_local_context_func = free_prune_local_context;
+    nn_function_prune_t *f = (nn_function_prune_t *)function;
+    prune_local_context_t *ctx = rt_malloc_func(sizeof(prune_local_context_t));
+    ctx->rate = f->rate;
+    function_context->func.local_context = ctx;
+    allocate_prune_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_TOPNERROR
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
-    function_context->func.exec_func = exec_top_n_error;
     function_context->func.free_local_context_func =
         free_top_n_error_local_context;
     nn_function_top_n_error_t *f = (nn_function_top_n_error_t *)function;
@@ -1511,17 +1690,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_top_n_error_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_BINARYERROR
   case NN_FUNCTION_BINARY_ERROR: { // BinaryError
-    function_context->func.exec_func = exec_binary_error;
     function_context->func.free_local_context_func =
         free_binary_error_local_context;
     function_context->func.local_context = 0;
     allocate_binary_error_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_CONFUSIONMATRIX
   case NN_FUNCTION_CONFUSION_MATRIX: { // ConfusionMatrix
-    function_context->func.exec_func = exec_confusion_matrix;
     function_context->func.free_local_context_func =
         free_confusion_matrix_local_context;
     nn_function_confusion_matrix_t *f =
@@ -1532,9 +1713,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_confusion_matrix_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_VATNOISE
   case NN_FUNCTION_VAT_NOISE: { // VATNoise
-    function_context->func.exec_func = exec_vat_noise;
     function_context->func.free_local_context_func =
         free_vat_noise_local_context;
     nn_function_vat_noise_t *f = (nn_function_vat_noise_t *)function;
@@ -1545,16 +1727,18 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_vat_noise_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_UNLINK
   case NN_FUNCTION_UNLINK: { // Unlink
-    function_context->func.exec_func = exec_unlink;
     function_context->func.free_local_context_func = free_unlink_local_context;
     function_context->func.local_context = 0;
     allocate_unlink_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_SINK
   case NN_FUNCTION_SINK: { // Sink
-    function_context->func.exec_func = exec_sink;
     function_context->func.free_local_context_func = free_sink_local_context;
     nn_function_sink_t *f = (nn_function_sink_t *)function;
     sink_local_context_t *ctx = rt_malloc_func(sizeof(sink_local_context_t));
@@ -1562,9 +1746,10 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_sink_local_context(&function_context->func);
   } break;
+#endif
 
+#ifdef CONFIG_NMSDETECTION2D
   case NN_FUNCTION_NMS_DETECTION2D: { // NmsDetection2d
-    function_context->func.exec_func = exec_nms_detection2d;
     function_context->func.free_local_context_func =
         free_nms_detection2d_local_context;
     nn_function_nms_detection2d_t *f =
@@ -1577,6 +1762,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.local_context = ctx;
     allocate_nms_detection2d_local_context(&function_context->func);
   } break;
+#endif
 
   default:
     function_context->func.local_context = 0;

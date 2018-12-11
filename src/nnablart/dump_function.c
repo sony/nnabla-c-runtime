@@ -115,10 +115,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    Mean(25)\n");
   } break;
   case NN_FUNCTION_MAX: { // Max
-    printf("NNB: Function type:    Max(26)\n");
+    printf("NNB: Function type:    Max(132)\n");
   } break;
   case NN_FUNCTION_MIN: { // Min
-    printf("NNB: Function type:    Min(27)\n");
+    printf("NNB: Function type:    Min(130)\n");
   } break;
   case NN_FUNCTION_PROD: { // Prod
     printf("NNB: Function type:    Prod(28)\n");
@@ -240,6 +240,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_CONSTANT: { // Constant
     printf("NNB: Function type:    Constant(67)\n");
   } break;
+  case NN_FUNCTION_ARANGE: { // Arange
+    printf("NNB: Function type:    Arange(131)\n");
+  } break;
   case NN_FUNCTION_ABS: { // Abs
     printf("NNB: Function type:    Abs(68)\n");
   } break;
@@ -329,6 +332,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_SHIFT: { // Shift
     printf("NNB: Function type:    Shift(82)\n");
+  } break;
+  case NN_FUNCTION_SORT: { // Sort
+    printf("NNB: Function type:    Sort(129)\n");
   } break;
   case NN_FUNCTION_RESHAPE: { // Reshape
     printf("NNB: Function type:    Reshape(126)\n");
@@ -434,6 +440,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
     printf("NNB: Function type:    Pow2Quantize(114)\n");
+  } break;
+  case NN_FUNCTION_PRUNE: { // Prune
+    printf("NNB: Function type:    Prune(135)\n");
   } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     printf("NNB: Function type:    TopNError(115)\n");
@@ -749,6 +758,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument keep_dims: %d\n", f->keep_dims);
+    printf("NNB: Function argument with_index: %d\n", f->with_index);
+    printf("NNB: Function argument only_index: %d\n", f->only_index);
   } break;
   case NN_FUNCTION_MIN: { // Min
     nn_function_min_t *f = (nn_function_min_t *)func;
@@ -759,6 +770,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument keep_dims: %d\n", f->keep_dims);
+    printf("NNB: Function argument with_index: %d\n", f->with_index);
+    printf("NNB: Function argument only_index: %d\n", f->only_index);
   } break;
   case NN_FUNCTION_PROD: { // Prod
     nn_function_prod_t *f = (nn_function_prod_t *)func;
@@ -899,6 +912,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
   } break;
+  case NN_FUNCTION_ARANGE: { // Arange
+    nn_function_arange_t *f = (nn_function_arange_t *)func;
+    printf("NNB: Function argument start: %f\n", f->start);
+    printf("NNB: Function argument stop: %f\n", f->stop);
+    printf("NNB: Function argument step: %f\n", f->step);
+  } break;
   case NN_FUNCTION_ABS: { // Abs
   } break;
   case NN_FUNCTION_EXP: { // Exp
@@ -1033,6 +1052,13 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument border_mode: %d\n", f->border_mode);
+  } break;
+  case NN_FUNCTION_SORT: { // Sort
+    nn_function_sort_t *f = (nn_function_sort_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
+    printf("NNB: Function argument reverse: %d\n", f->reverse);
+    printf("NNB: Function argument with_index: %d\n", f->with_index);
+    printf("NNB: Function argument only_index: %d\n", f->only_index);
   } break;
   case NN_FUNCTION_RESHAPE: { // Reshape
     nn_function_reshape_t *f = (nn_function_reshape_t *)func;
@@ -1344,6 +1370,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument m: %d\n", f->m);
     printf("NNB: Function argument ste_fine_grained: %d\n",
            f->ste_fine_grained);
+  } break;
+  case NN_FUNCTION_PRUNE: { // Prune
+    nn_function_prune_t *f = (nn_function_prune_t *)func;
+    printf("NNB: Function argument rate: %f\n", f->rate);
   } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     nn_function_top_n_error_t *f = (nn_function_top_n_error_t *)func;

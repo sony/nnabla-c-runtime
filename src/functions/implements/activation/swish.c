@@ -14,10 +14,13 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <assert.h>
 #include <math.h>
+
+#ifdef CONFIG_SWISH
 
 typedef struct {
   rt_variable_t *input;
@@ -39,7 +42,7 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  swish_local_context_t *c = malloc(sizeof(swish_local_context_t));
+  swish_local_context_t *c = rt_malloc_func(sizeof(swish_local_context_t));
   if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -54,14 +57,18 @@ rt_function_error_t allocate_swish_local_context(rt_function_t *f) {
   c->output_size = calc_shape_size(f->outputs[0]->shape);
 
   if (c->input_size != c->output_size) {
-    free(c);
+    rt_free_func(c);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (c->input->type == NN_DATA_TYPE_FLOAT &&
       c->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SWISH_FLOAT32
     f->exec_func = exec_swish;
+#endif /* CONFIG_SWISH_FLOAT32 */
   } else {
+#ifdef CONFIG_SWISH_GENERIC
     f->exec_func = exec_swish_generic;
+#endif /* CONFIG_SWISH_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -70,6 +77,7 @@ rt_function_error_t free_swish_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SWISH_FLOAT32
 rt_function_error_t exec_swish(rt_function_t *f) {
   swish_local_context_t *c = (swish_local_context_t *)(f->local_context);
   float *x = (float *)(c->input->data);
@@ -81,7 +89,9 @@ rt_function_error_t exec_swish(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SWISH_FLOAT32 */
 
+#ifdef CONFIG_SWISH_GENERIC
 rt_function_error_t exec_swish_generic(rt_function_t *f) {
   swish_local_context_t *c = (swish_local_context_t *)(f->local_context);
 
@@ -93,3 +103,6 @@ rt_function_error_t exec_swish_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SWISH_GENERIC */
+
+#endif /* CONFIG_SWISH */

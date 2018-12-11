@@ -24,8 +24,9 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_BINARY_FORMAT_VERSION  (2)
-#define NN_BINARY_FORMAT_REVISION ${BINARY_VERSION}
+#define NN_C_RUNTIME_VERSION  ("${C_RUNTIME_VERSION}")
+#define NN_BINARY_FORMAT_VERSION  (${NNB_VERSION})
+#define NN_BINARY_FORMAT_REVISION ("${BINARY_VERSION}")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -68,12 +69,18 @@ typedef enum {
 
 /// @brief Function implement type.
 typedef enum {
-  NN_END_OF_USER_DEFINED_FUNCTION_IMPLEMENT = 99, ///< User defined implement has implement type 0 to 99.
-  NN_FUNCTION_IMPLEMENT_AUTO,                     ///< Select functions automatically with input type.
-  NN_FUNCTION_IMPLEMENT_FLOAT,                    ///< RESERVED: Calculate with 32bit floating point.
-  NN_FUNCTION_IMPLEMENT_FIXED16,                  ///< RESERVED: Calculate with 16bit fixed point.
-  NN_FUNCTION_IMPLEMENT_FIXED8,                   ///< RESERVED: Calculate with 8bit fixed point.
-  NN_END_OF_IMPLEMENT = 65535                 // Ensure this type has 16bits
+  /// User defined implement has implement type 0 to 99.
+  NN_END_OF_USER_DEFINED_FUNCTION_IMPLEMENT = 99,
+  /// Select functions automatically with input type.
+  NN_FUNCTION_IMPLEMENT_AUTO,
+  /// RESERVED: Calculate with 32bit floating point.
+  NN_FUNCTION_IMPLEMENT_FLOAT,
+  /// RESERVED: Calculate with 16bit fixed point.
+  NN_FUNCTION_IMPLEMENT_FIXED16,
+  /// RESERVED: Calculate with 8bit fixed point.
+  NN_FUNCTION_IMPLEMENT_FIXED8,
+  /// Ensure this type has 16bits  
+  NN_END_OF_IMPLEMENT = 65535
 } nn_function_implement_t;
 
 /// @brief Common definition of Function.

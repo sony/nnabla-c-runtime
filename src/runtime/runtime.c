@@ -20,23 +20,20 @@
 
 #include "runtime_internal.h"
 
-void *(*rt_variable_malloc_func)(size_t size);
-void (*rt_variable_free_func)(void *ptr);
+void *(*rt_variable_malloc_func)(size_t size) = malloc;
+void (*rt_variable_free_func)(void *ptr) = free;
 
-void *(*rt_malloc_func)(size_t size);
-void (*rt_free_func)(void *ptr);
+void *(*rt_malloc_func)(size_t size) = malloc;
+void (*rt_free_func)(void *ptr) = free;
 
 rt_return_value_t rt_allocate_context(rt_context_pointer *context) {
-  rt_context_t *c = calloc(1, sizeof(rt_context_t));
+  rt_context_t *c = rt_malloc_func(sizeof(rt_context_t));
+  memset(c, 0, sizeof(rt_context_t));
   if (c == 0) {
     return RT_RET_ERROR_ALLOCATE_CONTEXT;
   }
   c->callbacks = 0;
   c->num_of_callbacks = 0;
-  rt_variable_malloc_func = malloc;
-  rt_variable_free_func = free;
-  rt_malloc_func = malloc;
-  rt_free_func = free;
   *context = c;
   return RT_RET_NOERROR;
 }
@@ -80,12 +77,20 @@ rt_return_value_t rt_add_callback(
   rt_context_t *c = context;
 
   rt_function_callback_t *callbacks;
-  callbacks = realloc(c->callbacks, (c->num_of_callbacks + 1) *
-                                        sizeof(rt_function_callback_t));
+  callbacks = rt_malloc_func((c->num_of_callbacks + 1) *
+                             sizeof(rt_function_callback_t));
   if (callbacks == 0) {
     return RT_RET_ERROR_ALLOCATE_CALLBACK_BUFFER;
   }
-  c->callbacks = callbacks;
+
+  if (c->callbacks == 0) {
+    c->callbacks = callbacks;
+  } else {
+    memcpy(callbacks, c->callbacks,
+           c->num_of_callbacks * sizeof(rt_function_callback_t));
+    rt_free_func(c->callbacks);
+    c->callbacks = callbacks;
+  }
 
   (c->callbacks + c->num_of_callbacks)->type = type;
   (c->callbacks + c->num_of_callbacks)->allocate_local_context =
@@ -242,6 +247,7 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
     c->functions[i].func.free_local_context_func(&(c->functions[i].func));
     if (c->functions[i].func.local_context != 0) {
       rt_free_func(c->functions[i].func.local_context);
+      c->functions[i].func.local_context = NULL;
     }
   }
   rt_free_func(c->functions);
@@ -251,10 +257,10 @@ rt_return_value_t rt_free_context(rt_context_pointer *context) {
 
   // Callback
   if (c->callbacks) {
-    free(c->callbacks);
+    rt_free_func(c->callbacks);
   }
 
-  free(*context);
+  rt_free_func(*context);
   return RT_RET_NOERROR;
 }
 
@@ -352,3 +358,9 @@ rt_return_value_t rt_forward(rt_context_pointer context) {
 
   return RT_RET_NOERROR;
 }
+
+const char *const rt_c_runtime_version(void) { return NN_C_RUNTIME_VERSION; }
+
+const int rt_nnb_version(void) { return NN_BINARY_FORMAT_VERSION; }
+
+const char *const rt_nnb_revision(void) { return NN_BINARY_FORMAT_REVISION; }

@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
 #include <string.h>
+
+#ifdef CONFIG_DECONVOLUTION
 
 typedef struct {
   rt_variable_t *input;
@@ -57,7 +60,7 @@ rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  deconvolution_private_t *p = malloc(sizeof(deconvolution_private_t));
+  deconvolution_private_t *p = rt_malloc_func(sizeof(deconvolution_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -101,9 +104,13 @@ rt_function_error_t allocate_deconvolution_local_context(rt_function_t *f) {
       p->output->type == NN_DATA_TYPE_FLOAT &&
       p->weight->type == NN_DATA_TYPE_FLOAT &&
       ((p->bias && p->bias->type == NN_DATA_TYPE_FLOAT) || !p->bias)) {
+#ifdef CONFIG_DECONVOLUTION_FLOAT32
     f->exec_func = exec_deconvolution;
+#endif /* CONFIG_DECONVOLUTION_FLOAT32 */
   } else {
+#ifdef CONFIG_DECONVOLUTION_GENERIC
     f->exec_func = exec_deconvolution_generic;
+#endif /* CONFIG_DECONVOLUTION_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -117,10 +124,11 @@ rt_function_error_t free_deconvolution_local_context(rt_function_t *f) {
   free_list(p->kernel_shape);
   free_list(p->in_position);
   free_list(p->out_position);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_DECONVOLUTION_FLOAT32
 rt_function_error_t exec_deconvolution(rt_function_t *f) {
   deconvolution_local_context_t *c =
       (deconvolution_local_context_t *)(f->local_context);
@@ -193,7 +201,9 @@ rt_function_error_t exec_deconvolution(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_DECONVOLUTION_FLOAT32 */
 
+#ifdef CONFIG_DECONVOLUTION_GENERIC
 rt_function_error_t exec_deconvolution_generic(rt_function_t *f) {
   deconvolution_local_context_t *c =
       (deconvolution_local_context_t *)(f->local_context);
@@ -203,7 +213,7 @@ rt_function_error_t exec_deconvolution_generic(rt_function_t *f) {
   int kernel_size = calc_shape_size(p->kernel_shape);
   int input_size = calc_shape_size(p->input_shape);
 
-  memset(p->output->data, 0, sizeof(float) * calc_shape_size(p->output->shape));
+  fill_variable_with(f->outputs[0], 0);
 
   for (int b = 0; b < p->base_loop_size; b++) {
     for (int g = 0; g < c->group; g++) {
@@ -272,3 +282,6 @@ rt_function_error_t exec_deconvolution_generic(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_DECONVOLUTION_GENERIC */
+
+#endif /* CONFIG_DECONVOLUTION */

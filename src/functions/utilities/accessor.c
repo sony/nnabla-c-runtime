@@ -11,8 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 #include "accessor.h"
+#include "shape.h"
+#include <string.h>
 
 float get_float(rt_variable_t *variable, nn_size_t pos) {
   return GET_FLOAT(variable, pos);
@@ -79,4 +80,30 @@ static rt_variable_setter setter_list[END_OF_NN_DATA_TYPE] = {
 
 rt_variable_setter select_setter(rt_variable_t *variable) {
   return setter_list[variable->type];
+}
+
+void fill_variable_with(rt_variable_t *variable, int8_t value) {
+  int size = calc_shape_size(variable->shape);
+
+  switch (variable->type) {
+  case NN_DATA_TYPE_FLOAT:
+    size *= sizeof(float);
+    break;
+
+  case NN_DATA_TYPE_INT16:
+    size *= sizeof(uint16_t);
+    break;
+
+  case NN_DATA_TYPE_INT8:
+    size *= sizeof(uint8_t);
+    break;
+
+  case NN_DATA_TYPE_SIGN:
+    size >>= 3;
+    break;
+
+  default:; // Do nothing
+  }
+
+  memset(variable->data, 0, size);
 }

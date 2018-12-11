@@ -14,10 +14,13 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 #include <string.h>
 
 #include <math.h>
+
+#ifdef CONFIG_SHIFT
 
 typedef struct {
   rt_list_t input_shape;
@@ -45,7 +48,7 @@ rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  shift_private_t *p = malloc(sizeof(shift_private_t));
+  shift_private_t *p = rt_malloc_func(sizeof(shift_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -60,12 +63,12 @@ rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
   p->output = f->outputs[0];
   p->set_output = select_setter(p->output);
 
-  p->table = malloc(sizeof(int *) * p->input_shape.size);
+  p->table = rt_malloc_func(sizeof(int *) * p->input_shape.size);
 
   for (int i = 0; i < p->input_shape.size; i++) {
     const int stride = p->input_strides.data[i];
     const int size = p->input_shape.data[i];
-    p->table[i] = malloc(size * sizeof(int));
+    p->table[i] = rt_malloc_func(size * sizeof(int));
     const int shift_index = context->shifts.size - p->input_shape.size + i;
     const int shift = shift_index >= 0 ? -context->shifts.data[shift_index] : 0;
 
@@ -82,9 +85,13 @@ rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_SHIFT_FLOAT32
     f->exec_func = exec_shift;
+#endif /* CONFIG_SHIFT_FLOAT32 */
   } else {
+#ifdef CONFIG_SHIFT_GENERIC
     f->exec_func = exec_shift_generic;
+#endif /* CONFIG_SHIFT_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -97,13 +104,14 @@ rt_function_error_t free_shift_local_context(rt_function_t *f) {
   free_list(p->input_strides);
   free_list(p->output_strides);
   for (int i = 0; i < p->input_shape.size; i++) {
-    free(p->table[i]);
+    rt_free_func(p->table[i]);
   }
-  free(p->table);
-  free(p);
+  rt_free_func(p->table);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_SHIFT_FLOAT32
 static void shift_recursive(shift_local_context_t *context, int x_offset,
                             int y_offset, int dim) {
   shift_private_t *p = (shift_private_t *)(context->data);
@@ -126,6 +134,15 @@ static void shift_recursive(shift_local_context_t *context, int x_offset,
   }
 }
 
+rt_function_error_t exec_shift(rt_function_t *f) {
+  shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
+
+  shift_recursive(context, 0, 0, 0);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_SHIFT_FLOAT32 */
+
+#ifdef CONFIG_SHIFT_GENERIC
 static void shift_recursive_generic(shift_local_context_t *context,
                                     int x_offset, int y_offset, int dim) {
   shift_private_t *p = (shift_private_t *)(context->data);
@@ -148,16 +165,12 @@ static void shift_recursive_generic(shift_local_context_t *context,
   }
 }
 
-rt_function_error_t exec_shift(rt_function_t *f) {
-  shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
-
-  shift_recursive(context, 0, 0, 0);
-  return RT_FUNCTION_ERROR_NOERROR;
-}
-
 rt_function_error_t exec_shift_generic(rt_function_t *f) {
   shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
 
   shift_recursive_generic(context, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_SHIFT_GENERIC */
+
+#endif /* CONFIG_SHIFT */

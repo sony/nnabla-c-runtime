@@ -17,7 +17,10 @@
 
 #include <assert.h>
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_CRELU
 
 typedef struct {
   rt_variable_t *input;
@@ -40,7 +43,8 @@ rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  crelu_private_t *p = (crelu_private_t *)malloc(sizeof(crelu_private_t));
+  crelu_private_t *p =
+      (crelu_private_t *)rt_malloc_func(sizeof(crelu_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -56,14 +60,18 @@ rt_function_error_t allocate_crelu_local_context(rt_function_t *f) {
 
   if (p->input_size * 2 != p->output_size) {
     free_list(p->in_shape);
-    free(p);
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_CRELU_FLOAT32
     f->exec_func = exec_crelu;
+#endif /* CONFIG_CRELU_FLOAT32 */
   } else {
+#ifdef CONFIG_CRELU_GENERIC
     f->exec_func = exec_crelu_generic;
+#endif /* CONFIG_CRELU_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -72,10 +80,11 @@ rt_function_error_t free_crelu_local_context(rt_function_t *f) {
   crelu_local_context_t *c = (crelu_local_context_t *)(f->local_context);
   crelu_private_t *p = (crelu_private_t *)(c->data);
   free_list(p->in_shape);
-  free(c->data);
+  rt_free_func(c->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_CRELU_FLOAT32
 /**
  * https://arxiv.org/pdf/1603.05201.pdf
  * Definition 2.1. CReLU activation, denoted by ρc : R →R2
@@ -101,7 +110,9 @@ rt_function_error_t exec_crelu(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_CRELU_FLOAT32 */
 
+#ifdef CONFIG_CRELU_GENERIC
 rt_function_error_t exec_crelu_generic(rt_function_t *f) {
   crelu_local_context_t *c = (crelu_local_context_t *)(f->local_context);
   crelu_private_t *p = (crelu_private_t *)(c->data);
@@ -123,3 +134,6 @@ rt_function_error_t exec_crelu_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_CRELU_GENERIC */
+
+#endif /* CONFIG_CRELU */

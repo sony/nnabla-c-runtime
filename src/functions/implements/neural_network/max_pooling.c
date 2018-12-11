@@ -14,17 +14,21 @@
 
 #include "pooling.h"
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <math.h>
 
+#ifdef CONFIG_MAXPOOLING
+
 rt_function_error_t allocate_max_pooling_local_context(rt_function_t *f) {
   max_pooling_local_context_t *context =
       (max_pooling_local_context_t *)(f->local_context);
-  pooling_private_t *p = malloc(sizeof(pooling_private_t));
+  pooling_private_t *p = rt_malloc_func(sizeof(pooling_private_t));
   rt_function_error_t ret =
       allocate_pooling(f, (pooling_context_t *)context, p);
   ((max_pooling_local_context_t *)(f->local_context))->data = (void *)p;
+  f->exec_func = exec_max_pooling;
   return ret;
 }
 
@@ -43,9 +47,16 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
                                 ->data);
   if (p->calc_context.x->type == NN_DATA_TYPE_FLOAT &&
       p->calc_context.y->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_MAXPOOLING_FLOAT32
     return exec_pooling(f, (pooling_context_t *)context, p, calc_max);
+#endif /* CONFIG_MAXPOOLING_FLOAT32 */
   } else {
+#ifdef CONFIG_MAXPOOLING_GENERIC
     return exec_pooling_generic(f, (pooling_context_t *)context, p,
                                 calc_max_generic);
+#endif /* CONFIG_MAXPOOLING_GENERIC */
   }
+  return RT_FUNCTION_ERROR_NOERROR;
 }
+
+#endif /* CONFIG_MAXPOOLING */

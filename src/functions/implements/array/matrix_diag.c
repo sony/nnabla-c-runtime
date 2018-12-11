@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_MATRIXDIAG
 
 typedef struct {
   rt_variable_t *input;
@@ -37,7 +40,8 @@ rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  matrix_diag_local_context_t *c = malloc(sizeof(matrix_diag_local_context_t));
+  matrix_diag_local_context_t *c =
+      rt_malloc_func(sizeof(matrix_diag_local_context_t));
   if (c == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -58,18 +62,22 @@ rt_function_error_t allocate_matrix_diag_local_context(rt_function_t *f) {
   }
   if (c->input->type == NN_DATA_TYPE_FLOAT &&
       c->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_MATRIXDIAG_FLOAT32
     f->exec_func = exec_matrix_diag;
+#endif /* CONFIG_MATRIXDIAG_FLOAT32 */
   } else {
+#ifdef CONFIG_MATRIXDIAG_GENERIC
     f->exec_func = exec_matrix_diag_generic;
+#endif /* CONFIG_MATRIXDIAG_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_matrix_diag_local_context(rt_function_t *f) {
-  free(f->local_context);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_MATRIXDIAG_FLOAT32
 rt_function_error_t exec_matrix_diag(rt_function_t *f) {
   matrix_diag_local_context_t *context =
       (matrix_diag_local_context_t *)(f->local_context);
@@ -88,7 +96,9 @@ rt_function_error_t exec_matrix_diag(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_MATRIXDIAG_FLOAT32 */
 
+#ifdef CONFIG_MATRIXDIAG_GENERIC
 rt_function_error_t exec_matrix_diag_generic(rt_function_t *f) {
   matrix_diag_local_context_t *context =
       (matrix_diag_local_context_t *)(f->local_context);
@@ -106,3 +116,6 @@ rt_function_error_t exec_matrix_diag_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_MATRIXDIAG_GENERIC */
+
+#endif /* CONFIG_MATRIXDIAG */

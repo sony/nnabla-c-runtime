@@ -19,16 +19,25 @@ include(${project_root}/build-tools/cmake/common.cmake)
 
 project(nnabla-c-runtime)
 
+file(STRINGS ${project_root}/VERSION.txt versions NEWLINE_CONSUME)
+string(REGEX REPLACE [[^.*C_RUNTIME_VERSION: ([A-z0-9.\-_]+).*$]] [[\1]] c_runtime_version ${versions})
+string(REGEX REPLACE [[^([0-9]+)\.([0-9]+)\.(.*)$]] [[\1]] c_runtime_version_major ${c_runtime_version})
+string(REGEX REPLACE [[^([0-9]+)\.([0-9]+)\.(.*)$]] [[\2]] c_runtime_version_minor ${c_runtime_version})
+string(REGEX REPLACE [[^([0-9]+)\.([0-9]+)\.(.*)$]] [[\3]] c_runtime_version_patch ${c_runtime_version})
+string(REGEX REPLACE [[^.*NNB_VERSION: ([0-9]+).*$]] [[\1]] nnb_version ${versions})
+
 add_subdirectory(src/runtime)
 add_subdirectory(src/functions)
 add_subdirectory(src/nnablart)
-
 
 set(CPACK_GENERATOR "ZIP")
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VENDOR "Sony")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Neural Network Libraries C runtime.")
-set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Yukio.Oobuchi@sony.com")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "nnabla@googlegroups.com")
+set(CPACK_PACKAGE_VERSION_MAJOR ${c_runtime_version_major})
+set(CPACK_PACKAGE_VERSION_MINOR ${c_runtime_version_minor})
+set(CPACK_PACKAGE_VERSION_PATCH ${c_runtime_version_patch})
 
 set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-Source-${CPACK_PACKAGE_VERSION})

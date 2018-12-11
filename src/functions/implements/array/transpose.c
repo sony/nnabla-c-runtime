@@ -14,7 +14,10 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_TRANSPOSE
 
 typedef struct {
   rt_variable_t *input;
@@ -39,7 +42,7 @@ rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS;
   }
 
-  transpose_private_t *p = malloc(sizeof(transpose_private_t));
+  transpose_private_t *p = rt_malloc_func(sizeof(transpose_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -57,9 +60,13 @@ rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
 
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_TRANSPOSE_FLOAT32
     f->exec_func = exec_transpose;
+#endif /* CONFIG_TRANSPOSE_FLOAT32 */
   } else {
+#ifdef CONFIG_TRANSPOSE_GENERIC
     f->exec_func = exec_transpose_generic;
+#endif /* CONFIG_TRANSPOSE_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -72,10 +79,11 @@ rt_function_error_t free_transpose_local_context(rt_function_t *f) {
   free_list(p->output_shape);
   free_list(p->input_strides);
   free_list(p->output_strides);
-  free(p);
+  rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+#ifdef CONFIG_TRANSPOSE_FLOAT32
 rt_function_error_t exec_transpose(rt_function_t *f) {
   transpose_local_context_t *c =
       (transpose_local_context_t *)(f->local_context);
@@ -94,7 +102,9 @@ rt_function_error_t exec_transpose(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_TRANSPOSE_FLOAT32 */
 
+#ifdef CONFIG_TRANSPOSE_GENERIC
 rt_function_error_t exec_transpose_generic(rt_function_t *f) {
   transpose_local_context_t *c =
       (transpose_local_context_t *)(f->local_context);
@@ -112,3 +122,6 @@ rt_function_error_t exec_transpose_generic(rt_function_t *f) {
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_TRANSPOSE_GENERIC */
+
+#endif /* CONFIG_TRANSPOSE */

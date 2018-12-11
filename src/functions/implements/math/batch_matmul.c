@@ -14,8 +14,11 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 #include <stdio.h>
+
+#ifdef CONFIG_BATCHMATMUL
 
 typedef struct {
   int samples;
@@ -51,7 +54,7 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
 
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
-  batch_matmul_private_t *p = malloc(sizeof(batch_matmul_private_t));
+  batch_matmul_private_t *p = rt_malloc_func(sizeof(batch_matmul_private_t));
   if (p == 0) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
@@ -86,22 +89,25 @@ rt_function_error_t allocate_batch_matmul_local_context(rt_function_t *f) {
   p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
 
-  if (p->output_size != p->row_y * p->col_y || p->col_a != p->row_b ||
-      p->samples != samples_b) {
+  if (p->samples != samples_b) {
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   if (p->input_a->type == NN_DATA_TYPE_FLOAT &&
       p->input_b->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
+#ifdef CONFIG_BATCHMATMUL_FLOAT32
     f->exec_func = exec_batch_matmul;
+#endif /* CONFIG_BATCHMATMUL_FLOAT32 */
   } else {
+#ifdef CONFIG_BATCHMATMUL_GENERIC
     f->exec_func = exec_batch_matmul_generic;
+#endif /* CONFIG_BATCHMATMUL_GENERIC */
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 rt_function_error_t free_batch_matmul_local_context(rt_function_t *f) {
-  free(((batch_matmul_local_context_t *)(f->local_context))->data);
+  rt_free_func(((batch_matmul_local_context_t *)(f->local_context))->data);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
@@ -131,6 +137,7 @@ static void transpose(float *mtx, int m, int n) {
   }
 }
 
+#ifdef CONFIG_BATCHMATMUL_FLOAT32
 rt_function_error_t exec_batch_matmul(rt_function_t *f) {
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
@@ -176,7 +183,9 @@ rt_function_error_t exec_batch_matmul(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_BATCHMATMUL_FLOAT32 */
 
+#ifdef CONFIG_BATCHMATMUL_GENERIC
 rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
   batch_matmul_local_context_t *context =
       (batch_matmul_local_context_t *)(f->local_context);
@@ -220,3 +229,6 @@ rt_function_error_t exec_batch_matmul_generic(rt_function_t *f) {
 
   return RT_FUNCTION_ERROR_NOERROR;
 }
+#endif /* CONFIG_BATCHMATMUL_GENERIC */
+
+#endif /* CONFIG_BATCHMATMUL */

@@ -19,7 +19,10 @@
 
 #include <assert.h>
 #include <math.h>
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
+
+#ifdef CONFIG_CONVOLUTION
 
 #define X (0)      // x input
 #define WEIGHT (1) // weight
@@ -29,8 +32,11 @@
 
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
+#ifdef CONFIG_CONVOLUTION_FLOAT32
   f->exec_func = exec_convolution;
+#endif /* CONFIG_CONVOLUTION_FLOAT32 */
 
+#ifdef CONFIG_CONVOLUTION_GENERIC
   for (int i = 0; i < f->num_of_inputs; i++) {
     if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
       f->exec_func = exec_convolution_generic;
@@ -40,7 +46,7 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
   if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
     f->exec_func = exec_convolution_generic;
   }
-
+#endif /* CONFIG_CONVOLUTION_GENERIC */
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA,
                                                    Y0);
 }
@@ -49,6 +55,10 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f) {
   return free_convolution_local_context_common(f);
 }
 
+#ifdef CONFIG_CONVOLUTION_FLOAT32
 rt_function_error_t exec_convolution(rt_function_t *f) {
   return exec_convolution_float(f);
 }
+#endif /* CONFIG_CONVOLUTION_FLOAT32 */
+
+#endif /* CONFIG_CONVOLUTION */
