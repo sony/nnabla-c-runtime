@@ -34,6 +34,7 @@ nnabla-c-runtime-build: nnabla-c-runtime-generate nnabla-c-runtime-auto-format n
 .PHONY: nnabla-c-runtime-generate
 nnabla-c-runtime-generate:
 	@cd $(NNABLA_C_RUNTIME_DIRECTORY) && python3 build-tools/code-generator/generate.py
+	@python3 build-tools/code-generator/header_create.py
 
 .PHONY: nnabla-c-runtime-compile
 nnabla-c-runtime-compile:

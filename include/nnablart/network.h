@@ -26,7 +26,7 @@ extern "C" {
 
 #define NN_C_RUNTIME_VERSION ("1.0.10.dev1")
 #define NN_BINARY_FORMAT_VERSION (2)
-#define NN_BINARY_FORMAT_REVISION ("c542645e2e6287265309f73b52e5c391")
+#define NN_BINARY_FORMAT_REVISION ("165adf86924672bceb20845af29484e1")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation

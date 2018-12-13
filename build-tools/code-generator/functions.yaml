@@ -34,8 +34,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       i: 0
+    c_runtime: support
     uniq_name: Affine_i
     id: 0
+    func_type:
+    - ALL
   Convolution:
     snake_name: convolution
     inputs:
@@ -65,8 +68,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iiIiIiIi: 1
+    c_runtime: support
     uniq_name: Convolution_iiIiIiIi
     id: 1
+    func_type:
+    - ALL
   DepthwiseConvolution:
     snake_name: depthwise_convolution
     inputs:
@@ -96,8 +102,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iiIiIiIi: 2
+    c_runtime: support
     uniq_name: DepthwiseConvolution_iiIiIiIi
     id: 2
+    func_type:
+    - ALL
   Deconvolution:
     snake_name: deconvolution
     inputs:
@@ -127,8 +136,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iiIiIiIi: 3
+    c_runtime: support
     uniq_name: Deconvolution_iiIiIiIi
     id: 3
+    func_type:
+    - ALL
   DepthwiseDeconvolution:
     snake_name: depthwise_deconvolution
     inputs:
@@ -158,8 +170,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iiIiIiIi: 4
+    c_runtime: not support
     uniq_name: DepthwiseDeconvolution_iiIiIiIi
     id: 4
+    func_type:
+    - ALL
   MaxPooling:
     snake_name: max_pooling
     inputs:
@@ -180,8 +195,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iIiIBiI: 5
+    c_runtime: support
     uniq_name: MaxPooling_iIiIBiI
     id: 5
+    func_type:
+    - ALL
   AveragePooling:
     snake_name: average_pooling
     inputs:
@@ -205,8 +223,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iIiIBiIB: 6
+    c_runtime: support
     uniq_name: AveragePooling_iIiIBiIB
     id: 6
+    func_type:
+    - ALL
   GlobalAveragePooling:
     snake_name: global_average_pooling
     inputs:
@@ -215,8 +236,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       Empty: 7
+    c_runtime: not support
     uniq_name: GlobalAveragePooling
     id: 7
+    func_type:
+    - ALL
   SumPooling:
     snake_name: sum_pooling
     inputs:
@@ -237,8 +261,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iIiIBiI: 8
+    c_runtime: support
     uniq_name: SumPooling_iIiIBiI
     id: 8
+    func_type:
+    - ALL
   Unpooling:
     snake_name: unpooling
     inputs:
@@ -250,8 +277,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       iI: 9
+    c_runtime: support
     uniq_name: Unpooling_iI
     id: 9
+    func_type:
+    - ALL
   Embed:
     snake_name: embed
     inputs:
@@ -263,8 +293,11 @@ Neural Network Layer:
       y: {}
     function_ids:
       Empty: 10
+    c_runtime: not support
     uniq_name: Embed
     id: 10
+    func_type:
+    - ALL
 Neural Network Activation Functions:
   Sigmoid:
     snake_name: sigmoid
@@ -274,8 +307,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       Empty: 11
+    c_runtime: support
     uniq_name: Sigmoid
     id: 11
+    func_type:
+    - ALL
   Swish:
     snake_name: swish
     inputs:
@@ -284,8 +320,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       Empty: 12
+    c_runtime: support
     uniq_name: Swish
     id: 12
+    func_type:
+    - ALL
   Tanh:
     snake_name: tanh
     inputs:
@@ -294,8 +333,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       Empty: 13
+    c_runtime: support
     uniq_name: Tanh
     id: 13
+    func_type:
+    - ALL
   ReLU:
     snake_name: relu
     inputs:
@@ -308,8 +350,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       B: 14
+    c_runtime: support
     uniq_name: ReLU_B
     id: 14
+    func_type:
+    - ALL
   LeakyReLU:
     snake_name: leaky_relu
     inputs:
@@ -326,8 +371,11 @@ Neural Network Activation Functions:
     function_ids:
       f: 15
       fB: 128
+    c_runtime: support
     uniq_name: LeakyReLU_fB
     id: 128
+    func_type:
+    - ALL
   Softmax:
     snake_name: softmax
     inputs:
@@ -340,8 +388,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       i: 16
+    c_runtime: support
     uniq_name: Softmax_i
     id: 16
+    func_type:
+    - ALL
   ELU:
     snake_name: elu
     inputs:
@@ -354,8 +405,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       f: 17
+    c_runtime: support
     uniq_name: ELU_f
     id: 17
+    func_type:
+    - ALL
   SELU:
     snake_name: selu
     inputs:
@@ -371,8 +425,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       ff: 18
+    c_runtime: support
     uniq_name: SELU_ff
     id: 18
+    func_type:
+    - ALL
   CReLU:
     snake_name: crelu
     inputs:
@@ -385,8 +442,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       i: 19
+    c_runtime: support
     uniq_name: CReLU_i
     id: 19
+    func_type:
+    - ALL
   CELU:
     snake_name: celu
     inputs:
@@ -402,8 +462,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       fi: 20
+    c_runtime: support
     uniq_name: CELU_fi
     id: 20
+    func_type:
+    - ALL
   PReLU:
     snake_name: prelu
     inputs:
@@ -417,8 +480,11 @@ Neural Network Activation Functions:
       y: {}
     function_ids:
       i: 21
+    c_runtime: support
     uniq_name: PReLU_i
     id: 21
+    func_type:
+    - ALL
 Normalization:
   BatchNormalization:
     snake_name: batch_normalization
@@ -445,8 +511,11 @@ Normalization:
       y: {}
     function_ids:
       iIffB: 22
+    c_runtime: support
     uniq_name: BatchNormalization_iIffB
     id: 22
+    func_type:
+    - ALL
   MeanSubtraction:
     snake_name: mean_subtraction
     inputs:
@@ -464,8 +533,11 @@ Normalization:
       y: {}
     function_ids:
       iB: 23
+    c_runtime: support
     uniq_name: MeanSubtraction_iB
     id: 23
+    func_type:
+    - ALL
   ClipGradByValue:
     snake_name: clip_grad_by_value
     inputs:
@@ -476,8 +548,11 @@ Normalization:
       y: {}
     function_ids:
       Empty: 121
+    c_runtime: not support
     uniq_name: ClipGradByValue
     id: 121
+    func_type:
+    - ALL
   ClipGradByNorm:
     snake_name: clip_grad_by_norm
     inputs:
@@ -493,8 +568,11 @@ Normalization:
       y: {}
     function_ids:
       fiI: 122
+    c_runtime: not support
     uniq_name: ClipGradByNorm_fiI
     id: 122
+    func_type:
+    - ALL
 Reduction:
   Sum:
     snake_name: sum
@@ -511,8 +589,11 @@ Reduction:
       y: {}
     function_ids:
       iIB: 24
+    c_runtime: support
     uniq_name: Sum_iIB
     id: 24
+    func_type:
+    - ALL
   Mean:
     snake_name: mean
     inputs:
@@ -528,8 +609,11 @@ Reduction:
       y: {}
     function_ids:
       iIB: 25
+    c_runtime: not support
     uniq_name: Mean_iIB
     id: 25
+    func_type:
+    - ALL
   Max:
     snake_name: max
     inputs:
@@ -552,8 +636,11 @@ Reduction:
     function_ids:
       iIB: 26
       iIBBB: 132
+    c_runtime: not support
     uniq_name: Max_iIBBB
     id: 132
+    func_type:
+    - ALL
   Min:
     snake_name: min
     inputs:
@@ -576,8 +663,11 @@ Reduction:
     function_ids:
       iIB: 27
       iIBBB: 130
+    c_runtime: not support
     uniq_name: Min_iIBBB
     id: 130
+    func_type:
+    - ALL
   Prod:
     snake_name: prod
     inputs:
@@ -593,8 +683,11 @@ Reduction:
       y: {}
     function_ids:
       iIB: 28
+    c_runtime: not support
     uniq_name: Prod_iIB
     id: 28
+    func_type:
+    - ALL
   ReduceSum:
     snake_name: reduce_sum
     inputs:
@@ -603,8 +696,11 @@ Reduction:
       y: {}
     function_ids:
       Empty: 29
+    c_runtime: not support
     uniq_name: ReduceSum
     id: 29
+    func_type:
+    - ALL
   ReduceMean:
     snake_name: reduce_mean
     inputs:
@@ -613,8 +709,11 @@ Reduction:
       y: {}
     function_ids:
       Empty: 30
+    c_runtime: not support
     uniq_name: ReduceMean
     id: 30
+    func_type:
+    - ALL
 Arithmetic:
   Add2:
     snake_name: add2
@@ -629,8 +728,11 @@ Arithmetic:
       y: {}
     function_ids:
       B: 31
+    c_runtime: support
     uniq_name: Add2_B
     id: 31
+    func_type:
+    - ALL
   BcAdd2:
     snake_name: bc_add2
     inputs:
@@ -640,8 +742,11 @@ Arithmetic:
       y: {}
     function_ids:
       Empty: 32
+    c_runtime: not support
     uniq_name: BcAdd2
     id: 32
+    func_type:
+    - ALL
   Sub2:
     snake_name: sub2
     inputs:
@@ -651,8 +756,11 @@ Arithmetic:
       y: {}
     function_ids:
       Empty: 33
+    c_runtime: support
     uniq_name: Sub2
     id: 33
+    func_type:
+    - ALL
   Mul2:
     snake_name: mul2
     inputs:
@@ -662,8 +770,11 @@ Arithmetic:
       y: {}
     function_ids:
       Empty: 34
+    c_runtime: support
     uniq_name: Mul2
     id: 34
+    func_type:
+    - ALL
   Div2:
     snake_name: div2
     inputs:
@@ -673,8 +784,11 @@ Arithmetic:
       y: {}
     function_ids:
       Empty: 35
+    c_runtime: support
     uniq_name: Div2
     id: 35
+    func_type:
+    - ALL
   Pow2:
     snake_name: pow2
     inputs:
@@ -684,8 +798,11 @@ Arithmetic:
       y: {}
     function_ids:
       Empty: 36
+    c_runtime: support
     uniq_name: Pow2
     id: 36
+    func_type:
+    - ALL
   AddScalar:
     snake_name: add_scalar
     inputs:
@@ -698,8 +815,11 @@ Arithmetic:
       y: {}
     function_ids:
       f: 37
+    c_runtime: support
     uniq_name: AddScalar_f
     id: 37
+    func_type:
+    - ALL
   MulScalar:
     snake_name: mul_scalar
     inputs:
@@ -712,8 +832,11 @@ Arithmetic:
       y: {}
     function_ids:
       f: 38
+    c_runtime: support
     uniq_name: MulScalar_f
     id: 38
+    func_type:
+    - ALL
   PowScalar:
     snake_name: pow_scalar
     inputs:
@@ -726,8 +849,11 @@ Arithmetic:
       y: {}
     function_ids:
       f: 39
+    c_runtime: support
     uniq_name: PowScalar_f
     id: 39
+    func_type:
+    - ALL
   RSubScalar:
     snake_name: r_sub_scalar
     inputs:
@@ -740,8 +866,11 @@ Arithmetic:
       y: {}
     function_ids:
       f: 40
+    c_runtime: support
     uniq_name: RSubScalar_f
     id: 40
+    func_type:
+    - ALL
   RDivScalar:
     snake_name: r_div_scalar
     inputs:
@@ -754,8 +883,11 @@ Arithmetic:
       y: {}
     function_ids:
       f: 41
+    c_runtime: support
     uniq_name: RDivScalar_f
     id: 41
+    func_type:
+    - ALL
   RPowScalar:
     snake_name: r_pow_scalar
     inputs:
@@ -768,8 +900,11 @@ Arithmetic:
       y: {}
     function_ids:
       f: 42
+    c_runtime: support
     uniq_name: RPowScalar_f
     id: 42
+    func_type:
+    - ALL
 Logical:
   Sign:
     snake_name: sign
@@ -783,8 +918,11 @@ Logical:
       y: {}
     function_ids:
       f: 43
+    c_runtime: support
     uniq_name: Sign_f
     id: 43
+    func_type:
+    - ALL
   Minimum2:
     snake_name: minimum2
     inputs:
@@ -794,8 +932,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 44
+    c_runtime: support
     uniq_name: Minimum2
     id: 44
+    func_type:
+    - ALL
   Maximum2:
     snake_name: maximum2
     inputs:
@@ -805,8 +946,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 45
+    c_runtime: support
     uniq_name: Maximum2
     id: 45
+    func_type:
+    - ALL
   MinimumScalar:
     snake_name: minimum_scalar
     inputs:
@@ -819,8 +963,11 @@ Logical:
       y: {}
     function_ids:
       f: 46
+    c_runtime: support
     uniq_name: MinimumScalar_f
     id: 46
+    func_type:
+    - ALL
   MaximumScalar:
     snake_name: maximum_scalar
     inputs:
@@ -833,8 +980,11 @@ Logical:
       y: {}
     function_ids:
       f: 47
+    c_runtime: support
     uniq_name: MaximumScalar_f
     id: 47
+    func_type:
+    - ALL
   LogicalAnd:
     snake_name: logical_and
     inputs:
@@ -844,8 +994,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 48
+    c_runtime: not support
     uniq_name: LogicalAnd
     id: 48
+    func_type:
+    - ALL
   LogicalOr:
     snake_name: logical_or
     inputs:
@@ -855,8 +1008,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 49
+    c_runtime: not support
     uniq_name: LogicalOr
     id: 49
+    func_type:
+    - ALL
   LogicalXor:
     snake_name: logical_xor
     inputs:
@@ -866,8 +1022,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 50
+    c_runtime: not support
     uniq_name: LogicalXor
     id: 50
+    func_type:
+    - ALL
   Equal:
     snake_name: equal
     inputs:
@@ -877,8 +1036,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 51
+    c_runtime: not support
     uniq_name: Equal
     id: 51
+    func_type:
+    - ALL
   NotEqual:
     snake_name: not_equal
     inputs:
@@ -888,8 +1050,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 52
+    c_runtime: not support
     uniq_name: NotEqual
     id: 52
+    func_type:
+    - ALL
   GreaterEqual:
     snake_name: greater_equal
     inputs:
@@ -899,8 +1064,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 53
+    c_runtime: not support
     uniq_name: GreaterEqual
     id: 53
+    func_type:
+    - ALL
   Greater:
     snake_name: greater
     inputs:
@@ -910,8 +1078,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 54
+    c_runtime: not support
     uniq_name: Greater
     id: 54
+    func_type:
+    - ALL
   LessEqual:
     snake_name: less_equal
     inputs:
@@ -921,8 +1092,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 55
+    c_runtime: not support
     uniq_name: LessEqual
     id: 55
+    func_type:
+    - ALL
   Less:
     snake_name: less
     inputs:
@@ -932,8 +1106,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 56
+    c_runtime: not support
     uniq_name: Less
     id: 56
+    func_type:
+    - ALL
   LogicalAndScalar:
     snake_name: logical_and_scalar
     inputs:
@@ -945,8 +1122,11 @@ Logical:
       y: {}
     function_ids:
       B: 57
+    c_runtime: not support
     uniq_name: LogicalAndScalar_B
     id: 57
+    func_type:
+    - ALL
   LogicalOrScalar:
     snake_name: logical_or_scalar
     inputs:
@@ -958,8 +1138,11 @@ Logical:
       y: {}
     function_ids:
       B: 58
+    c_runtime: not support
     uniq_name: LogicalOrScalar_B
     id: 58
+    func_type:
+    - ALL
   LogicalXorScalar:
     snake_name: logical_xor_scalar
     inputs:
@@ -971,8 +1154,11 @@ Logical:
       y: {}
     function_ids:
       B: 59
+    c_runtime: not support
     uniq_name: LogicalXorScalar_B
     id: 59
+    func_type:
+    - ALL
   EqualScalar:
     snake_name: equal_scalar
     inputs:
@@ -985,8 +1171,11 @@ Logical:
       y: {}
     function_ids:
       f: 60
+    c_runtime: not support
     uniq_name: EqualScalar_f
     id: 60
+    func_type:
+    - ALL
   NotEqualScalar:
     snake_name: not_equal_scalar
     inputs:
@@ -999,8 +1188,11 @@ Logical:
       y: {}
     function_ids:
       f: 61
+    c_runtime: not support
     uniq_name: NotEqualScalar_f
     id: 61
+    func_type:
+    - ALL
   GreaterEqualScalar:
     snake_name: greater_equal_scalar
     inputs:
@@ -1013,8 +1205,11 @@ Logical:
       y: {}
     function_ids:
       f: 62
+    c_runtime: not support
     uniq_name: GreaterEqualScalar_f
     id: 62
+    func_type:
+    - ALL
   GreaterScalar:
     snake_name: greater_scalar
     inputs:
@@ -1027,8 +1222,11 @@ Logical:
       y: {}
     function_ids:
       f: 63
+    c_runtime: not support
     uniq_name: GreaterScalar_f
     id: 63
+    func_type:
+    - ALL
   LessEqualScalar:
     snake_name: less_equal_scalar
     inputs:
@@ -1041,8 +1239,11 @@ Logical:
       y: {}
     function_ids:
       f: 64
+    c_runtime: not support
     uniq_name: LessEqualScalar_f
     id: 64
+    func_type:
+    - ALL
   LessScalar:
     snake_name: less_scalar
     inputs:
@@ -1055,8 +1256,11 @@ Logical:
       y: {}
     function_ids:
       f: 65
+    c_runtime: not support
     uniq_name: LessScalar_f
     id: 65
+    func_type:
+    - ALL
   LogicalNot:
     snake_name: logical_not
     inputs:
@@ -1065,8 +1269,11 @@ Logical:
       y: {}
     function_ids:
       Empty: 66
+    c_runtime: not support
     uniq_name: LogicalNot
     id: 66
+    func_type:
+    - ALL
 Math:
   Constant:
     snake_name: constant
@@ -1082,8 +1289,11 @@ Math:
       y: {}
     function_ids:
       fiI: 67
+    c_runtime: not support
     uniq_name: Constant_fiI
     id: 67
+    func_type:
+    - ALL
   Arange:
     snake_name: arange
     inputs: {}
@@ -1099,8 +1309,11 @@ Math:
       y: {}
     function_ids:
       fff: 131
+    c_runtime: not support
     uniq_name: Arange_fff
     id: 131
+    func_type:
+    - ALL
   Abs:
     snake_name: abs
     inputs:
@@ -1109,8 +1322,11 @@ Math:
       y: {}
     function_ids:
       Empty: 68
+    c_runtime: support
     uniq_name: Abs
     id: 68
+    func_type:
+    - ALL
   Exp:
     snake_name: exp
     inputs:
@@ -1119,8 +1335,11 @@ Math:
       y: {}
     function_ids:
       Empty: 69
+    c_runtime: support
     uniq_name: Exp
     id: 69
+    func_type:
+    - ALL
   Log:
     snake_name: log
     inputs:
@@ -1129,8 +1348,11 @@ Math:
       y: {}
     function_ids:
       Empty: 70
+    c_runtime: support
     uniq_name: Log
     id: 70
+    func_type:
+    - ALL
   Identity:
     snake_name: identity
     inputs:
@@ -1139,8 +1361,11 @@ Math:
       y: {}
     function_ids:
       Empty: 71
+    c_runtime: support
     uniq_name: Identity
     id: 71
+    func_type:
+    - ALL
   BatchMatmul:
     snake_name: batch_matmul
     inputs:
@@ -1157,8 +1382,11 @@ Math:
       y: {}
     function_ids:
       BB: 72
+    c_runtime: support
     uniq_name: BatchMatmul_BB
     id: 72
+    func_type:
+    - ALL
   Round:
     snake_name: round
     inputs:
@@ -1168,8 +1396,11 @@ Math:
       y: {}
     function_ids:
       Empty: 73
+    c_runtime: support
     uniq_name: Round_
     id: 73
+    func_type:
+    - ALL
   Ceil:
     snake_name: ceil
     inputs:
@@ -1179,8 +1410,11 @@ Math:
       y: {}
     function_ids:
       Empty: 124
+    c_runtime: not support
     uniq_name: Ceil_
     id: 124
+    func_type:
+    - ALL
   Floor:
     snake_name: floor
     inputs:
@@ -1190,8 +1424,11 @@ Math:
       y: {}
     function_ids:
       Empty: 125
+    c_runtime: not support
     uniq_name: Floor_
     id: 125
+    func_type:
+    - ALL
   Sin:
     snake_name: sin
     inputs:
@@ -1200,8 +1437,11 @@ Math:
       y: {}
     function_ids:
       Empty: 173
+    c_runtime: not support
     uniq_name: Sin
     id: 173
+    func_type:
+    - ALL
   Cos:
     snake_name: cos
     inputs:
@@ -1210,8 +1450,11 @@ Math:
       y: {}
     function_ids:
       Empty: 174
+    c_runtime: not support
     uniq_name: Cos
     id: 174
+    func_type:
+    - ALL
   Tan:
     snake_name: tan
     inputs:
@@ -1220,8 +1463,11 @@ Math:
       y: {}
     function_ids:
       Empty: 175
+    c_runtime: not support
     uniq_name: Tan
     id: 175
+    func_type:
+    - ALL
   Sinh:
     snake_name: sinh
     inputs:
@@ -1230,8 +1476,11 @@ Math:
       y: {}
     function_ids:
       Empty: 176
+    c_runtime: not support
     uniq_name: Sinh
     id: 176
+    func_type:
+    - ALL
   Cosh:
     snake_name: cosh
     inputs:
@@ -1240,8 +1489,11 @@ Math:
       y: {}
     function_ids:
       Empty: 177
+    c_runtime: not support
     uniq_name: Cosh
     id: 177
+    func_type:
+    - ALL
   ASin:
     snake_name: asin
     inputs:
@@ -1250,8 +1502,11 @@ Math:
       y: {}
     function_ids:
       Empty: 178
+    c_runtime: not support
     uniq_name: ASin
     id: 178
+    func_type:
+    - ALL
   ACos:
     snake_name: acos
     inputs:
@@ -1260,8 +1515,11 @@ Math:
       y: {}
     function_ids:
       Empty: 179
+    c_runtime: not support
     uniq_name: ACos
     id: 179
+    func_type:
+    - ALL
   ATan:
     snake_name: atan
     inputs:
@@ -1270,8 +1528,11 @@ Math:
       y: {}
     function_ids:
       Empty: 180
+    c_runtime: not support
     uniq_name: ATan
     id: 180
+    func_type:
+    - ALL
   ASinh:
     snake_name: asinh
     inputs:
@@ -1280,8 +1541,11 @@ Math:
       y: {}
     function_ids:
       Empty: 181
+    c_runtime: not support
     uniq_name: ASinh
     id: 181
+    func_type:
+    - ALL
   ACosh:
     snake_name: acosh
     inputs:
@@ -1290,8 +1554,11 @@ Math:
       y: {}
     function_ids:
       Empty: 182
+    c_runtime: not support
     uniq_name: ACosh
     id: 182
+    func_type:
+    - ALL
   ATanh:
     snake_name: atanh
     inputs:
@@ -1300,8 +1567,11 @@ Math:
       y: {}
     function_ids:
       Empty: 183
+    c_runtime: not support
     uniq_name: ATanh
     id: 183
+    func_type:
+    - ALL
 Array Manipulation:
   Concatenate:
     snake_name: concatenate
@@ -1316,8 +1586,11 @@ Array Manipulation:
       y: {}
     function_ids:
       i: 74
+    c_runtime: support
     uniq_name: Concatenate_i
     id: 74
+    func_type:
+    - ALL
   Split:
     snake_name: split
     inputs:
@@ -1332,8 +1605,11 @@ Array Manipulation:
         parameter: true
     function_ids:
       i: 75
+    c_runtime: support
     uniq_name: Split_i
     id: 75
+    func_type:
+    - ALL
   Stack:
     snake_name: stack
     inputs:
@@ -1347,8 +1623,11 @@ Array Manipulation:
       y: {}
     function_ids:
       i: 76
+    c_runtime: support
     uniq_name: Stack_i
     id: 76
+    func_type:
+    - ALL
   Slice:
     snake_name: slice
     inputs:
@@ -1367,8 +1646,11 @@ Array Manipulation:
       y: {}
     function_ids:
       iIiIiI: 77
+    c_runtime: support
     uniq_name: Slice_iIiIiI
     id: 77
+    func_type:
+    - ALL
   Pad:
     snake_name: pad
     inputs:
@@ -1389,8 +1671,11 @@ Array Manipulation:
       y: {}
     function_ids:
       iIif: 123
+    c_runtime: not support
     uniq_name: Pad_iIif
     id: 123
+    func_type:
+    - ALL
   Transpose:
     snake_name: transpose
     inputs:
@@ -1402,8 +1687,11 @@ Array Manipulation:
       y: {}
     function_ids:
       iI: 78
+    c_runtime: support
     uniq_name: Transpose_iI
     id: 78
+    func_type:
+    - ALL
   Broadcast:
     snake_name: broadcast
     inputs:
@@ -1415,8 +1703,11 @@ Array Manipulation:
       y: {}
     function_ids:
       iI: 79
+    c_runtime: not support
     uniq_name: Broadcast_iI
     id: 79
+    func_type:
+    - ALL
   BroadcastTo:
     snake_name: broadcast_to
     inputs:
@@ -1430,8 +1721,11 @@ Array Manipulation:
       z: {}
     function_ids:
       i: 184
+    c_runtime: not support
     uniq_name: BroadcastTo_i
     id: 184
+    func_type:
+    - ALL
   OneHot:
     snake_name: one_hot
     inputs:
@@ -1444,8 +1738,11 @@ Array Manipulation:
       output: {}
     function_ids:
       iI: 80
+    c_runtime: not support
     uniq_name: OneHot_iI
     id: 80
+    func_type:
+    - ALL
   Flip:
     snake_name: flip
     inputs:
@@ -1458,8 +1755,11 @@ Array Manipulation:
       y: {}
     function_ids:
       iI: 81
+    c_runtime: support
     uniq_name: Flip_iI
     id: 81
+    func_type:
+    - ALL
   Shift:
     snake_name: shift
     inputs:
@@ -1478,8 +1778,11 @@ Array Manipulation:
       y: {}
     function_ids:
       iIi: 82
+    c_runtime: support
     uniq_name: Shift_iIi
     id: 82
+    func_type:
+    - ALL
   Sort:
     snake_name: sort
     inputs:
@@ -1503,8 +1806,11 @@ Array Manipulation:
         parameter: true
     function_ids:
       iBBB: 129
+    c_runtime: not support
     uniq_name: Sort_iBBB
     id: 129
+    func_type:
+    - ALL
   Reshape:
     snake_name: reshape
     inputs:
@@ -1520,8 +1826,11 @@ Array Manipulation:
     function_ids:
       iI: 83
       iIB: 126
+    c_runtime: support
     uniq_name: Reshape_iIB
     id: 126
+    func_type:
+    - ALL
   MatrixDiag:
     snake_name: matrix_diag
     inputs:
@@ -1530,8 +1839,11 @@ Array Manipulation:
       y: {}
     function_ids:
       Empty: 84
+    c_runtime: support
     uniq_name: MatrixDiag
     id: 84
+    func_type:
+    - ALL
   MatrixDiagPart:
     snake_name: matrix_diag_part
     inputs:
@@ -1540,8 +1852,11 @@ Array Manipulation:
       y: {}
     function_ids:
       Empty: 85
+    c_runtime: support
     uniq_name: MatrixDiagPart
     id: 85
+    func_type:
+    - ALL
 Signal Processing:
   Interpolate:
     snake_name: interpolate
@@ -1562,8 +1877,11 @@ Signal Processing:
       y: {}
     function_ids:
       iIiB: 127
+    c_runtime: not support
     uniq_name: Interpolate_iIiB
     id: 127
+    func_type:
+    - ALL
   FFT:
     snake_name: fft
     inputs:
@@ -1578,8 +1896,11 @@ Signal Processing:
       y: {}
     function_ids:
       iB: 158
+    c_runtime: not support
     uniq_name: FFT_iB
     id: 158
+    func_type:
+    - ALL
   IFFT:
     snake_name: ifft
     inputs:
@@ -1594,8 +1915,11 @@ Signal Processing:
       y: {}
     function_ids:
       iB: 159
+    c_runtime: not support
     uniq_name: IFFT_iB
     id: 159
+    func_type:
+    - ALL
 Stochasticity:
   Dropout:
     snake_name: dropout
@@ -1612,8 +1936,11 @@ Stochasticity:
       y: {}
     function_ids:
       fi: 86
+    c_runtime: support
     uniq_name: Dropout_fi
     id: 86
+    func_type:
+    - ALL
   TopKData:
     snake_name: top_k_data
     inputs:
@@ -1634,8 +1961,11 @@ Stochasticity:
       y: {}
     function_ids:
       iBBi: 87
+    c_runtime: not support
     uniq_name: TopKData_iBBi
     id: 87
+    func_type:
+    - ALL
   TopKGrad:
     snake_name: top_k_grad
     inputs:
@@ -1653,8 +1983,11 @@ Stochasticity:
       y: {}
     function_ids:
       iBi: 88
+    c_runtime: not support
     uniq_name: TopKGrad_iBi
     id: 88
+    func_type:
+    - ALL
   Rand:
     snake_name: rand
     inputs: {}
@@ -1675,8 +2008,11 @@ Stochasticity:
       y: {}
     function_ids:
       ffiIi: 89
+    c_runtime: not support
     uniq_name: Rand_ffiIi
     id: 89
+    func_type:
+    - ALL
   Randint:
     snake_name: randint
     inputs: {}
@@ -1698,8 +2034,11 @@ Stochasticity:
         template: TI
     function_ids:
       iiiIi: 90
+    c_runtime: not support
     uniq_name: Randint_iiiIi
     id: 90
+    func_type:
+    - ALL
   Randn:
     snake_name: randn
     inputs: {}
@@ -1720,8 +2059,11 @@ Stochasticity:
       y: {}
     function_ids:
       ffiIi: 91
+    c_runtime: not support
     uniq_name: Randn_ffiIi
     id: 91
+    func_type:
+    - ALL
   RandomCrop:
     snake_name: random_crop
     inputs:
@@ -1740,8 +2082,11 @@ Stochasticity:
       y: {}
     function_ids:
       iIii: 92
+    c_runtime: not support
     uniq_name: RandomCrop_iIii
     id: 92
+    func_type:
+    - ALL
   RandomFlip:
     snake_name: random_flip
     inputs:
@@ -1760,8 +2105,11 @@ Stochasticity:
       y: {}
     function_ids:
       iIii: 93
+    c_runtime: not support
     uniq_name: RandomFlip_iIii
     id: 93
+    func_type:
+    - ALL
   RandomShift:
     snake_name: random_shift
     inputs:
@@ -1786,8 +2134,11 @@ Stochasticity:
       y: {}
     function_ids:
       iIiii: 94
+    c_runtime: not support
     uniq_name: RandomShift_iIiii
     id: 94
+    func_type:
+    - ALL
   ImageAugmentation:
     snake_name: image_augmentation
     inputs:
@@ -1845,8 +2196,11 @@ Stochasticity:
       y: {}
     function_ids:
       iIiIfffffBBfBffBfi: 95
+    c_runtime: not support
     uniq_name: ImageAugmentation_iIiIfffffBBfBffBfi
     id: 95
+    func_type:
+    - ALL
 Loss Functions:
   SigmoidCrossEntropy:
     snake_name: sigmoid_cross_entropy
@@ -1860,8 +2214,11 @@ Loss Functions:
       y: {}
     function_ids:
       Empty: 96
+    c_runtime: not support
     uniq_name: SigmoidCrossEntropy
     id: 96
+    func_type:
+    - ALL
   BinaryCrossEntropy:
     snake_name: binary_cross_entropy
     inputs:
@@ -1871,8 +2228,11 @@ Loss Functions:
       y: {}
     function_ids:
       Empty: 97
+    c_runtime: not support
     uniq_name: BinaryCrossEntropy
     id: 97
+    func_type:
+    - ALL
   SoftmaxCrossEntropy:
     snake_name: softmax_cross_entropy
     inputs:
@@ -1889,8 +2249,11 @@ Loss Functions:
       y: {}
     function_ids:
       i: 98
+    c_runtime: not support
     uniq_name: SoftmaxCrossEntropy_i
     id: 98
+    func_type:
+    - ALL
   CategoricalCrossEntropy:
     snake_name: categorical_cross_entropy
     inputs:
@@ -1907,8 +2270,11 @@ Loss Functions:
       y: {}
     function_ids:
       i: 99
+    c_runtime: not support
     uniq_name: CategoricalCrossEntropy_i
     id: 99
+    func_type:
+    - ALL
   SquaredError:
     snake_name: squared_error
     inputs:
@@ -1918,8 +2284,11 @@ Loss Functions:
       y: {}
     function_ids:
       Empty: 100
+    c_runtime: not support
     uniq_name: SquaredError
     id: 100
+    func_type:
+    - ALL
   AbsoluteError:
     snake_name: absolute_error
     inputs:
@@ -1929,8 +2298,11 @@ Loss Functions:
       y: {}
     function_ids:
       Empty: 101
+    c_runtime: not support
     uniq_name: AbsoluteError
     id: 101
+    func_type:
+    - ALL
   HuberLoss:
     snake_name: huber_loss
     inputs:
@@ -1944,8 +2316,11 @@ Loss Functions:
       y: {}
     function_ids:
       f: 102
+    c_runtime: not support
     uniq_name: HuberLoss_f
     id: 102
+    func_type:
+    - ALL
   EpsilonInsensitiveLoss:
     snake_name: epsilon_insensitive_loss
     inputs:
@@ -1958,8 +2333,11 @@ Loss Functions:
       y: {}
     function_ids:
       f: 103
+    c_runtime: not support
     uniq_name: EpsilonInsensitiveLoss_f
     id: 103
+    func_type:
+    - ALL
   KLMultinomial:
     snake_name: kl_multinomial
     inputs:
@@ -1973,8 +2351,11 @@ Loss Functions:
       D: {}
     function_ids:
       i: 104
+    c_runtime: not support
     uniq_name: KLMultinomial_i
     id: 104
+    func_type:
+    - ALL
 Quantization Neural Network Layers:
   BinarySigmoid:
     snake_name: binary_sigmoid
@@ -1984,8 +2365,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       Empty: 105
+    c_runtime: support
     uniq_name: BinarySigmoid
     id: 105
+    func_type:
+    - ALL
   BinaryTanh:
     snake_name: binary_tanh
     inputs:
@@ -1994,8 +2378,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       Empty: 106
+    c_runtime: support
     uniq_name: BinaryTanh
     id: 106
+    func_type:
+    - ALL
   BinaryConnectAffine:
     snake_name: binary_connect_affine
     inputs:
@@ -2015,8 +2402,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       i: 107
+    c_runtime: support
     uniq_name: BinaryConnectAffine_i
     id: 107
+    func_type:
+    - ALL
   BinaryConnectConvolution:
     snake_name: binary_connect_convolution
     inputs:
@@ -2048,8 +2438,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       iiIiIiIi: 108
+    c_runtime: support
     uniq_name: BinaryConnectConvolution_iiIiIiIi
     id: 108
+    func_type:
+    - ALL
   BinaryWeightAffine:
     snake_name: binary_weight_affine
     inputs:
@@ -2071,8 +2464,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       i: 109
+    c_runtime: support
     uniq_name: BinaryWeightAffine_i
     id: 109
+    func_type:
+    - ALL
   BinaryWeightConvolution:
     snake_name: binary_weight_convolution
     inputs:
@@ -2106,8 +2502,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       iiIiIiIi: 110
+    c_runtime: support
     uniq_name: BinaryWeightConvolution_iiIiIiIi
     id: 110
+    func_type:
+    - ALL
   INQAffine:
     snake_name: inq_affine
     inputs:
@@ -2143,8 +2542,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       iiiIii: 111
+    c_runtime: not support
     uniq_name: INQAffine_iiiIii
     id: 111
+    func_type:
+    - ALL
   INQConvolution:
     snake_name: inq_convolution
     inputs:
@@ -2192,8 +2594,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       iiIiIiIiiiIii: 112
+    c_runtime: not support
     uniq_name: INQConvolution_iiIiIiIiiiIii
     id: 112
+    func_type:
+    - ALL
   FixedPointQuantize:
     snake_name: fixed_point_quantize
     inputs:
@@ -2215,8 +2620,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       BifB: 113
+    c_runtime: not support
     uniq_name: FixedPointQuantize_BifB
     id: 113
+    func_type:
+    - ALL
   Pow2Quantize:
     snake_name: pow2_quantize
     inputs:
@@ -2241,8 +2649,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       BBiiB: 114
+    c_runtime: not support
     uniq_name: Pow2Quantize_BBiiB
     id: 114
+    func_type:
+    - ALL
   Prune:
     snake_name: prune
     inputs:
@@ -2255,8 +2666,11 @@ Quantization Neural Network Layers:
       y: {}
     function_ids:
       f: 135
+    c_runtime: not support
     uniq_name: Prune_f
     id: 135
+    func_type:
+    - ALL
 Validation:
   TopNError:
     snake_name: top_n_error
@@ -2275,8 +2689,11 @@ Validation:
       output: {}
     function_ids:
       ii: 115
+    c_runtime: not support
     uniq_name: TopNError_ii
     id: 115
+    func_type:
+    - ALL
   BinaryError:
     snake_name: binary_error
     inputs:
@@ -2286,8 +2703,11 @@ Validation:
       output: {}
     function_ids:
       Empty: 116
+    c_runtime: not support
     uniq_name: BinaryError
     id: 116
+    func_type:
+    - ALL
   ConfusionMatrix:
     snake_name: confusion_matrix
     inputs:
@@ -2302,8 +2722,11 @@ Validation:
       output: {}
     function_ids:
       i: 117
+    c_runtime: not support
     uniq_name: ConfusionMatrix_i
     id: 117
+    func_type:
+    - ALL
 Unsupported, Special Use:
   VATNoise:
     snake_name: vat_noise
@@ -2321,8 +2744,11 @@ Unsupported, Special Use:
       y: {}
     function_ids:
       if: 118
+    c_runtime: not support
     uniq_name: VATNoise_if
     id: 118
+    func_type:
+    - ALL
   Unlink:
     snake_name: unlink
     inputs:
@@ -2331,8 +2757,11 @@ Unsupported, Special Use:
       y: {}
     function_ids:
       Empty: 119
+    c_runtime: not support
     uniq_name: Unlink
     id: 119
+    func_type:
+    - ALL
   Sink:
     snake_name: sink
     inputs:
@@ -2346,8 +2775,11 @@ Unsupported, Special Use:
       y: {}
     function_ids:
       B: 120
+    c_runtime: not support
     uniq_name: Sink_B
     id: 120
+    func_type:
+    - ALL
   NmsDetection2d:
     snake_name: nms_detection2d
     inputs:
@@ -2366,5 +2798,8 @@ Unsupported, Special Use:
       y: {}
     function_ids:
       ffB: 231
+    c_runtime: not support
     uniq_name: NmsDetection2d_ffB
     id: 231
+    func_type:
+    - ALL
