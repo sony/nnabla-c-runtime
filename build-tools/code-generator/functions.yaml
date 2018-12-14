@@ -913,7 +913,7 @@ Logical:
     arguments:
       alpha:
         type: float
-        default: '0.0'
+        default: '1.0'
     outputs:
       y: {}
     function_ids:
@@ -2398,13 +2398,17 @@ Quantization Neural Network Layers:
       base_axis:
         type: int64
         default: '1'
+      quantize_zero_to:
+        type: float
+        default: '1.0'
     outputs:
       y: {}
     function_ids:
       i: 107
+      if: 235
     c_runtime: support
-    uniq_name: BinaryConnectAffine_i
-    id: 107
+    uniq_name: BinaryConnectAffine_if
+    id: 235
     func_type:
     - ALL
   BinaryConnectConvolution:
@@ -2434,13 +2438,17 @@ Quantization Neural Network Layers:
       group:
         type: int64
         default: '1'
+      quantize_zero_to:
+        type: float
+        default: '1.0'
     outputs:
       y: {}
     function_ids:
       iiIiIiIi: 108
+      iiIiIiIif: 233
     c_runtime: support
-    uniq_name: BinaryConnectConvolution_iiIiIiIi
-    id: 108
+    uniq_name: BinaryConnectConvolution_iiIiIiIif
+    id: 233
     func_type:
     - ALL
   BinaryWeightAffine:
@@ -2460,13 +2468,17 @@ Quantization Neural Network Layers:
       base_axis:
         type: int64
         default: '1'
+      quantize_zero_to:
+        type: float
+        default: '1.0'
     outputs:
       y: {}
     function_ids:
       i: 109
+      if: 234
     c_runtime: support
-    uniq_name: BinaryWeightAffine_i
-    id: 109
+    uniq_name: BinaryWeightAffine_if
+    id: 234
     func_type:
     - ALL
   BinaryWeightConvolution:
@@ -2498,13 +2510,17 @@ Quantization Neural Network Layers:
       group:
         type: int64
         default: '1'
+      quantize_zero_to:
+        type: float
+        default: '1.0'
     outputs:
       y: {}
     function_ids:
       iiIiIiIi: 110
+      iiIiIiIif: 232
     c_runtime: support
-    uniq_name: BinaryWeightConvolution_iiIiIiIi
-    id: 110
+    uniq_name: BinaryWeightConvolution_iiIiIiIif
+    id: 232
     func_type:
     - ALL
   INQAffine:

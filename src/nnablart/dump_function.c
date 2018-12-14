@@ -418,16 +418,16 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    BinaryTanh(106)\n");
   } break;
   case NN_FUNCTION_BINARY_CONNECT_AFFINE: { // BinaryConnectAffine
-    printf("NNB: Function type:    BinaryConnectAffine(107)\n");
+    printf("NNB: Function type:    BinaryConnectAffine(235)\n");
   } break;
   case NN_FUNCTION_BINARY_CONNECT_CONVOLUTION: { // BinaryConnectConvolution
-    printf("NNB: Function type:    BinaryConnectConvolution(108)\n");
+    printf("NNB: Function type:    BinaryConnectConvolution(233)\n");
   } break;
   case NN_FUNCTION_BINARY_WEIGHT_AFFINE: { // BinaryWeightAffine
-    printf("NNB: Function type:    BinaryWeightAffine(109)\n");
+    printf("NNB: Function type:    BinaryWeightAffine(234)\n");
   } break;
   case NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION: { // BinaryWeightConvolution
-    printf("NNB: Function type:    BinaryWeightConvolution(110)\n");
+    printf("NNB: Function type:    BinaryWeightConvolution(232)\n");
   } break;
   case NN_FUNCTION_INQ_AFFINE: { // INQAffine
     printf("NNB: Function type:    INQAffine(111)\n");
@@ -1252,6 +1252,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_binary_connect_affine_t *f =
         (nn_function_binary_connect_affine_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument quantize_zero_to: %f\n",
+           f->quantize_zero_to);
   } break;
   case NN_FUNCTION_BINARY_CONNECT_CONVOLUTION: { // BinaryConnectConvolution
     nn_function_binary_connect_convolution_t *f =
@@ -1276,11 +1278,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument quantize_zero_to: %f\n",
+           f->quantize_zero_to);
   } break;
   case NN_FUNCTION_BINARY_WEIGHT_AFFINE: { // BinaryWeightAffine
     nn_function_binary_weight_affine_t *f =
         (nn_function_binary_weight_affine_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument quantize_zero_to: %f\n",
+           f->quantize_zero_to);
   } break;
   case NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION: { // BinaryWeightConvolution
     nn_function_binary_weight_convolution_t *f =
@@ -1305,6 +1311,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument quantize_zero_to: %f\n",
+           f->quantize_zero_to);
   } break;
   case NN_FUNCTION_INQ_AFFINE: { // INQAffine
     nn_function_inq_affine_t *f = (nn_function_inq_affine_t *)func;

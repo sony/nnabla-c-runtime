@@ -2448,8 +2448,9 @@ rt_function_error_t exec_binary_tanh(rt_function_t *f);
 
 /// Local context for BinaryConnectAffine
 typedef struct {
-  int32_t base_axis; ///< int64
-  void *data;        ///< General purpose data area
+  int32_t base_axis;      ///< int64
+  float quantize_zero_to; ///< float
+  void *data;             ///< General purpose data area
 } binary_connect_affine_local_context_t;
 
 /// Allocate BinaryConnectAffine local context
@@ -2468,12 +2469,13 @@ rt_function_error_t exec_binary_connect_affine(rt_function_t *f);
 
 /// Local context for BinaryConnectConvolution
 typedef struct {
-  int32_t base_axis;  ///< int64
-  rt_list_t pad;      ///< Original type is [Shape]
-  rt_list_t stride;   ///< Original type is [Shape]
-  rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< int64
-  void *data;         ///< General purpose data area
+  int32_t base_axis;      ///< int64
+  rt_list_t pad;          ///< Original type is [Shape]
+  rt_list_t stride;       ///< Original type is [Shape]
+  rt_list_t dilation;     ///< Original type is [Shape]
+  int32_t group;          ///< int64
+  float quantize_zero_to; ///< float
+  void *data;             ///< General purpose data area
 } binary_connect_convolution_local_context_t;
 
 /// Allocate BinaryConnectConvolution local context
@@ -2493,8 +2495,9 @@ rt_function_error_t exec_binary_connect_convolution(rt_function_t *f);
 
 /// Local context for BinaryWeightAffine
 typedef struct {
-  int32_t base_axis; ///< int64
-  void *data;        ///< General purpose data area
+  int32_t base_axis;      ///< int64
+  float quantize_zero_to; ///< float
+  void *data;             ///< General purpose data area
 } binary_weight_affine_local_context_t;
 
 /// Allocate BinaryWeightAffine local context
@@ -2513,12 +2516,13 @@ rt_function_error_t exec_binary_weight_affine(rt_function_t *f);
 
 /// Local context for BinaryWeightConvolution
 typedef struct {
-  int32_t base_axis;  ///< int64
-  rt_list_t pad;      ///< Original type is [Shape]
-  rt_list_t stride;   ///< Original type is [Shape]
-  rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< int64
-  void *data;         ///< General purpose data area
+  int32_t base_axis;      ///< int64
+  rt_list_t pad;          ///< Original type is [Shape]
+  rt_list_t stride;       ///< Original type is [Shape]
+  rt_list_t dilation;     ///< Original type is [Shape]
+  int32_t group;          ///< int64
+  float quantize_zero_to; ///< float
+  void *data;             ///< General purpose data area
 } binary_weight_convolution_local_context_t;
 
 /// Allocate BinaryWeightConvolution local context

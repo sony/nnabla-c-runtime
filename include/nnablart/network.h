@@ -26,7 +26,7 @@ extern "C" {
 
 #define NN_C_RUNTIME_VERSION ("1.0.10.dev1")
 #define NN_BINARY_FORMAT_VERSION (2)
-#define NN_BINARY_FORMAT_REVISION ("165adf86924672bceb20845af29484e1")
+#define NN_BINARY_FORMAT_REVISION ("e3d398f4d56529cbeda9fcbe5fc8a19a")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -184,35 +184,43 @@ typedef enum {
   NN_FUNCTION_RANDOM_CROP = 92,      ///< RandomCrop
   NN_FUNCTION_RANDOM_FLIP = 93,      ///< RandomFlip
   NN_FUNCTION_RANDOM_SHIFT = 94,     ///< RandomShift
-  NN_FUNCTION_IMAGE_AUGMENTATION = 95,          ///< ImageAugmentation
-  NN_FUNCTION_SIGMOID_CROSS_ENTROPY = 96,       ///< SigmoidCrossEntropy
-  NN_FUNCTION_BINARY_CROSS_ENTROPY = 97,        ///< BinaryCrossEntropy
-  NN_FUNCTION_SOFTMAX_CROSS_ENTROPY = 98,       ///< SoftmaxCrossEntropy
-  NN_FUNCTION_CATEGORICAL_CROSS_ENTROPY = 99,   ///< CategoricalCrossEntropy
-  NN_FUNCTION_SQUARED_ERROR = 100,              ///< SquaredError
-  NN_FUNCTION_ABSOLUTE_ERROR = 101,             ///< AbsoluteError
-  NN_FUNCTION_HUBER_LOSS = 102,                 ///< HuberLoss
-  NN_FUNCTION_EPSILON_INSENSITIVE_LOSS = 103,   ///< EpsilonInsensitiveLoss
-  NN_FUNCTION_KL_MULTINOMIAL = 104,             ///< KLMultinomial
-  NN_FUNCTION_BINARY_SIGMOID = 105,             ///< BinarySigmoid
-  NN_FUNCTION_BINARY_TANH = 106,                ///< BinaryTanh
-  NN_FUNCTION_BINARY_CONNECT_AFFINE = 107,      ///< BinaryConnectAffine
-  NN_FUNCTION_BINARY_CONNECT_CONVOLUTION = 108, ///< BinaryConnectConvolution
-  NN_FUNCTION_BINARY_WEIGHT_AFFINE = 109,       ///< BinaryWeightAffine
-  NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION = 110,  ///< BinaryWeightConvolution
-  NN_FUNCTION_INQ_AFFINE = 111,                 ///< INQAffine
-  NN_FUNCTION_INQ_CONVOLUTION = 112,            ///< INQConvolution
-  NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,       ///< FixedPointQuantize
-  NN_FUNCTION_POW2_QUANTIZE = 114,              ///< Pow2Quantize
-  NN_FUNCTION_PRUNE = 135,                      ///< Prune
-  NN_FUNCTION_TOP_N_ERROR = 115,                ///< TopNError
-  NN_FUNCTION_BINARY_ERROR = 116,               ///< BinaryError
-  NN_FUNCTION_CONFUSION_MATRIX = 117,           ///< ConfusionMatrix
-  NN_FUNCTION_VAT_NOISE = 118,                  ///< VATNoise
-  NN_FUNCTION_UNLINK = 119,                     ///< Unlink
-  NN_FUNCTION_SINK = 120,                       ///< Sink
-  NN_FUNCTION_NMS_DETECTION2D = 231,            ///< NmsDetection2d
-  NN_END_OF_FUNCTION = 65535                    // Ensure this type has 16bits
+  NN_FUNCTION_IMAGE_AUGMENTATION = 95,        ///< ImageAugmentation
+  NN_FUNCTION_SIGMOID_CROSS_ENTROPY = 96,     ///< SigmoidCrossEntropy
+  NN_FUNCTION_BINARY_CROSS_ENTROPY = 97,      ///< BinaryCrossEntropy
+  NN_FUNCTION_SOFTMAX_CROSS_ENTROPY = 98,     ///< SoftmaxCrossEntropy
+  NN_FUNCTION_CATEGORICAL_CROSS_ENTROPY = 99, ///< CategoricalCrossEntropy
+  NN_FUNCTION_SQUARED_ERROR = 100,            ///< SquaredError
+  NN_FUNCTION_ABSOLUTE_ERROR = 101,           ///< AbsoluteError
+  NN_FUNCTION_HUBER_LOSS = 102,               ///< HuberLoss
+  NN_FUNCTION_EPSILON_INSENSITIVE_LOSS = 103, ///< EpsilonInsensitiveLoss
+  NN_FUNCTION_KL_MULTINOMIAL = 104,           ///< KLMultinomial
+  NN_FUNCTION_BINARY_SIGMOID = 105,           ///< BinarySigmoid
+  NN_FUNCTION_BINARY_TANH = 106,              ///< BinaryTanh
+  NN_FUNCTION_BINARY_CONNECT_AFFINE_0 =
+      107, ///< Recent version of BinaryConnectAffine has arg [i]
+  NN_FUNCTION_BINARY_CONNECT_AFFINE = 235, ///< BinaryConnectAffine
+  NN_FUNCTION_BINARY_CONNECT_CONVOLUTION_0 =
+      108, ///< Recent version of BinaryConnectConvolution has arg [iiIiIiIi]
+  NN_FUNCTION_BINARY_CONNECT_CONVOLUTION = 233, ///< BinaryConnectConvolution
+  NN_FUNCTION_BINARY_WEIGHT_AFFINE_0 =
+      109, ///< Recent version of BinaryWeightAffine has arg [i]
+  NN_FUNCTION_BINARY_WEIGHT_AFFINE = 234, ///< BinaryWeightAffine
+  NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION_0 =
+      110, ///< Recent version of BinaryWeightConvolution has arg [iiIiIiIi]
+  NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION = 232, ///< BinaryWeightConvolution
+  NN_FUNCTION_INQ_AFFINE = 111,                ///< INQAffine
+  NN_FUNCTION_INQ_CONVOLUTION = 112,           ///< INQConvolution
+  NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,      ///< FixedPointQuantize
+  NN_FUNCTION_POW2_QUANTIZE = 114,             ///< Pow2Quantize
+  NN_FUNCTION_PRUNE = 135,                     ///< Prune
+  NN_FUNCTION_TOP_N_ERROR = 115,               ///< TopNError
+  NN_FUNCTION_BINARY_ERROR = 116,              ///< BinaryError
+  NN_FUNCTION_CONFUSION_MATRIX = 117,          ///< ConfusionMatrix
+  NN_FUNCTION_VAT_NOISE = 118,                 ///< VATNoise
+  NN_FUNCTION_UNLINK = 119,                    ///< Unlink
+  NN_FUNCTION_SINK = 120,                      ///< Sink
+  NN_FUNCTION_NMS_DETECTION2D = 231,           ///< NmsDetection2d
+  NN_END_OF_FUNCTION = 65535                   // Ensure this type has 16bits
 } nn_function_type_t;
 
 /// @brief Function implement type.
@@ -1926,7 +1934,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis; ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_connect_affine_t;
 
 /// @}
@@ -1939,11 +1948,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis;  ///< Original type is [int64]
-  nn_list_t pad;      ///< Original type is [Shape]
-  nn_list_t stride;   ///< Original type is [Shape]
-  nn_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  nn_list_t pad;          ///< Original type is [Shape]
+  nn_list_t stride;       ///< Original type is [Shape]
+  nn_list_t dilation;     ///< Original type is [Shape]
+  int32_t group;          ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_connect_convolution_t;
 
 /// @}
@@ -1956,7 +1966,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis; ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_weight_affine_t;
 
 /// @}
@@ -1969,11 +1980,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis;  ///< Original type is [int64]
-  nn_list_t pad;      ///< Original type is [Shape]
-  nn_list_t stride;   ///< Original type is [Shape]
-  nn_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  nn_list_t pad;          ///< Original type is [Shape]
+  nn_list_t stride;       ///< Original type is [Shape]
+  nn_list_t dilation;     ///< Original type is [Shape]
+  int32_t group;          ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_weight_convolution_t;
 
 /// @}
