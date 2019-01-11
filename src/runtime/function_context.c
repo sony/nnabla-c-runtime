@@ -226,6 +226,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_LEAKYRELU
+  case NN_FUNCTION_LEAKY_RELU_0: { // LeakyReLU
+    function_context->func.free_local_context_func =
+        free_leaky_relu_local_context;
+    nn_function_leaky_relu_t *f = (nn_function_leaky_relu_t *)function;
+    leaky_relu_local_context_t *ctx =
+        rt_malloc_func(sizeof(leaky_relu_local_context_t));
+    ctx->alpha = f->alpha;
+    ctx->inplace = 0;
+    function_context->func.local_context = ctx;
+    allocate_leaky_relu_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_LEAKY_RELU: { // LeakyReLU
     function_context->func.free_local_context_func =
         free_leaky_relu_local_context;
@@ -389,6 +400,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_MAX
+  case NN_FUNCTION_MAX_0: { // Max
+    function_context->func.free_local_context_func = free_max_local_context;
+    nn_function_max_t *f = (nn_function_max_t *)function;
+    max_local_context_t *ctx = rt_malloc_func(sizeof(max_local_context_t));
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    ctx->keep_dims = f->keep_dims;
+    ctx->with_index = 0;
+    ctx->only_index = 0;
+    function_context->func.local_context = ctx;
+    allocate_max_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_MAX: { // Max
     function_context->func.free_local_context_func = free_max_local_context;
     nn_function_max_t *f = (nn_function_max_t *)function;
@@ -403,6 +425,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_MIN
+  case NN_FUNCTION_MIN_0: { // Min
+    function_context->func.free_local_context_func = free_min_local_context;
+    nn_function_min_t *f = (nn_function_min_t *)function;
+    min_local_context_t *ctx = rt_malloc_func(sizeof(min_local_context_t));
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    ctx->keep_dims = f->keep_dims;
+    ctx->with_index = 0;
+    ctx->only_index = 0;
+    function_context->func.local_context = ctx;
+    allocate_min_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_MIN: { // Min
     function_context->func.free_local_context_func = free_min_local_context;
     nn_function_min_t *f = (nn_function_min_t *)function;
@@ -1177,6 +1210,16 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_RESHAPE
+  case NN_FUNCTION_RESHAPE_0: { // Reshape
+    function_context->func.free_local_context_func = free_reshape_local_context;
+    nn_function_reshape_t *f = (nn_function_reshape_t *)function;
+    reshape_local_context_t *ctx =
+        rt_malloc_func(sizeof(reshape_local_context_t));
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->inplace = 1;
+    function_context->func.local_context = ctx;
+    allocate_reshape_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_RESHAPE: { // Reshape
     function_context->func.free_local_context_func = free_reshape_local_context;
     nn_function_reshape_t *f = (nn_function_reshape_t *)function;
@@ -1531,6 +1574,18 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_BINARYCONNECTAFFINE
+  case NN_FUNCTION_BINARY_CONNECT_AFFINE_0: { // BinaryConnectAffine
+    function_context->func.free_local_context_func =
+        free_binary_connect_affine_local_context;
+    nn_function_binary_connect_affine_t *f =
+        (nn_function_binary_connect_affine_t *)function;
+    binary_connect_affine_local_context_t *ctx =
+        rt_malloc_func(sizeof(binary_connect_affine_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->quantize_zero_to = 1.0;
+    function_context->func.local_context = ctx;
+    allocate_binary_connect_affine_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_BINARY_CONNECT_AFFINE: { // BinaryConnectAffine
     function_context->func.free_local_context_func =
         free_binary_connect_affine_local_context;
@@ -1539,12 +1594,29 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     binary_connect_affine_local_context_t *ctx =
         rt_malloc_func(sizeof(binary_connect_affine_local_context_t));
     ctx->base_axis = f->base_axis;
+    ctx->quantize_zero_to = f->quantize_zero_to;
     function_context->func.local_context = ctx;
     allocate_binary_connect_affine_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_BINARYCONNECTCONVOLUTION
+  case NN_FUNCTION_BINARY_CONNECT_CONVOLUTION_0: { // BinaryConnectConvolution
+    function_context->func.free_local_context_func =
+        free_binary_connect_convolution_local_context;
+    nn_function_binary_connect_convolution_t *f =
+        (nn_function_binary_connect_convolution_t *)function;
+    binary_connect_convolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(binary_connect_convolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->quantize_zero_to = 1.0;
+    function_context->func.local_context = ctx;
+    allocate_binary_connect_convolution_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_BINARY_CONNECT_CONVOLUTION: { // BinaryConnectConvolution
     function_context->func.free_local_context_func =
         free_binary_connect_convolution_local_context;
@@ -1557,12 +1629,25 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->stride = create_rt_list_from_nn_list(n, f->stride);
     ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
     ctx->group = f->group;
+    ctx->quantize_zero_to = f->quantize_zero_to;
     function_context->func.local_context = ctx;
     allocate_binary_connect_convolution_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_BINARYWEIGHTAFFINE
+  case NN_FUNCTION_BINARY_WEIGHT_AFFINE_0: { // BinaryWeightAffine
+    function_context->func.free_local_context_func =
+        free_binary_weight_affine_local_context;
+    nn_function_binary_weight_affine_t *f =
+        (nn_function_binary_weight_affine_t *)function;
+    binary_weight_affine_local_context_t *ctx =
+        rt_malloc_func(sizeof(binary_weight_affine_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->quantize_zero_to = 1.0;
+    function_context->func.local_context = ctx;
+    allocate_binary_weight_affine_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_BINARY_WEIGHT_AFFINE: { // BinaryWeightAffine
     function_context->func.free_local_context_func =
         free_binary_weight_affine_local_context;
@@ -1571,12 +1656,29 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     binary_weight_affine_local_context_t *ctx =
         rt_malloc_func(sizeof(binary_weight_affine_local_context_t));
     ctx->base_axis = f->base_axis;
+    ctx->quantize_zero_to = f->quantize_zero_to;
     function_context->func.local_context = ctx;
     allocate_binary_weight_affine_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_BINARYWEIGHTCONVOLUTION
+  case NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION_0: { // BinaryWeightConvolution
+    function_context->func.free_local_context_func =
+        free_binary_weight_convolution_local_context;
+    nn_function_binary_weight_convolution_t *f =
+        (nn_function_binary_weight_convolution_t *)function;
+    binary_weight_convolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(binary_weight_convolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->quantize_zero_to = 1.0;
+    function_context->func.local_context = ctx;
+    allocate_binary_weight_convolution_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION: { // BinaryWeightConvolution
     function_context->func.free_local_context_func =
         free_binary_weight_convolution_local_context;
@@ -1589,6 +1691,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->stride = create_rt_list_from_nn_list(n, f->stride);
     ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
     ctx->group = f->group;
+    ctx->quantize_zero_to = f->quantize_zero_to;
     function_context->func.local_context = ctx;
     allocate_binary_weight_convolution_local_context(&function_context->func);
   } break;

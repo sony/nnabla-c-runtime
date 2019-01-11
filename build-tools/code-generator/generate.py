@@ -102,6 +102,7 @@ class CodeGenerator:
         self.generate('include/nnablart/functions.h')
         self.generate('src/nnablart/dump_function.c')
         self.generate('src/runtime/function_context.c')
+        self.generate('include/nnablart/config.h')
 
 
 CodeGenerator().generate_all()

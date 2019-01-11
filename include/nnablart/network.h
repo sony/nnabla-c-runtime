@@ -26,7 +26,7 @@ extern "C" {
 
 #define NN_C_RUNTIME_VERSION ("1.0.10.dev1")
 #define NN_BINARY_FORMAT_VERSION (2)
-#define NN_BINARY_FORMAT_REVISION ("7fc932d5b7611c02cb08dfbf991e2f7a")
+#define NN_BINARY_FORMAT_REVISION ("e3d398f4d56529cbeda9fcbe5fc8a19a")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -63,152 +63,164 @@ typedef struct {
 
 /// @brief Function types.
 typedef enum {
-  NN_FUNCTION_AFFINE = 0,                       ///< Affine
-  NN_FUNCTION_CONVOLUTION = 1,                  ///< Convolution
-  NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2,        ///< DepthwiseConvolution
-  NN_FUNCTION_DECONVOLUTION = 3,                ///< Deconvolution
-  NN_FUNCTION_DEPTHWISE_DECONVOLUTION = 4,      ///< DepthwiseDeconvolution
-  NN_FUNCTION_MAX_POOLING = 5,                  ///< MaxPooling
-  NN_FUNCTION_AVERAGE_POOLING = 6,              ///< AveragePooling
-  NN_FUNCTION_GLOBAL_AVERAGE_POOLING = 7,       ///< GlobalAveragePooling
-  NN_FUNCTION_SUM_POOLING = 8,                  ///< SumPooling
-  NN_FUNCTION_UNPOOLING = 9,                    ///< Unpooling
-  NN_FUNCTION_EMBED = 10,                       ///< Embed
-  NN_FUNCTION_SIGMOID = 11,                     ///< Sigmoid
-  NN_FUNCTION_SWISH = 12,                       ///< Swish
-  NN_FUNCTION_TANH = 13,                        ///< Tanh
-  NN_FUNCTION_RELU = 14,                        ///< ReLU
-  NN_FUNCTION_LEAKY_RELU = 128,                 ///< LeakyReLU
-  NN_FUNCTION_SOFTMAX = 16,                     ///< Softmax
-  NN_FUNCTION_ELU = 17,                         ///< ELU
-  NN_FUNCTION_SELU = 18,                        ///< SELU
-  NN_FUNCTION_CRELU = 19,                       ///< CReLU
-  NN_FUNCTION_CELU = 20,                        ///< CELU
-  NN_FUNCTION_PRELU = 21,                       ///< PReLU
-  NN_FUNCTION_BATCH_NORMALIZATION = 22,         ///< BatchNormalization
-  NN_FUNCTION_MEAN_SUBTRACTION = 23,            ///< MeanSubtraction
-  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,         ///< ClipGradByValue
-  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,          ///< ClipGradByNorm
-  NN_FUNCTION_SUM = 24,                         ///< Sum
-  NN_FUNCTION_MEAN = 25,                        ///< Mean
-  NN_FUNCTION_MAX = 132,                        ///< Max
-  NN_FUNCTION_MIN = 130,                        ///< Min
-  NN_FUNCTION_PROD = 28,                        ///< Prod
-  NN_FUNCTION_REDUCE_SUM = 29,                  ///< ReduceSum
-  NN_FUNCTION_REDUCE_MEAN = 30,                 ///< ReduceMean
-  NN_FUNCTION_ADD2 = 31,                        ///< Add2
-  NN_FUNCTION_BC_ADD2 = 32,                     ///< BcAdd2
-  NN_FUNCTION_SUB2 = 33,                        ///< Sub2
-  NN_FUNCTION_MUL2 = 34,                        ///< Mul2
-  NN_FUNCTION_DIV2 = 35,                        ///< Div2
-  NN_FUNCTION_POW2 = 36,                        ///< Pow2
-  NN_FUNCTION_ADD_SCALAR = 37,                  ///< AddScalar
-  NN_FUNCTION_MUL_SCALAR = 38,                  ///< MulScalar
-  NN_FUNCTION_POW_SCALAR = 39,                  ///< PowScalar
-  NN_FUNCTION_R_SUB_SCALAR = 40,                ///< RSubScalar
-  NN_FUNCTION_R_DIV_SCALAR = 41,                ///< RDivScalar
-  NN_FUNCTION_R_POW_SCALAR = 42,                ///< RPowScalar
-  NN_FUNCTION_SIGN = 43,                        ///< Sign
-  NN_FUNCTION_MINIMUM2 = 44,                    ///< Minimum2
-  NN_FUNCTION_MAXIMUM2 = 45,                    ///< Maximum2
-  NN_FUNCTION_MINIMUM_SCALAR = 46,              ///< MinimumScalar
-  NN_FUNCTION_MAXIMUM_SCALAR = 47,              ///< MaximumScalar
-  NN_FUNCTION_LOGICAL_AND = 48,                 ///< LogicalAnd
-  NN_FUNCTION_LOGICAL_OR = 49,                  ///< LogicalOr
-  NN_FUNCTION_LOGICAL_XOR = 50,                 ///< LogicalXor
-  NN_FUNCTION_EQUAL = 51,                       ///< Equal
-  NN_FUNCTION_NOT_EQUAL = 52,                   ///< NotEqual
-  NN_FUNCTION_GREATER_EQUAL = 53,               ///< GreaterEqual
-  NN_FUNCTION_GREATER = 54,                     ///< Greater
-  NN_FUNCTION_LESS_EQUAL = 55,                  ///< LessEqual
-  NN_FUNCTION_LESS = 56,                        ///< Less
-  NN_FUNCTION_LOGICAL_AND_SCALAR = 57,          ///< LogicalAndScalar
-  NN_FUNCTION_LOGICAL_OR_SCALAR = 58,           ///< LogicalOrScalar
-  NN_FUNCTION_LOGICAL_XOR_SCALAR = 59,          ///< LogicalXorScalar
-  NN_FUNCTION_EQUAL_SCALAR = 60,                ///< EqualScalar
-  NN_FUNCTION_NOT_EQUAL_SCALAR = 61,            ///< NotEqualScalar
-  NN_FUNCTION_GREATER_EQUAL_SCALAR = 62,        ///< GreaterEqualScalar
-  NN_FUNCTION_GREATER_SCALAR = 63,              ///< GreaterScalar
-  NN_FUNCTION_LESS_EQUAL_SCALAR = 64,           ///< LessEqualScalar
-  NN_FUNCTION_LESS_SCALAR = 65,                 ///< LessScalar
-  NN_FUNCTION_LOGICAL_NOT = 66,                 ///< LogicalNot
-  NN_FUNCTION_CONSTANT = 67,                    ///< Constant
-  NN_FUNCTION_ARANGE = 131,                     ///< Arange
-  NN_FUNCTION_ABS = 68,                         ///< Abs
-  NN_FUNCTION_EXP = 69,                         ///< Exp
-  NN_FUNCTION_LOG = 70,                         ///< Log
-  NN_FUNCTION_IDENTITY = 71,                    ///< Identity
-  NN_FUNCTION_BATCH_MATMUL = 72,                ///< BatchMatmul
-  NN_FUNCTION_ROUND = 73,                       ///< Round
-  NN_FUNCTION_CEIL = 124,                       ///< Ceil
-  NN_FUNCTION_FLOOR = 125,                      ///< Floor
-  NN_FUNCTION_SIN = 173,                        ///< Sin
-  NN_FUNCTION_COS = 174,                        ///< Cos
-  NN_FUNCTION_TAN = 175,                        ///< Tan
-  NN_FUNCTION_SINH = 176,                       ///< Sinh
-  NN_FUNCTION_COSH = 177,                       ///< Cosh
-  NN_FUNCTION_ASIN = 178,                       ///< ASin
-  NN_FUNCTION_ACOS = 179,                       ///< ACos
-  NN_FUNCTION_ATAN = 180,                       ///< ATan
-  NN_FUNCTION_ASINH = 181,                      ///< ASinh
-  NN_FUNCTION_ACOSH = 182,                      ///< ACosh
-  NN_FUNCTION_ATANH = 183,                      ///< ATanh
-  NN_FUNCTION_CONCATENATE = 74,                 ///< Concatenate
-  NN_FUNCTION_SPLIT = 75,                       ///< Split
-  NN_FUNCTION_STACK = 76,                       ///< Stack
-  NN_FUNCTION_SLICE = 77,                       ///< Slice
-  NN_FUNCTION_PAD = 123,                        ///< Pad
-  NN_FUNCTION_TRANSPOSE = 78,                   ///< Transpose
-  NN_FUNCTION_BROADCAST = 79,                   ///< Broadcast
-  NN_FUNCTION_BROADCAST_TO = 184,               ///< BroadcastTo
-  NN_FUNCTION_ONE_HOT = 80,                     ///< OneHot
-  NN_FUNCTION_FLIP = 81,                        ///< Flip
-  NN_FUNCTION_SHIFT = 82,                       ///< Shift
-  NN_FUNCTION_SORT = 129,                       ///< Sort
-  NN_FUNCTION_RESHAPE = 126,                    ///< Reshape
-  NN_FUNCTION_MATRIX_DIAG = 84,                 ///< MatrixDiag
-  NN_FUNCTION_MATRIX_DIAG_PART = 85,            ///< MatrixDiagPart
-  NN_FUNCTION_INTERPOLATE = 127,                ///< Interpolate
-  NN_FUNCTION_FFT = 158,                        ///< FFT
-  NN_FUNCTION_IFFT = 159,                       ///< IFFT
-  NN_FUNCTION_DROPOUT = 86,                     ///< Dropout
-  NN_FUNCTION_TOP_K_DATA = 87,                  ///< TopKData
-  NN_FUNCTION_TOP_K_GRAD = 88,                  ///< TopKGrad
-  NN_FUNCTION_RAND = 89,                        ///< Rand
-  NN_FUNCTION_RANDINT = 90,                     ///< Randint
-  NN_FUNCTION_RANDN = 91,                       ///< Randn
-  NN_FUNCTION_RANDOM_CROP = 92,                 ///< RandomCrop
-  NN_FUNCTION_RANDOM_FLIP = 93,                 ///< RandomFlip
-  NN_FUNCTION_RANDOM_SHIFT = 94,                ///< RandomShift
-  NN_FUNCTION_IMAGE_AUGMENTATION = 95,          ///< ImageAugmentation
-  NN_FUNCTION_SIGMOID_CROSS_ENTROPY = 96,       ///< SigmoidCrossEntropy
-  NN_FUNCTION_BINARY_CROSS_ENTROPY = 97,        ///< BinaryCrossEntropy
-  NN_FUNCTION_SOFTMAX_CROSS_ENTROPY = 98,       ///< SoftmaxCrossEntropy
-  NN_FUNCTION_CATEGORICAL_CROSS_ENTROPY = 99,   ///< CategoricalCrossEntropy
-  NN_FUNCTION_SQUARED_ERROR = 100,              ///< SquaredError
-  NN_FUNCTION_ABSOLUTE_ERROR = 101,             ///< AbsoluteError
-  NN_FUNCTION_HUBER_LOSS = 102,                 ///< HuberLoss
-  NN_FUNCTION_EPSILON_INSENSITIVE_LOSS = 103,   ///< EpsilonInsensitiveLoss
-  NN_FUNCTION_KL_MULTINOMIAL = 104,             ///< KLMultinomial
-  NN_FUNCTION_BINARY_SIGMOID = 105,             ///< BinarySigmoid
-  NN_FUNCTION_BINARY_TANH = 106,                ///< BinaryTanh
-  NN_FUNCTION_BINARY_CONNECT_AFFINE = 107,      ///< BinaryConnectAffine
-  NN_FUNCTION_BINARY_CONNECT_CONVOLUTION = 108, ///< BinaryConnectConvolution
-  NN_FUNCTION_BINARY_WEIGHT_AFFINE = 109,       ///< BinaryWeightAffine
-  NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION = 110,  ///< BinaryWeightConvolution
-  NN_FUNCTION_INQ_AFFINE = 111,                 ///< INQAffine
-  NN_FUNCTION_INQ_CONVOLUTION = 112,            ///< INQConvolution
-  NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,       ///< FixedPointQuantize
-  NN_FUNCTION_POW2_QUANTIZE = 114,              ///< Pow2Quantize
-  NN_FUNCTION_PRUNE = 135,                      ///< Prune
-  NN_FUNCTION_TOP_N_ERROR = 115,                ///< TopNError
-  NN_FUNCTION_BINARY_ERROR = 116,               ///< BinaryError
-  NN_FUNCTION_CONFUSION_MATRIX = 117,           ///< ConfusionMatrix
-  NN_FUNCTION_VAT_NOISE = 118,                  ///< VATNoise
-  NN_FUNCTION_UNLINK = 119,                     ///< Unlink
-  NN_FUNCTION_SINK = 120,                       ///< Sink
-  NN_FUNCTION_NMS_DETECTION2D = 231,            ///< NmsDetection2d
-  NN_END_OF_FUNCTION = 65535                    // Ensure this type has 16bits
+  NN_FUNCTION_AFFINE = 0,                  ///< Affine
+  NN_FUNCTION_CONVOLUTION = 1,             ///< Convolution
+  NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2,   ///< DepthwiseConvolution
+  NN_FUNCTION_DECONVOLUTION = 3,           ///< Deconvolution
+  NN_FUNCTION_DEPTHWISE_DECONVOLUTION = 4, ///< DepthwiseDeconvolution
+  NN_FUNCTION_MAX_POOLING = 5,             ///< MaxPooling
+  NN_FUNCTION_AVERAGE_POOLING = 6,         ///< AveragePooling
+  NN_FUNCTION_GLOBAL_AVERAGE_POOLING = 7,  ///< GlobalAveragePooling
+  NN_FUNCTION_SUM_POOLING = 8,             ///< SumPooling
+  NN_FUNCTION_UNPOOLING = 9,               ///< Unpooling
+  NN_FUNCTION_EMBED = 10,                  ///< Embed
+  NN_FUNCTION_SIGMOID = 11,                ///< Sigmoid
+  NN_FUNCTION_SWISH = 12,                  ///< Swish
+  NN_FUNCTION_TANH = 13,                   ///< Tanh
+  NN_FUNCTION_RELU = 14,                   ///< ReLU
+  NN_FUNCTION_LEAKY_RELU_0 = 15, ///< Recent version of LeakyReLU has arg [f]
+  NN_FUNCTION_LEAKY_RELU = 128,  ///< LeakyReLU
+  NN_FUNCTION_SOFTMAX = 16,      ///< Softmax
+  NN_FUNCTION_ELU = 17,          ///< ELU
+  NN_FUNCTION_SELU = 18,         ///< SELU
+  NN_FUNCTION_CRELU = 19,        ///< CReLU
+  NN_FUNCTION_CELU = 20,         ///< CELU
+  NN_FUNCTION_PRELU = 21,        ///< PReLU
+  NN_FUNCTION_BATCH_NORMALIZATION = 22, ///< BatchNormalization
+  NN_FUNCTION_MEAN_SUBTRACTION = 23,    ///< MeanSubtraction
+  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121, ///< ClipGradByValue
+  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,  ///< ClipGradByNorm
+  NN_FUNCTION_SUM = 24,                 ///< Sum
+  NN_FUNCTION_MEAN = 25,                ///< Mean
+  NN_FUNCTION_MAX_0 = 26,               ///< Recent version of Max has arg [iIB]
+  NN_FUNCTION_MAX = 132,                ///< Max
+  NN_FUNCTION_MIN_0 = 27,               ///< Recent version of Min has arg [iIB]
+  NN_FUNCTION_MIN = 130,                ///< Min
+  NN_FUNCTION_PROD = 28,                ///< Prod
+  NN_FUNCTION_REDUCE_SUM = 29,          ///< ReduceSum
+  NN_FUNCTION_REDUCE_MEAN = 30,         ///< ReduceMean
+  NN_FUNCTION_ADD2 = 31,                ///< Add2
+  NN_FUNCTION_BC_ADD2 = 32,             ///< BcAdd2
+  NN_FUNCTION_SUB2 = 33,                ///< Sub2
+  NN_FUNCTION_MUL2 = 34,                ///< Mul2
+  NN_FUNCTION_DIV2 = 35,                ///< Div2
+  NN_FUNCTION_POW2 = 36,                ///< Pow2
+  NN_FUNCTION_ADD_SCALAR = 37,          ///< AddScalar
+  NN_FUNCTION_MUL_SCALAR = 38,          ///< MulScalar
+  NN_FUNCTION_POW_SCALAR = 39,          ///< PowScalar
+  NN_FUNCTION_R_SUB_SCALAR = 40,        ///< RSubScalar
+  NN_FUNCTION_R_DIV_SCALAR = 41,        ///< RDivScalar
+  NN_FUNCTION_R_POW_SCALAR = 42,        ///< RPowScalar
+  NN_FUNCTION_SIGN = 43,                ///< Sign
+  NN_FUNCTION_MINIMUM2 = 44,            ///< Minimum2
+  NN_FUNCTION_MAXIMUM2 = 45,            ///< Maximum2
+  NN_FUNCTION_MINIMUM_SCALAR = 46,      ///< MinimumScalar
+  NN_FUNCTION_MAXIMUM_SCALAR = 47,      ///< MaximumScalar
+  NN_FUNCTION_LOGICAL_AND = 48,         ///< LogicalAnd
+  NN_FUNCTION_LOGICAL_OR = 49,          ///< LogicalOr
+  NN_FUNCTION_LOGICAL_XOR = 50,         ///< LogicalXor
+  NN_FUNCTION_EQUAL = 51,               ///< Equal
+  NN_FUNCTION_NOT_EQUAL = 52,           ///< NotEqual
+  NN_FUNCTION_GREATER_EQUAL = 53,       ///< GreaterEqual
+  NN_FUNCTION_GREATER = 54,             ///< Greater
+  NN_FUNCTION_LESS_EQUAL = 55,          ///< LessEqual
+  NN_FUNCTION_LESS = 56,                ///< Less
+  NN_FUNCTION_LOGICAL_AND_SCALAR = 57,  ///< LogicalAndScalar
+  NN_FUNCTION_LOGICAL_OR_SCALAR = 58,   ///< LogicalOrScalar
+  NN_FUNCTION_LOGICAL_XOR_SCALAR = 59,  ///< LogicalXorScalar
+  NN_FUNCTION_EQUAL_SCALAR = 60,        ///< EqualScalar
+  NN_FUNCTION_NOT_EQUAL_SCALAR = 61,    ///< NotEqualScalar
+  NN_FUNCTION_GREATER_EQUAL_SCALAR = 62, ///< GreaterEqualScalar
+  NN_FUNCTION_GREATER_SCALAR = 63,       ///< GreaterScalar
+  NN_FUNCTION_LESS_EQUAL_SCALAR = 64,    ///< LessEqualScalar
+  NN_FUNCTION_LESS_SCALAR = 65,          ///< LessScalar
+  NN_FUNCTION_LOGICAL_NOT = 66,          ///< LogicalNot
+  NN_FUNCTION_CONSTANT = 67,             ///< Constant
+  NN_FUNCTION_ARANGE = 131,              ///< Arange
+  NN_FUNCTION_ABS = 68,                  ///< Abs
+  NN_FUNCTION_EXP = 69,                  ///< Exp
+  NN_FUNCTION_LOG = 70,                  ///< Log
+  NN_FUNCTION_IDENTITY = 71,             ///< Identity
+  NN_FUNCTION_BATCH_MATMUL = 72,         ///< BatchMatmul
+  NN_FUNCTION_ROUND = 73,                ///< Round
+  NN_FUNCTION_CEIL = 124,                ///< Ceil
+  NN_FUNCTION_FLOOR = 125,               ///< Floor
+  NN_FUNCTION_SIN = 173,                 ///< Sin
+  NN_FUNCTION_COS = 174,                 ///< Cos
+  NN_FUNCTION_TAN = 175,                 ///< Tan
+  NN_FUNCTION_SINH = 176,                ///< Sinh
+  NN_FUNCTION_COSH = 177,                ///< Cosh
+  NN_FUNCTION_ASIN = 178,                ///< ASin
+  NN_FUNCTION_ACOS = 179,                ///< ACos
+  NN_FUNCTION_ATAN = 180,                ///< ATan
+  NN_FUNCTION_ASINH = 181,               ///< ASinh
+  NN_FUNCTION_ACOSH = 182,               ///< ACosh
+  NN_FUNCTION_ATANH = 183,               ///< ATanh
+  NN_FUNCTION_CONCATENATE = 74,          ///< Concatenate
+  NN_FUNCTION_SPLIT = 75,                ///< Split
+  NN_FUNCTION_STACK = 76,                ///< Stack
+  NN_FUNCTION_SLICE = 77,                ///< Slice
+  NN_FUNCTION_PAD = 123,                 ///< Pad
+  NN_FUNCTION_TRANSPOSE = 78,            ///< Transpose
+  NN_FUNCTION_BROADCAST = 79,            ///< Broadcast
+  NN_FUNCTION_BROADCAST_TO = 184,        ///< BroadcastTo
+  NN_FUNCTION_ONE_HOT = 80,              ///< OneHot
+  NN_FUNCTION_FLIP = 81,                 ///< Flip
+  NN_FUNCTION_SHIFT = 82,                ///< Shift
+  NN_FUNCTION_SORT = 129,                ///< Sort
+  NN_FUNCTION_RESHAPE_0 = 83,        ///< Recent version of Reshape has arg [iI]
+  NN_FUNCTION_RESHAPE = 126,         ///< Reshape
+  NN_FUNCTION_MATRIX_DIAG = 84,      ///< MatrixDiag
+  NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
+  NN_FUNCTION_INTERPOLATE = 127,     ///< Interpolate
+  NN_FUNCTION_FFT = 158,             ///< FFT
+  NN_FUNCTION_IFFT = 159,            ///< IFFT
+  NN_FUNCTION_DROPOUT = 86,          ///< Dropout
+  NN_FUNCTION_TOP_K_DATA = 87,       ///< TopKData
+  NN_FUNCTION_TOP_K_GRAD = 88,       ///< TopKGrad
+  NN_FUNCTION_RAND = 89,             ///< Rand
+  NN_FUNCTION_RANDINT = 90,          ///< Randint
+  NN_FUNCTION_RANDN = 91,            ///< Randn
+  NN_FUNCTION_RANDOM_CROP = 92,      ///< RandomCrop
+  NN_FUNCTION_RANDOM_FLIP = 93,      ///< RandomFlip
+  NN_FUNCTION_RANDOM_SHIFT = 94,     ///< RandomShift
+  NN_FUNCTION_IMAGE_AUGMENTATION = 95,        ///< ImageAugmentation
+  NN_FUNCTION_SIGMOID_CROSS_ENTROPY = 96,     ///< SigmoidCrossEntropy
+  NN_FUNCTION_BINARY_CROSS_ENTROPY = 97,      ///< BinaryCrossEntropy
+  NN_FUNCTION_SOFTMAX_CROSS_ENTROPY = 98,     ///< SoftmaxCrossEntropy
+  NN_FUNCTION_CATEGORICAL_CROSS_ENTROPY = 99, ///< CategoricalCrossEntropy
+  NN_FUNCTION_SQUARED_ERROR = 100,            ///< SquaredError
+  NN_FUNCTION_ABSOLUTE_ERROR = 101,           ///< AbsoluteError
+  NN_FUNCTION_HUBER_LOSS = 102,               ///< HuberLoss
+  NN_FUNCTION_EPSILON_INSENSITIVE_LOSS = 103, ///< EpsilonInsensitiveLoss
+  NN_FUNCTION_KL_MULTINOMIAL = 104,           ///< KLMultinomial
+  NN_FUNCTION_BINARY_SIGMOID = 105,           ///< BinarySigmoid
+  NN_FUNCTION_BINARY_TANH = 106,              ///< BinaryTanh
+  NN_FUNCTION_BINARY_CONNECT_AFFINE_0 =
+      107, ///< Recent version of BinaryConnectAffine has arg [i]
+  NN_FUNCTION_BINARY_CONNECT_AFFINE = 235, ///< BinaryConnectAffine
+  NN_FUNCTION_BINARY_CONNECT_CONVOLUTION_0 =
+      108, ///< Recent version of BinaryConnectConvolution has arg [iiIiIiIi]
+  NN_FUNCTION_BINARY_CONNECT_CONVOLUTION = 233, ///< BinaryConnectConvolution
+  NN_FUNCTION_BINARY_WEIGHT_AFFINE_0 =
+      109, ///< Recent version of BinaryWeightAffine has arg [i]
+  NN_FUNCTION_BINARY_WEIGHT_AFFINE = 234, ///< BinaryWeightAffine
+  NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION_0 =
+      110, ///< Recent version of BinaryWeightConvolution has arg [iiIiIiIi]
+  NN_FUNCTION_BINARY_WEIGHT_CONVOLUTION = 232, ///< BinaryWeightConvolution
+  NN_FUNCTION_INQ_AFFINE = 111,                ///< INQAffine
+  NN_FUNCTION_INQ_CONVOLUTION = 112,           ///< INQConvolution
+  NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,      ///< FixedPointQuantize
+  NN_FUNCTION_POW2_QUANTIZE = 114,             ///< Pow2Quantize
+  NN_FUNCTION_PRUNE = 135,                     ///< Prune
+  NN_FUNCTION_TOP_N_ERROR = 115,               ///< TopNError
+  NN_FUNCTION_BINARY_ERROR = 116,              ///< BinaryError
+  NN_FUNCTION_CONFUSION_MATRIX = 117,          ///< ConfusionMatrix
+  NN_FUNCTION_VAT_NOISE = 118,                 ///< VATNoise
+  NN_FUNCTION_UNLINK = 119,                    ///< Unlink
+  NN_FUNCTION_SINK = 120,                      ///< Sink
+  NN_FUNCTION_NMS_DETECTION2D = 231,           ///< NmsDetection2d
+  NN_END_OF_FUNCTION = 65535                   // Ensure this type has 16bits
 } nn_function_type_t;
 
 /// @brief Function implement type.
@@ -1922,7 +1934,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis; ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_connect_affine_t;
 
 /// @}
@@ -1935,11 +1948,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis;  ///< Original type is [int64]
-  nn_list_t pad;      ///< Original type is [Shape]
-  nn_list_t stride;   ///< Original type is [Shape]
-  nn_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  nn_list_t pad;          ///< Original type is [Shape]
+  nn_list_t stride;       ///< Original type is [Shape]
+  nn_list_t dilation;     ///< Original type is [Shape]
+  int32_t group;          ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_connect_convolution_t;
 
 /// @}
@@ -1952,7 +1966,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis; ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_weight_affine_t;
 
 /// @}
@@ -1965,11 +1980,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis;  ///< Original type is [int64]
-  nn_list_t pad;      ///< Original type is [Shape]
-  nn_list_t stride;   ///< Original type is [Shape]
-  nn_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< Original type is [int64]
+  int32_t base_axis;      ///< Original type is [int64]
+  nn_list_t pad;          ///< Original type is [Shape]
+  nn_list_t stride;       ///< Original type is [Shape]
+  nn_list_t dilation;     ///< Original type is [Shape]
+  int32_t group;          ///< Original type is [int64]
+  float quantize_zero_to; ///< Original type is [float]
 } nn_function_binary_weight_convolution_t;
 
 /// @}
