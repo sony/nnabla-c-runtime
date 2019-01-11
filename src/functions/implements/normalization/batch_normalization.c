@@ -174,12 +174,12 @@ static void forward_impl_global(rt_function_t *f,
   int i1;
   for (i1 = 0; i1 < specified_axis_size; i1++) {
     int i02;
+    const float stdvar = (float)sqrt(rv[i1] + context->eps);
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
       const float mean = rm[i1];
-      const float stdvar = (float)sqrt(rv[i1] + context->eps);
       y[i] = (x[i] - mean) * gamma[i1] / stdvar + beta[i1];
     }
   }
@@ -257,12 +257,12 @@ forward_impl_batch_generic(rt_function_t *f,
     set_rm(input_rm, i1, rm);
     set_rv(input_rv, i1, rv);
 
+    const float stdvar = (float)sqrt(v[i1] + context->eps);
     // Subtract mean and divide by std, and apply beta and gamma.
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
-      const float stdvar = (float)sqrt(v[i1] + context->eps);
       float x = get_x(input_x, i);
       float beta = get_beta(input_beta, i1);
       float gamma = get_gamma(input_gamma, i1);
@@ -297,16 +297,16 @@ forward_impl_global_generic(rt_function_t *f,
   int i1;
   for (i1 = 0; i1 < specified_axis_size; i1++) {
     int i02;
+    float rv = get_rv(input_rv, i1);
+    const float stdvar = (float)sqrt(rv + context->eps);
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
       const int i = i0 * multiplication_axis_output + i1 * output_size + i2;
       float x = get_x(input_x, i);
       float rm = get_rm(input_rm, i1);
-      float rv = get_rv(input_rv, i1);
       float gamma = get_gamma(input_gamma, i1);
       float beta = get_beta(input_beta, i1);
-      const float stdvar = (float)sqrt(rv + context->eps);
       float y = (x - rm) * gamma / stdvar + beta;
       set_output(output, i, y);
     }
