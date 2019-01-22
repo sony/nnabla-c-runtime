@@ -29,7 +29,7 @@ RUN set -xe \
 RUN /bin/bash -c "source activate py35 \
     && pip install 'Cython>=0.25,<0.26' autopep8 boto3 \
        configparser contextlib2 futures h5py mako \
-       numpy protobuf pyyaml requests scikit-image scikit_image scipy tqdm \
+       'numpy<1.16' protobuf pyyaml requests scikit-image scikit_image scipy tqdm \
     && pip install pytest"
 
 ENV PATH /opt/miniconda3/envs/py35/bin:$PATH
