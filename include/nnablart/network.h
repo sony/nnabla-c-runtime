@@ -25,7 +25,8 @@ extern "C" {
 #include <stdlib.h> // for size_t
 
 #define NN_C_RUNTIME_VERSION ("1.0.10.dev1")
-#define NN_BINARY_FORMAT_VERSION (2)
+#define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
+#define NN_BINARY_FORMAT_VERSION (3)
 #define NN_BINARY_FORMAT_REVISION ("e3d398f4d56529cbeda9fcbe5fc8a19a")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -107,7 +107,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
 
   //////////////////////////////////////////////////////////////////////////////
   // Binary format version check
-  if (n->version != NN_BINARY_FORMAT_VERSION) {
+  if (n < NN_BINARY_FORMAT_MINIMUM_VERSION || n > NN_BINARY_FORMAT_VERSION ) {
     return RT_RET_ERROR_VERSION_UNMATCH;
   }
 
@@ -148,9 +148,14 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   for (i = 0; i < c->num_of_buffers; i++) {
     if (c->buffers[i].allocate_type == RT_BUFFER_ALLOCATE_TYPE_INITIAL) {
       c->buffers[i].allocate_type = RT_BUFFER_ALLOCATE_TYPE_MALLOC;
-      c->buffers[i].buffer = rt_variable_malloc_func(
-          *(list + i) * sizeof(float)); // TODO float only.
-      memset(c->buffers[i].buffer, 0, *(list + i) * sizeof(float));
+      if (n->version == 2) {
+        c->buffers[i].buffer =
+            rt_variable_malloc_func(*(list + i) * sizeof(float));
+        memset(c->buffers[i].buffer, 0, *(list + i) * sizeof(float));
+      } else {
+        c->buffers[i].buffer = rt_variable_malloc_func(*(list + i));
+        memset(c->buffers[i].buffer, 0, *(list + i));
+      }
       if (c->buffers[i].buffer == 0) {
         return RT_RET_ERROR_ALLOCATE_CONTEXT;
       }
