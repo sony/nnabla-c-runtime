@@ -49,6 +49,7 @@ rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
   p->set_output = select_setter(p->output);
   p->output_size = calc_shape_size(f->outputs[0]->shape);
   if (p->input_size != p->output_size) {
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   ((reshape_local_context_t *)(f->local_context))->data = (void *)p;

@@ -44,6 +44,7 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
   }
   // Check axes
   if (context->axes.size != 1) {
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
   // Check and parse shapes
@@ -59,6 +60,7 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
   p->multiplication_axis_output = p->specified_axis_size * p->output_size;
   p->multiplication_batch_axis = p->batch_size * p->output_size;
   if (p->batch_size * p->specified_axis_size * p->output_size != size) {
+    rt_malloc_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
 
