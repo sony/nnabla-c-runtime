@@ -52,6 +52,11 @@ rt_function_error_t allocate_unpooling_local_context(rt_function_t *f) {
   p->set_output = select_setter(p->output);
 
   if (context->kernel.size > p->input_shape.size) {
+    free_list(p->input_shape);
+    free_list(p->output_shape);
+    free_list(p->input_strides);
+    free_list(p->output_strides);
+    rt_free_func(p);
     return RT_FUNCTION_ERROR_INVALID_SHAPE;
   }
 
