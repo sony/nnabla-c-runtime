@@ -107,7 +107,8 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
 
   //////////////////////////////////////////////////////////////////////////////
   // Binary format version check
-  if (n < NN_BINARY_FORMAT_MINIMUM_VERSION || n > NN_BINARY_FORMAT_VERSION) {
+  if (n->version < NN_BINARY_FORMAT_MINIMUM_VERSION ||
+      n->version > NN_BINARY_FORMAT_VERSION) {
     return RT_RET_ERROR_VERSION_UNMATCH;
   }
 
