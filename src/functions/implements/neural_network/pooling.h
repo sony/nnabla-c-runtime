@@ -32,8 +32,12 @@ typedef struct {
   int hend;
   int wstart;
   int wend;
-  int wx;
+  int dstart;
+  int dend;
+  int hstride;
+  int wstride;
   int pool_size;
+  int kernel_size;
   rt_variable_t *x;
   rt_variable_getter get_x;
   rt_variable_t *y;
@@ -47,8 +51,10 @@ typedef struct {
   rt_list_t input_shape;
   rt_list_t output_shape;
   int input_n_kernel_size_diff;
-  int x_stride;
-  int y_stride;
+  int x_map_size;
+  int y_map_size;
+  rt_list_t input_strides;
+  rt_list_t output_strides;
   pooling_calc_context_t calc_context;
 } pooling_private_t;
 
