@@ -25,8 +25,10 @@ typedef struct {
   rt_variable_getter get_input;
   rt_variable_t *output;
   rt_variable_setter set_output;
-  rt_list_t input_strides;
+  rt_list_t in_position;
+  rt_list_t out_position;
   uint8_t *flip;
+  int output_size;
 } flip_private_t;
 
 rt_function_error_t exec_flip_generic(rt_function_t *f);
@@ -50,16 +52,18 @@ rt_function_error_t allocate_flip_local_context(rt_function_t *f) {
     return RT_FUNCTION_ERROR_MALLOC;
   }
   ((flip_local_context_t *)(f->local_context))->data = (void *)p;
-  p->flip = rt_malloc_func(sizeof(uint8_t) * (f->inputs[0]->shape.size - 1));
-  memset(p->flip, 0, sizeof(uint8_t) * (f->inputs[0]->shape.size - 1));
+  p->flip = rt_malloc_func(sizeof(uint8_t) * (f->inputs[0]->shape.size));
+  memset(p->flip, 0, sizeof(uint8_t) * (f->inputs[0]->shape.size));
   p->input = f->inputs[0];
   p->get_input = select_getter(p->input);
   p->output = f->outputs[0];
   p->set_output = select_setter(p->output);
-  p->input_strides = calc_contiguous_strides(p->input->shape);
+  p->in_position = allocate_list(p->input->shape.size);
+  p->out_position = allocate_list(p->output->shape.size);
+  p->output_size = calc_shape_size(p->output->shape);
 
   for (int i = 0; i < c->axes.size; i++) {
-    p->flip[c->axes.data[i] - 1] = 1;
+    p->flip[c->axes.data[i]] = 1;
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -67,95 +71,56 @@ rt_function_error_t allocate_flip_local_context(rt_function_t *f) {
 rt_function_error_t free_flip_local_context(rt_function_t *f) {
   flip_private_t *p =
       (flip_private_t *)(((flip_local_context_t *)(f->local_context))->data);
-  free_list(p->input_strides);
+  free_list(p->in_position);
+  free_list(p->out_position);
   rt_free_func(p->flip);
   rt_free_func(p);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
 #ifdef CONFIG_FLIP_FLOAT32
-static void flip_recursive(flip_local_context_t *c, int x_offset, int y_offset,
-                           int dim) {
+rt_function_error_t exec_flip(rt_function_t *f) {
+  flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
   flip_private_t *p = (flip_private_t *)(c->data);
   const float *x = (float *)(p->input->data);
   float *y = (float *)(p->output->data);
-  int current_x_offset = x_offset, current_y_offset = y_offset;
-  const int y_stride = p->input_strides.data[dim + 1];
-  int x_stride = y_stride;
-  const int size = p->input->shape.data[dim + 1];
-  if (p->flip[dim]) {
-    current_x_offset += x_stride * (size - 1);
-    x_stride = -x_stride;
-  }
-  if (dim == p->input->shape.size - 2) {
-    const float *current_x = x + current_x_offset;
-    const float *end_x = current_x + size * x_stride;
-    float *current_y = y + current_y_offset;
-    if (x_stride == 1) {
-      memcpy(current_y, current_x, sizeof(float) * size);
-    } else {
-      while (current_x != end_x) {
-        *current_y = *current_x;
-        current_x += x_stride;
-        current_y += y_stride;
+
+  for (int o = 0; o < p->output_size; o++) {
+    pos_to_shape(p->out_position, p->output->shape, o);
+    for (int i = 0; i < p->input->shape.size; i++) {
+      if (p->flip[i]) {
+        p->in_position.data[i] =
+            p->input->shape.data[i] - p->out_position.data[i] - 1;
+      } else {
+        p->in_position.data[i] = p->out_position.data[i];
       }
     }
-  } else {
-    for (int i = 0; i < size; i++) {
-      flip_recursive(c, current_x_offset, current_y_offset, dim + 1);
-      current_x_offset += x_stride;
-      current_y_offset += y_stride;
-    }
+    int index = shape_to_pos(p->input->shape, p->in_position);
+    y[o] = x[index];
   }
-}
-
-rt_function_error_t exec_flip(rt_function_t *f) {
-  flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
-
-  flip_recursive(c, 0, 0, 0);
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_FLIP_FLOAT32 */
 
 #ifdef CONFIG_FLIP_GENERIC
-static void flip_recursive_generic(flip_local_context_t *c, int x_offset,
-                                   int y_offset, int dim) {
-  flip_private_t *p = (flip_private_t *)(c->data);
-  int current_x_offset = x_offset, current_y_offset = y_offset;
-  const int y_stride = p->input_strides.data[dim + 1];
-  int x_stride = y_stride;
-  const int size = p->input->shape.data[dim + 1];
-  if (p->flip[dim]) {
-    current_x_offset += x_stride * (size - 1);
-    x_stride = -x_stride;
-  }
-  if (dim == p->input->shape.size - 2) {
-    if (x_stride == 1) {
-      for (int i = 0; i < size; i++) {
-        float x = p->get_input(p->input, i + current_x_offset);
-        p->set_output(p->output, i + current_y_offset, x);
-      }
-    } else {
-      for (int i = 0; i < size; i++) {
-        float x = p->get_input(p->input, current_x_offset);
-        p->set_output(p->output, current_y_offset, x);
-        current_x_offset += x_stride;
-        current_y_offset += y_stride;
-      }
-    }
-  } else {
-    for (int i = 0; i < size; i++) {
-      flip_recursive_generic(c, current_x_offset, current_y_offset, dim + 1);
-      current_x_offset += x_stride;
-      current_y_offset += y_stride;
-    }
-  }
-}
-
 rt_function_error_t exec_flip_generic(rt_function_t *f) {
   flip_local_context_t *c = (flip_local_context_t *)(f->local_context);
+  flip_private_t *p = (flip_private_t *)(c->data);
 
-  flip_recursive_generic(c, 0, 0, 0);
+  for (int o = 0; o < p->output_size; o++) {
+    pos_to_shape(p->out_position, p->output->shape, o);
+    for (int i = 0; i < p->input->shape.size; i++) {
+      if (p->flip[i]) {
+        p->in_position.data[i] =
+            p->input->shape.data[i] - p->out_position.data[i] - 1;
+      } else {
+        p->in_position.data[i] = p->out_position.data[i];
+      }
+    }
+    int index = shape_to_pos(p->input->shape, p->in_position);
+    float x = p->get_input(p->input, index);
+    p->set_output(p->output, o, x);
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_FLIP_GENERIC */
