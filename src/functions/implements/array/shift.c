@@ -26,12 +26,13 @@ typedef struct {
   rt_list_t input_shape;
   rt_list_t output_shape;
   rt_list_t input_strides;
-  rt_list_t output_strides;
+  rt_list_t out_position;
   int **table;
   rt_variable_t *input;
   rt_variable_getter get_input;
   rt_variable_t *output;
   rt_variable_setter set_output;
+  int output_size;
 } shift_private_t;
 
 #define MAX(a, b) ((a > b) ? a : b)
@@ -57,11 +58,12 @@ rt_function_error_t allocate_shift_local_context(rt_function_t *f) {
   p->input_shape = clone_list(f->inputs[0]->shape);
   p->output_shape = clone_list(f->outputs[0]->shape);
   p->input_strides = calc_contiguous_strides(f->inputs[0]->shape);
-  p->output_strides = calc_contiguous_strides(f->outputs[0]->shape);
+  p->out_position = allocate_list(p->output_shape.size);
   p->input = f->inputs[0];
   p->get_input = select_getter(p->input);
   p->output = f->outputs[0];
   p->set_output = select_setter(p->output);
+  p->output_size = calc_shape_size(p->output->shape);
 
   p->table = rt_malloc_func(sizeof(int *) * p->input_shape.size);
 
@@ -102,7 +104,7 @@ rt_function_error_t free_shift_local_context(rt_function_t *f) {
   free_list(p->input_shape);
   free_list(p->output_shape);
   free_list(p->input_strides);
-  free_list(p->output_strides);
+  free_list(p->out_position);
   for (int i = 0; i < p->input_shape.size; i++) {
     rt_free_func(p->table[i]);
   }
@@ -112,63 +114,38 @@ rt_function_error_t free_shift_local_context(rt_function_t *f) {
 }
 
 #ifdef CONFIG_SHIFT_FLOAT32
-static void shift_recursive(shift_local_context_t *context, int x_offset,
-                            int y_offset, int dim) {
-  shift_private_t *p = (shift_private_t *)(context->data);
-  int current_y_offset = y_offset;
-  const int stride = p->input_strides.data[dim];
-  const int size = p->input_shape.data[dim];
-  const float *x = (float *)(p->input->data);
-  float *y = (float *)(p->output->data);
-  if (dim == p->input_shape.size - 1) {
-    for (int i = 0; i < size; i++) {
-      y[current_y_offset] = x[x_offset + p->table[dim][i]];
-      current_y_offset += stride;
-    }
-  } else {
-    for (int i = 0; i < size; i++) {
-      shift_recursive(context, x_offset + p->table[dim][i], current_y_offset,
-                      dim + 1);
-      current_y_offset += stride;
-    }
-  }
-}
-
 rt_function_error_t exec_shift(rt_function_t *f) {
   shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
+  shift_private_t *p = (shift_private_t *)(context->data);
+  const float *x = (float *)(p->input->data);
+  float *y = (float *)(p->output->data);
 
-  shift_recursive(context, 0, 0, 0);
+  for (int o = 0; o < p->output_size; o++) {
+    int index = 0;
+    pos_to_shape(p->out_position, p->output->shape, o);
+    for (int i = 0; i < p->input_shape.size; i++) {
+      index += p->table[i][p->out_position.data[i]];
+    }
+    y[o] = x[index];
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_SHIFT_FLOAT32 */
 
 #ifdef CONFIG_SHIFT_GENERIC
-static void shift_recursive_generic(shift_local_context_t *context,
-                                    int x_offset, int y_offset, int dim) {
-  shift_private_t *p = (shift_private_t *)(context->data);
-  int current_y_offset = y_offset;
-  const int stride = p->input_strides.data[dim];
-  const int size = p->input_shape.data[dim];
-
-  if (dim == p->input_shape.size - 1) {
-    for (int i = 0; i < size; i++) {
-      float x = p->get_input(p->input, x_offset + p->table[dim][i]);
-      p->set_output(p->output, current_y_offset, x);
-      current_y_offset += stride;
-    }
-  } else {
-    for (int i = 0; i < size; i++) {
-      shift_recursive_generic(context, x_offset + p->table[dim][i],
-                              current_y_offset, dim + 1);
-      current_y_offset += stride;
-    }
-  }
-}
-
 rt_function_error_t exec_shift_generic(rt_function_t *f) {
   shift_local_context_t *context = (shift_local_context_t *)(f->local_context);
+  shift_private_t *p = (shift_private_t *)(context->data);
 
-  shift_recursive_generic(context, 0, 0, 0);
+  for (int o = 0; o < p->output_size; o++) {
+    int index = 0;
+    pos_to_shape(p->out_position, p->output->shape, o);
+    for (int i = 0; i < p->input_shape.size; i++) {
+      index += p->table[i][p->out_position.data[i]];
+    }
+    float x = p->get_input(p->input, index);
+    p->set_output(p->output, o, x);
+  }
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_SHIFT_GENERIC */
