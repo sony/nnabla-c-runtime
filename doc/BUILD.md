@@ -25,7 +25,7 @@ If you want to follow newest NNabla by hand, you can update @c
 functions.yaml with following command.
 
 ```bash
-$ nnabla_cli function_info build-tools/code-generator/functions.yaml
+$ nnabla_cli function_info -o build-tools/code-generator/functions.yaml
 ```
 
 ## Compile

@@ -39,6 +39,119 @@ Neural Network Layer:
     id: 0
     func_type:
     - ALL
+  RNN:
+    snake_name: rnn
+    inputs:
+      x: {}
+      h: {}
+      weight_l0:
+        parameter: true
+      weight:
+        optional: true
+        parameter: true
+      bias:
+        optional: true
+        parameter: true
+    arguments:
+      num_layers:
+        type: int64
+        default: '1'
+      nonlinearity:
+        type: string
+        default: tanh
+      dropout:
+        type: float
+        default: 0.0
+      bidirectional:
+        type: bool
+        default: 'False'
+      training:
+        type: bool
+        default: 'True'
+    outputs:
+      y: {}
+      h_n: {}
+    function_ids:
+      iifBB: 244
+    c_runtime: not support
+    uniq_name: RNN_iifBB
+    id: 244
+    func_type:
+    - ALL
+  LSTM:
+    snake_name: lstm
+    inputs:
+      x: {}
+      h: {}
+      c: {}
+      weight_l0:
+        parameter: true
+      weight:
+        optional: true
+        parameter: true
+      bias:
+        optional: true
+        parameter: true
+    arguments:
+      num_layers:
+        type: int64
+        default: '1'
+      dropout:
+        type: float
+        default: 0.0
+      bidirectional:
+        type: bool
+        default: 'False'
+      training:
+        type: bool
+        default: 'True'
+    outputs:
+      y: {}
+      h_n: {}
+      c_n: {}
+    function_ids:
+      ifBB: 242
+    c_runtime: not support
+    uniq_name: LSTM_ifBB
+    id: 242
+    func_type:
+    - ALL
+  GRU:
+    snake_name: gru
+    inputs:
+      x: {}
+      h: {}
+      weight_l0:
+        parameter: true
+      weight:
+        optional: true
+        parameter: true
+      bias:
+        optional: true
+        parameter: true
+    arguments:
+      num_layers:
+        type: int64
+        default: '1'
+      dropout:
+        type: float
+        default: 0.0
+      bidirectional:
+        type: bool
+        default: 'False'
+      training:
+        type: bool
+        default: 'True'
+    outputs:
+      y: {}
+      h_n: {}
+    function_ids:
+      ifBB: 243
+    c_runtime: not support
+    uniq_name: GRU_ifBB
+    id: 243
+    func_type:
+    - ALL
   Convolution:
     snake_name: convolution
     inputs:
@@ -1274,6 +1387,81 @@ Logical:
     id: 66
     func_type:
     - ALL
+  IsNaN:
+    snake_name: isnan
+    inputs:
+      x0: {}
+    outputs:
+      y: {}
+    function_ids:
+      Empty: 236
+    c_runtime: not support
+    uniq_name: IsNaN
+    id: 236
+    func_type:
+    - ALL
+  IsInf:
+    snake_name: isinf
+    inputs:
+      x0: {}
+    outputs:
+      y: {}
+    function_ids:
+      Empty: 237
+    c_runtime: not support
+    uniq_name: IsInf
+    id: 237
+    func_type:
+    - ALL
+  ResetNaN:
+    snake_name: reset_nan
+    inputs:
+      x0: {}
+    arguments:
+      val:
+        type: double
+        default: '0'
+    outputs:
+      y: {}
+    function_ids:
+      f: 238
+    c_runtime: not support
+    uniq_name: ResetNaN_f
+    id: 238
+    func_type:
+    - ALL
+  ResetInf:
+    snake_name: reset_inf
+    inputs:
+      x0: {}
+    arguments:
+      val:
+        type: double
+        default: '0'
+    outputs:
+      y: {}
+    function_ids:
+      f: 239
+    c_runtime: not support
+    uniq_name: ResetInf_f
+    id: 239
+    func_type:
+    - ALL
+  Where:
+    snake_name: where
+    inputs:
+      condition: {}
+      x_true: {}
+      x_false: {}
+    outputs:
+      y: {}
+    function_ids:
+      Empty: 240
+    c_runtime: not support
+    uniq_name: Where
+    id: 240
+    func_type:
+    - ALL
 Math:
   Constant:
     snake_name: constant
@@ -1531,6 +1719,20 @@ Math:
     c_runtime: not support
     uniq_name: ATan
     id: 180
+    func_type:
+    - ALL
+  ATan2:
+    snake_name: atan2
+    inputs:
+      x0: {}
+      x1: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 241
+    uniq_name: ATan2
+    id: 241
     func_type:
     - ALL
   ASinh:
