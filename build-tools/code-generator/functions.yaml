@@ -58,6 +58,9 @@ Neural Network Layer:
         default: '1'
       nonlinearity:
         type: string
+        available_values:
+        - tanh
+        - relu
         default: tanh
       dropout:
         type: float

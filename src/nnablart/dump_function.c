@@ -33,6 +33,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_AFFINE: { // Affine
     printf("NNB: Function type:    Affine(0)\n");
   } break;
+  case NN_FUNCTION_RNN: { // RNN
+    printf("NNB: Function type:    RNN(244)\n");
+  } break;
+  case NN_FUNCTION_LSTM: { // LSTM
+    printf("NNB: Function type:    LSTM(242)\n");
+  } break;
+  case NN_FUNCTION_GRU: { // GRU
+    printf("NNB: Function type:    GRU(243)\n");
+  } break;
   case NN_FUNCTION_CONVOLUTION: { // Convolution
     printf("NNB: Function type:    Convolution(1)\n");
   } break;
@@ -237,6 +246,21 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_LOGICAL_NOT: { // LogicalNot
     printf("NNB: Function type:    LogicalNot(66)\n");
   } break;
+  case NN_FUNCTION_ISNAN: { // IsNaN
+    printf("NNB: Function type:    IsNaN(236)\n");
+  } break;
+  case NN_FUNCTION_ISINF: { // IsInf
+    printf("NNB: Function type:    IsInf(237)\n");
+  } break;
+  case NN_FUNCTION_RESET_NAN: { // ResetNaN
+    printf("NNB: Function type:    ResetNaN(238)\n");
+  } break;
+  case NN_FUNCTION_RESET_INF: { // ResetInf
+    printf("NNB: Function type:    ResetInf(239)\n");
+  } break;
+  case NN_FUNCTION_WHERE: { // Where
+    printf("NNB: Function type:    Where(240)\n");
+  } break;
   case NN_FUNCTION_CONSTANT: { // Constant
     printf("NNB: Function type:    Constant(67)\n");
   } break;
@@ -290,6 +314,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_ATAN: { // ATan
     printf("NNB: Function type:    ATan(180)\n");
+  } break;
+  case NN_FUNCTION_ATAN2: { // ATan2
+    printf("NNB: Function type:    ATan2(241)\n");
   } break;
   case NN_FUNCTION_ASINH: { // ASinh
     printf("NNB: Function type:    ASinh(181)\n");
@@ -481,6 +508,28 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_AFFINE: { // Affine
     nn_function_affine_t *f = (nn_function_affine_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+  } break;
+  case NN_FUNCTION_RNN: { // RNN
+    nn_function_rnn_t *f = (nn_function_rnn_t *)func;
+    printf("NNB: Function argument num_layers: %d\n", f->num_layers);
+    printf("NNB: Function argument nonlinearity: %d\n", f->nonlinearity);
+    printf("NNB: Function argument dropout: %f\n", f->dropout);
+    printf("NNB: Function argument bidirectional: %d\n", f->bidirectional);
+    printf("NNB: Function argument training: %d\n", f->training);
+  } break;
+  case NN_FUNCTION_LSTM: { // LSTM
+    nn_function_lstm_t *f = (nn_function_lstm_t *)func;
+    printf("NNB: Function argument num_layers: %d\n", f->num_layers);
+    printf("NNB: Function argument dropout: %f\n", f->dropout);
+    printf("NNB: Function argument bidirectional: %d\n", f->bidirectional);
+    printf("NNB: Function argument training: %d\n", f->training);
+  } break;
+  case NN_FUNCTION_GRU: { // GRU
+    nn_function_gru_t *f = (nn_function_gru_t *)func;
+    printf("NNB: Function argument num_layers: %d\n", f->num_layers);
+    printf("NNB: Function argument dropout: %f\n", f->dropout);
+    printf("NNB: Function argument bidirectional: %d\n", f->bidirectional);
+    printf("NNB: Function argument training: %d\n", f->training);
   } break;
   case NN_FUNCTION_CONVOLUTION: { // Convolution
     nn_function_convolution_t *f = (nn_function_convolution_t *)func;
@@ -902,6 +951,20 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_LOGICAL_NOT: { // LogicalNot
   } break;
+  case NN_FUNCTION_ISNAN: { // IsNaN
+  } break;
+  case NN_FUNCTION_ISINF: { // IsInf
+  } break;
+  case NN_FUNCTION_RESET_NAN: { // ResetNaN
+    nn_function_reset_nan_t *f = (nn_function_reset_nan_t *)func;
+    printf("NNB: Function argument val: %f\n", f->val);
+  } break;
+  case NN_FUNCTION_RESET_INF: { // ResetInf
+    nn_function_reset_inf_t *f = (nn_function_reset_inf_t *)func;
+    printf("NNB: Function argument val: %f\n", f->val);
+  } break;
+  case NN_FUNCTION_WHERE: { // Where
+  } break;
   case NN_FUNCTION_CONSTANT: { // Constant
     nn_function_constant_t *f = (nn_function_constant_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
@@ -952,6 +1015,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ACOS: { // ACos
   } break;
   case NN_FUNCTION_ATAN: { // ATan
+  } break;
+  case NN_FUNCTION_ATAN2: { // ATan2
   } break;
   case NN_FUNCTION_ASINH: { // ASinh
   } break;

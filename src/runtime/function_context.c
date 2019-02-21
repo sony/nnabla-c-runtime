@@ -40,6 +40,49 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_RNN
+  case NN_FUNCTION_RNN: { // RNN
+    function_context->func.free_local_context_func = free_rnn_local_context;
+    nn_function_rnn_t *f = (nn_function_rnn_t *)function;
+    rnn_local_context_t *ctx = rt_malloc_func(sizeof(rnn_local_context_t));
+    ctx->num_layers = f->num_layers;
+    ctx->nonlinearity = f->nonlinearity;
+    ctx->dropout = f->dropout;
+    ctx->bidirectional = f->bidirectional;
+    ctx->training = f->training;
+    function_context->func.local_context = ctx;
+    allocate_rnn_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_LSTM
+  case NN_FUNCTION_LSTM: { // LSTM
+    function_context->func.free_local_context_func = free_lstm_local_context;
+    nn_function_lstm_t *f = (nn_function_lstm_t *)function;
+    lstm_local_context_t *ctx = rt_malloc_func(sizeof(lstm_local_context_t));
+    ctx->num_layers = f->num_layers;
+    ctx->dropout = f->dropout;
+    ctx->bidirectional = f->bidirectional;
+    ctx->training = f->training;
+    function_context->func.local_context = ctx;
+    allocate_lstm_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_GRU
+  case NN_FUNCTION_GRU: { // GRU
+    function_context->func.free_local_context_func = free_gru_local_context;
+    nn_function_gru_t *f = (nn_function_gru_t *)function;
+    gru_local_context_t *ctx = rt_malloc_func(sizeof(gru_local_context_t));
+    ctx->num_layers = f->num_layers;
+    ctx->dropout = f->dropout;
+    ctx->bidirectional = f->bidirectional;
+    ctx->training = f->training;
+    function_context->func.local_context = ctx;
+    allocate_gru_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_CONVOLUTION
   case NN_FUNCTION_CONVOLUTION: { // Convolution
     function_context->func.free_local_context_func =
@@ -873,6 +916,56 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_ISNAN
+  case NN_FUNCTION_ISNAN: { // IsNaN
+    function_context->func.free_local_context_func = free_isnan_local_context;
+    function_context->func.local_context = 0;
+    allocate_isnan_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_ISINF
+  case NN_FUNCTION_ISINF: { // IsInf
+    function_context->func.free_local_context_func = free_isinf_local_context;
+    function_context->func.local_context = 0;
+    allocate_isinf_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_RESETNAN
+  case NN_FUNCTION_RESET_NAN: { // ResetNaN
+    function_context->func.free_local_context_func =
+        free_reset_nan_local_context;
+    nn_function_reset_nan_t *f = (nn_function_reset_nan_t *)function;
+    reset_nan_local_context_t *ctx =
+        rt_malloc_func(sizeof(reset_nan_local_context_t));
+    ctx->val = f->val;
+    function_context->func.local_context = ctx;
+    allocate_reset_nan_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_RESETINF
+  case NN_FUNCTION_RESET_INF: { // ResetInf
+    function_context->func.free_local_context_func =
+        free_reset_inf_local_context;
+    nn_function_reset_inf_t *f = (nn_function_reset_inf_t *)function;
+    reset_inf_local_context_t *ctx =
+        rt_malloc_func(sizeof(reset_inf_local_context_t));
+    ctx->val = f->val;
+    function_context->func.local_context = ctx;
+    allocate_reset_inf_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_WHERE
+  case NN_FUNCTION_WHERE: { // Where
+    function_context->func.free_local_context_func = free_where_local_context;
+    function_context->func.local_context = 0;
+    allocate_where_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_CONSTANT
   case NN_FUNCTION_CONSTANT: { // Constant
     function_context->func.free_local_context_func =
@@ -1033,6 +1126,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.free_local_context_func = free_atan_local_context;
     function_context->func.local_context = 0;
     allocate_atan_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_ATAN2
+  case NN_FUNCTION_ATAN2: { // ATan2
+    function_context->func.free_local_context_func = free_atan2_local_context;
+    function_context->func.local_context = 0;
+    allocate_atan2_local_context(&function_context->func);
   } break;
 #endif
 

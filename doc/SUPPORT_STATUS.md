@@ -18,15 +18,18 @@
 
 # Implement status
 
-Total 61/145
+Total 61/154
 
 
 ## Neural Network Layer
-Count 8/11
+Count 8/14
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
 |          Affine          |     yes      |     yes      |     yes      |
+|           RNN            |      no      |      -       |      -       |
+|           LSTM           |      no      |      -       |      -       |
+|           GRU            |      no      |      -       |      -       |
 |       Convolution        |     yes      |     yes      |     yes      |
 |   DepthwiseConvolution   |     yes      |     yes      |     yes      |
 |      Deconvolution       |     yes      |     yes      |     yes      |
@@ -97,7 +100,7 @@ Count 11/12
 |        RPowScalar        |     yes      |     yes      |     yes      |
 
 ## Logical
-Count 5/24
+Count 5/29
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -125,9 +128,14 @@ Count 5/24
 |     LessEqualScalar      |      no      |      -       |      -       |
 |        LessScalar        |      no      |      -       |      -       |
 |        LogicalNot        |      no      |      -       |      -       |
+|          IsNaN           |      no      |      -       |      -       |
+|          IsInf           |      no      |      -       |      -       |
+|         ResetNaN         |      no      |      -       |      -       |
+|         ResetInf         |      no      |      -       |      -       |
+|          Where           |      no      |      -       |      -       |
 
 ## Math
-Count 6/21
+Count 6/22
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -149,6 +157,7 @@ Count 6/21
 |           ASin           |      no      |      -       |      -       |
 |           ACos           |      no      |      -       |      -       |
 |           ATan           |      no      |      -       |      -       |
+|          ATan2           |      no      |      -       |      -       |
 |          ASinh           |      no      |      -       |      -       |
 |          ACosh           |      no      |      -       |      -       |
 |          ATanh           |      no      |      -       |      -       |

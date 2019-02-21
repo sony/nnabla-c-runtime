@@ -18,6 +18,54 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Layer
 ////////////////////////////////////////////////////////////////////////////////
+// RNN
+#ifdef CONFIG_RNN
+rt_function_error_t allocate_rnn_local_context(rt_function_t *f) {
+  f->exec_func = exec_rnn;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rnn_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rnn(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RNN */
+
+// LSTM
+#ifdef CONFIG_LSTM
+rt_function_error_t allocate_lstm_local_context(rt_function_t *f) {
+  f->exec_func = exec_lstm;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_lstm_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_lstm(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LSTM */
+
+// GRU
+#ifdef CONFIG_GRU
+rt_function_error_t allocate_gru_local_context(rt_function_t *f) {
+  f->exec_func = exec_lstm;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_gru_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_gru(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_GRU */
+
 // DepthwiseDeconvolution
 #ifdef CONFIG_DEPTHWISEDECONVOLUTION
 rt_function_error_t
@@ -541,6 +589,86 @@ rt_function_error_t exec_logical_not(rt_function_t *f) {
 }
 #endif /* CONFIG_LOGICALNOT */
 
+// IsNaN
+#ifdef CONFIG_ISNAN
+rt_function_error_t allocate_isnan_local_context(rt_function_t *f) {
+  f->exec_func = exec_isnan;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_isnan_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_isnan(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ISNAN */
+
+// IsInf
+#ifdef CONFIG_ISINF
+rt_function_error_t allocate_isinf_local_context(rt_function_t *f) {
+  f->exec_func = exec_isinf;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_isinf_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_isinf(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ISINF */
+
+// ResetNaN
+#ifdef CONFIG_RESETNAN
+rt_function_error_t allocate_reset_nan_local_context(rt_function_t *f) {
+  f->exec_func = exec_reset_nan;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_reset_nan_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_reset_nan(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RESETNAN */
+
+// ResetInf
+#ifdef CONFIG_RESETINF
+rt_function_error_t allocate_reset_inf_local_context(rt_function_t *f) {
+  f->exec_func = exec_reset_inf;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_reset_inf_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_reset_inf(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RESETINF */
+
+// Where
+#ifdef CONFIG_WHERE
+rt_function_error_t allocate_where_local_context(rt_function_t *f) {
+  f->exec_func = exec_where;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_where_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_where(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WHERE */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Math
 ////////////////////////////////////////////////////////////////////////////////
@@ -773,6 +901,22 @@ rt_function_error_t exec_floor(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_FLOOR */
+
+// ATan2
+#ifdef CONFIG_ATAN2
+rt_function_error_t allocate_atan2_local_context(rt_function_t *f) {
+  f->exec_func = exec_atan2;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_atan2_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_atan2(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ATAN2 */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Array Manipulation

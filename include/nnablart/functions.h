@@ -112,6 +112,80 @@ rt_function_error_t free_affine_local_context(rt_function_t *f);
 rt_function_error_t exec_affine(rt_function_t *f);
 /// @}
 
+/// @defgroup RNN RNN
+/// @{
+
+/// Named values for RNN.nonlinearity
+typedef enum {
+  RNN_NONLINEARITY_TANH,
+  RNN_NONLINEARITY_RELU,
+  END_OF_RNN_NONLINEARITY
+} rnn_nonlinearity_value_t;
+
+/// Local context for RNN
+typedef struct {
+  int32_t num_layers;                    ///< int64
+  rnn_nonlinearity_value_t nonlinearity; ///< string
+  float dropout;                         ///< float
+  uint8_t bidirectional;                 ///< bool
+  uint8_t training;                      ///< bool
+  void *data;                            ///< General purpose data area
+} rnn_local_context_t;
+
+/// Allocate RNN local context
+rt_function_error_t allocate_rnn_local_context(rt_function_t *f);
+
+/// Free RNN local context
+rt_function_error_t free_rnn_local_context(rt_function_t *f);
+
+/// Exec RNN
+rt_function_error_t exec_rnn(rt_function_t *f);
+/// @}
+
+/// @defgroup LSTM LSTM
+/// @{
+
+/// Local context for LSTM
+typedef struct {
+  int32_t num_layers;    ///< int64
+  float dropout;         ///< float
+  uint8_t bidirectional; ///< bool
+  uint8_t training;      ///< bool
+  void *data;            ///< General purpose data area
+} lstm_local_context_t;
+
+/// Allocate LSTM local context
+rt_function_error_t allocate_lstm_local_context(rt_function_t *f);
+
+/// Free LSTM local context
+rt_function_error_t free_lstm_local_context(rt_function_t *f);
+
+/// Exec LSTM
+rt_function_error_t exec_lstm(rt_function_t *f);
+/// @}
+
+/// @defgroup GRU GRU
+/// @{
+
+/// Local context for GRU
+typedef struct {
+  int32_t num_layers;    ///< int64
+  float dropout;         ///< float
+  uint8_t bidirectional; ///< bool
+  uint8_t training;      ///< bool
+  void *data;            ///< General purpose data area
+} gru_local_context_t;
+
+/// Allocate GRU local context
+rt_function_error_t allocate_gru_local_context(rt_function_t *f);
+
+/// Free GRU local context
+rt_function_error_t free_gru_local_context(rt_function_t *f);
+
+/// Exec GRU
+rt_function_error_t exec_gru(rt_function_t *f);
+/// @}
+
 /// @defgroup Convolution Convolution
 /// @{
 
@@ -1334,6 +1408,83 @@ rt_function_error_t free_logical_not_local_context(rt_function_t *f);
 rt_function_error_t exec_logical_not(rt_function_t *f);
 /// @}
 
+/// @defgroup IsNaN IsNaN
+/// @{
+
+/// Allocate IsNaN local context
+rt_function_error_t allocate_isnan_local_context(rt_function_t *f);
+
+/// Free IsNaN local context
+rt_function_error_t free_isnan_local_context(rt_function_t *f);
+
+/// Exec IsNaN
+rt_function_error_t exec_isnan(rt_function_t *f);
+/// @}
+
+/// @defgroup IsInf IsInf
+/// @{
+
+/// Allocate IsInf local context
+rt_function_error_t allocate_isinf_local_context(rt_function_t *f);
+
+/// Free IsInf local context
+rt_function_error_t free_isinf_local_context(rt_function_t *f);
+
+/// Exec IsInf
+rt_function_error_t exec_isinf(rt_function_t *f);
+/// @}
+
+/// @defgroup ResetNaN ResetNaN
+/// @{
+
+/// Local context for ResetNaN
+typedef struct {
+  float val;  ///< double
+  void *data; ///< General purpose data area
+} reset_nan_local_context_t;
+
+/// Allocate ResetNaN local context
+rt_function_error_t allocate_reset_nan_local_context(rt_function_t *f);
+
+/// Free ResetNaN local context
+rt_function_error_t free_reset_nan_local_context(rt_function_t *f);
+
+/// Exec ResetNaN
+rt_function_error_t exec_reset_nan(rt_function_t *f);
+/// @}
+
+/// @defgroup ResetInf ResetInf
+/// @{
+
+/// Local context for ResetInf
+typedef struct {
+  float val;  ///< double
+  void *data; ///< General purpose data area
+} reset_inf_local_context_t;
+
+/// Allocate ResetInf local context
+rt_function_error_t allocate_reset_inf_local_context(rt_function_t *f);
+
+/// Free ResetInf local context
+rt_function_error_t free_reset_inf_local_context(rt_function_t *f);
+
+/// Exec ResetInf
+rt_function_error_t exec_reset_inf(rt_function_t *f);
+/// @}
+
+/// @defgroup Where Where
+/// @{
+
+/// Allocate Where local context
+rt_function_error_t allocate_where_local_context(rt_function_t *f);
+
+/// Free Where local context
+rt_function_error_t free_where_local_context(rt_function_t *f);
+
+/// Exec Where
+rt_function_error_t exec_where(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1594,6 +1745,19 @@ rt_function_error_t free_atan_local_context(rt_function_t *f);
 
 /// Exec ATan
 rt_function_error_t exec_atan(rt_function_t *f);
+/// @}
+
+/// @defgroup ATan2 ATan2
+/// @{
+
+/// Allocate ATan2 local context
+rt_function_error_t allocate_atan2_local_context(rt_function_t *f);
+
+/// Free ATan2 local context
+rt_function_error_t free_atan2_local_context(rt_function_t *f);
+
+/// Exec ATan2
+rt_function_error_t exec_atan2(rt_function_t *f);
 /// @}
 
 /// @defgroup ASinh ASinh
