@@ -81,6 +81,7 @@ def generate(filename, info):
     try:
         tmpl = Template(filename=filename)
         output = tmpl.render(C_RUNTIME_VERSION=versions['C_RUNTIME_VERSION'],
+                             NNB_MINIMUM_VERSION=versions['NNB_MINIMUM_VERSION'],
                              NNB_VERSION=versions['NNB_VERSION'],
                              BINARY_VERSION=m.hexdigest(),
                              FUNCTION_ENUMS='\n'.join(enums),
