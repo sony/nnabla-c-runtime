@@ -70,7 +70,7 @@ nnabla-c-runtime-auto-format:
 ifneq ("$(NNABLA_DIRECTORY)","")
 .PHONY: nnabla-c-runtime-update-function-info
 nnabla-c-runtime-update-function-info: nnabla-install
-	@nnabla_cli function_info $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
+	@nnabla_cli function_info -o $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
 
 .PHONY: nnabla-c-runtime-generate-function-test
 nnabla-c-runtime-generate-function-test: nnabla-install
