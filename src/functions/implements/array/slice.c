@@ -14,6 +14,7 @@
 
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include <limits.h>
 #include <nnablart/config.h>
 #include <nnablart/functions.h>
 
@@ -65,8 +66,16 @@ rt_function_error_t allocate_slice_local_context(rt_function_t *f) {
     p->step.data[i] = 1;
   }
   for (j = 0; i < p->input->shape.size; i++, j++) {
-    p->start.data[i] = context->start.data[j];
-    p->step.data[i] = context->step.data[j];
+    if (context->start.data[j] < 0 || context->start.data[j] == INT_MAX) {
+      p->start.data[i] = 0;
+    } else {
+      p->start.data[i] = context->start.data[j];
+    }
+    if (context->step.data[j] < 0 || context->step.data[j] == INT_MAX) {
+      p->step.data[i] = 1;
+    } else {
+      p->step.data[i] = context->step.data[j];
+    }
   }
   if (p->input->type == NN_DATA_TYPE_FLOAT &&
       p->output->type == NN_DATA_TYPE_FLOAT) {
