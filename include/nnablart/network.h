@@ -24,10 +24,10 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_C_RUNTIME_VERSION ("1.0.10.dev1")
+#define NN_C_RUNTIME_VERSION ("1.0.13.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_BINARY_FORMAT_REVISION ("c7c12c1ce6d9e4919083e1e540b0189e")
+#define NN_BINARY_FORMAT_REVISION ("92ab8d4232e69ad17c2a945dc065d2be")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -90,6 +90,7 @@ typedef enum {
   NN_FUNCTION_CRELU = 19,        ///< CReLU
   NN_FUNCTION_CELU = 20,         ///< CELU
   NN_FUNCTION_PRELU = 21,        ///< PReLU
+  NN_FUNCTION_GELU = 245,        ///< GELU
   NN_FUNCTION_BATCH_NORMALIZATION = 22, ///< BatchNormalization
   NN_FUNCTION_MEAN_SUBTRACTION = 23,    ///< MeanSubtraction
   NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121, ///< ClipGradByValue
@@ -615,6 +616,17 @@ typedef struct {
   // End of common part.
   int32_t base_axis; ///< Original type is [int64]
 } nn_function_prelu_t;
+
+/// @}
+
+/// @brief GELU function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_gelu_t;
 
 /// @}
 

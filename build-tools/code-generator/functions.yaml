@@ -601,6 +601,19 @@ Neural Network Activation Functions:
     id: 21
     func_type:
     - ALL
+  GELU:
+    snake_name: gelu
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    function_ids:
+      Empty: 245
+    c_runtime: not support
+    uniq_name: GELU
+    id: 245
+    func_type:
+    - ALL
 Normalization:
   BatchNormalization:
     snake_name: batch_normalization

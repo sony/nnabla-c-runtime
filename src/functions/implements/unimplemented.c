@@ -122,6 +122,21 @@ rt_function_error_t exec_embed(rt_function_t *f) {
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef CONFIG_GELU
+rt_function_error_t allocate_gelu_local_context(rt_function_t *f) {
+  f->exec_func = exec_clip_grad_by_value;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_gelu_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_gelu(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_GELU */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Normalization
 ////////////////////////////////////////////////////////////////////////////////
