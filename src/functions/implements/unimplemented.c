@@ -922,20 +922,6 @@ rt_function_error_t exec_atan2(rt_function_t *f) {
 // Array Manipulation
 ////////////////////////////////////////////////////////////////////////////////
 
-/// Pad
-#ifdef CONFIG_PAD
-rt_function_error_t allocate_pad_local_context(rt_function_t *f) {
-  f->exec_func = exec_pad;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-rt_function_error_t free_pad_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-rt_function_error_t exec_pad(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_PAD */
-
 // Broadcast
 #ifdef CONFIG_BROADCAST
 rt_function_error_t allocate_broadcast_local_context(rt_function_t *f) {

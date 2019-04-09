@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 61/154
+Total 62/154
 
 
 ## Neural Network Layer
@@ -163,7 +163,7 @@ Count 6/22
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 10/15
+Count 11/15
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -171,7 +171,7 @@ Count 10/15
 |          Split           |     yes      |     yes      |     yes      |
 |          Stack           |     yes      |     yes      |     yes      |
 |          Slice           |     yes      |     yes      |     yes      |
-|           Pad            |      no      |      -       |      -       |
+|           Pad            |     yes      |     yes      |     yes      |
 |        Transpose         |     yes      |     yes      |     yes      |
 |        Broadcast         |      no      |      -       |      -       |
 |       BroadcastTo        |      no      |      -       |      -       |
