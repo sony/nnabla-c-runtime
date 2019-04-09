@@ -24,7 +24,7 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_C_RUNTIME_VERSION ("1.0.13.dev1_c1")
+#define NN_C_RUNTIME_VERSION ("1.0.15.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
 #define NN_BINARY_FORMAT_REVISION ("92ab8d4232e69ad17c2a945dc065d2be")
