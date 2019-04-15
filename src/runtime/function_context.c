@@ -362,6 +362,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_GELU
+  case NN_FUNCTION_GELU: { // GELU
+    function_context->func.free_local_context_func = free_gelu_local_context;
+    function_context->func.local_context = 0;
+    allocate_gelu_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_BATCHNORMALIZATION
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     function_context->func.free_local_context_func =

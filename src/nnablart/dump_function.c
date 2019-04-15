@@ -105,6 +105,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_PRELU: { // PReLU
     printf("NNB: Function type:    PReLU(21)\n");
   } break;
+  case NN_FUNCTION_GELU: { // GELU
+    printf("NNB: Function type:    GELU(245)\n");
+  } break;
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     printf("NNB: Function type:    BatchNormalization(22)\n");
   } break;
@@ -745,6 +748,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_PRELU: { // PReLU
     nn_function_prelu_t *f = (nn_function_prelu_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+  } break;
+  case NN_FUNCTION_GELU: { // GELU
   } break;
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     nn_function_batch_normalization_t *f =

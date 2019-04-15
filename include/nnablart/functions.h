@@ -595,6 +595,19 @@ rt_function_error_t free_prelu_local_context(rt_function_t *f);
 rt_function_error_t exec_prelu(rt_function_t *f);
 /// @}
 
+/// @defgroup GELU GELU
+/// @{
+
+/// Allocate GELU local context
+rt_function_error_t allocate_gelu_local_context(rt_function_t *f);
+
+/// Free GELU local context
+rt_function_error_t free_gelu_local_context(rt_function_t *f);
+
+/// Exec GELU
+rt_function_error_t exec_gelu(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////

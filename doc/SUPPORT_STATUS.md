@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 61/154
+Total 62/155
 
 
 ## Neural Network Layer
@@ -42,7 +42,7 @@ Count 8/14
 |          Embed           |      no      |      -       |      -       |
 
 ## Neural Network Activation Functions
-Count 11/11
+Count 11/12
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -57,6 +57,7 @@ Count 11/11
 |          CReLU           |     yes      |     yes      |     yes      |
 |           CELU           |     yes      |     yes      |     yes      |
 |          PReLU           |     yes      |     yes      |     yes      |
+|           GELU           |      no      |      -       |      -       |
 
 ## Normalization
 Count 2/4
@@ -163,7 +164,7 @@ Count 6/22
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 10/15
+Count 11/15
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -171,7 +172,7 @@ Count 10/15
 |          Split           |     yes      |     yes      |     yes      |
 |          Stack           |     yes      |     yes      |     yes      |
 |          Slice           |     yes      |     yes      |     yes      |
-|           Pad            |      no      |      -       |      -       |
+|           Pad            |     yes      |     yes      |     yes      |
 |        Transpose         |     yes      |     yes      |     yes      |
 |        Broadcast         |      no      |      -       |      -       |
 |       BroadcastTo        |      no      |      -       |      -       |

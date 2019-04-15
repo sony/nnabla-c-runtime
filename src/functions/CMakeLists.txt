@@ -86,6 +86,7 @@ add_library(nnablart_functions STATIC
   implements/array/slice.c
   implements/array/flip.c
   implements/array/transpose.c
+  implements/array/pad.c
 
   implements/normalization/batch_normalization.c
   implements/normalization/mean_subtraction.c
