@@ -20,6 +20,16 @@
 #include <nnablart/network.h>
 #include <nnablart/runtime.h>
 
+static int check_data_size(int actual_size, int expected_size) {
+  if (actual_size != expected_size) {
+    printf("Input data size is invalid.\n");
+    printf("Expected data size is: %d\n", expected_size);
+    printf("Actual data size is: %d\n", actual_size);
+    return -1;
+  }
+  return 0;
+}
+
 int infer(nn_network_t *net, int argc, char *argv[]) {
   int i, j; // Iterator
   rt_return_value_t ret;
@@ -39,7 +49,12 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   ret = rt_initialize_context(context, net);
   assert(ret == RT_RET_NOERROR);
 
-  assert(argc == rt_num_of_input(context) + 1);
+  if (argc != rt_num_of_input(context) + 1) {
+    printf("Incorrect input parameters.\n");
+    printf(" Required inputs: %d and output: 1\n", rt_num_of_input(context));
+    printf(" Actual inputs: %d\n", argc);
+    return -1;
+  }
 
   for (i = 0; i < rt_num_of_input(context); i++) {
     printf("Input[%d] size:%d\n", i, rt_input_size(context, i));
@@ -50,7 +65,10 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     input = fopen(*argv, "rb");
 #endif
     argv += 1;
-    assert(input);
+    if (input == NULL) {
+      printf("Cannot open input file: %s.\n", *(argv - 1));
+      return -1;
+    }
     fseek(input, 0L, SEEK_END);
     size_t input_data_size = ftell(input);
     int read_size = 0;
@@ -61,36 +79,47 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
 
     switch (variable->type) {
     case NN_DATA_TYPE_FLOAT:
-      assert(input_data_size == rt_input_size(context, i) * sizeof(float));
+      if (check_data_size(input_data_size,
+                          rt_input_size(context, i) * sizeof(float)) < 0)
+        return -1;
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
       break;
     case NN_DATA_TYPE_INT8:
-      assert(input_data_size == rt_input_size(context, i) * sizeof(uint8_t));
+      if (check_data_size(input_data_size,
+                          rt_input_size(context, i) * sizeof(uint8_t)) < 0)
+        return -1;
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
       break;
     case NN_DATA_TYPE_INT16:
-      assert(input_data_size == rt_input_size(context, i) * sizeof(uint16_t));
+      if (check_data_size(input_data_size,
+                          rt_input_size(context, i) * sizeof(uint16_t)) < 0)
+        return -1;
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
       break;
     case NN_DATA_TYPE_SIGN:
-      assert(input_data_size == (rt_input_size(context, i) >> 3));
+      if (check_data_size(input_data_size, rt_input_size(context, i) >> 3) < 0)
+        return -1;
       fseek(input, 0L, SEEK_SET);
       read_size = (int)fread(rt_input_buffer(context, i), sizeof(uint8_t),
                              input_data_size, input);
       break;
     default:
       printf("Type: %d is not yet supported.", variable->type);
-      assert(0);
-      break;
+      return -1;
     }
 
     assert(read_size == input_data_size);
+    if (read_size != input_data_size) {
+      printf("Failed to read input data, expected to read: %d bytes, actual "
+             "read: %d bytes\n",
+             (int)input_data_size, (int)read_size);
+    }
     fclose(input);
 
     printf("Input[%d] Shape (", i);
@@ -101,7 +130,10 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   }
 
   ret = rt_forward(context);
-  assert(ret == RT_RET_NOERROR);
+  if (ret != RT_RET_NOERROR) {
+    printf("Error occurs in infer process. %d\n", ret);
+    return -1;
+  }
 
   for (i = 0; i < rt_num_of_output(context); i++) {
     printf("Output[%d] size:%d\n", i, rt_output_size(context, i));
@@ -121,14 +153,22 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
 #else
     output = fopen(output_filename, "wb");
 #endif
-    assert(output);
+    if (output == NULL) {
+      printf("Cannot open output file:%s.\n", output_filename);
+      return -1;
+    }
 
     int output_data_size =
         rt_output_size(context, i) * sizeof(float); // TODO float only.
     int output_write_size =
         (int)fwrite(rt_output_buffer(context, i), sizeof(uint8_t),
                     output_data_size, output);
-    assert(output_write_size == output_data_size);
+    if (output_write_size != output_data_size) {
+      printf("Failed to write output. Expected writing: %d bytes, actual "
+             "writing: %d bytes\n",
+             output_data_size, output_write_size);
+      return -1;
+    }
 
     fclose(output);
     free(output_filename);
