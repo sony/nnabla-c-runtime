@@ -180,13 +180,17 @@ Neural Network Layer:
       group:
         type: int64
         default: '1'
+      channel_last:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       iiIiIiIi: 1
+      iiIiIiIiB: 265
     c_runtime: support
-    uniq_name: Convolution_iiIiIiIi
-    id: 1
+    uniq_name: Convolution_iiIiIiIiB
+    id: 265
     func_type:
     - ALL
   DepthwiseConvolution:
@@ -307,13 +311,17 @@ Neural Network Layer:
       pad:
         type: Shape
         default: (0,) * len(kernel)
+      channel_last:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       iIiIBiI: 5
+      iIiIBiIB: 266
     c_runtime: support
-    uniq_name: MaxPooling_iIiIBiI
-    id: 5
+    uniq_name: MaxPooling_iIiIBiIB
+    id: 266
     func_type:
     - ALL
   AveragePooling:
@@ -332,6 +340,9 @@ Neural Network Layer:
       pad:
         type: Shape
         default: (0,) * len(kernel)
+      channel_last:
+        type: bool
+        default: 'False'
       including_pad:
         type: bool
         default: 'True'
@@ -339,9 +350,10 @@ Neural Network Layer:
       y: {}
     function_ids:
       iIiIBiIB: 6
+      iIiIBiIBB: 267
     c_runtime: support
-    uniq_name: AveragePooling_iIiIBiIB
-    id: 6
+    uniq_name: AveragePooling_iIiIBiIBB
+    id: 267
     func_type:
     - ALL
   GlobalAveragePooling:
@@ -373,13 +385,17 @@ Neural Network Layer:
       pad:
         type: Shape
         default: (0,) * len(kernel)
+      channel_last:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       iIiIBiI: 8
+      iIiIBiIB: 268
     c_runtime: support
-    uniq_name: SumPooling_iIiIBiI
-    id: 8
+    uniq_name: SumPooling_iIiIBiIB
+    id: 268
     func_type:
     - ALL
   Unpooling:
@@ -509,6 +525,23 @@ Neural Network Activation Functions:
     id: 16
     func_type:
     - ALL
+  LogSoftmax:
+    snake_name: log_softmax
+    inputs:
+      x: {}
+    arguments:
+      axis:
+        type: int64
+        default: len(x.shape) - 1
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      i: 269
+    uniq_name: LogSoftmax_i
+    id: 269
+    func_type:
+    - ALL
   ELU:
     snake_name: elu
     inputs:
@@ -614,7 +647,152 @@ Neural Network Activation Functions:
     id: 245
     func_type:
     - ALL
+  ReLU6:
+    snake_name: relu6
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 256
+    uniq_name: ReLU6
+    id: 256
+    func_type:
+    - ALL
+  HardSigmoid:
+    snake_name: hard_sigmoid
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 249
+      ff: 259
+    uniq_name: HardSigmoid
+    id: 259
+    func_type:
+    - ALL
+  HardTanh:
+    snake_name: hard_tanh
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      ii: 250
+      ff: 260
+      Empty: 261
+    uniq_name: HardTanh
+    id: 261
+    func_type:
+    - ALL
+  LogSigmoid:
+    snake_name: log_sigmoid
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 251
+    uniq_name: LogSigmoid
+    id: 251
+    func_type:
+    - ALL
+  SoftPlus:
+    snake_name: softplus
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      ii: 252
+      Empty: 262
+    uniq_name: SoftPlus
+    id: 262
+    func_type:
+    - ALL
+  SoftSign:
+    snake_name: softsign
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 253
+    uniq_name: SoftSign
+    id: 253
+    func_type:
+    - ALL
+  TanhShrink:
+    snake_name: tanh_shrink
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 254
+    uniq_name: TanhShrink
+    id: 254
+    func_type:
+    - ALL
+  Sinc:
+    snake_name: sinc
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 255
+    uniq_name: Sinc
+    id: 255
+    func_type:
+    - ALL
 Normalization:
+  FusedBatchNormalization:
+    snake_name: fused_batch_normalization
+    inputs:
+      x: {}
+      beta: {}
+      gamma: {}
+      mean: {}
+      variance: {}
+      z:
+        optional: true
+    arguments:
+      axes:
+        type: repeated int64
+        default: (1,)
+      decay_rate:
+        type: float
+        default: '0.9'
+      eps:
+        type: float
+        default: 1e-05
+      batch_stat:
+        type: bool
+        default: 'True'
+      nonlinearity:
+        type: string
+        available_values:
+        - relu
+        default: '''relu'''
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iIffBi: 270
+    uniq_name: FusedBatchNormalization_iIffBi
+    id: 270
+    func_type:
+    - ALL
   BatchNormalization:
     snake_name: batch_normalization
     inputs:
@@ -643,6 +821,43 @@ Normalization:
     c_runtime: support
     uniq_name: BatchNormalization_iIffB
     id: 22
+    func_type:
+    - ALL
+  SyncBatchNormalization:
+    snake_name: sync_batch_normalization
+    inputs:
+      x: {}
+      beta: {}
+      gamma: {}
+      mean: {}
+      variance: {}
+    arguments:
+      comm:
+        type: Communicator
+      group:
+        type: string
+        available_values:
+        - world
+        default: world
+      axes:
+        type: repeated int64
+        default: (1,)
+      decay_rate:
+        type: float
+        default: '0.9'
+      eps:
+        type: float
+        default: 1e-05
+      batch_stat:
+        type: bool
+        default: 'True'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      CiiIffB: 263
+    uniq_name: SyncBatchNormalization_CiiIffB
+    id: 263
     func_type:
     - ALL
   MeanSubtraction:
@@ -1944,6 +2159,22 @@ Array Manipulation:
     id: 184
     func_type:
     - ALL
+  Tile:
+    snake_name: tile
+    inputs:
+      x: {}
+    arguments:
+      reps:
+        type: repeated int64
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iI: 247
+    uniq_name: Tile_iI
+    id: 247
+    func_type:
+    - ALL
   OneHot:
     snake_name: one_hot
     inputs:
@@ -2073,6 +2304,34 @@ Array Manipulation:
     c_runtime: support
     uniq_name: MatrixDiagPart
     id: 85
+    func_type:
+    - ALL
+  Assign:
+    snake_name: assign
+    inputs:
+      dst: {}
+      src: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 248
+    uniq_name: Assign
+    id: 248
+    func_type:
+    - ALL
+  GatherNd:
+    snake_name: gather_nd
+    inputs:
+      x: {}
+      indices: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 264
+    uniq_name: GatherNd
+    id: 264
     func_type:
     - ALL
 Signal Processing:
@@ -2280,6 +2539,30 @@ Stochasticity:
     c_runtime: not support
     uniq_name: Randn_ffiIi
     id: 91
+    func_type:
+    - ALL
+  RandomChoice:
+    snake_name: random_choice
+    inputs:
+      x: {}
+      w: {}
+    arguments:
+      shape:
+        type: Shape
+        default: '[]'
+      replace:
+        type: bool
+        default: 'True'
+      seed:
+        type: int64
+        default: '-1'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iIBi: 246
+    uniq_name: RandomChoice_iIBi
+    id: 246
     func_type:
     - ALL
   RandomCrop:

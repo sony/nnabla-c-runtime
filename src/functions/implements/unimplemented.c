@@ -122,9 +122,153 @@ rt_function_error_t exec_embed(rt_function_t *f) {
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
 
+// LogSoftmax
+#ifdef CONFIG_LOGSOFTMAX
+rt_function_error_t allocate_log_softmax_local_context(rt_function_t *f) {
+  f->exec_func = exec_log_softmax;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_log_softmax_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_log_softmax(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LOGSOFTMAX */
+
+// ReLU6
+#ifdef CONFIG_RELU6
+rt_function_error_t allocate_relu6_local_context(rt_function_t *f) {
+  f->exec_func = exec_relu6;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_relu6_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_relu6(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RELU6 */
+
+// HardSigmoid
+#ifdef CONFIG_HARDSIGMOID
+rt_function_error_t allocate_hard_sigmoid_local_context(rt_function_t *f) {
+  f->exec_func = exec_hard_sigmoid;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_hard_sigmoid_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_hard_sigmoid(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_HARDSIGMOID */
+
+// HardTanh
+#ifdef CONFIG_HARDTANH
+rt_function_error_t allocate_hard_tanh_local_context(rt_function_t *f) {
+  f->exec_func = exec_hard_tanh;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_hard_tanh_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_hard_tanh(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_HARDTANH */
+
+// LogSigmoid
+#ifdef CONFIG_LOGSIGMOID
+rt_function_error_t allocate_log_sigmoid_local_context(rt_function_t *f) {
+  f->exec_func = exec_log_sigmoid;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_log_sigmoid_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_log_sigmoid(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LOGSIGMOID */
+
+// SoftPlus
+#ifdef CONFIG_LOGSIGMOID
+rt_function_error_t allocate_softplus_local_context(rt_function_t *f) {
+  f->exec_func = exec_softplus;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_softplus_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_softplus(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LOGSIGMOID */
+
+// SoftSign
+#ifdef CONFIG_SOFTSIGN
+rt_function_error_t allocate_softsign_local_context(rt_function_t *f) {
+  f->exec_func = exec_softsign;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_softsign_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_softsign(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SOFTSIGN */
+
+// TanhShrink
+#ifdef CONFIG_TANHSHRINK
+rt_function_error_t allocate_tanh_shrink_local_context(rt_function_t *f) {
+  f->exec_func = exec_tanh_shrink;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_tanh_shrink_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_tanh_shrink(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_TANHSHRINK */
+
+// Sinc
+#ifdef CONFIG_SINC
+rt_function_error_t allocate_sinc_local_context(rt_function_t *f) {
+  f->exec_func = exec_sinc;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_sinc_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_sinc(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LOGSIGMOID */
+
 #ifdef CONFIG_GELU
 rt_function_error_t allocate_gelu_local_context(rt_function_t *f) {
-  f->exec_func = exec_clip_grad_by_value;
+  f->exec_func = exec_gelu;
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
@@ -140,6 +284,42 @@ rt_function_error_t exec_gelu(rt_function_t *f) {
 ////////////////////////////////////////////////////////////////////////////////
 // Normalization
 ////////////////////////////////////////////////////////////////////////////////
+
+// FusedBatchNormalization
+#ifdef CONFIG_FUSEDBATCHNORMALIZATION
+rt_function_error_t
+allocate_fused_batch_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_fused_batch_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_fused_batch_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_fused_batch_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_FUSEDBATCHNORMALIZATION */
+
+// SyncBatchNormalization
+#ifdef CONFIG_SYNCBATCHNORMALIZATION
+rt_function_error_t
+allocate_sync_batch_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_sync_batch_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_sync_batch_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_sync_batch_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_FUSEDBATCHNORMALIZATION */
 
 #ifdef CONFIG_CLIPGRADBYVALUE
 rt_function_error_t
@@ -969,6 +1149,54 @@ rt_function_error_t exec_broadcast_to(rt_function_t *f) {
 }
 #endif /* CONFIG_BROADCASTTO */
 
+// Tile
+#ifdef CONFIG_TILE
+rt_function_error_t allocate_tile_local_context(rt_function_t *f) {
+  f->exec_func = exec_tile;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_tile_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_tile(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ONEHOT */
+
+// Assign
+#ifdef CONFIG_ASSIGN
+rt_function_error_t allocate_assign_local_context(rt_function_t *f) {
+  f->exec_func = exec_assign;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_assign_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_assign(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ONEHOT */
+
+// GatherNd
+#ifdef CONFIG_GATHERND
+rt_function_error_t allocate_gather_nd_local_context(rt_function_t *f) {
+  f->exec_func = exec_gather_nd;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_gather_nd_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_gather_nd(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ONEHOT */
+
 // OneHot
 #ifdef CONFIG_ONEHOT
 rt_function_error_t allocate_one_hot_local_context(rt_function_t *f) {
@@ -1077,6 +1305,22 @@ rt_function_error_t free_randn_local_context(rt_function_t *f) {
 }
 
 rt_function_error_t exec_randn(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDN */
+
+// RandomChoice
+#ifdef CONFIG_RANDOMCHOICE
+rt_function_error_t allocate_random_choice_local_context(rt_function_t *f) {
+  f->exec_func = exec_random_choice;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_random_choice_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_random_choice(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_RANDN */
