@@ -27,7 +27,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.0.15.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_BINARY_FORMAT_REVISION ("92ab8d4232e69ad17c2a945dc065d2be")
+#define NN_BINARY_FORMAT_REVISION ("46da759ffd63dd9f9ccfb7a8f770e9ed")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -64,77 +64,101 @@ typedef struct {
 
 /// @brief Function types.
 typedef enum {
-  NN_FUNCTION_AFFINE = 0,                  ///< Affine
-  NN_FUNCTION_RNN = 244,                   ///< RNN
-  NN_FUNCTION_LSTM = 242,                  ///< LSTM
-  NN_FUNCTION_GRU = 243,                   ///< GRU
-  NN_FUNCTION_CONVOLUTION = 1,             ///< Convolution
+  NN_FUNCTION_AFFINE = 0, ///< Affine
+  NN_FUNCTION_RNN = 244,  ///< RNN
+  NN_FUNCTION_LSTM = 242, ///< LSTM
+  NN_FUNCTION_GRU = 243,  ///< GRU
+  NN_FUNCTION_CONVOLUTION_0 =
+      1, ///< Recent version of Convolution has arg [iiIiIiIi]
+  NN_FUNCTION_CONVOLUTION = 265,           ///< Convolution
   NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2,   ///< DepthwiseConvolution
   NN_FUNCTION_DECONVOLUTION = 3,           ///< Deconvolution
   NN_FUNCTION_DEPTHWISE_DECONVOLUTION = 4, ///< DepthwiseDeconvolution
-  NN_FUNCTION_MAX_POOLING = 5,             ///< MaxPooling
-  NN_FUNCTION_AVERAGE_POOLING = 6,         ///< AveragePooling
-  NN_FUNCTION_GLOBAL_AVERAGE_POOLING = 7,  ///< GlobalAveragePooling
-  NN_FUNCTION_SUM_POOLING = 8,             ///< SumPooling
-  NN_FUNCTION_UNPOOLING = 9,               ///< Unpooling
-  NN_FUNCTION_EMBED = 10,                  ///< Embed
-  NN_FUNCTION_SIGMOID = 11,                ///< Sigmoid
-  NN_FUNCTION_SWISH = 12,                  ///< Swish
-  NN_FUNCTION_TANH = 13,                   ///< Tanh
-  NN_FUNCTION_RELU = 14,                   ///< ReLU
+  NN_FUNCTION_MAX_POOLING_0 =
+      5, ///< Recent version of MaxPooling has arg [iIiIBiI]
+  NN_FUNCTION_MAX_POOLING = 266, ///< MaxPooling
+  NN_FUNCTION_AVERAGE_POOLING_0 =
+      6, ///< Recent version of AveragePooling has arg [iIiIBiIB]
+  NN_FUNCTION_AVERAGE_POOLING = 267,      ///< AveragePooling
+  NN_FUNCTION_GLOBAL_AVERAGE_POOLING = 7, ///< GlobalAveragePooling
+  NN_FUNCTION_SUM_POOLING_0 =
+      8, ///< Recent version of SumPooling has arg [iIiIBiI]
+  NN_FUNCTION_SUM_POOLING = 268, ///< SumPooling
+  NN_FUNCTION_UNPOOLING = 9,     ///< Unpooling
+  NN_FUNCTION_EMBED = 10,        ///< Embed
+  NN_FUNCTION_SIGMOID = 11,      ///< Sigmoid
+  NN_FUNCTION_SWISH = 12,        ///< Swish
+  NN_FUNCTION_TANH = 13,         ///< Tanh
+  NN_FUNCTION_RELU = 14,         ///< ReLU
   NN_FUNCTION_LEAKY_RELU_0 = 15, ///< Recent version of LeakyReLU has arg [f]
   NN_FUNCTION_LEAKY_RELU = 128,  ///< LeakyReLU
   NN_FUNCTION_SOFTMAX = 16,      ///< Softmax
+  NN_FUNCTION_LOG_SOFTMAX = 269, ///< LogSoftmax
   NN_FUNCTION_ELU = 17,          ///< ELU
   NN_FUNCTION_SELU = 18,         ///< SELU
   NN_FUNCTION_CRELU = 19,        ///< CReLU
   NN_FUNCTION_CELU = 20,         ///< CELU
   NN_FUNCTION_PRELU = 21,        ///< PReLU
   NN_FUNCTION_GELU = 245,        ///< GELU
-  NN_FUNCTION_BATCH_NORMALIZATION = 22, ///< BatchNormalization
-  NN_FUNCTION_MEAN_SUBTRACTION = 23,    ///< MeanSubtraction
-  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121, ///< ClipGradByValue
-  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,  ///< ClipGradByNorm
-  NN_FUNCTION_SUM = 24,                 ///< Sum
-  NN_FUNCTION_MEAN = 25,                ///< Mean
-  NN_FUNCTION_MAX_0 = 26,               ///< Recent version of Max has arg [iIB]
-  NN_FUNCTION_MAX = 132,                ///< Max
-  NN_FUNCTION_MIN_0 = 27,               ///< Recent version of Min has arg [iIB]
-  NN_FUNCTION_MIN = 130,                ///< Min
-  NN_FUNCTION_PROD = 28,                ///< Prod
-  NN_FUNCTION_REDUCE_SUM = 29,          ///< ReduceSum
-  NN_FUNCTION_REDUCE_MEAN = 30,         ///< ReduceMean
-  NN_FUNCTION_ADD2 = 31,                ///< Add2
-  NN_FUNCTION_BC_ADD2 = 32,             ///< BcAdd2
-  NN_FUNCTION_SUB2 = 33,                ///< Sub2
-  NN_FUNCTION_MUL2 = 34,                ///< Mul2
-  NN_FUNCTION_DIV2 = 35,                ///< Div2
-  NN_FUNCTION_POW2 = 36,                ///< Pow2
-  NN_FUNCTION_ADD_SCALAR = 37,          ///< AddScalar
-  NN_FUNCTION_MUL_SCALAR = 38,          ///< MulScalar
-  NN_FUNCTION_POW_SCALAR = 39,          ///< PowScalar
-  NN_FUNCTION_R_SUB_SCALAR = 40,        ///< RSubScalar
-  NN_FUNCTION_R_DIV_SCALAR = 41,        ///< RDivScalar
-  NN_FUNCTION_R_POW_SCALAR = 42,        ///< RPowScalar
-  NN_FUNCTION_SIGN = 43,                ///< Sign
-  NN_FUNCTION_MINIMUM2 = 44,            ///< Minimum2
-  NN_FUNCTION_MAXIMUM2 = 45,            ///< Maximum2
-  NN_FUNCTION_MINIMUM_SCALAR = 46,      ///< MinimumScalar
-  NN_FUNCTION_MAXIMUM_SCALAR = 47,      ///< MaximumScalar
-  NN_FUNCTION_LOGICAL_AND = 48,         ///< LogicalAnd
-  NN_FUNCTION_LOGICAL_OR = 49,          ///< LogicalOr
-  NN_FUNCTION_LOGICAL_XOR = 50,         ///< LogicalXor
-  NN_FUNCTION_EQUAL = 51,               ///< Equal
-  NN_FUNCTION_NOT_EQUAL = 52,           ///< NotEqual
-  NN_FUNCTION_GREATER_EQUAL = 53,       ///< GreaterEqual
-  NN_FUNCTION_GREATER = 54,             ///< Greater
-  NN_FUNCTION_LESS_EQUAL = 55,          ///< LessEqual
-  NN_FUNCTION_LESS = 56,                ///< Less
-  NN_FUNCTION_LOGICAL_AND_SCALAR = 57,  ///< LogicalAndScalar
-  NN_FUNCTION_LOGICAL_OR_SCALAR = 58,   ///< LogicalOrScalar
-  NN_FUNCTION_LOGICAL_XOR_SCALAR = 59,  ///< LogicalXorScalar
-  NN_FUNCTION_EQUAL_SCALAR = 60,        ///< EqualScalar
-  NN_FUNCTION_NOT_EQUAL_SCALAR = 61,    ///< NotEqualScalar
+  NN_FUNCTION_RELU6 = 256,       ///< ReLU6
+  NN_FUNCTION_HARD_SIGMOID_0 =
+      249, ///< Recent version of HardSigmoid has arg [Empty]
+  NN_FUNCTION_HARD_SIGMOID = 259, ///< HardSigmoid
+  NN_FUNCTION_HARD_TANH_0 = 250,  ///< Recent version of HardTanh has arg [ii]
+  NN_FUNCTION_HARD_TANH_1 = 260,  ///< Recent version of HardTanh has arg [ff]
+  NN_FUNCTION_HARD_TANH = 261,    ///< HardTanh
+  NN_FUNCTION_LOG_SIGMOID = 251,  ///< LogSigmoid
+  NN_FUNCTION_SOFTPLUS_0 = 252,   ///< Recent version of SoftPlus has arg [ii]
+  NN_FUNCTION_SOFTPLUS = 262,     ///< SoftPlus
+  NN_FUNCTION_SOFTSIGN = 253,     ///< SoftSign
+  NN_FUNCTION_TANH_SHRINK = 254,  ///< TanhShrink
+  NN_FUNCTION_SINC = 255,         ///< Sinc
+  NN_FUNCTION_FUSED_BATCH_NORMALIZATION = 270, ///< FusedBatchNormalization
+  NN_FUNCTION_BATCH_NORMALIZATION = 22,        ///< BatchNormalization
+  NN_FUNCTION_SYNC_BATCH_NORMALIZATION = 263,  ///< SyncBatchNormalization
+  NN_FUNCTION_MEAN_SUBTRACTION = 23,           ///< MeanSubtraction
+  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,        ///< ClipGradByValue
+  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,         ///< ClipGradByNorm
+  NN_FUNCTION_SUM = 24,                        ///< Sum
+  NN_FUNCTION_MEAN = 25,                       ///< Mean
+  NN_FUNCTION_MAX_0 = 26,              ///< Recent version of Max has arg [iIB]
+  NN_FUNCTION_MAX = 132,               ///< Max
+  NN_FUNCTION_MIN_0 = 27,              ///< Recent version of Min has arg [iIB]
+  NN_FUNCTION_MIN = 130,               ///< Min
+  NN_FUNCTION_PROD = 28,               ///< Prod
+  NN_FUNCTION_REDUCE_SUM = 29,         ///< ReduceSum
+  NN_FUNCTION_REDUCE_MEAN = 30,        ///< ReduceMean
+  NN_FUNCTION_ADD2 = 31,               ///< Add2
+  NN_FUNCTION_BC_ADD2 = 32,            ///< BcAdd2
+  NN_FUNCTION_SUB2 = 33,               ///< Sub2
+  NN_FUNCTION_MUL2 = 34,               ///< Mul2
+  NN_FUNCTION_DIV2 = 35,               ///< Div2
+  NN_FUNCTION_POW2 = 36,               ///< Pow2
+  NN_FUNCTION_ADD_SCALAR = 37,         ///< AddScalar
+  NN_FUNCTION_MUL_SCALAR = 38,         ///< MulScalar
+  NN_FUNCTION_POW_SCALAR = 39,         ///< PowScalar
+  NN_FUNCTION_R_SUB_SCALAR = 40,       ///< RSubScalar
+  NN_FUNCTION_R_DIV_SCALAR = 41,       ///< RDivScalar
+  NN_FUNCTION_R_POW_SCALAR = 42,       ///< RPowScalar
+  NN_FUNCTION_SIGN = 43,               ///< Sign
+  NN_FUNCTION_MINIMUM2 = 44,           ///< Minimum2
+  NN_FUNCTION_MAXIMUM2 = 45,           ///< Maximum2
+  NN_FUNCTION_MINIMUM_SCALAR = 46,     ///< MinimumScalar
+  NN_FUNCTION_MAXIMUM_SCALAR = 47,     ///< MaximumScalar
+  NN_FUNCTION_LOGICAL_AND = 48,        ///< LogicalAnd
+  NN_FUNCTION_LOGICAL_OR = 49,         ///< LogicalOr
+  NN_FUNCTION_LOGICAL_XOR = 50,        ///< LogicalXor
+  NN_FUNCTION_EQUAL = 51,              ///< Equal
+  NN_FUNCTION_NOT_EQUAL = 52,          ///< NotEqual
+  NN_FUNCTION_GREATER_EQUAL = 53,      ///< GreaterEqual
+  NN_FUNCTION_GREATER = 54,            ///< Greater
+  NN_FUNCTION_LESS_EQUAL = 55,         ///< LessEqual
+  NN_FUNCTION_LESS = 56,               ///< Less
+  NN_FUNCTION_LOGICAL_AND_SCALAR = 57, ///< LogicalAndScalar
+  NN_FUNCTION_LOGICAL_OR_SCALAR = 58,  ///< LogicalOrScalar
+  NN_FUNCTION_LOGICAL_XOR_SCALAR = 59, ///< LogicalXorScalar
+  NN_FUNCTION_EQUAL_SCALAR = 60,       ///< EqualScalar
+  NN_FUNCTION_NOT_EQUAL_SCALAR = 61,   ///< NotEqualScalar
   NN_FUNCTION_GREATER_EQUAL_SCALAR = 62, ///< GreaterEqualScalar
   NN_FUNCTION_GREATER_SCALAR = 63,       ///< GreaterScalar
   NN_FUNCTION_LESS_EQUAL_SCALAR = 64,    ///< LessEqualScalar
@@ -175,6 +199,7 @@ typedef enum {
   NN_FUNCTION_TRANSPOSE = 78,            ///< Transpose
   NN_FUNCTION_BROADCAST = 79,            ///< Broadcast
   NN_FUNCTION_BROADCAST_TO = 184,        ///< BroadcastTo
+  NN_FUNCTION_TILE = 247,                ///< Tile
   NN_FUNCTION_ONE_HOT = 80,              ///< OneHot
   NN_FUNCTION_FLIP = 81,                 ///< Flip
   NN_FUNCTION_SHIFT = 82,                ///< Shift
@@ -183,6 +208,8 @@ typedef enum {
   NN_FUNCTION_RESHAPE = 126,         ///< Reshape
   NN_FUNCTION_MATRIX_DIAG = 84,      ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
+  NN_FUNCTION_ASSIGN = 248,          ///< Assign
+  NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
   NN_FUNCTION_INTERPOLATE = 127,     ///< Interpolate
   NN_FUNCTION_FFT = 158,             ///< FFT
   NN_FUNCTION_IFFT = 159,            ///< IFFT
@@ -192,6 +219,7 @@ typedef enum {
   NN_FUNCTION_RAND = 89,             ///< Rand
   NN_FUNCTION_RANDINT = 90,          ///< Randint
   NN_FUNCTION_RANDN = 91,            ///< Randn
+  NN_FUNCTION_RANDOM_CHOICE = 246,   ///< RandomChoice
   NN_FUNCTION_RANDOM_CROP = 92,      ///< RandomCrop
   NN_FUNCTION_RANDOM_FLIP = 93,      ///< RandomFlip
   NN_FUNCTION_RANDOM_SHIFT = 94,     ///< RandomShift
@@ -335,11 +363,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis;  ///< Original type is [int64]
-  nn_list_t pad;      ///< Original type is [Shape]
-  nn_list_t stride;   ///< Original type is [Shape]
-  nn_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< Original type is [int64]
+  int32_t base_axis;    ///< Original type is [int64]
+  nn_list_t pad;        ///< Original type is [Shape]
+  nn_list_t stride;     ///< Original type is [Shape]
+  nn_list_t dilation;   ///< Original type is [Shape]
+  int32_t group;        ///< Original type is [int64]
+  uint8_t channel_last; ///< Original type is [bool]
 } nn_function_convolution_t;
 
 /// @}
@@ -407,6 +436,7 @@ typedef struct {
   nn_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< Original type is [bool]
   nn_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< Original type is [bool]
 } nn_function_max_pooling_t;
 
 /// @}
@@ -423,6 +453,7 @@ typedef struct {
   nn_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< Original type is [bool]
   nn_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< Original type is [bool]
   uint8_t including_pad; ///< Original type is [bool]
 } nn_function_average_pooling_t;
 
@@ -451,6 +482,7 @@ typedef struct {
   nn_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< Original type is [bool]
   nn_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< Original type is [bool]
 } nn_function_sum_pooling_t;
 
 /// @}
@@ -552,6 +584,19 @@ typedef struct {
 
 /// @}
 
+/// @brief LogSoftmax function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis; ///< Original type is [int64]
+} nn_function_log_softmax_t;
+
+/// @}
+
 /// @brief ELU function.
 /// @{
 typedef struct {
@@ -630,6 +675,111 @@ typedef struct {
 
 /// @}
 
+/// @brief ReLU6 function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_relu6_t;
+
+/// @}
+
+/// @brief HardSigmoid function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_hard_sigmoid_t;
+
+/// @}
+
+/// @brief HardTanh function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_hard_tanh_t;
+
+/// @}
+
+/// @brief LogSigmoid function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_log_sigmoid_t;
+
+/// @}
+
+/// @brief SoftPlus function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_softplus_t;
+
+/// @}
+
+/// @brief SoftSign function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_softsign_t;
+
+/// @}
+
+/// @brief TanhShrink function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_tanh_shrink_t;
+
+/// @}
+
+/// @brief Sinc function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_sinc_t;
+
+/// @}
+
+/// @brief FusedBatchNormalization function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t axes;        ///< Original type is [repeated int64]
+  float decay_rate;      ///< Original type is [float]
+  float eps;             ///< Original type is [float]
+  uint8_t batch_stat;    ///< Original type is [bool]
+  uint32_t nonlinearity; ///< Original type is [string]
+} nn_function_fused_batch_normalization_t;
+
+/// @}
+
 /// @brief BatchNormalization function.
 /// @{
 typedef struct {
@@ -643,6 +793,23 @@ typedef struct {
   float eps;          ///< Original type is [float]
   uint8_t batch_stat; ///< Original type is [bool]
 } nn_function_batch_normalization_t;
+
+/// @}
+
+/// @brief SyncBatchNormalization function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint32_t group;     ///< Original type is [string]
+  nn_list_t axes;     ///< Original type is [repeated int64]
+  float decay_rate;   ///< Original type is [float]
+  float eps;          ///< Original type is [float]
+  uint8_t batch_stat; ///< Original type is [bool]
+} nn_function_sync_batch_normalization_t;
 
 /// @}
 
@@ -1634,6 +1801,19 @@ typedef struct {
 
 /// @}
 
+/// @brief Tile function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t reps; ///< Original type is [repeated int64]
+} nn_function_tile_t;
+
+/// @}
+
 /// @brief OneHot function.
 /// @{
 typedef struct {
@@ -1723,6 +1903,28 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_matrix_diag_part_t;
+
+/// @}
+
+/// @brief Assign function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_assign_t;
+
+/// @}
+
+/// @brief GatherNd function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_gather_nd_t;
 
 /// @}
 
@@ -1859,6 +2061,21 @@ typedef struct {
   nn_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< Original type is [int64]
 } nn_function_randn_t;
+
+/// @}
+
+/// @brief RandomChoice function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t shape; ///< Original type is [Shape]
+  uint8_t replace; ///< Original type is [bool]
+  int32_t seed;    ///< Original type is [int64]
+} nn_function_random_choice_t;
 
 /// @}
 

@@ -191,12 +191,13 @@ rt_function_error_t exec_gru(rt_function_t *f);
 
 /// Local context for Convolution
 typedef struct {
-  int32_t base_axis;  ///< int64
-  rt_list_t pad;      ///< Original type is [Shape]
-  rt_list_t stride;   ///< Original type is [Shape]
-  rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< int64
-  void *data;         ///< General purpose data area
+  int32_t base_axis;    ///< int64
+  rt_list_t pad;        ///< Original type is [Shape]
+  rt_list_t stride;     ///< Original type is [Shape]
+  rt_list_t dilation;   ///< Original type is [Shape]
+  int32_t group;        ///< int64
+  uint8_t channel_last; ///< bool
+  void *data;           ///< General purpose data area
 } convolution_local_context_t;
 
 /// Allocate Convolution local context
@@ -290,6 +291,7 @@ typedef struct {
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< bool
   void *data;            ///< General purpose data area
 } max_pooling_local_context_t;
 
@@ -312,6 +314,7 @@ typedef struct {
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< bool
   uint8_t including_pad; ///< bool
   void *data;            ///< General purpose data area
 } average_pooling_local_context_t;
@@ -349,6 +352,7 @@ typedef struct {
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< bool
   void *data;            ///< General purpose data area
 } sum_pooling_local_context_t;
 
@@ -498,6 +502,25 @@ rt_function_error_t free_softmax_local_context(rt_function_t *f);
 rt_function_error_t exec_softmax(rt_function_t *f);
 /// @}
 
+/// @defgroup LogSoftmax LogSoftmax
+/// @{
+
+/// Local context for LogSoftmax
+typedef struct {
+  int32_t axis; ///< int64
+  void *data;   ///< General purpose data area
+} log_softmax_local_context_t;
+
+/// Allocate LogSoftmax local context
+rt_function_error_t allocate_log_softmax_local_context(rt_function_t *f);
+
+/// Free LogSoftmax local context
+rt_function_error_t free_log_softmax_local_context(rt_function_t *f);
+
+/// Exec LogSoftmax
+rt_function_error_t exec_log_softmax(rt_function_t *f);
+/// @}
+
 /// @defgroup ELU ELU
 /// @{
 
@@ -608,11 +631,146 @@ rt_function_error_t free_gelu_local_context(rt_function_t *f);
 rt_function_error_t exec_gelu(rt_function_t *f);
 /// @}
 
+/// @defgroup ReLU6 ReLU6
+/// @{
+
+/// Allocate ReLU6 local context
+rt_function_error_t allocate_relu6_local_context(rt_function_t *f);
+
+/// Free ReLU6 local context
+rt_function_error_t free_relu6_local_context(rt_function_t *f);
+
+/// Exec ReLU6
+rt_function_error_t exec_relu6(rt_function_t *f);
+/// @}
+
+/// @defgroup HardSigmoid HardSigmoid
+/// @{
+
+/// Allocate HardSigmoid local context
+rt_function_error_t allocate_hard_sigmoid_local_context(rt_function_t *f);
+
+/// Free HardSigmoid local context
+rt_function_error_t free_hard_sigmoid_local_context(rt_function_t *f);
+
+/// Exec HardSigmoid
+rt_function_error_t exec_hard_sigmoid(rt_function_t *f);
+/// @}
+
+/// @defgroup HardTanh HardTanh
+/// @{
+
+/// Allocate HardTanh local context
+rt_function_error_t allocate_hard_tanh_local_context(rt_function_t *f);
+
+/// Free HardTanh local context
+rt_function_error_t free_hard_tanh_local_context(rt_function_t *f);
+
+/// Exec HardTanh
+rt_function_error_t exec_hard_tanh(rt_function_t *f);
+/// @}
+
+/// @defgroup LogSigmoid LogSigmoid
+/// @{
+
+/// Allocate LogSigmoid local context
+rt_function_error_t allocate_log_sigmoid_local_context(rt_function_t *f);
+
+/// Free LogSigmoid local context
+rt_function_error_t free_log_sigmoid_local_context(rt_function_t *f);
+
+/// Exec LogSigmoid
+rt_function_error_t exec_log_sigmoid(rt_function_t *f);
+/// @}
+
+/// @defgroup SoftPlus SoftPlus
+/// @{
+
+/// Allocate SoftPlus local context
+rt_function_error_t allocate_softplus_local_context(rt_function_t *f);
+
+/// Free SoftPlus local context
+rt_function_error_t free_softplus_local_context(rt_function_t *f);
+
+/// Exec SoftPlus
+rt_function_error_t exec_softplus(rt_function_t *f);
+/// @}
+
+/// @defgroup SoftSign SoftSign
+/// @{
+
+/// Allocate SoftSign local context
+rt_function_error_t allocate_softsign_local_context(rt_function_t *f);
+
+/// Free SoftSign local context
+rt_function_error_t free_softsign_local_context(rt_function_t *f);
+
+/// Exec SoftSign
+rt_function_error_t exec_softsign(rt_function_t *f);
+/// @}
+
+/// @defgroup TanhShrink TanhShrink
+/// @{
+
+/// Allocate TanhShrink local context
+rt_function_error_t allocate_tanh_shrink_local_context(rt_function_t *f);
+
+/// Free TanhShrink local context
+rt_function_error_t free_tanh_shrink_local_context(rt_function_t *f);
+
+/// Exec TanhShrink
+rt_function_error_t exec_tanh_shrink(rt_function_t *f);
+/// @}
+
+/// @defgroup Sinc Sinc
+/// @{
+
+/// Allocate Sinc local context
+rt_function_error_t allocate_sinc_local_context(rt_function_t *f);
+
+/// Free Sinc local context
+rt_function_error_t free_sinc_local_context(rt_function_t *f);
+
+/// Exec Sinc
+rt_function_error_t exec_sinc(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Normalization Normalization
 /// @{
+
+/// @defgroup FusedBatchNormalization FusedBatchNormalization
+/// @{
+
+/// Named values for FusedBatchNormalization.nonlinearity
+typedef enum {
+  FUSED_BATCH_NORMALIZATION_NONLINEARITY_RELU,
+  END_OF_FUSED_BATCH_NORMALIZATION_NONLINEARITY
+} fused_batch_normalization_nonlinearity_value_t;
+
+/// Local context for FusedBatchNormalization
+typedef struct {
+  rt_list_t axes;     ///< Original type is [repeated int64]
+  float decay_rate;   ///< float
+  float eps;          ///< float
+  uint8_t batch_stat; ///< bool
+  fused_batch_normalization_nonlinearity_value_t nonlinearity; ///< string
+  void *data; ///< General purpose data area
+} fused_batch_normalization_local_context_t;
+
+/// Allocate FusedBatchNormalization local context
+rt_function_error_t
+allocate_fused_batch_normalization_local_context(rt_function_t *f);
+
+/// Free FusedBatchNormalization local context
+rt_function_error_t
+free_fused_batch_normalization_local_context(rt_function_t *f);
+
+/// Exec FusedBatchNormalization
+rt_function_error_t exec_fused_batch_normalization(rt_function_t *f);
+/// @}
 
 /// @defgroup BatchNormalization BatchNormalization
 /// @{
@@ -635,6 +793,37 @@ rt_function_error_t free_batch_normalization_local_context(rt_function_t *f);
 
 /// Exec BatchNormalization
 rt_function_error_t exec_batch_normalization(rt_function_t *f);
+/// @}
+
+/// @defgroup SyncBatchNormalization SyncBatchNormalization
+/// @{
+
+/// Named values for SyncBatchNormalization.group
+typedef enum {
+  SYNC_BATCH_NORMALIZATION_GROUP_WORLD,
+  END_OF_SYNC_BATCH_NORMALIZATION_GROUP
+} sync_batch_normalization_group_value_t;
+
+/// Local context for SyncBatchNormalization
+typedef struct {
+  sync_batch_normalization_group_value_t group; ///< string
+  rt_list_t axes;     ///< Original type is [repeated int64]
+  float decay_rate;   ///< float
+  float eps;          ///< float
+  uint8_t batch_stat; ///< bool
+  void *data;         ///< General purpose data area
+} sync_batch_normalization_local_context_t;
+
+/// Allocate SyncBatchNormalization local context
+rt_function_error_t
+allocate_sync_batch_normalization_local_context(rt_function_t *f);
+
+/// Free SyncBatchNormalization local context
+rt_function_error_t
+free_sync_batch_normalization_local_context(rt_function_t *f);
+
+/// Exec SyncBatchNormalization
+rt_function_error_t exec_sync_batch_normalization(rt_function_t *f);
 /// @}
 
 /// @defgroup MeanSubtraction MeanSubtraction
@@ -1981,6 +2170,25 @@ rt_function_error_t free_broadcast_to_local_context(rt_function_t *f);
 rt_function_error_t exec_broadcast_to(rt_function_t *f);
 /// @}
 
+/// @defgroup Tile Tile
+/// @{
+
+/// Local context for Tile
+typedef struct {
+  rt_list_t reps; ///< Original type is [repeated int64]
+  void *data;     ///< General purpose data area
+} tile_local_context_t;
+
+/// Allocate Tile local context
+rt_function_error_t allocate_tile_local_context(rt_function_t *f);
+
+/// Free Tile local context
+rt_function_error_t free_tile_local_context(rt_function_t *f);
+
+/// Exec Tile
+rt_function_error_t exec_tile(rt_function_t *f);
+/// @}
+
 /// @defgroup OneHot OneHot
 /// @{
 
@@ -2112,6 +2320,32 @@ rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f);
 
 /// Exec MatrixDiagPart
 rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
+/// @}
+
+/// @defgroup Assign Assign
+/// @{
+
+/// Allocate Assign local context
+rt_function_error_t allocate_assign_local_context(rt_function_t *f);
+
+/// Free Assign local context
+rt_function_error_t free_assign_local_context(rt_function_t *f);
+
+/// Exec Assign
+rt_function_error_t exec_assign(rt_function_t *f);
+/// @}
+
+/// @defgroup GatherNd GatherNd
+/// @{
+
+/// Allocate GatherNd local context
+rt_function_error_t allocate_gather_nd_local_context(rt_function_t *f);
+
+/// Free GatherNd local context
+rt_function_error_t free_gather_nd_local_context(rt_function_t *f);
+
+/// Exec GatherNd
+rt_function_error_t exec_gather_nd(rt_function_t *f);
 /// @}
 
 /// @}
@@ -2321,6 +2555,27 @@ rt_function_error_t free_randn_local_context(rt_function_t *f);
 
 /// Exec Randn
 rt_function_error_t exec_randn(rt_function_t *f);
+/// @}
+
+/// @defgroup RandomChoice RandomChoice
+/// @{
+
+/// Local context for RandomChoice
+typedef struct {
+  rt_list_t shape; ///< Original type is [Shape]
+  uint8_t replace; ///< bool
+  int32_t seed;    ///< int64
+  void *data;      ///< General purpose data area
+} random_choice_local_context_t;
+
+/// Allocate RandomChoice local context
+rt_function_error_t allocate_random_choice_local_context(rt_function_t *f);
+
+/// Free RandomChoice local context
+rt_function_error_t free_random_choice_local_context(rt_function_t *f);
+
+/// Exec RandomChoice
+rt_function_error_t exec_random_choice(rt_function_t *f);
 /// @}
 
 /// @defgroup RandomCrop RandomCrop

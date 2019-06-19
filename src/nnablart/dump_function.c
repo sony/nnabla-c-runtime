@@ -43,7 +43,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    GRU(243)\n");
   } break;
   case NN_FUNCTION_CONVOLUTION: { // Convolution
-    printf("NNB: Function type:    Convolution(1)\n");
+    printf("NNB: Function type:    Convolution(265)\n");
   } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     printf("NNB: Function type:    DepthwiseConvolution(2)\n");
@@ -55,16 +55,16 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    DepthwiseDeconvolution(4)\n");
   } break;
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
-    printf("NNB: Function type:    MaxPooling(5)\n");
+    printf("NNB: Function type:    MaxPooling(266)\n");
   } break;
   case NN_FUNCTION_AVERAGE_POOLING: { // AveragePooling
-    printf("NNB: Function type:    AveragePooling(6)\n");
+    printf("NNB: Function type:    AveragePooling(267)\n");
   } break;
   case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
     printf("NNB: Function type:    GlobalAveragePooling(7)\n");
   } break;
   case NN_FUNCTION_SUM_POOLING: { // SumPooling
-    printf("NNB: Function type:    SumPooling(8)\n");
+    printf("NNB: Function type:    SumPooling(268)\n");
   } break;
   case NN_FUNCTION_UNPOOLING: { // Unpooling
     printf("NNB: Function type:    Unpooling(9)\n");
@@ -90,6 +90,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SOFTMAX: { // Softmax
     printf("NNB: Function type:    Softmax(16)\n");
   } break;
+  case NN_FUNCTION_LOG_SOFTMAX: { // LogSoftmax
+    printf("NNB: Function type:    LogSoftmax(269)\n");
+  } break;
   case NN_FUNCTION_ELU: { // ELU
     printf("NNB: Function type:    ELU(17)\n");
   } break;
@@ -108,8 +111,38 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_GELU: { // GELU
     printf("NNB: Function type:    GELU(245)\n");
   } break;
+  case NN_FUNCTION_RELU6: { // ReLU6
+    printf("NNB: Function type:    ReLU6(256)\n");
+  } break;
+  case NN_FUNCTION_HARD_SIGMOID: { // HardSigmoid
+    printf("NNB: Function type:    HardSigmoid(259)\n");
+  } break;
+  case NN_FUNCTION_HARD_TANH: { // HardTanh
+    printf("NNB: Function type:    HardTanh(261)\n");
+  } break;
+  case NN_FUNCTION_LOG_SIGMOID: { // LogSigmoid
+    printf("NNB: Function type:    LogSigmoid(251)\n");
+  } break;
+  case NN_FUNCTION_SOFTPLUS: { // SoftPlus
+    printf("NNB: Function type:    SoftPlus(262)\n");
+  } break;
+  case NN_FUNCTION_SOFTSIGN: { // SoftSign
+    printf("NNB: Function type:    SoftSign(253)\n");
+  } break;
+  case NN_FUNCTION_TANH_SHRINK: { // TanhShrink
+    printf("NNB: Function type:    TanhShrink(254)\n");
+  } break;
+  case NN_FUNCTION_SINC: { // Sinc
+    printf("NNB: Function type:    Sinc(255)\n");
+  } break;
+  case NN_FUNCTION_FUSED_BATCH_NORMALIZATION: { // FusedBatchNormalization
+    printf("NNB: Function type:    FusedBatchNormalization(270)\n");
+  } break;
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     printf("NNB: Function type:    BatchNormalization(22)\n");
+  } break;
+  case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
+    printf("NNB: Function type:    SyncBatchNormalization(263)\n");
   } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     printf("NNB: Function type:    MeanSubtraction(23)\n");
@@ -354,6 +387,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BROADCAST_TO: { // BroadcastTo
     printf("NNB: Function type:    BroadcastTo(184)\n");
   } break;
+  case NN_FUNCTION_TILE: { // Tile
+    printf("NNB: Function type:    Tile(247)\n");
+  } break;
   case NN_FUNCTION_ONE_HOT: { // OneHot
     printf("NNB: Function type:    OneHot(80)\n");
   } break;
@@ -374,6 +410,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
     printf("NNB: Function type:    MatrixDiagPart(85)\n");
+  } break;
+  case NN_FUNCTION_ASSIGN: { // Assign
+    printf("NNB: Function type:    Assign(248)\n");
+  } break;
+  case NN_FUNCTION_GATHER_ND: { // GatherNd
+    printf("NNB: Function type:    GatherNd(264)\n");
   } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     printf("NNB: Function type:    Interpolate(127)\n");
@@ -401,6 +443,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_RANDN: { // Randn
     printf("NNB: Function type:    Randn(91)\n");
+  } break;
+  case NN_FUNCTION_RANDOM_CHOICE: { // RandomChoice
+    printf("NNB: Function type:    RandomChoice(246)\n");
   } break;
   case NN_FUNCTION_RANDOM_CROP: { // RandomCrop
     printf("NNB: Function type:    RandomCrop(92)\n");
@@ -556,6 +601,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     nn_function_depthwise_convolution_t *f =
@@ -649,6 +695,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_AVERAGE_POOLING: { // AveragePooling
     nn_function_average_pooling_t *f = (nn_function_average_pooling_t *)func;
@@ -671,6 +718,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
     printf("NNB: Function argument including_pad: %d\n", f->including_pad);
   } break;
   case NN_FUNCTION_GLOBAL_AVERAGE_POOLING: { // GlobalAveragePooling
@@ -696,6 +744,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_UNPOOLING: { // Unpooling
     nn_function_unpooling_t *f = (nn_function_unpooling_t *)func;
@@ -727,6 +776,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_softmax_t *f = (nn_function_softmax_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
   } break;
+  case NN_FUNCTION_LOG_SOFTMAX: { // LogSoftmax
+    nn_function_log_softmax_t *f = (nn_function_log_softmax_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
+  } break;
   case NN_FUNCTION_ELU: { // ELU
     nn_function_elu_t *f = (nn_function_elu_t *)func;
     printf("NNB: Function argument alpha: %f\n", f->alpha);
@@ -751,9 +804,53 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_GELU: { // GELU
   } break;
+  case NN_FUNCTION_RELU6: { // ReLU6
+  } break;
+  case NN_FUNCTION_HARD_SIGMOID: { // HardSigmoid
+  } break;
+  case NN_FUNCTION_HARD_TANH: { // HardTanh
+  } break;
+  case NN_FUNCTION_LOG_SIGMOID: { // LogSigmoid
+  } break;
+  case NN_FUNCTION_SOFTPLUS: { // SoftPlus
+  } break;
+  case NN_FUNCTION_SOFTSIGN: { // SoftSign
+  } break;
+  case NN_FUNCTION_TANH_SHRINK: { // TanhShrink
+  } break;
+  case NN_FUNCTION_SINC: { // Sinc
+  } break;
+  case NN_FUNCTION_FUSED_BATCH_NORMALIZATION: { // FusedBatchNormalization
+    nn_function_fused_batch_normalization_t *f =
+        (nn_function_fused_batch_normalization_t *)func;
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument decay_rate: %f\n", f->decay_rate);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
+    printf("NNB: Function argument nonlinearity: %d\n", f->nonlinearity);
+  } break;
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     nn_function_batch_normalization_t *f =
         (nn_function_batch_normalization_t *)func;
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument decay_rate: %f\n", f->decay_rate);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
+  } break;
+  case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
+    nn_function_sync_batch_normalization_t *f =
+        (nn_function_sync_batch_normalization_t *)func;
+    printf("NNB: Function argument group: %d\n", f->group);
     printf("NNB: Function argument axes: (");
     list = (int *)NN_GET(net, f->axes.list);
     for (i = 0; i < f->axes.size; i++) {
@@ -1095,6 +1192,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_broadcast_to_t *f = (nn_function_broadcast_to_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
   } break;
+  case NN_FUNCTION_TILE: { // Tile
+    nn_function_tile_t *f = (nn_function_tile_t *)func;
+    printf("NNB: Function argument reps: (");
+    list = (int *)NN_GET(net, f->reps.list);
+    for (i = 0; i < f->reps.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+  } break;
   case NN_FUNCTION_ONE_HOT: { // OneHot
     nn_function_one_hot_t *f = (nn_function_one_hot_t *)func;
     printf("NNB: Function argument shape: (");
@@ -1143,6 +1249,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
   } break;
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
+  } break;
+  case NN_FUNCTION_ASSIGN: { // Assign
+  } break;
+  case NN_FUNCTION_GATHER_ND: { // GatherNd
   } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     nn_function_interpolate_t *f = (nn_function_interpolate_t *)func;
@@ -1217,6 +1327,17 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
+  case NN_FUNCTION_RANDOM_CHOICE: { // RandomChoice
+    nn_function_random_choice_t *f = (nn_function_random_choice_t *)func;
+    printf("NNB: Function argument shape: (");
+    list = (int *)NN_GET(net, f->shape.list);
+    for (i = 0; i < f->shape.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument replace: %d\n", f->replace);
     printf("NNB: Function argument seed: %d\n", f->seed);
   } break;
   case NN_FUNCTION_RANDOM_CROP: { // RandomCrop

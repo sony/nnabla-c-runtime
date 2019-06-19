@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/155
+Total 62/170
 
 
 ## Neural Network Layer
@@ -42,7 +42,7 @@ Count 8/14
 |          Embed           |      no      |      -       |      -       |
 
 ## Neural Network Activation Functions
-Count 11/12
+Count 11/21
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -52,19 +52,30 @@ Count 11/12
 |           ReLU           |     yes      |     yes      |     yes      |
 |        LeakyReLU         |     yes      |     yes      |     yes      |
 |         Softmax          |     yes      |     yes      |     yes      |
+|        LogSoftmax        |      no      |      -       |      -       |
 |           ELU            |     yes      |     yes      |     yes      |
 |           SELU           |     yes      |     yes      |     yes      |
 |          CReLU           |     yes      |     yes      |     yes      |
 |           CELU           |     yes      |     yes      |     yes      |
 |          PReLU           |     yes      |     yes      |     yes      |
 |           GELU           |      no      |      -       |      -       |
+|          ReLU6           |      no      |      -       |      -       |
+|       HardSigmoid        |      no      |      -       |      -       |
+|         HardTanh         |      no      |      -       |      -       |
+|        LogSigmoid        |      no      |      -       |      -       |
+|         SoftPlus         |      no      |      -       |      -       |
+|         SoftSign         |      no      |      -       |      -       |
+|        TanhShrink        |      no      |      -       |      -       |
+|           Sinc           |      no      |      -       |      -       |
 
 ## Normalization
-Count 2/4
+Count 2/6
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
+| FusedBatchNormalization  |      no      |      -       |      -       |
 |    BatchNormalization    |     yes      |     yes      |     yes      |
+|  SyncBatchNormalization  |      no      |      -       |      -       |
 |     MeanSubtraction      |     yes      |     yes      |     yes      |
 |     ClipGradByValue      |      no      |      -       |      -       |
 |      ClipGradByNorm      |      no      |      -       |      -       |
@@ -164,7 +175,7 @@ Count 6/22
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/15
+Count 11/18
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -176,6 +187,7 @@ Count 11/15
 |        Transpose         |     yes      |     yes      |     yes      |
 |        Broadcast         |      no      |      -       |      -       |
 |       BroadcastTo        |      no      |      -       |      -       |
+|           Tile           |      no      |      -       |      -       |
 |          OneHot          |      no      |      -       |      -       |
 |           Flip           |     yes      |     yes      |     yes      |
 |          Shift           |     yes      |     yes      |     yes      |
@@ -183,6 +195,8 @@ Count 11/15
 |         Reshape          |     yes      |     yes      |     yes      |
 |        MatrixDiag        |     yes      |     yes      |     yes      |
 |      MatrixDiagPart      |     yes      |     yes      |     yes      |
+|          Assign          |      no      |      -       |      -       |
+|         GatherNd         |      no      |      -       |      -       |
 
 ## Signal Processing
 Count 0/3
@@ -194,7 +208,7 @@ Count 0/3
 |           IFFT           |      no      |      -       |      -       |
 
 ## Stochasticity
-Count 1/10
+Count 1/11
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -204,6 +218,7 @@ Count 1/10
 |           Rand           |      no      |      -       |      -       |
 |         Randint          |      no      |      -       |      -       |
 |          Randn           |      no      |      -       |      -       |
+|       RandomChoice       |      no      |      -       |      -       |
 |        RandomCrop        |      no      |      -       |      -       |
 |        RandomFlip        |      no      |      -       |      -       |
 |       RandomShift        |      no      |      -       |      -       |
