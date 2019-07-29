@@ -27,7 +27,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.0.15.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_BINARY_FORMAT_REVISION ("46da759ffd63dd9f9ccfb7a8f770e9ed")
+#define NN_BINARY_FORMAT_REVISION ("12f78f2ce3eadd6bddd002d79dab3164")
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -210,6 +210,7 @@ typedef enum {
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
   NN_FUNCTION_ASSIGN = 248,          ///< Assign
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
+  NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
   NN_FUNCTION_INTERPOLATE = 127,     ///< Interpolate
   NN_FUNCTION_FFT = 158,             ///< FFT
   NN_FUNCTION_IFFT = 159,            ///< IFFT
@@ -259,6 +260,7 @@ typedef enum {
   NN_FUNCTION_UNLINK = 119,                    ///< Unlink
   NN_FUNCTION_SINK = 120,                      ///< Sink
   NN_FUNCTION_NMS_DETECTION2D = 231,           ///< NmsDetection2d
+  NN_FUNCTION_MAX_POOLING_BACKWARD = 272,      ///< MaxPoolingBackward
   NN_END_OF_FUNCTION = 65535                   // Ensure this type has 16bits
 } nn_function_type_t;
 
@@ -1928,6 +1930,19 @@ typedef struct {
 
 /// @}
 
+/// @brief ScatterNd function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t shape; ///< Original type is [repeated int64]
+} nn_function_scatter_nd_t;
+
+/// @}
+
 /// @brief Interpolate function.
 /// @{
 typedef struct {
@@ -2520,6 +2535,23 @@ typedef struct {
   float nms;             ///< Original type is [float]
   uint8_t nms_per_class; ///< Original type is [bool]
 } nn_function_nms_detection2d_t;
+
+/// @}
+
+/// @brief MaxPoolingBackward function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t kernel;      ///< Original type is [Shape]
+  nn_list_t stride;      ///< Original type is [Shape]
+  uint8_t ignore_border; ///< Original type is [bool]
+  nn_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< Original type is [bool]
+} nn_function_max_pooling_backward_t;
 
 /// @}
 

@@ -61,7 +61,7 @@ Neural Network Layer:
         available_values:
         - tanh
         - relu
-        default: tanh
+        default: '''tanh'''
       dropout:
         type: float
         default: 0.0
@@ -2334,6 +2334,23 @@ Array Manipulation:
     id: 264
     func_type:
     - ALL
+  ScatterNd:
+    snake_name: scatter_nd
+    inputs:
+      data: {}
+      indices: {}
+    arguments:
+      shape:
+        type: repeated int64
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iI: 271
+    uniq_name: ScatterNd_iI
+    id: 271
+    func_type:
+    - ALL
 Signal Processing:
   Interpolate:
     snake_name: interpolate
@@ -3318,5 +3335,34 @@ Unsupported, Special Use:
     c_runtime: not support
     uniq_name: NmsDetection2d_ffB
     id: 231
+    func_type:
+    - ALL
+  MaxPoolingBackward:
+    snake_name: max_pooling_backward
+    inputs:
+      x: {}
+      dy: {}
+    arguments:
+      kernel:
+        type: Shape
+      stride:
+        type: Shape
+        default: kernel
+      ignore_border:
+        type: bool
+        default: 'True'
+      pad:
+        type: Shape
+        default: (0,) * len(kernel)
+      channel_last:
+        type: bool
+        default: 'False'
+    outputs:
+      dx: {}
+    c_runtime: not support
+    function_ids:
+      iIiIBiIB: 272
+    uniq_name: MaxPoolingBackward_iIiIBiIB
+    id: 272
     func_type:
     - ALL

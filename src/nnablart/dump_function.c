@@ -417,6 +417,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_GATHER_ND: { // GatherNd
     printf("NNB: Function type:    GatherNd(264)\n");
   } break;
+  case NN_FUNCTION_SCATTER_ND: { // ScatterNd
+    printf("NNB: Function type:    ScatterNd(271)\n");
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     printf("NNB: Function type:    Interpolate(127)\n");
   } break;
@@ -539,6 +542,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_NMS_DETECTION2D: { // NmsDetection2d
     printf("NNB: Function type:    NmsDetection2d(231)\n");
+  } break;
+  case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
+    printf("NNB: Function type:    MaxPoolingBackward(272)\n");
   } break;
   default:;
   }
@@ -1254,6 +1260,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
   } break;
+  case NN_FUNCTION_SCATTER_ND: { // ScatterNd
+    nn_function_scatter_nd_t *f = (nn_function_scatter_nd_t *)func;
+    printf("NNB: Function argument shape: (");
+    list = (int *)NN_GET(net, f->shape.list);
+    for (i = 0; i < f->shape.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     nn_function_interpolate_t *f = (nn_function_interpolate_t *)func;
     printf("NNB: Function argument output_size: (");
@@ -1601,6 +1616,30 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument thresh: %f\n", f->thresh);
     printf("NNB: Function argument nms: %f\n", f->nms);
     printf("NNB: Function argument nms_per_class: %d\n", f->nms_per_class);
+  } break;
+  case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
+    nn_function_max_pooling_backward_t *f =
+        (nn_function_max_pooling_backward_t *)func;
+    printf("NNB: Function argument kernel: (");
+    list = (int *)NN_GET(net, f->kernel.list);
+    for (i = 0; i < f->kernel.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument stride: (");
+    list = (int *)NN_GET(net, f->stride.list);
+    for (i = 0; i < f->stride.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument ignore_border: %d\n", f->ignore_border);
+    printf("NNB: Function argument pad: (");
+    list = (int *)NN_GET(net, f->pad.list);
+    for (i = 0; i < f->pad.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   default:;
   }

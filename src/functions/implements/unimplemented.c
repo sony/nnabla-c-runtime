@@ -1163,7 +1163,7 @@ rt_function_error_t free_tile_local_context(rt_function_t *f) {
 rt_function_error_t exec_tile(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_ONEHOT */
+#endif /* CONFIG_TILE */
 
 // Assign
 #ifdef CONFIG_ASSIGN
@@ -1179,7 +1179,7 @@ rt_function_error_t free_assign_local_context(rt_function_t *f) {
 rt_function_error_t exec_assign(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_ONEHOT */
+#endif /* CONFIG_ASSIGN */
 
 // GatherNd
 #ifdef CONFIG_GATHERND
@@ -1195,7 +1195,23 @@ rt_function_error_t free_gather_nd_local_context(rt_function_t *f) {
 rt_function_error_t exec_gather_nd(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_ONEHOT */
+#endif /* CONFIG_GATHERND */
+
+// ScatterNd
+#ifdef CONFIG_SCATTERND
+rt_function_error_t allocate_scatter_nd_local_context(rt_function_t *f) {
+  f->exec_func = exec_scatter_nd;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_scatter_nd_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_scatter_nd(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SCATTERND */
 
 // OneHot
 #ifdef CONFIG_ONEHOT
@@ -1792,6 +1808,7 @@ rt_function_error_t exec_sink(rt_function_t *f) {
 }
 #endif /* CONFIG_SINK */
 
+// NmsDetection2d
 #ifdef CONFIG_NMSDETECTION2D
 rt_function_error_t allocate_nms_detection2d_local_context(rt_function_t *f) {
   f->exec_func = exec_nms_detection2d;
@@ -1806,3 +1823,20 @@ rt_function_error_t exec_nms_detection2d(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_NMSDETECTION2D */
+
+// MaxPoolingBackward
+#ifdef CONFIG_MAXPOOLINGBACKWARD
+rt_function_error_t
+allocate_max_pooling_backward_local_context(rt_function_t *f) {
+  f->exec_func = exec_nms_detection2d;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_max_pooling_backward_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_max_pooling_backward(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_MAXPOOLINGBACKWARD */
