@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/170
+Total 62/172
 
 
 ## Neural Network Layer
@@ -175,7 +175,7 @@ Count 6/22
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/18
+Count 11/19
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -197,6 +197,7 @@ Count 11/18
 |      MatrixDiagPart      |     yes      |     yes      |     yes      |
 |          Assign          |      no      |      -       |      -       |
 |         GatherNd         |      no      |      -       |      -       |
+|        ScatterNd         |      no      |      -       |      -       |
 
 ## Signal Processing
 Count 0/3
@@ -266,7 +267,7 @@ Count 0/3
 |     ConfusionMatrix      |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
-Count 0/4
+Count 0/5
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -274,4 +275,5 @@ Count 0/4
 |          Unlink          |      no      |      -       |      -       |
 |           Sink           |      no      |      -       |      -       |
 |      NmsDetection2d      |      no      |      -       |      -       |
+|    MaxPoolingBackward    |      no      |      -       |      -       |
 

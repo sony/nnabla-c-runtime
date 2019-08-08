@@ -2348,6 +2348,25 @@ rt_function_error_t free_gather_nd_local_context(rt_function_t *f);
 rt_function_error_t exec_gather_nd(rt_function_t *f);
 /// @}
 
+/// @defgroup ScatterNd ScatterNd
+/// @{
+
+/// Local context for ScatterNd
+typedef struct {
+  rt_list_t shape; ///< Original type is [repeated int64]
+  void *data;      ///< General purpose data area
+} scatter_nd_local_context_t;
+
+/// Allocate ScatterNd local context
+rt_function_error_t allocate_scatter_nd_local_context(rt_function_t *f);
+
+/// Free ScatterNd local context
+rt_function_error_t free_scatter_nd_local_context(rt_function_t *f);
+
+/// Exec ScatterNd
+rt_function_error_t exec_scatter_nd(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3233,6 +3252,30 @@ rt_function_error_t free_nms_detection2d_local_context(rt_function_t *f);
 
 /// Exec NmsDetection2d
 rt_function_error_t exec_nms_detection2d(rt_function_t *f);
+/// @}
+
+/// @defgroup MaxPoolingBackward MaxPoolingBackward
+/// @{
+
+/// Local context for MaxPoolingBackward
+typedef struct {
+  rt_list_t kernel;      ///< Original type is [Shape]
+  rt_list_t stride;      ///< Original type is [Shape]
+  uint8_t ignore_border; ///< bool
+  rt_list_t pad;         ///< Original type is [Shape]
+  uint8_t channel_last;  ///< bool
+  void *data;            ///< General purpose data area
+} max_pooling_backward_local_context_t;
+
+/// Allocate MaxPoolingBackward local context
+rt_function_error_t
+allocate_max_pooling_backward_local_context(rt_function_t *f);
+
+/// Free MaxPoolingBackward local context
+rt_function_error_t free_max_pooling_backward_local_context(rt_function_t *f);
+
+/// Exec MaxPoolingBackward
+rt_function_error_t exec_max_pooling_backward(rt_function_t *f);
 /// @}
 
 /// @}

@@ -1575,6 +1575,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_SCATTERND
+  case NN_FUNCTION_SCATTER_ND: { // ScatterNd
+    function_context->func.free_local_context_func =
+        free_scatter_nd_local_context;
+    nn_function_scatter_nd_t *f = (nn_function_scatter_nd_t *)function;
+    scatter_nd_local_context_t *ctx =
+        rt_malloc_func(sizeof(scatter_nd_local_context_t));
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    function_context->func.local_context = ctx;
+    allocate_scatter_nd_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_INTERPOLATE
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     function_context->func.free_local_context_func =
@@ -2204,6 +2217,24 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->nms_per_class = f->nms_per_class;
     function_context->func.local_context = ctx;
     allocate_nms_detection2d_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_MAXPOOLINGBACKWARD
+  case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
+    function_context->func.free_local_context_func =
+        free_max_pooling_backward_local_context;
+    nn_function_max_pooling_backward_t *f =
+        (nn_function_max_pooling_backward_t *)function;
+    max_pooling_backward_local_context_t *ctx =
+        rt_malloc_func(sizeof(max_pooling_backward_local_context_t));
+    ctx->kernel = create_rt_list_from_nn_list(n, f->kernel);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->ignore_border = f->ignore_border;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->channel_last = f->channel_last;
+    function_context->func.local_context = ctx;
+    allocate_max_pooling_backward_local_context(&function_context->func);
   } break;
 #endif
 
