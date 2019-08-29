@@ -15,9 +15,7 @@
 from collections import OrderedDict
 from os.path import basename, abspath, dirname, join, splitext
 import importlib
-import json
 import os
-import re
 import subprocess
 import yaml
 import zlib
