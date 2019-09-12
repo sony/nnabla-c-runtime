@@ -24,10 +24,10 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_C_RUNTIME_VERSION ("1.0.15.dev1_c1")
+#define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_BINARY_FORMAT_REVISION ("12f78f2ce3eadd6bddd002d79dab3164")
+#define NN_API_LEVEL (4)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -2567,7 +2567,7 @@ typedef struct {
 ///
 typedef struct {
   uint32_t version;    ///< binary format version
-  uint32_t revision;   ///< function-level compatibility revision
+  uint32_t api_level;  ///< function-level compatibility revision
   nn_list_t buffers;   ///< list of nn_variable_buffer_t
   nn_list_t variables; ///< list of nn_variable_t
   nn_list_t functions; ///< list of nn_function_t

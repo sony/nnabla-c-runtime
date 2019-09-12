@@ -83,7 +83,7 @@ def generate(filename, info):
         output = tmpl.render(C_RUNTIME_VERSION=versions['C_RUNTIME_VERSION'],
                              NNB_MINIMUM_VERSION=versions['NNB_MINIMUM_VERSION'],
                              NNB_VERSION=versions['NNB_VERSION'],
-                             BINARY_VERSION=m.hexdigest(),
+                             API_LEVEL=versions['API_LEVEL'],
                              FUNCTION_ENUMS='\n'.join(enums),
                              FUNCTION_DEFINES='\n'.join(defines))
         return output
