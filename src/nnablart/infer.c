@@ -47,7 +47,19 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
   assert(ret == RT_RET_NOERROR);
 
   ret = rt_initialize_context(context, net);
-  assert(ret == RT_RET_NOERROR);
+  if (ret != RT_RET_NOERROR) {
+    switch (ret) {
+    case RT_RET_ERROR_VERSION_UNMATCH:
+      printf("input network(.nnb) is mismatch to current runtime library.\n");
+      return -1;
+    case RT_RET_ERROR_INITIALIZE_CONTEXT_TWICE:
+      printf("cannot initialize context twice.\n");
+      return -1;
+    default:
+      printf("rt_initialize_context() failed with %d.\n", ret);
+      return -1;
+    }
+  }
 
   if (argc != rt_num_of_input(context) + 1) {
     printf("Incorrect input parameters.\n");

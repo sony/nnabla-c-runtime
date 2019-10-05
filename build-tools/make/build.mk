@@ -71,6 +71,7 @@ ifneq ("$(NNABLA_DIRECTORY)","")
 .PHONY: nnabla-c-runtime-update-function-info
 nnabla-c-runtime-update-function-info: nnabla-install
 	@nnabla_cli function_info -o $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
+	@api=$(nnabla_cli function_info --api -1|grep API_LEVEL) && sed -i -e "s/API_LEVEL:.*/$api/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
 
 .PHONY: nnabla-c-runtime-generate-function-test
 nnabla-c-runtime-generate-function-test: nnabla-install

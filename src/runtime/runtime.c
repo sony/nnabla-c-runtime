@@ -113,6 +113,12 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   }
 
   //////////////////////////////////////////////////////////////////////////////
+  // API level check
+  if (n->api_level > NN_API_LEVEL) {
+    return RT_RET_ERROR_VERSION_UNMATCH;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
   // Buffer list
   c->num_of_buffers = n->buffers.size;
   c->buffers =
@@ -369,4 +375,9 @@ const char *const rt_c_runtime_version(void) { return NN_C_RUNTIME_VERSION; }
 
 const int rt_nnb_version(void) { return NN_BINARY_FORMAT_VERSION; }
 
-const char *const rt_nnb_revision(void) { return NN_BINARY_FORMAT_REVISION; }
+const char *const rt_nnb_revision(void) {
+  static char buffer[16];
+  snprintf(buffer, sizeof(buffer) - 1, "API_LEVEL_%d", NN_API_LEVEL);
+  buffer[sizeof(buffer) - 1] = 0;
+  return buffer;
+}
