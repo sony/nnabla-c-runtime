@@ -1245,6 +1245,38 @@ rt_function_error_t exec_sort(rt_function_t *f) {
 }
 #endif /* CONFIG_SORT */
 
+// BatchInv
+#ifdef CONFIG_BATCHINV
+rt_function_error_t allocate_batch_inv_local_context(rt_function_t *f) {
+  f->exec_func = exec_batch_inv;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_batch_inv_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_batch_inv(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BATCHINV */
+
+// BatchDet
+#ifdef CONFIG_BATCHDET
+rt_function_error_t allocate_batch_det_local_context(rt_function_t *f) {
+  f->exec_func = exec_batch_det;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_batch_det_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_batch_det(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BATCHDET */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Stochasticity
 ////////////////////////////////////////////////////////////////////////////////
@@ -1618,6 +1650,22 @@ rt_function_error_t exec_fixed_point_quantize(rt_function_t *f) {
 }
 #endif /* CONFIG_FIXEDPOINTQUANTIZE */
 
+// MinMaxQuantize
+#ifdef CONFIG_MINMAXQUANTIZE
+rt_function_error_t allocate_min_max_quantize_local_context(rt_function_t *f) {
+  f->exec_func = exec_min_max_quantize;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_min_max_quantize_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_min_max_quantize(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_MINMAXQUANTIZE */
+
 // Pow2Quantize
 #ifdef CONFIG_POW2QUANTIZE
 rt_function_error_t allocate_pow2_quantize_local_context(rt_function_t *f) {
@@ -1840,3 +1888,19 @@ rt_function_error_t exec_max_pooling_backward(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_MAXPOOLINGBACKWARD */
+
+// WarpByFlow
+#ifdef CONFIG_WARPBYFLOW
+rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f) {
+  f->exec_func = exec_warp_by_flow;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WARPBYFLOW */

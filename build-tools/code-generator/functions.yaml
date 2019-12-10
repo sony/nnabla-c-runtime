@@ -2306,6 +2306,32 @@ Array Manipulation:
     id: 85
     func_type:
     - ALL
+  BatchInv:
+    snake_name: batch_inv
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 275
+    uniq_name: BatchInv
+    id: 275
+    func_type:
+    - ALL
+  BatchDet:
+    snake_name: batch_det
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 276
+    uniq_name: BatchDet
+    id: 276
+    func_type:
+    - ALL
   Assign:
     snake_name: assign
     inputs:
@@ -3159,6 +3185,40 @@ Quantization Neural Network Layers:
     id: 113
     func_type:
     - ALL
+  MinMaxQuantize:
+    snake_name: min_max_quantize
+    inputs:
+      x: {}
+      qr_min: {}
+      qr_max: {}
+      ql_min: {}
+      ql_max: {}
+    arguments:
+      decay:
+        type: float
+        default: '0.999'
+      x_min_max:
+        type: bool
+        default: 'False'
+      ema:
+        type: bool
+        default: 'False'
+      ste_fine_grained:
+        type: bool
+        default: 'True'
+      eps:
+        type: float
+        default: '0.01'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      fBBB: 273
+      fBBBf: 274
+    uniq_name: MinMaxQuantize_fBBBf
+    id: 274
+    func_type:
+    - ALL
   Pow2Quantize:
     snake_name: pow2_quantize
     inputs:
@@ -3364,5 +3424,19 @@ Unsupported, Special Use:
       iIiIBiIB: 272
     uniq_name: MaxPoolingBackward_iIiIBiIB
     id: 272
+    func_type:
+    - ALL
+  WarpByFlow:
+    snake_name: warp_by_flow
+    inputs:
+      data: {}
+      flow: {}
+    outputs:
+      warped_image: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 277
+    uniq_name: WarpByFlow
+    id: 277
     func_type:
     - ALL

@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/172
+Total 62/176
 
 
 ## Neural Network Layer
@@ -175,7 +175,7 @@ Count 6/22
 |          ATanh           |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/19
+Count 11/21
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -195,6 +195,8 @@ Count 11/19
 |         Reshape          |     yes      |     yes      |     yes      |
 |        MatrixDiag        |     yes      |     yes      |     yes      |
 |      MatrixDiagPart      |     yes      |     yes      |     yes      |
+|         BatchInv         |      no      |      -       |      -       |
+|         BatchDet         |      no      |      -       |      -       |
 |          Assign          |      no      |      -       |      -       |
 |         GatherNd         |      no      |      -       |      -       |
 |        ScatterNd         |      no      |      -       |      -       |
@@ -241,7 +243,7 @@ Count 0/9
 |      KLMultinomial       |      no      |      -       |      -       |
 
 ## Quantization Neural Network Layers
-Count 6/11
+Count 6/12
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -254,6 +256,7 @@ Count 6/11
 |        INQAffine         |      no      |      -       |      -       |
 |      INQConvolution      |      no      |      -       |      -       |
 |    FixedPointQuantize    |      no      |      -       |      -       |
+|      MinMaxQuantize      |      no      |      -       |      -       |
 |       Pow2Quantize       |      no      |      -       |      -       |
 |          Prune           |      no      |      -       |      -       |
 
@@ -267,7 +270,7 @@ Count 0/3
 |     ConfusionMatrix      |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
-Count 0/5
+Count 0/6
 
 |         Function         |  Available   |    float     |   generic    |
 |--------------------------|--------------|--------------|--------------|
@@ -276,4 +279,5 @@ Count 0/5
 |           Sink           |      no      |      -       |      -       |
 |      NmsDetection2d      |      no      |      -       |      -       |
 |    MaxPoolingBackward    |      no      |      -       |      -       |
+|        WarpByFlow        |      no      |      -       |      -       |
 

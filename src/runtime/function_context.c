@@ -1558,6 +1558,24 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_BATCHINV
+  case NN_FUNCTION_BATCH_INV: { // BatchInv
+    function_context->func.free_local_context_func =
+        free_batch_inv_local_context;
+    function_context->func.local_context = 0;
+    allocate_batch_inv_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_BATCHDET
+  case NN_FUNCTION_BATCH_DET: { // BatchDet
+    function_context->func.free_local_context_func =
+        free_batch_det_local_context;
+    function_context->func.local_context = 0;
+    allocate_batch_det_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_ASSIGN
   case NN_FUNCTION_ASSIGN: { // Assign
     function_context->func.free_local_context_func = free_assign_local_context;
@@ -2106,6 +2124,39 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_MINMAXQUANTIZE
+  case NN_FUNCTION_MIN_MAX_QUANTIZE_0: { // MinMaxQuantize
+    function_context->func.free_local_context_func =
+        free_min_max_quantize_local_context;
+    nn_function_min_max_quantize_t *f =
+        (nn_function_min_max_quantize_t *)function;
+    min_max_quantize_local_context_t *ctx =
+        rt_malloc_func(sizeof(min_max_quantize_local_context_t));
+    ctx->decay = f->decay;
+    ctx->x_min_max = f->x_min_max;
+    ctx->ema = f->ema;
+    ctx->ste_fine_grained = f->ste_fine_grained;
+    ctx->eps = 0.01;
+    function_context->func.local_context = ctx;
+    allocate_min_max_quantize_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_MIN_MAX_QUANTIZE: { // MinMaxQuantize
+    function_context->func.free_local_context_func =
+        free_min_max_quantize_local_context;
+    nn_function_min_max_quantize_t *f =
+        (nn_function_min_max_quantize_t *)function;
+    min_max_quantize_local_context_t *ctx =
+        rt_malloc_func(sizeof(min_max_quantize_local_context_t));
+    ctx->decay = f->decay;
+    ctx->x_min_max = f->x_min_max;
+    ctx->ema = f->ema;
+    ctx->ste_fine_grained = f->ste_fine_grained;
+    ctx->eps = f->eps;
+    function_context->func.local_context = ctx;
+    allocate_min_max_quantize_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_POW2QUANTIZE
   case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
     function_context->func.free_local_context_func =
@@ -2235,6 +2286,15 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->channel_last = f->channel_last;
     function_context->func.local_context = ctx;
     allocate_max_pooling_backward_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_WARPBYFLOW
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+    function_context->func.free_local_context_func =
+        free_warp_by_flow_local_context;
+    function_context->func.local_context = 0;
+    allocate_warp_by_flow_local_context(&function_context->func);
   } break;
 #endif
 
