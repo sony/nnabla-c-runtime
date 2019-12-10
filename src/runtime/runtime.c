@@ -114,6 +114,14 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
 
   //////////////////////////////////////////////////////////////////////////////
   // API level check
+  if (n->api_level > NN_API_LEVEL_MAX) {
+    n->api_level = 1;
+    printf("WARNING:\n"
+           "The NNabla version is too low to find a suitable api level. \n"
+           "Unexpected errors might occur.\n"
+           "Please upgrade NNabla to latest version.\n");
+  }
+
   if (n->api_level > NN_API_LEVEL) {
     return RT_RET_ERROR_VERSION_UNMATCH;
   }

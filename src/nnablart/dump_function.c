@@ -411,6 +411,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
     printf("NNB: Function type:    MatrixDiagPart(85)\n");
   } break;
+  case NN_FUNCTION_BATCH_INV: { // BatchInv
+    printf("NNB: Function type:    BatchInv(275)\n");
+  } break;
+  case NN_FUNCTION_BATCH_DET: { // BatchDet
+    printf("NNB: Function type:    BatchDet(276)\n");
+  } break;
   case NN_FUNCTION_ASSIGN: { // Assign
     printf("NNB: Function type:    Assign(248)\n");
   } break;
@@ -516,6 +522,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_FIXED_POINT_QUANTIZE: { // FixedPointQuantize
     printf("NNB: Function type:    FixedPointQuantize(113)\n");
   } break;
+  case NN_FUNCTION_MIN_MAX_QUANTIZE: { // MinMaxQuantize
+    printf("NNB: Function type:    MinMaxQuantize(274)\n");
+  } break;
   case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
     printf("NNB: Function type:    Pow2Quantize(114)\n");
   } break;
@@ -545,6 +554,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
     printf("NNB: Function type:    MaxPoolingBackward(272)\n");
+  } break;
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+    printf("NNB: Function type:    WarpByFlow(277)\n");
   } break;
   default:;
   }
@@ -1256,6 +1268,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
   } break;
+  case NN_FUNCTION_BATCH_INV: { // BatchInv
+  } break;
+  case NN_FUNCTION_BATCH_DET: { // BatchDet
+  } break;
   case NN_FUNCTION_ASSIGN: { // Assign
   } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
@@ -1576,6 +1592,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument ste_fine_grained: %d\n",
            f->ste_fine_grained);
   } break;
+  case NN_FUNCTION_MIN_MAX_QUANTIZE: { // MinMaxQuantize
+    nn_function_min_max_quantize_t *f = (nn_function_min_max_quantize_t *)func;
+    printf("NNB: Function argument decay: %f\n", f->decay);
+    printf("NNB: Function argument x_min_max: %d\n", f->x_min_max);
+    printf("NNB: Function argument ema: %d\n", f->ema);
+    printf("NNB: Function argument ste_fine_grained: %d\n",
+           f->ste_fine_grained);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
   case NN_FUNCTION_POW2_QUANTIZE: { // Pow2Quantize
     nn_function_pow2_quantize_t *f = (nn_function_pow2_quantize_t *)func;
     printf("NNB: Function argument sign: %d\n", f->sign);
@@ -1640,6 +1665,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+  } break;
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
   } break;
   default:;
   }

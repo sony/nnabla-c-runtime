@@ -27,7 +27,8 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (4)
+#define NN_API_LEVEL (6)
+#define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @defgroup Network Internal network representation
@@ -208,6 +209,8 @@ typedef enum {
   NN_FUNCTION_RESHAPE = 126,         ///< Reshape
   NN_FUNCTION_MATRIX_DIAG = 84,      ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
+  NN_FUNCTION_BATCH_INV = 275,       ///< BatchInv
+  NN_FUNCTION_BATCH_DET = 276,       ///< BatchDet
   NN_FUNCTION_ASSIGN = 248,          ///< Assign
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
   NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
@@ -251,17 +254,21 @@ typedef enum {
   NN_FUNCTION_INQ_AFFINE = 111,                ///< INQAffine
   NN_FUNCTION_INQ_CONVOLUTION = 112,           ///< INQConvolution
   NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,      ///< FixedPointQuantize
-  NN_FUNCTION_POW2_QUANTIZE = 114,             ///< Pow2Quantize
-  NN_FUNCTION_PRUNE = 135,                     ///< Prune
-  NN_FUNCTION_TOP_N_ERROR = 115,               ///< TopNError
-  NN_FUNCTION_BINARY_ERROR = 116,              ///< BinaryError
-  NN_FUNCTION_CONFUSION_MATRIX = 117,          ///< ConfusionMatrix
-  NN_FUNCTION_VAT_NOISE = 118,                 ///< VATNoise
-  NN_FUNCTION_UNLINK = 119,                    ///< Unlink
-  NN_FUNCTION_SINK = 120,                      ///< Sink
-  NN_FUNCTION_NMS_DETECTION2D = 231,           ///< NmsDetection2d
-  NN_FUNCTION_MAX_POOLING_BACKWARD = 272,      ///< MaxPoolingBackward
-  NN_END_OF_FUNCTION = 65535                   // Ensure this type has 16bits
+  NN_FUNCTION_MIN_MAX_QUANTIZE_0 =
+      273, ///< Recent version of MinMaxQuantize has arg [fBBB]
+  NN_FUNCTION_MIN_MAX_QUANTIZE = 274,     ///< MinMaxQuantize
+  NN_FUNCTION_POW2_QUANTIZE = 114,        ///< Pow2Quantize
+  NN_FUNCTION_PRUNE = 135,                ///< Prune
+  NN_FUNCTION_TOP_N_ERROR = 115,          ///< TopNError
+  NN_FUNCTION_BINARY_ERROR = 116,         ///< BinaryError
+  NN_FUNCTION_CONFUSION_MATRIX = 117,     ///< ConfusionMatrix
+  NN_FUNCTION_VAT_NOISE = 118,            ///< VATNoise
+  NN_FUNCTION_UNLINK = 119,               ///< Unlink
+  NN_FUNCTION_SINK = 120,                 ///< Sink
+  NN_FUNCTION_NMS_DETECTION2D = 231,      ///< NmsDetection2d
+  NN_FUNCTION_MAX_POOLING_BACKWARD = 272, ///< MaxPoolingBackward
+  NN_FUNCTION_WARP_BY_FLOW = 277,         ///< WarpByFlow
+  NN_END_OF_FUNCTION = 65535              // Ensure this type has 16bits
 } nn_function_type_t;
 
 /// @brief Function implement type.
@@ -1908,6 +1915,28 @@ typedef struct {
 
 /// @}
 
+/// @brief BatchInv function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_batch_inv_t;
+
+/// @}
+
+/// @brief BatchDet function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_batch_det_t;
+
+/// @}
+
 /// @brief Assign function.
 /// @{
 typedef struct {
@@ -2417,6 +2446,23 @@ typedef struct {
 
 /// @}
 
+/// @brief MinMaxQuantize function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float decay;              ///< Original type is [float]
+  uint8_t x_min_max;        ///< Original type is [bool]
+  uint8_t ema;              ///< Original type is [bool]
+  uint8_t ste_fine_grained; ///< Original type is [bool]
+  float eps;                ///< Original type is [float]
+} nn_function_min_max_quantize_t;
+
+/// @}
+
 /// @brief Pow2Quantize function.
 /// @{
 typedef struct {
@@ -2552,6 +2598,17 @@ typedef struct {
   nn_list_t pad;         ///< Original type is [Shape]
   uint8_t channel_last;  ///< Original type is [bool]
 } nn_function_max_pooling_backward_t;
+
+/// @}
+
+/// @brief WarpByFlow function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_warp_by_flow_t;
 
 /// @}
 

@@ -2322,6 +2322,32 @@ rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f);
 rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
 /// @}
 
+/// @defgroup BatchInv BatchInv
+/// @{
+
+/// Allocate BatchInv local context
+rt_function_error_t allocate_batch_inv_local_context(rt_function_t *f);
+
+/// Free BatchInv local context
+rt_function_error_t free_batch_inv_local_context(rt_function_t *f);
+
+/// Exec BatchInv
+rt_function_error_t exec_batch_inv(rt_function_t *f);
+/// @}
+
+/// @defgroup BatchDet BatchDet
+/// @{
+
+/// Allocate BatchDet local context
+rt_function_error_t allocate_batch_det_local_context(rt_function_t *f);
+
+/// Free BatchDet local context
+rt_function_error_t free_batch_det_local_context(rt_function_t *f);
+
+/// Exec BatchDet
+rt_function_error_t exec_batch_det(rt_function_t *f);
+/// @}
+
 /// @defgroup Assign Assign
 /// @{
 
@@ -3075,6 +3101,29 @@ rt_function_error_t free_fixed_point_quantize_local_context(rt_function_t *f);
 rt_function_error_t exec_fixed_point_quantize(rt_function_t *f);
 /// @}
 
+/// @defgroup MinMaxQuantize MinMaxQuantize
+/// @{
+
+/// Local context for MinMaxQuantize
+typedef struct {
+  float decay;              ///< float
+  uint8_t x_min_max;        ///< bool
+  uint8_t ema;              ///< bool
+  uint8_t ste_fine_grained; ///< bool
+  float eps;                ///< float
+  void *data;               ///< General purpose data area
+} min_max_quantize_local_context_t;
+
+/// Allocate MinMaxQuantize local context
+rt_function_error_t allocate_min_max_quantize_local_context(rt_function_t *f);
+
+/// Free MinMaxQuantize local context
+rt_function_error_t free_min_max_quantize_local_context(rt_function_t *f);
+
+/// Exec MinMaxQuantize
+rt_function_error_t exec_min_max_quantize(rt_function_t *f);
+/// @}
+
 /// @defgroup Pow2Quantize Pow2Quantize
 /// @{
 
@@ -3276,6 +3325,19 @@ rt_function_error_t free_max_pooling_backward_local_context(rt_function_t *f);
 
 /// Exec MaxPoolingBackward
 rt_function_error_t exec_max_pooling_backward(rt_function_t *f);
+/// @}
+
+/// @defgroup WarpByFlow WarpByFlow
+/// @{
+
+/// Allocate WarpByFlow local context
+rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f);
+
+/// Free WarpByFlow local context
+rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f);
+
+/// Exec WarpByFlow
+rt_function_error_t exec_warp_by_flow(rt_function_t *f);
 /// @}
 
 /// @}
