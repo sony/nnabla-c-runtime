@@ -17,9 +17,10 @@ FROM ubuntu:16.04
 RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-format \
     make \
-    python-pip \
+    python3-pip \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install setuptools
-RUN pip install autopep8
+RUN pip3 install setuptools
+RUN pip3 install future
+RUN pip3 install autopep8
