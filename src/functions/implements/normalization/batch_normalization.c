@@ -147,7 +147,7 @@ static void forward_impl_batch(rt_function_t *f,
              (1 - context->decay_rate) * v[i1] * multiplication_batch_axis /
                  (multiplication_batch_axis - 1);
 
-    const float stdvar = (float)sqrt(v[i1] + context->eps);
+    const float stdvar = sqrtf(v[i1] + context->eps);
     // Subtract mean and divide by std, and apply beta and gamma.
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
@@ -176,7 +176,7 @@ static void forward_impl_global(rt_function_t *f,
   int i1;
   for (i1 = 0; i1 < specified_axis_size; i1++) {
     int i02;
-    const float stdvar = (float)sqrt(rv[i1] + context->eps);
+    const float stdvar = sqrtf(rv[i1] + context->eps);
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;
@@ -259,7 +259,7 @@ forward_impl_batch_generic(rt_function_t *f,
     set_rm(input_rm, i1, rm);
     set_rv(input_rv, i1, rv);
 
-    const float stdvar = (float)sqrt(v[i1] + context->eps);
+    const float stdvar = sqrtf(v[i1] + context->eps);
     // Subtract mean and divide by std, and apply beta and gamma.
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
@@ -300,7 +300,7 @@ forward_impl_global_generic(rt_function_t *f,
   for (i1 = 0; i1 < specified_axis_size; i1++) {
     int i02;
     float rv = get_rv(input_rv, i1);
-    const float stdvar = (float)sqrt(rv + context->eps);
+    const float stdvar = sqrtf(rv + context->eps);
     for (i02 = 0; i02 < multiplication_batch_axis; i02++) {
       const int i0 = i02 / output_size;
       const int i2 = i02 % output_size;

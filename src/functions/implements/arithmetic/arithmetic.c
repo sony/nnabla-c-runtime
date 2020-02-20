@@ -68,11 +68,11 @@ float calc_sub(float v1, float v2) { return v1 - v2; }
 
 float calc_rsub(float v1, float v2) { return v2 - v1; }
 
-float calc_rpow(float v1, float v2) { return (float)pow(v2, v1); }
+float calc_rpow(float v1, float v2) { return powf(v2, v1); }
 
 float calc_rdiv(float v1, float v2) { return v2 / v1; }
 
-float calc_pow(float v1, float v2) { return (float)pow(v1, v2); }
+float calc_pow(float v1, float v2) { return powf(v1, v2); }
 
 float calc_mul(float v1, float v2) { return v1 * v2; }
 

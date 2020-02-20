@@ -49,7 +49,7 @@ rt_function_error_t exec_elu(rt_function_t *f) {
   int s;
   for (s = 0; s < size; s++) {
     y[s] = (float)(x[s] > (float)0 ? x[s]
-                                   : context->alpha * (exp(x[s]) - (float)1));
+                                   : context->alpha * (expf(x[s]) - (float)1));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -68,7 +68,7 @@ rt_function_error_t exec_elu_generic(rt_function_t *f) {
     float val_x = get_input(input, s);
     float val_y =
         (float)(val_x > (float)0 ? val_x
-                                 : context->alpha * (exp(val_x) - (float)1));
+                                 : context->alpha * (expf(val_x) - (float)1));
     set_output(output, s, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;

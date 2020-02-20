@@ -193,7 +193,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
     c->variables[i].fp_pos = var->fp_pos;
 
     if (var->type == NN_DATA_TYPE_INT8 || var->type == NN_DATA_TYPE_INT16) {
-      c->variables[i].coefficient = (1.0 / (1 << var->fp_pos));
+      c->variables[i].coefficient = (1.0f / (1 << var->fp_pos));
     } else {
       c->variables[i].coefficient = 0;
     }

@@ -50,7 +50,7 @@ rt_function_error_t exec_selu(rt_function_t *f) {
   int s;
   for (s = 0; s < size; s++) {
     y[s] = (float)(x[s] > (float)0 ? context->scale * x[s]
-                                   : coef * (exp(x[s]) - (float)1));
+                                   : coef * (expf(x[s]) - (float)1));
   }
   return RT_FUNCTION_ERROR_NOERROR;
 }
@@ -69,7 +69,7 @@ rt_function_error_t exec_selu_generic(rt_function_t *f) {
   for (s = 0; s < size; s++) {
     float val_x = get_input(input, s);
     float val_y = (float)(val_x > (float)0 ? context->scale * val_x
-                                           : coef * (exp(val_x) - (float)1));
+                                           : coef * (expf(val_x) - (float)1));
     set_output(output, s, val_y);
   }
   return RT_FUNCTION_ERROR_NOERROR;
