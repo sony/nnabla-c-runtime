@@ -61,8 +61,8 @@ nnabla-c-runtime-doc:
 # Auto format
 .PHONY: nnabla-c-runtime-auto-format
 nnabla-c-runtime-auto-format:
-	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.py" |xargs -n1 autopep8 -i
-	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.[ch]" |xargs -n1 clang-format -i
+	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.py" | xargs -n1 autopep8 -i
+	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.[ch]" | xargs -n1 clang-format -i
 
 ########################################################################################################################
 # With NNabla
