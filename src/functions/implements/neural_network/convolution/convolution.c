@@ -33,32 +33,74 @@
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
 #ifdef CONFIG_CONVOLUTION_FLOAT32
-  f->exec_func = exec_convolution;
+  f->exec_func = exec_convolution_float;
 #endif /* CONFIG_CONVOLUTION_FLOAT32 */
 
 #ifdef CONFIG_CONVOLUTION_GENERIC
   for (int i = 0; i < f->num_of_inputs; i++) {
+
+#ifdef CONFIG_CONVOLUTION_FIXED8
+    if (f->inputs[i]->type == NN_DATA_TYPE_INT8) {
+      f->exec_func = exec_convolution_int8;
+      break;
+    }
+#endif /* CONFIG_CONVOLUTION_FIXED8 */
+
+#ifdef CONFIG_CONVOLUTION_FIXED16
+    if (f->inputs[i]->type == NN_DATA_TYPE_INT16) {
+      f->exec_func = exec_convolution_int16;
+      break;
+    }
+#endif /* CONFIG_CONVOLUTION_FIXED16 */
+
     if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
       f->exec_func = exec_convolution_generic;
       break;
     }
   }
-  if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
-    f->exec_func = exec_convolution_generic;
+
+  for (int i = 0; i < f->num_of_outputs; i++) {
+    int conv_output_assigned = 0;
+
+#ifdef CONFIG_CONVOLUTION_FIXED8
+    if ((f->outputs[i]->type == NN_DATA_TYPE_INT8) &&
+        (f->exec_func == exec_convolution_int8)) {
+      f->exec_func = exec_convolution_int8;
+      conv_output_assigned = 1;
+      break;
+    }
+#endif /* CONFIG_CONVOLUTION_FIXED8 */
+
+#ifdef CONFIG_CONVOLUTION_FIXED16
+    if ((f->outputs[i]->type == NN_DATA_TYPE_INT16) &&
+        (f->exec_func == exec_convolution_int16)) {
+      f->exec_func = exec_convolution_int16;
+      conv_output_assigned = 1;
+      break;
+    }
+#endif /* CONFIG_CONVOLUTION_FIXED16 */
+
+#ifdef CONFIG_CONVOLUTION_FLOAT32
+    if ((f->outputs[i]->type == NN_DATA_TYPE_FLOAT) &&
+        (f->exec_func == exec_convolution_float)) {
+      f->exec_func = exec_convolution_float;
+      conv_output_assigned = 1;
+      break;
+    }
+#endif /* CONFIG_CONVOLUTION_FLOAT32 */
+
+    if (!conv_output_assigned) {
+      f->exec_func = exec_convolution_generic;
+    }
   }
-#endif /* CONFIG_CONVOLUTION_GENERIC */
+
   return allocate_convolution_local_context_common(f, X, WEIGHT, BIAS, ALPHA,
                                                    Y0);
 }
+#endif /* CONFIG_CONVOLUTION_GENERIC */
 
 rt_function_error_t free_convolution_local_context(rt_function_t *f) {
   return free_convolution_local_context_common(f);
 }
-
-#ifdef CONFIG_CONVOLUTION_FLOAT32
-rt_function_error_t exec_convolution(rt_function_t *f) {
-  return exec_convolution_float(f);
-}
-#endif /* CONFIG_CONVOLUTION_FLOAT32 */
 
 #endif /* CONFIG_CONVOLUTION */

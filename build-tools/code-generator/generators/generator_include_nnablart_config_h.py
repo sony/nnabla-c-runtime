@@ -22,6 +22,8 @@ def get_func_list(info):
                     break
                 elif t == 'ALL':
                     func_list.append(fn)
+                    func_list.append(fn+'_FIXED8')
+                    func_list.append(fn+'_FIXED16')
                     func_list.append(fn+'_FLOAT32')
                     func_list.append(fn+'_GENERIC')
                 elif t == 'FLOAT32':

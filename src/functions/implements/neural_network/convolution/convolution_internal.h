@@ -60,6 +60,8 @@ typedef struct {
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f);
 rt_function_error_t exec_convolution_float(rt_function_t *f);
+rt_function_error_t exec_convolution_int8(rt_function_t *f);
+rt_function_error_t exec_convolution_int16(rt_function_t *f);
 rt_function_error_t
 allocate_convolution_local_context_common(rt_function_t *f, int x, int weight,
                                           int bias, int alpha, int y0);

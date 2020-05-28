@@ -10,6 +10,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 add_library(nnablart_functions STATIC
   # Utilities
   utilities/accessor.c
+  utilities/fixedpoint.c
   utilities/list.c
   utilities/shape.c
 
@@ -24,6 +25,8 @@ add_library(nnablart_functions STATIC
   implements/neural_network/convolution/convolution.c
   implements/neural_network/convolution/convolution_generic.c
   implements/neural_network/convolution/convolution_float.c
+  implements/neural_network/convolution/convolution_int8.c
+  implements/neural_network/convolution/convolution_int16.c
   implements/neural_network/convolution/convolution_common.c
   implements/neural_network/convolution/binary_connect_convolution.c
   implements/neural_network/convolution/binary_weight_convolution.c
