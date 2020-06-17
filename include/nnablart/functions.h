@@ -239,12 +239,14 @@ rt_function_error_t exec_depthwise_convolution(rt_function_t *f);
 
 /// Local context for Deconvolution
 typedef struct {
-  int32_t base_axis;  ///< int64
-  rt_list_t pad;      ///< Original type is [Shape]
-  rt_list_t stride;   ///< Original type is [Shape]
-  rt_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< int64
-  void *data;         ///< General purpose data area
+  int32_t base_axis;        ///< int64
+  rt_list_t pad;            ///< Original type is [Shape]
+  rt_list_t stride;         ///< Original type is [Shape]
+  rt_list_t dilation;       ///< Original type is [Shape]
+  int32_t group;            ///< int64
+  uint8_t channel_last;     ///< bool
+  rt_list_t output_padding; ///< Original type is [Shape]
+  void *data;               ///< General purpose data area
 } deconvolution_local_context_t;
 
 /// Allocate Deconvolution local context
@@ -280,6 +282,21 @@ free_depthwise_deconvolution_local_context(rt_function_t *f);
 
 /// Exec DepthwiseDeconvolution
 rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f);
+/// @}
+
+/// @defgroup AdaptiveSeparableConvolution AdaptiveSeparableConvolution
+/// @{
+
+/// Allocate AdaptiveSeparableConvolution local context
+rt_function_error_t
+allocate_adaptive_separable_convolution_local_context(rt_function_t *f);
+
+/// Free AdaptiveSeparableConvolution local context
+rt_function_error_t
+free_adaptive_separable_convolution_local_context(rt_function_t *f);
+
+/// Exec AdaptiveSeparableConvolution
+rt_function_error_t exec_adaptive_separable_convolution(rt_function_t *f);
 /// @}
 
 /// @defgroup MaxPooling MaxPooling
@@ -371,8 +388,9 @@ rt_function_error_t exec_sum_pooling(rt_function_t *f);
 
 /// Local context for Unpooling
 typedef struct {
-  rt_list_t kernel; ///< Original type is [Shape]
-  void *data;       ///< General purpose data area
+  rt_list_t kernel;     ///< Original type is [Shape]
+  uint8_t channel_last; ///< bool
+  void *data;           ///< General purpose data area
 } unpooling_local_context_t;
 
 /// Allocate Unpooling local context
@@ -1040,6 +1058,19 @@ rt_function_error_t free_add2_local_context(rt_function_t *f);
 rt_function_error_t exec_add2(rt_function_t *f);
 /// @}
 
+/// @defgroup AddN AddN
+/// @{
+
+/// Allocate AddN local context
+rt_function_error_t allocate_add_n_local_context(rt_function_t *f);
+
+/// Free AddN local context
+rt_function_error_t free_add_n_local_context(rt_function_t *f);
+
+/// Exec AddN
+rt_function_error_t exec_add_n(rt_function_t *f);
+/// @}
+
 /// @defgroup BcAdd2 BcAdd2
 /// @{
 
@@ -1077,6 +1108,19 @@ rt_function_error_t free_mul2_local_context(rt_function_t *f);
 
 /// Exec Mul2
 rt_function_error_t exec_mul2(rt_function_t *f);
+/// @}
+
+/// @defgroup MulN MulN
+/// @{
+
+/// Allocate MulN local context
+rt_function_error_t allocate_mul_n_local_context(rt_function_t *f);
+
+/// Free MulN local context
+rt_function_error_t free_mul_n_local_context(rt_function_t *f);
+
+/// Exec MulN
+rt_function_error_t exec_mul_n(rt_function_t *f);
 /// @}
 
 /// @defgroup Div2 Div2
@@ -2414,6 +2458,9 @@ typedef struct {
   rt_list_t output_size;         ///< Original type is [repeated int64]
   interpolate_mode_value_t mode; ///< string
   uint8_t align_corners;         ///< bool
+  uint8_t half_pixel;            ///< bool
+  uint8_t half_pixel_for_nn;     ///< bool
+  uint8_t channel_last;          ///< bool
   void *data;                    ///< General purpose data area
 } interpolate_local_context_t;
 
@@ -2602,6 +2649,72 @@ rt_function_error_t free_randn_local_context(rt_function_t *f);
 rt_function_error_t exec_randn(rt_function_t *f);
 /// @}
 
+/// @defgroup RandBinomial RandBinomial
+/// @{
+
+/// Local context for RandBinomial
+typedef struct {
+  int32_t n;       ///< int64
+  float p;         ///< float
+  rt_list_t shape; ///< Original type is [Shape]
+  int32_t seed;    ///< int64
+  void *data;      ///< General purpose data area
+} rand_binomial_local_context_t;
+
+/// Allocate RandBinomial local context
+rt_function_error_t allocate_rand_binomial_local_context(rt_function_t *f);
+
+/// Free RandBinomial local context
+rt_function_error_t free_rand_binomial_local_context(rt_function_t *f);
+
+/// Exec RandBinomial
+rt_function_error_t exec_rand_binomial(rt_function_t *f);
+/// @}
+
+/// @defgroup RandBeta RandBeta
+/// @{
+
+/// Local context for RandBeta
+typedef struct {
+  float alpha;     ///< float
+  float beta;      ///< float
+  rt_list_t shape; ///< Original type is [Shape]
+  int32_t seed;    ///< int64
+  void *data;      ///< General purpose data area
+} rand_beta_local_context_t;
+
+/// Allocate RandBeta local context
+rt_function_error_t allocate_rand_beta_local_context(rt_function_t *f);
+
+/// Free RandBeta local context
+rt_function_error_t free_rand_beta_local_context(rt_function_t *f);
+
+/// Exec RandBeta
+rt_function_error_t exec_rand_beta(rt_function_t *f);
+/// @}
+
+/// @defgroup RandGamma RandGamma
+/// @{
+
+/// Local context for RandGamma
+typedef struct {
+  float k;         ///< float
+  float theta;     ///< float
+  rt_list_t shape; ///< Original type is [Shape]
+  int32_t seed;    ///< int64
+  void *data;      ///< General purpose data area
+} rand_gamma_local_context_t;
+
+/// Allocate RandGamma local context
+rt_function_error_t allocate_rand_gamma_local_context(rt_function_t *f);
+
+/// Free RandGamma local context
+rt_function_error_t free_rand_gamma_local_context(rt_function_t *f);
+
+/// Exec RandGamma
+rt_function_error_t exec_rand_gamma(rt_function_t *f);
+/// @}
+
 /// @defgroup RandomChoice RandomChoice
 /// @{
 
@@ -2692,6 +2805,32 @@ rt_function_error_t free_random_shift_local_context(rt_function_t *f);
 
 /// Exec RandomShift
 rt_function_error_t exec_random_shift(rt_function_t *f);
+/// @}
+
+/// @defgroup RandomErase RandomErase
+/// @{
+
+/// Local context for RandomErase
+typedef struct {
+  float prob;               ///< float
+  int32_t n;                ///< int64
+  uint8_t share;            ///< bool
+  uint8_t inplace;          ///< bool
+  int32_t base_axis;        ///< int64
+  int32_t seed;             ///< int64
+  uint8_t channel_last;     ///< bool
+  uint8_t ste_fine_grained; ///< bool
+  void *data;               ///< General purpose data area
+} random_erase_local_context_t;
+
+/// Allocate RandomErase local context
+rt_function_error_t allocate_random_erase_local_context(rt_function_t *f);
+
+/// Free RandomErase local context
+rt_function_error_t free_random_erase_local_context(rt_function_t *f);
+
+/// Exec RandomErase
+rt_function_error_t exec_random_erase(rt_function_t *f);
 /// @}
 
 /// @defgroup ImageAugmentation ImageAugmentation
@@ -3338,6 +3477,29 @@ rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f);
 
 /// Exec WarpByFlow
 rt_function_error_t exec_warp_by_flow(rt_function_t *f);
+/// @}
+
+/// @defgroup PatchCorrelation PatchCorrelation
+/// @{
+
+/// Local context for PatchCorrelation
+typedef struct {
+  rt_list_t patch;      ///< Original type is [Shape]
+  rt_list_t shift;      ///< Original type is [Shape]
+  rt_list_t patch_step; ///< Original type is [Shape]
+  rt_list_t shift_step; ///< Original type is [Shape]
+  rt_list_t padding;    ///< Original type is [Shape]
+  void *data;           ///< General purpose data area
+} patch_correlation_local_context_t;
+
+/// Allocate PatchCorrelation local context
+rt_function_error_t allocate_patch_correlation_local_context(rt_function_t *f);
+
+/// Free PatchCorrelation local context
+rt_function_error_t free_patch_correlation_local_context(rt_function_t *f);
+
+/// Exec PatchCorrelation
+rt_function_error_t exec_patch_correlation(rt_function_t *f);
 /// @}
 
 /// @}

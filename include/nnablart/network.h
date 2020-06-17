@@ -27,7 +27,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (6)
+#define NN_API_LEVEL (15)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,10 +71,16 @@ typedef enum {
   NN_FUNCTION_GRU = 243,  ///< GRU
   NN_FUNCTION_CONVOLUTION_0 =
       1, ///< Recent version of Convolution has arg [iiIiIiIi]
-  NN_FUNCTION_CONVOLUTION = 265,           ///< Convolution
-  NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2,   ///< DepthwiseConvolution
-  NN_FUNCTION_DECONVOLUTION = 3,           ///< Deconvolution
+  NN_FUNCTION_CONVOLUTION = 265,         ///< Convolution
+  NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2, ///< DepthwiseConvolution
+  NN_FUNCTION_DECONVOLUTION_0 =
+      3, ///< Recent version of Deconvolution has arg [iiIiIiIi]
+  NN_FUNCTION_DECONVOLUTION_1 =
+      279, ///< Recent version of Deconvolution has arg [iiIiIiIiB]
+  NN_FUNCTION_DECONVOLUTION = 292,         ///< Deconvolution
   NN_FUNCTION_DEPTHWISE_DECONVOLUTION = 4, ///< DepthwiseDeconvolution
+  NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION =
+      278, ///< AdaptiveSeparableConvolution
   NN_FUNCTION_MAX_POOLING_0 =
       5, ///< Recent version of MaxPooling has arg [iIiIBiI]
   NN_FUNCTION_MAX_POOLING = 266, ///< MaxPooling
@@ -85,7 +91,8 @@ typedef enum {
   NN_FUNCTION_SUM_POOLING_0 =
       8, ///< Recent version of SumPooling has arg [iIiIBiI]
   NN_FUNCTION_SUM_POOLING = 268, ///< SumPooling
-  NN_FUNCTION_UNPOOLING = 9,     ///< Unpooling
+  NN_FUNCTION_UNPOOLING_0 = 9,   ///< Recent version of Unpooling has arg [iI]
+  NN_FUNCTION_UNPOOLING = 287,   ///< Unpooling
   NN_FUNCTION_EMBED = 10,        ///< Embed
   NN_FUNCTION_SIGMOID = 11,      ///< Sigmoid
   NN_FUNCTION_SWISH = 12,        ///< Swish
@@ -130,9 +137,11 @@ typedef enum {
   NN_FUNCTION_REDUCE_SUM = 29,         ///< ReduceSum
   NN_FUNCTION_REDUCE_MEAN = 30,        ///< ReduceMean
   NN_FUNCTION_ADD2 = 31,               ///< Add2
+  NN_FUNCTION_ADD_N = 281,             ///< AddN
   NN_FUNCTION_BC_ADD2 = 32,            ///< BcAdd2
   NN_FUNCTION_SUB2 = 33,               ///< Sub2
   NN_FUNCTION_MUL2 = 34,               ///< Mul2
+  NN_FUNCTION_MUL_N = 282,             ///< MulN
   NN_FUNCTION_DIV2 = 35,               ///< Div2
   NN_FUNCTION_POW2 = 36,               ///< Pow2
   NN_FUNCTION_ADD_SCALAR = 37,         ///< AddScalar
@@ -214,19 +223,31 @@ typedef enum {
   NN_FUNCTION_ASSIGN = 248,          ///< Assign
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
   NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
-  NN_FUNCTION_INTERPOLATE = 127,     ///< Interpolate
-  NN_FUNCTION_FFT = 158,             ///< FFT
-  NN_FUNCTION_IFFT = 159,            ///< IFFT
-  NN_FUNCTION_DROPOUT = 86,          ///< Dropout
-  NN_FUNCTION_TOP_K_DATA = 87,       ///< TopKData
-  NN_FUNCTION_TOP_K_GRAD = 88,       ///< TopKGrad
-  NN_FUNCTION_RAND = 89,             ///< Rand
-  NN_FUNCTION_RANDINT = 90,          ///< Randint
-  NN_FUNCTION_RANDN = 91,            ///< Randn
-  NN_FUNCTION_RANDOM_CHOICE = 246,   ///< RandomChoice
-  NN_FUNCTION_RANDOM_CROP = 92,      ///< RandomCrop
-  NN_FUNCTION_RANDOM_FLIP = 93,      ///< RandomFlip
-  NN_FUNCTION_RANDOM_SHIFT = 94,     ///< RandomShift
+  NN_FUNCTION_INTERPOLATE_0 =
+      127, ///< Recent version of Interpolate has arg [iIiB]
+  NN_FUNCTION_INTERPOLATE_1 =
+      286, ///< Recent version of Interpolate has arg [iIiBB]
+  NN_FUNCTION_INTERPOLATE = 291,   ///< Interpolate
+  NN_FUNCTION_FFT = 158,           ///< FFT
+  NN_FUNCTION_IFFT = 159,          ///< IFFT
+  NN_FUNCTION_DROPOUT = 86,        ///< Dropout
+  NN_FUNCTION_TOP_K_DATA = 87,     ///< TopKData
+  NN_FUNCTION_TOP_K_GRAD = 88,     ///< TopKGrad
+  NN_FUNCTION_RAND = 89,           ///< Rand
+  NN_FUNCTION_RANDINT = 90,        ///< Randint
+  NN_FUNCTION_RANDN = 91,          ///< Randn
+  NN_FUNCTION_RAND_BINOMIAL = 289, ///< RandBinomial
+  NN_FUNCTION_RAND_BETA = 288,     ///< RandBeta
+  NN_FUNCTION_RAND_GAMMA = 290,    ///< RandGamma
+  NN_FUNCTION_RANDOM_CHOICE = 246, ///< RandomChoice
+  NN_FUNCTION_RANDOM_CROP = 92,    ///< RandomCrop
+  NN_FUNCTION_RANDOM_FLIP = 93,    ///< RandomFlip
+  NN_FUNCTION_RANDOM_SHIFT = 94,   ///< RandomShift
+  NN_FUNCTION_RANDOM_ERASE_0 =
+      283, ///< Recent version of RandomErase has arg [ffFfFiBfFBiiB]
+  NN_FUNCTION_RANDOM_ERASE_1 =
+      284, ///< Recent version of RandomErase has arg [ffFfFfFiBBiiB]
+  NN_FUNCTION_RANDOM_ERASE = 285,             ///< RandomErase
   NN_FUNCTION_IMAGE_AUGMENTATION = 95,        ///< ImageAugmentation
   NN_FUNCTION_SIGMOID_CROSS_ENTROPY = 96,     ///< SigmoidCrossEntropy
   NN_FUNCTION_BINARY_CROSS_ENTROPY = 97,      ///< BinaryCrossEntropy
@@ -268,6 +289,7 @@ typedef enum {
   NN_FUNCTION_NMS_DETECTION2D = 231,      ///< NmsDetection2d
   NN_FUNCTION_MAX_POOLING_BACKWARD = 272, ///< MaxPoolingBackward
   NN_FUNCTION_WARP_BY_FLOW = 277,         ///< WarpByFlow
+  NN_FUNCTION_PATCH_CORRELATION = 280,    ///< PatchCorrelation
   NN_END_OF_FUNCTION = 65535              // Ensure this type has 16bits
 } nn_function_type_t;
 
@@ -407,11 +429,13 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t base_axis;  ///< Original type is [int64]
-  nn_list_t pad;      ///< Original type is [Shape]
-  nn_list_t stride;   ///< Original type is [Shape]
-  nn_list_t dilation; ///< Original type is [Shape]
-  int32_t group;      ///< Original type is [int64]
+  int32_t base_axis;        ///< Original type is [int64]
+  nn_list_t pad;            ///< Original type is [Shape]
+  nn_list_t stride;         ///< Original type is [Shape]
+  nn_list_t dilation;       ///< Original type is [Shape]
+  int32_t group;            ///< Original type is [int64]
+  uint8_t channel_last;     ///< Original type is [bool]
+  nn_list_t output_padding; ///< Original type is [Shape]
 } nn_function_deconvolution_t;
 
 /// @}
@@ -430,6 +454,17 @@ typedef struct {
   nn_list_t dilation; ///< Original type is [Shape]
   int32_t divisor;    ///< Original type is [int64]
 } nn_function_depthwise_deconvolution_t;
+
+/// @}
+
+/// @brief AdaptiveSeparableConvolution function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_adaptive_separable_convolution_t;
 
 /// @}
 
@@ -504,7 +539,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  nn_list_t kernel; ///< Original type is [Shape]
+  nn_list_t kernel;     ///< Original type is [Shape]
+  uint8_t channel_last; ///< Original type is [bool]
 } nn_function_unpooling_t;
 
 /// @}
@@ -970,6 +1006,17 @@ typedef struct {
 
 /// @}
 
+/// @brief AddN function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_add_n_t;
+
+/// @}
+
 /// @brief BcAdd2 function.
 /// @{
 typedef struct {
@@ -1000,6 +1047,17 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_mul2_t;
+
+/// @}
+
+/// @brief MulN function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_mul_n_t;
 
 /// @}
 
@@ -1980,9 +2038,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  nn_list_t output_size; ///< Original type is [repeated int64]
-  uint32_t mode;         ///< Original type is [string]
-  uint8_t align_corners; ///< Original type is [bool]
+  nn_list_t output_size;     ///< Original type is [repeated int64]
+  uint32_t mode;             ///< Original type is [string]
+  uint8_t align_corners;     ///< Original type is [bool]
+  uint8_t half_pixel;        ///< Original type is [bool]
+  uint8_t half_pixel_for_nn; ///< Original type is [bool]
+  uint8_t channel_last;      ///< Original type is [bool]
 } nn_function_interpolate_t;
 
 /// @}
@@ -2108,6 +2169,54 @@ typedef struct {
 
 /// @}
 
+/// @brief RandBinomial function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t n;       ///< Original type is [int64]
+  float p;         ///< Original type is [float]
+  nn_list_t shape; ///< Original type is [Shape]
+  int32_t seed;    ///< Original type is [int64]
+} nn_function_rand_binomial_t;
+
+/// @}
+
+/// @brief RandBeta function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float alpha;     ///< Original type is [float]
+  float beta;      ///< Original type is [float]
+  nn_list_t shape; ///< Original type is [Shape]
+  int32_t seed;    ///< Original type is [int64]
+} nn_function_rand_beta_t;
+
+/// @}
+
+/// @brief RandGamma function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float k;         ///< Original type is [float]
+  float theta;     ///< Original type is [float]
+  nn_list_t shape; ///< Original type is [Shape]
+  int32_t seed;    ///< Original type is [int64]
+} nn_function_rand_gamma_t;
+
+/// @}
+
 /// @brief RandomChoice function.
 /// @{
 typedef struct {
@@ -2166,6 +2275,26 @@ typedef struct {
   int32_t base_axis;    ///< Original type is [int64]
   int32_t seed;         ///< Original type is [int64]
 } nn_function_random_shift_t;
+
+/// @}
+
+/// @brief RandomErase function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float prob;               ///< Original type is [float]
+  int32_t n;                ///< Original type is [int64]
+  uint8_t share;            ///< Original type is [bool]
+  uint8_t inplace;          ///< Original type is [bool]
+  int32_t base_axis;        ///< Original type is [int64]
+  int32_t seed;             ///< Original type is [int64]
+  uint8_t channel_last;     ///< Original type is [bool]
+  uint8_t ste_fine_grained; ///< Original type is [bool]
+} nn_function_random_erase_t;
 
 /// @}
 
@@ -2609,6 +2738,23 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_warp_by_flow_t;
+
+/// @}
+
+/// @brief PatchCorrelation function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t patch;      ///< Original type is [Shape]
+  nn_list_t shift;      ///< Original type is [Shape]
+  nn_list_t patch_step; ///< Original type is [Shape]
+  nn_list_t shift_step; ///< Original type is [Shape]
+  nn_list_t padding;    ///< Original type is [Shape]
+} nn_function_patch_correlation_t;
 
 /// @}
 
