@@ -135,6 +135,40 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_DECONVOLUTION
+  case NN_FUNCTION_DECONVOLUTION_0: { // Deconvolution
+    function_context->func.free_local_context_func =
+        free_deconvolution_local_context;
+    nn_function_deconvolution_t *f = (nn_function_deconvolution_t *)function;
+    deconvolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(deconvolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->channel_last = 0;
+    ctx->output_padding.size = 0;
+    ctx->output_padding.data = NULL;
+    function_context->func.local_context = ctx;
+    allocate_deconvolution_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_DECONVOLUTION_1: { // Deconvolution
+    function_context->func.free_local_context_func =
+        free_deconvolution_local_context;
+    nn_function_deconvolution_t *f = (nn_function_deconvolution_t *)function;
+    deconvolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(deconvolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->channel_last = f->channel_last;
+    ctx->output_padding.size = 0;
+    ctx->output_padding.data = NULL;
+    function_context->func.local_context = ctx;
+    allocate_deconvolution_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_DECONVOLUTION: { // Deconvolution
     function_context->func.free_local_context_func =
         free_deconvolution_local_context;
@@ -146,6 +180,8 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->stride = create_rt_list_from_nn_list(n, f->stride);
     ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
     ctx->group = f->group;
+    ctx->channel_last = f->channel_last;
+    ctx->output_padding = create_rt_list_from_nn_list(n, f->output_padding);
     function_context->func.local_context = ctx;
     allocate_deconvolution_local_context(&function_context->func);
   } break;
@@ -166,6 +202,16 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->divisor = f->divisor;
     function_context->func.local_context = ctx;
     allocate_depthwise_deconvolution_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_ADAPTIVESEPARABLECONVOLUTION
+  case NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION: { // AdaptiveSeparableConvolution
+    function_context->func.free_local_context_func =
+        free_adaptive_separable_convolution_local_context;
+    function_context->func.local_context = 0;
+    allocate_adaptive_separable_convolution_local_context(
+        &function_context->func);
   } break;
 #endif
 
@@ -276,6 +322,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_UNPOOLING
+  case NN_FUNCTION_UNPOOLING_0: { // Unpooling
+    function_context->func.free_local_context_func =
+        free_unpooling_local_context;
+    nn_function_unpooling_t *f = (nn_function_unpooling_t *)function;
+    unpooling_local_context_t *ctx =
+        rt_malloc_func(sizeof(unpooling_local_context_t));
+    ctx->kernel = create_rt_list_from_nn_list(n, f->kernel);
+    ctx->channel_last = 0;
+    function_context->func.local_context = ctx;
+    allocate_unpooling_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_UNPOOLING: { // Unpooling
     function_context->func.free_local_context_func =
         free_unpooling_local_context;
@@ -283,6 +340,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     unpooling_local_context_t *ctx =
         rt_malloc_func(sizeof(unpooling_local_context_t));
     ctx->kernel = create_rt_list_from_nn_list(n, f->kernel);
+    ctx->channel_last = f->channel_last;
     function_context->func.local_context = ctx;
     allocate_unpooling_local_context(&function_context->func);
   } break;
@@ -729,6 +787,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_ADDN
+  case NN_FUNCTION_ADD_N: { // AddN
+    function_context->func.free_local_context_func = free_add_n_local_context;
+    function_context->func.local_context = 0;
+    allocate_add_n_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_BCADD2
   case NN_FUNCTION_BC_ADD2: { // BcAdd2
     function_context->func.free_local_context_func = free_bc_add2_local_context;
@@ -750,6 +816,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     function_context->func.free_local_context_func = free_mul2_local_context;
     function_context->func.local_context = 0;
     allocate_mul2_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_MULN
+  case NN_FUNCTION_MUL_N: { // MulN
+    function_context->func.free_local_context_func = free_mul_n_local_context;
+    function_context->func.local_context = 0;
+    allocate_mul_n_local_context(&function_context->func);
   } break;
 #endif
 
@@ -1607,6 +1681,36 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_INTERPOLATE
+  case NN_FUNCTION_INTERPOLATE_0: { // Interpolate
+    function_context->func.free_local_context_func =
+        free_interpolate_local_context;
+    nn_function_interpolate_t *f = (nn_function_interpolate_t *)function;
+    interpolate_local_context_t *ctx =
+        rt_malloc_func(sizeof(interpolate_local_context_t));
+    ctx->output_size = create_rt_list_from_nn_list(n, f->output_size);
+    ctx->mode = f->mode;
+    ctx->align_corners = f->align_corners;
+    ctx->half_pixel = 0;
+    ctx->half_pixel_for_nn = 0;
+    ctx->channel_last = 0;
+    function_context->func.local_context = ctx;
+    allocate_interpolate_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_INTERPOLATE_1: { // Interpolate
+    function_context->func.free_local_context_func =
+        free_interpolate_local_context;
+    nn_function_interpolate_t *f = (nn_function_interpolate_t *)function;
+    interpolate_local_context_t *ctx =
+        rt_malloc_func(sizeof(interpolate_local_context_t));
+    ctx->output_size = create_rt_list_from_nn_list(n, f->output_size);
+    ctx->mode = f->mode;
+    ctx->align_corners = f->align_corners;
+    ctx->half_pixel = f->half_pixel;
+    ctx->half_pixel_for_nn = 0;
+    ctx->channel_last = 0;
+    function_context->func.local_context = ctx;
+    allocate_interpolate_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     function_context->func.free_local_context_func =
         free_interpolate_local_context;
@@ -1616,6 +1720,9 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->output_size = create_rt_list_from_nn_list(n, f->output_size);
     ctx->mode = f->mode;
     ctx->align_corners = f->align_corners;
+    ctx->half_pixel = f->half_pixel;
+    ctx->half_pixel_for_nn = f->half_pixel_for_nn;
+    ctx->channel_last = f->channel_last;
     function_context->func.local_context = ctx;
     allocate_interpolate_local_context(&function_context->func);
   } break;
@@ -1732,6 +1839,54 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_RANDBINOMIAL
+  case NN_FUNCTION_RAND_BINOMIAL: { // RandBinomial
+    function_context->func.free_local_context_func =
+        free_rand_binomial_local_context;
+    nn_function_rand_binomial_t *f = (nn_function_rand_binomial_t *)function;
+    rand_binomial_local_context_t *ctx =
+        rt_malloc_func(sizeof(rand_binomial_local_context_t));
+    ctx->n = f->n;
+    ctx->p = f->p;
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->seed = f->seed;
+    function_context->func.local_context = ctx;
+    allocate_rand_binomial_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_RANDBETA
+  case NN_FUNCTION_RAND_BETA: { // RandBeta
+    function_context->func.free_local_context_func =
+        free_rand_beta_local_context;
+    nn_function_rand_beta_t *f = (nn_function_rand_beta_t *)function;
+    rand_beta_local_context_t *ctx =
+        rt_malloc_func(sizeof(rand_beta_local_context_t));
+    ctx->alpha = f->alpha;
+    ctx->beta = f->beta;
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->seed = f->seed;
+    function_context->func.local_context = ctx;
+    allocate_rand_beta_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_RANDGAMMA
+  case NN_FUNCTION_RAND_GAMMA: { // RandGamma
+    function_context->func.free_local_context_func =
+        free_rand_gamma_local_context;
+    nn_function_rand_gamma_t *f = (nn_function_rand_gamma_t *)function;
+    rand_gamma_local_context_t *ctx =
+        rt_malloc_func(sizeof(rand_gamma_local_context_t));
+    ctx->k = f->k;
+    ctx->theta = f->theta;
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->seed = f->seed;
+    function_context->func.local_context = ctx;
+    allocate_rand_gamma_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_RANDOMCHOICE
   case NN_FUNCTION_RANDOM_CHOICE: { // RandomChoice
     function_context->func.free_local_context_func =
@@ -1790,6 +1945,43 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->seed = f->seed;
     function_context->func.local_context = ctx;
     allocate_random_shift_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_RANDOMERASE
+  case NN_FUNCTION_RANDOM_ERASE_1: { // RandomErase
+    function_context->func.free_local_context_func =
+        free_random_erase_local_context;
+    nn_function_random_erase_t *f = (nn_function_random_erase_t *)function;
+    random_erase_local_context_t *ctx =
+        rt_malloc_func(sizeof(random_erase_local_context_t));
+    ctx->prob = f->prob;
+    ctx->n = f->n;
+    ctx->share = f->share;
+    ctx->inplace = f->inplace;
+    ctx->base_axis = f->base_axis;
+    ctx->seed = f->seed;
+    ctx->channel_last = f->channel_last;
+    ctx->ste_fine_grained = f->ste_fine_grained;
+    function_context->func.local_context = ctx;
+    allocate_random_erase_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_RANDOM_ERASE: { // RandomErase
+    function_context->func.free_local_context_func =
+        free_random_erase_local_context;
+    nn_function_random_erase_t *f = (nn_function_random_erase_t *)function;
+    random_erase_local_context_t *ctx =
+        rt_malloc_func(sizeof(random_erase_local_context_t));
+    ctx->prob = f->prob;
+    ctx->n = f->n;
+    ctx->share = f->share;
+    ctx->inplace = f->inplace;
+    ctx->base_axis = f->base_axis;
+    ctx->seed = f->seed;
+    ctx->channel_last = f->channel_last;
+    ctx->ste_fine_grained = f->ste_fine_grained;
+    function_context->func.local_context = ctx;
+    allocate_random_erase_local_context(&function_context->func);
   } break;
 #endif
 
@@ -2295,6 +2487,24 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
         free_warp_by_flow_local_context;
     function_context->func.local_context = 0;
     allocate_warp_by_flow_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_PATCHCORRELATION
+  case NN_FUNCTION_PATCH_CORRELATION: { // PatchCorrelation
+    function_context->func.free_local_context_func =
+        free_patch_correlation_local_context;
+    nn_function_patch_correlation_t *f =
+        (nn_function_patch_correlation_t *)function;
+    patch_correlation_local_context_t *ctx =
+        rt_malloc_func(sizeof(patch_correlation_local_context_t));
+    ctx->patch = create_rt_list_from_nn_list(n, f->patch);
+    ctx->shift = create_rt_list_from_nn_list(n, f->shift);
+    ctx->patch_step = create_rt_list_from_nn_list(n, f->patch_step);
+    ctx->shift_step = create_rt_list_from_nn_list(n, f->shift_step);
+    ctx->padding = create_rt_list_from_nn_list(n, f->padding);
+    function_context->func.local_context = ctx;
+    allocate_patch_correlation_local_context(&function_context->func);
   } break;
 #endif
 

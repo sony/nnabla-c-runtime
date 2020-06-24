@@ -123,6 +123,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   }
 
   if (n->api_level > NN_API_LEVEL) {
+    printf("n->api_level: %d\n", n->api_level);
     return RT_RET_ERROR_VERSION_UNMATCH;
   }
 

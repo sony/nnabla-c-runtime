@@ -84,6 +84,24 @@ rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f) {
 }
 #endif /* CONFIG_DEPTHWISEDECONVOLUTION */
 
+// AdaptiveSeparableConvolution
+#ifdef CONFIG_ADAPTIVESEPARABLECONVOLUTION
+rt_function_error_t
+allocate_adaptive_separable_convolution_local_context(rt_function_t *f) {
+  f->exec_func = exec_adaptive_separable_convolution;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_adaptive_separable_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_adaptive_separable_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ADAPTIVESEPARABLECONVOLUTION */
+
 // GlobalAveragePooling
 #ifdef CONFIG_GLOBALAVERAGEPOOLING
 rt_function_error_t
@@ -471,6 +489,38 @@ rt_function_error_t exec_bc_add2(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_BCADD2 */
+
+// AddN
+#ifdef CONFIG_ADDN
+rt_function_error_t allocate_add_n_local_context(rt_function_t *f) {
+  f->exec_func = exec_add_n;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_add_n_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_add_n(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ADDN */
+
+// MulN
+#ifdef CONFIG_MULN
+rt_function_error_t allocate_mul_n_local_context(rt_function_t *f) {
+  f->exec_func = exec_mul_n;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_mul_n_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_mul_n(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_MULN */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
@@ -1357,6 +1407,70 @@ rt_function_error_t exec_randn(rt_function_t *f) {
 }
 #endif /* CONFIG_RANDN */
 
+// RandBinomial
+#ifdef CONFIG_RANDBINOMIAL
+rt_function_error_t allocate_rand_binomial_local_context(rt_function_t *f) {
+  f->exec_func = exec_rand_binomial;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_binomial_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand_binomial(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDBINOMIAL */
+
+// RandBeta
+#ifdef CONFIG_RANDBETA
+rt_function_error_t allocate_rand_beta_local_context(rt_function_t *f) {
+  f->exec_func = exec_rand_beta;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_beta_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand_beta(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDBETA */
+
+// RandGamma
+#ifdef CONFIG_RANDGAMMA
+rt_function_error_t allocate_rand_gamma_local_context(rt_function_t *f) {
+  f->exec_func = exec_rand_gamma;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_gamma_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand_gamma(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDGAMMA */
+
+// RandomErase
+#ifdef CONFIG_RANDOMERASE
+rt_function_error_t allocate_random_erase_local_context(rt_function_t *f) {
+  f->exec_func = exec_random_erase;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_random_erase_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_random_erase(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDOMERASE */
+
 // RandomChoice
 #ifdef CONFIG_RANDOMCHOICE
 rt_function_error_t allocate_random_choice_local_context(rt_function_t *f) {
@@ -1904,3 +2018,19 @@ rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_WARPBYFLOW */
+
+// PatchCorrelation
+#ifdef CONFIG_PATCHCORRELATION
+rt_function_error_t allocate_patch_correlation_local_context(rt_function_t *f) {
+  f->exec_func = exec_patch_correlation;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_patch_correlation_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_patch_correlation(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_PATCHCORRELATION */
