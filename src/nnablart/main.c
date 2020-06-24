@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
     subcmd = argv[1];
 
     if (strncmp("version", subcmd, 7) == 0) {
+      printf("  NNabla Version    [%s]\n", rt_nnabla_version());
       printf("  C Runtime Version [%s]\n", rt_c_runtime_version());
       printf("  NNB Version       [%d]\n", rt_nnb_version());
       printf("  NNB Revision      [%s]\n", rt_nnb_revision());

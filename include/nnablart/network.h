@@ -24,10 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
+#define NN_NNABLA_VERSION ("1.9.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (15)
+#define NN_API_LEVEL (17)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +73,7 @@ typedef enum {
   NN_FUNCTION_CONVOLUTION_0 =
       1, ///< Recent version of Convolution has arg [iiIiIiIi]
   NN_FUNCTION_CONVOLUTION = 265,         ///< Convolution
+  NN_FUNCTION_FUSED_CONVOLUTION = 295,   ///< FusedConvolution
   NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2, ///< DepthwiseConvolution
   NN_FUNCTION_DECONVOLUTION_0 =
       3, ///< Recent version of Deconvolution has arg [iiIiIiIi]
@@ -280,6 +282,8 @@ typedef enum {
   NN_FUNCTION_MIN_MAX_QUANTIZE = 274,     ///< MinMaxQuantize
   NN_FUNCTION_POW2_QUANTIZE = 114,        ///< Pow2Quantize
   NN_FUNCTION_PRUNE = 135,                ///< Prune
+  NN_FUNCTION_QUANTIZE_LINEAR = 293,      ///< QuantizeLinear
+  NN_FUNCTION_DEQUANTIZE_LINEAR = 294,    ///< DequantizeLinear
   NN_FUNCTION_TOP_N_ERROR = 115,          ///< TopNError
   NN_FUNCTION_BINARY_ERROR = 116,         ///< BinaryError
   NN_FUNCTION_CONFUSION_MATRIX = 117,     ///< ConfusionMatrix
@@ -401,6 +405,28 @@ typedef struct {
   int32_t group;        ///< Original type is [int64]
   uint8_t channel_last; ///< Original type is [bool]
 } nn_function_convolution_t;
+
+/// @}
+
+/// @brief FusedConvolution function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t base_axis;     ///< Original type is [int64]
+  nn_list_t pad;         ///< Original type is [Shape]
+  nn_list_t stride;      ///< Original type is [Shape]
+  nn_list_t dilation;    ///< Original type is [Shape]
+  int32_t group;         ///< Original type is [int64]
+  uint8_t channel_last;  ///< Original type is [bool]
+  float decay_rate;      ///< Original type is [float]
+  float eps;             ///< Original type is [float]
+  uint8_t batch_stat;    ///< Original type is [bool]
+  uint32_t nonlinearity; ///< Original type is [string]
+} nn_function_fused_convolution_t;
 
 /// @}
 
@@ -2619,6 +2645,32 @@ typedef struct {
   // End of common part.
   float rate; ///< Original type is [float]
 } nn_function_prune_t;
+
+/// @}
+
+/// @brief QuantizeLinear function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint32_t round_mode;  ///< Original type is [string]
+  uint8_t narrow_range; ///< Original type is [bool]
+  int32_t dtype;        ///< Original type is [int64]
+} nn_function_quantize_linear_t;
+
+/// @}
+
+/// @brief DequantizeLinear function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_dequantize_linear_t;
 
 /// @}
 

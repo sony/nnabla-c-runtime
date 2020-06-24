@@ -116,6 +116,29 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_FUSEDCONVOLUTION
+  case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
+    function_context->func.free_local_context_func =
+        free_fused_convolution_local_context;
+    nn_function_fused_convolution_t *f =
+        (nn_function_fused_convolution_t *)function;
+    fused_convolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(fused_convolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->channel_last = f->channel_last;
+    ctx->decay_rate = f->decay_rate;
+    ctx->eps = f->eps;
+    ctx->batch_stat = f->batch_stat;
+    ctx->nonlinearity = f->nonlinearity;
+    function_context->func.local_context = ctx;
+    allocate_fused_convolution_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_DEPTHWISECONVOLUTION
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     function_context->func.free_local_context_func =
@@ -2374,6 +2397,31 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->rate = f->rate;
     function_context->func.local_context = ctx;
     allocate_prune_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_QUANTIZELINEAR
+  case NN_FUNCTION_QUANTIZE_LINEAR: { // QuantizeLinear
+    function_context->func.free_local_context_func =
+        free_quantize_linear_local_context;
+    nn_function_quantize_linear_t *f =
+        (nn_function_quantize_linear_t *)function;
+    quantize_linear_local_context_t *ctx =
+        rt_malloc_func(sizeof(quantize_linear_local_context_t));
+    ctx->round_mode = f->round_mode;
+    ctx->narrow_range = f->narrow_range;
+    ctx->dtype = f->dtype;
+    function_context->func.local_context = ctx;
+    allocate_quantize_linear_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_DEQUANTIZELINEAR
+  case NN_FUNCTION_DEQUANTIZE_LINEAR: { // DequantizeLinear
+    function_context->func.free_local_context_func =
+        free_dequantize_linear_local_context;
+    function_context->func.local_context = 0;
+    allocate_dequantize_linear_local_context(&function_context->func);
   } break;
 #endif
 

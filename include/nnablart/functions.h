@@ -210,6 +210,46 @@ rt_function_error_t free_convolution_local_context(rt_function_t *f);
 rt_function_error_t exec_convolution(rt_function_t *f);
 /// @}
 
+/// @defgroup FusedConvolution FusedConvolution
+/// @{
+
+/// Named values for FusedConvolution.nonlinearity
+typedef enum {
+  FUSED_CONVOLUTION_NONLINEARITY_IDENTITY,
+  FUSED_CONVOLUTION_NONLINEARITY_RELU,
+  FUSED_CONVOLUTION_NONLINEARITY_SIGMOID,
+  FUSED_CONVOLUTION_NONLINEARITY_TANH,
+  FUSED_CONVOLUTION_NONLINEARITY_LEAKY_RELU,
+  FUSED_CONVOLUTION_NONLINEARITY_ELU,
+  FUSED_CONVOLUTION_NONLINEARITY_RELU6,
+  END_OF_FUSED_CONVOLUTION_NONLINEARITY
+} fused_convolution_nonlinearity_value_t;
+
+/// Local context for FusedConvolution
+typedef struct {
+  int32_t base_axis;    ///< int64
+  rt_list_t pad;        ///< Original type is [Shape]
+  rt_list_t stride;     ///< Original type is [Shape]
+  rt_list_t dilation;   ///< Original type is [Shape]
+  int32_t group;        ///< int64
+  uint8_t channel_last; ///< bool
+  float decay_rate;     ///< float
+  float eps;            ///< float
+  uint8_t batch_stat;   ///< bool
+  fused_convolution_nonlinearity_value_t nonlinearity; ///< string
+  void *data; ///< General purpose data area
+} fused_convolution_local_context_t;
+
+/// Allocate FusedConvolution local context
+rt_function_error_t allocate_fused_convolution_local_context(rt_function_t *f);
+
+/// Free FusedConvolution local context
+rt_function_error_t free_fused_convolution_local_context(rt_function_t *f);
+
+/// Exec FusedConvolution
+rt_function_error_t exec_fused_convolution(rt_function_t *f);
+/// @}
+
 /// @defgroup DepthwiseConvolution DepthwiseConvolution
 /// @{
 
@@ -3303,6 +3343,47 @@ rt_function_error_t free_prune_local_context(rt_function_t *f);
 
 /// Exec Prune
 rt_function_error_t exec_prune(rt_function_t *f);
+/// @}
+
+/// @defgroup QuantizeLinear QuantizeLinear
+/// @{
+
+/// Named values for QuantizeLinear.round_mode
+typedef enum {
+  QUANTIZE_LINEAR_ROUND_MODE_HALF_AWAY_FROM_ZERO,
+  QUANTIZE_LINEAR_ROUND_MODE_HALF_TO_EVEN,
+  END_OF_QUANTIZE_LINEAR_ROUND_MODE
+} quantize_linear_round_mode_value_t;
+
+/// Local context for QuantizeLinear
+typedef struct {
+  quantize_linear_round_mode_value_t round_mode; ///< string
+  uint8_t narrow_range;                          ///< bool
+  int32_t dtype;                                 ///< int64
+  void *data;                                    ///< General purpose data area
+} quantize_linear_local_context_t;
+
+/// Allocate QuantizeLinear local context
+rt_function_error_t allocate_quantize_linear_local_context(rt_function_t *f);
+
+/// Free QuantizeLinear local context
+rt_function_error_t free_quantize_linear_local_context(rt_function_t *f);
+
+/// Exec QuantizeLinear
+rt_function_error_t exec_quantize_linear(rt_function_t *f);
+/// @}
+
+/// @defgroup DequantizeLinear DequantizeLinear
+/// @{
+
+/// Allocate DequantizeLinear local context
+rt_function_error_t allocate_dequantize_linear_local_context(rt_function_t *f);
+
+/// Free DequantizeLinear local context
+rt_function_error_t free_dequantize_linear_local_context(rt_function_t *f);
+
+/// Exec DequantizeLinear
+rt_function_error_t exec_dequantize_linear(rt_function_t *f);
 /// @}
 
 /// @}

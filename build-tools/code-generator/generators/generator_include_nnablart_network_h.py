@@ -80,7 +80,8 @@ def generate(filename, info):
     from mako import exceptions
     try:
         tmpl = Template(filename=filename)
-        output = tmpl.render(C_RUNTIME_VERSION=versions['C_RUNTIME_VERSION'],
+        output = tmpl.render(NNABLA_VERSION=versions['NNABLA_VERSION'],
+                             C_RUNTIME_VERSION=versions['C_RUNTIME_VERSION'],
                              NNB_MINIMUM_VERSION=versions['NNB_MINIMUM_VERSION'],
                              NNB_VERSION=versions['NNB_VERSION'],
                              API_LEVEL=versions['API_LEVEL'],

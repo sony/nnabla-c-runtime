@@ -172,7 +172,7 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
     int output_data_type = rt_output_variable(context, i)->type;
     int output_data_size;
 
-    switch(output_data_type) {
+    switch (output_data_type) {
     case NN_DATA_TYPE_FLOAT:
       output_data_size = rt_output_size(context, i) * sizeof(float);
       break;

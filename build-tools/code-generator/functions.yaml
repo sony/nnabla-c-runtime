@@ -193,6 +193,78 @@ Neural Network Layer:
     id: 265
     func_type:
     - ALL
+  FusedConvolution:
+    snake_name: fused_convolution
+    inputs:
+      x: {}
+      weight:
+        parameter: true
+      bias:
+        optional: true
+        parameter: true
+      beta:
+        optional: true
+        parameter: true
+      gamma:
+        optional: true
+        parameter: true
+      mean:
+        optional: true
+      variance:
+        optional: true
+      z:
+        optional: true
+    arguments:
+      base_axis:
+        type: int64
+        default: '1'
+      pad:
+        type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
+      stride:
+        type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
+      dilation:
+        type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
+      group:
+        type: int64
+        default: '1'
+      channel_last:
+        type: bool
+        default: 'False'
+      decay_rate:
+        type: float
+        default: '0.9'
+      eps:
+        type: float
+        default: 1e-05
+      batch_stat:
+        type: bool
+        default: 'True'
+      nonlinearity:
+        type: string
+        available_values:
+        - identity
+        - relu
+        - sigmoid
+        - tanh
+        - leaky_relu
+        - elu
+        - relu6
+        default: '''relu'''
+      nonlinearity_args:
+        type: repeated float
+        default: list()
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiIiIiIiBffBifF: 295
+    uniq_name: FusedConvolution_iiIiIiIiBffBifF
+    id: 295
+    func_type:
+    - ALL
   DepthwiseConvolution:
     snake_name: depthwise_convolution
     inputs:
@@ -3453,6 +3525,49 @@ Quantization Neural Network Layers:
     c_runtime: not support
     uniq_name: Prune_f
     id: 135
+    func_type:
+    - ALL
+  QuantizeLinear:
+    snake_name: quantize_linear
+    inputs:
+      x: {}
+      scale: {}
+      zero_point: {}
+    arguments:
+      round_mode:
+        type: string
+        available_values:
+        - HALF_AWAY_FROM_ZERO
+        - HALF_TO_EVEN
+        default: '''HALF_AWAY_FROM_ZERO'''
+      narrow_range:
+        type: bool
+        default: 'False'
+      dtype:
+        type: int64
+        default: '1'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iBi: 293
+    uniq_name: QuantizeLinear_iBi
+    id: 293
+    func_type:
+    - ALL
+  DequantizeLinear:
+    snake_name: dequantize_linear
+    inputs:
+      x: {}
+      scale: {}
+      zero_point: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 294
+    uniq_name: DequantizeLinear
+    id: 294
     func_type:
     - ALL
 Validation:
