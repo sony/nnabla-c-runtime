@@ -13,7 +13,10 @@
 // limitations under the License.
 
 #include "pooling.h"
+#include "../../utilities/fixedpoint.h"
 #include "../../utilities/shape.h"
+#include <float.h>
+#include <limits.h>
 #include <math.h>
 
 rt_function_error_t allocate_pooling(rt_function_t *f,
@@ -281,8 +284,194 @@ rt_function_error_t exec_pooling_generic(rt_function_t *f,
   return RT_FUNCTION_ERROR_NOERROR;
 }
 
+rt_function_error_t exec_pooling_fixed8(rt_function_t *f,
+                                        pooling_context_t *context,
+                                        pooling_private_t *p,
+                                        exec_pooling_func_fixed8_t exec) {
+  int8_t *y = (int8_t *)(p->calc_context.y->data);
+  const int hx = p->input_shape.data[p->input_n_kernel_size_diff + 0];
+  const int wx = p->input_shape.data[p->input_n_kernel_size_diff + 1];
+  const int hy = p->output_shape.data[p->input_n_kernel_size_diff + 0];
+  const int wy = p->output_shape.data[p->input_n_kernel_size_diff + 1];
+  const int hkernel = context->kernel.data[0];
+  const int wkernel = context->kernel.data[1];
+  const int hstride = context->stride.data[0];
+  const int wstride = context->stride.data[1];
+  const int hpad = context->pad.data[0];
+  const int wpad = context->pad.data[1];
+  const int n_map = calc_shape_size(f->inputs[0]->shape) / p->x_map_size;
+  p->calc_context.offset_x = 0;
+  p->calc_context.offset_y = 0;
+  p->calc_context.kernel_size = context->kernel.size;
+
+  if (context->kernel.size == 2) {
+    for (int n = 0; n < n_map; n++) {
+      for (int iy = 0; iy < hy; iy++) {
+        for (int jy = 0; jy < wy; jy++) {
+          int hstart = iy * hstride - hpad;
+          int wstart = jy * wstride - wpad;
+          int hend = (int)fminf((float)(hstart + hkernel), (float)(hx + hpad));
+          int wend = (int)fminf((float)(wstart + wkernel), (float)(wx + wpad));
+          p->calc_context.pool_size = (hend - hstart) * (wend - wstart);
+          p->calc_context.hstart = (int)fmaxf((float)hstart, 0);
+          p->calc_context.wstart = (int)fmaxf((float)wstart, 0);
+          p->calc_context.hend = (int)fminf((float)hend, (float)hx);
+          p->calc_context.wend = (int)fminf((float)wend, (float)wx);
+          p->calc_context.hstride =
+              p->input_strides.data[p->input_n_kernel_size_diff + 0];
+          int k =
+              iy * p->output_strides.data[p->input_n_kernel_size_diff + 0] + jy;
+          int8_t val = exec(p->calc_context);
+          *(y + k + p->calc_context.offset_y) = val;
+        }
+      }
+      p->calc_context.offset_x += p->x_map_size;
+      p->calc_context.offset_y += p->y_map_size;
+    }
+  } else if (context->kernel.size == 3) {
+    const int dx = p->input_shape.data[p->input_n_kernel_size_diff + 2];
+    const int dy = p->output_shape.data[p->input_n_kernel_size_diff + 2];
+    const int dkernel = context->kernel.data[2];
+    const int dstride = context->stride.data[2];
+    const int dpad = context->pad.data[2];
+
+    for (int n = 0; n < n_map; n++) {
+      for (int iy = 0; iy < hy; iy++) {
+        for (int jy = 0; jy < wy; jy++) {
+          for (int ky = 0; ky < dy; ky++) {
+            int hstart = iy * hstride - hpad;
+            int wstart = jy * wstride - wpad;
+            int dstart = ky * dstride - dpad;
+            int hend =
+                (int)fminf((float)(hstart + hkernel), (float)(hx + hpad));
+            int wend =
+                (int)fminf((float)(wstart + wkernel), (float)(wx + wpad));
+            int dend =
+                (int)fminf((float)(dstart + dkernel), (float)(dx + dpad));
+            p->calc_context.pool_size =
+                (hend - hstart) * (wend - wstart) * (dend - dstart);
+            p->calc_context.hstart = (int)fmaxf((float)hstart, 0);
+            p->calc_context.wstart = (int)fmaxf((float)wstart, 0);
+            p->calc_context.dstart = (int)fmaxf((float)dstart, 0);
+            p->calc_context.hend = (int)fminf((float)hend, (float)hx);
+            p->calc_context.wend = (int)fminf((float)wend, (float)wx);
+            p->calc_context.dend = (int)fminf((float)dend, (float)dx);
+            p->calc_context.hstride =
+                p->input_strides.data[p->input_n_kernel_size_diff + 0];
+            p->calc_context.wstride =
+                p->input_strides.data[p->input_n_kernel_size_diff + 1];
+            int k =
+                iy * p->output_strides.data[p->input_n_kernel_size_diff + 0] +
+                jy * p->output_strides.data[p->input_n_kernel_size_diff + 1] +
+                ky;
+            int8_t val = exec(p->calc_context);
+            val = rescale_scalar_fixed8(val, f->inputs[0]->fp_pos,
+                                        f->outputs[0]->fp_pos);
+            *(y + k + p->calc_context.offset_y) = val;
+          }
+        }
+      }
+      p->calc_context.offset_x += p->x_map_size;
+      p->calc_context.offset_y += p->y_map_size;
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
+rt_function_error_t exec_pooling_fixed16(rt_function_t *f,
+                                         pooling_context_t *context,
+                                         pooling_private_t *p,
+                                         exec_pooling_func_fixed16_t exec) {
+  int16_t *y = (int16_t *)(p->calc_context.y->data);
+  const int hx = p->input_shape.data[p->input_n_kernel_size_diff + 0];
+  const int wx = p->input_shape.data[p->input_n_kernel_size_diff + 1];
+  const int hy = p->output_shape.data[p->input_n_kernel_size_diff + 0];
+  const int wy = p->output_shape.data[p->input_n_kernel_size_diff + 1];
+  const int hkernel = context->kernel.data[0];
+  const int wkernel = context->kernel.data[1];
+  const int hstride = context->stride.data[0];
+  const int wstride = context->stride.data[1];
+  const int hpad = context->pad.data[0];
+  const int wpad = context->pad.data[1];
+  const int n_map = calc_shape_size(f->inputs[0]->shape) / p->x_map_size;
+  p->calc_context.offset_x = 0;
+  p->calc_context.offset_y = 0;
+  p->calc_context.kernel_size = context->kernel.size;
+
+  if (context->kernel.size == 2) {
+    for (int n = 0; n < n_map; n++) {
+      for (int iy = 0; iy < hy; iy++) {
+        for (int jy = 0; jy < wy; jy++) {
+          int hstart = iy * hstride - hpad;
+          int wstart = jy * wstride - wpad;
+          int hend = (int)fminf((float)(hstart + hkernel), (float)(hx + hpad));
+          int wend = (int)fminf((float)(wstart + wkernel), (float)(wx + wpad));
+          p->calc_context.pool_size = (hend - hstart) * (wend - wstart);
+          p->calc_context.hstart = (int)fmaxf((float)hstart, 0);
+          p->calc_context.wstart = (int)fmaxf((float)wstart, 0);
+          p->calc_context.hend = (int)fminf((float)hend, (float)hx);
+          p->calc_context.wend = (int)fminf((float)wend, (float)wx);
+          p->calc_context.hstride =
+              p->input_strides.data[p->input_n_kernel_size_diff + 0];
+          int k =
+              iy * p->output_strides.data[p->input_n_kernel_size_diff + 0] + jy;
+          int16_t val = exec(p->calc_context);
+          *(y + k + p->calc_context.offset_y) = val;
+        }
+      }
+      p->calc_context.offset_x += p->x_map_size;
+      p->calc_context.offset_y += p->y_map_size;
+    }
+  } else if (context->kernel.size == 3) {
+    const int dx = p->input_shape.data[p->input_n_kernel_size_diff + 2];
+    const int dy = p->output_shape.data[p->input_n_kernel_size_diff + 2];
+    const int dkernel = context->kernel.data[2];
+    const int dstride = context->stride.data[2];
+    const int dpad = context->pad.data[2];
+
+    for (int n = 0; n < n_map; n++) {
+      for (int iy = 0; iy < hy; iy++) {
+        for (int jy = 0; jy < wy; jy++) {
+          for (int ky = 0; ky < dy; ky++) {
+            int hstart = iy * hstride - hpad;
+            int wstart = jy * wstride - wpad;
+            int dstart = ky * dstride - dpad;
+            int hend =
+                (int)fminf((float)(hstart + hkernel), (float)(hx + hpad));
+            int wend =
+                (int)fminf((float)(wstart + wkernel), (float)(wx + wpad));
+            int dend =
+                (int)fminf((float)(dstart + dkernel), (float)(dx + dpad));
+            p->calc_context.pool_size =
+                (hend - hstart) * (wend - wstart) * (dend - dstart);
+            p->calc_context.hstart = (int)fmaxf((float)hstart, 0);
+            p->calc_context.wstart = (int)fmaxf((float)wstart, 0);
+            p->calc_context.dstart = (int)fmaxf((float)dstart, 0);
+            p->calc_context.hend = (int)fminf((float)hend, (float)hx);
+            p->calc_context.wend = (int)fminf((float)wend, (float)wx);
+            p->calc_context.dend = (int)fminf((float)dend, (float)dx);
+            p->calc_context.hstride =
+                p->input_strides.data[p->input_n_kernel_size_diff + 0];
+            p->calc_context.wstride =
+                p->input_strides.data[p->input_n_kernel_size_diff + 1];
+            int k =
+                iy * p->output_strides.data[p->input_n_kernel_size_diff + 0] +
+                jy * p->output_strides.data[p->input_n_kernel_size_diff + 1] +
+                ky;
+            int16_t val = exec(p->calc_context);
+            *(y + k + p->calc_context.offset_y) = val;
+          }
+        }
+      }
+      p->calc_context.offset_x += p->x_map_size;
+      p->calc_context.offset_y += p->y_map_size;
+    }
+  }
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+
 float calc_max(pooling_calc_context_t calc) {
-  float max_val = 0.0f;
+  float max_val = -FLT_MAX;
   float *x = (float *)(calc.x->data);
   if (calc.kernel_size == 2) {
     int l = calc.hstart * calc.hstride + calc.wstart;
@@ -315,8 +504,78 @@ float calc_max(pooling_calc_context_t calc) {
   return max_val;
 }
 
+int8_t calc_max_fixed8(pooling_calc_context_t calc) {
+  int8_t max_val = INT8_MIN;
+  int8_t *x = (int8_t *)(calc.x->data);
+  if (calc.kernel_size == 2) {
+    int l = calc.hstart * calc.hstride + calc.wstart;
+    max_val = *(x + l + calc.offset_x);
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = ix * calc.hstride + calc.wstart;
+           jx < ix * calc.hstride + calc.wend; jx++) {
+        int8_t val = *(x + jx + calc.offset_x);
+        if (max_val < val) {
+          max_val = val;
+        }
+      }
+    }
+  } else if (calc.kernel_size == 3) {
+    int l =
+        calc.hstart * calc.hstride + calc.wstart * calc.wstride + calc.dstart;
+    max_val = *(x + l + calc.offset_x);
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = calc.wstart; jx < calc.wend; jx++) {
+        for (int kx = calc.dstart; kx < calc.dend; kx++) {
+          int8_t val =
+              *(x + ix * calc.hstride + jx * calc.wstride + kx + calc.offset_x);
+          if (max_val < val) {
+            max_val = val;
+          }
+        }
+      }
+    }
+  }
+  max_val = rescale_scalar_fixed8(max_val, calc.x->fp_pos, calc.y->fp_pos);
+  return max_val;
+}
+
+int16_t calc_max_fixed16(pooling_calc_context_t calc) {
+  int16_t max_val = INT16_MIN;
+  int16_t *x = (int16_t *)(calc.x->data);
+  if (calc.kernel_size == 2) {
+    int l = calc.hstart * calc.hstride + calc.wstart;
+    max_val = *(x + l + calc.offset_x);
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = ix * calc.hstride + calc.wstart;
+           jx < ix * calc.hstride + calc.wend; jx++) {
+        int16_t val = *(x + jx + calc.offset_x);
+        if (max_val < val) {
+          max_val = val;
+        }
+      }
+    }
+  } else if (calc.kernel_size == 3) {
+    int l =
+        calc.hstart * calc.hstride + calc.wstart * calc.wstride + calc.dstart;
+    max_val = *(x + l + calc.offset_x);
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = calc.wstart; jx < calc.wend; jx++) {
+        for (int kx = calc.dstart; kx < calc.dend; kx++) {
+          int16_t val =
+              *(x + ix * calc.hstride + jx * calc.wstride + kx + calc.offset_x);
+          if (max_val < val) {
+            max_val = val;
+          }
+        }
+      }
+    }
+  }
+  max_val = rescale_scalar_fixed16(max_val, calc.x->fp_pos, calc.y->fp_pos);
+  return max_val;
+}
+
 float calc_max_generic(pooling_calc_context_t calc) {
-  float max_val = 0.0f;
+  float max_val = -FLT_MAX;
   if (calc.kernel_size == 2) {
     for (int ix = calc.hstart; ix < calc.hend; ix++) {
       for (int jx = ix * calc.hstride + calc.wstart;
@@ -364,6 +623,56 @@ float calc_sum(pooling_calc_context_t calc) {
     }
   }
   return sum_val;
+}
+
+int8_t calc_sum_fixed8(pooling_calc_context_t calc) {
+  int16_t sum_val = 0;
+  int8_t *x = (int8_t *)(calc.x->data);
+  if (calc.kernel_size == 2) {
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = ix * calc.hstride + calc.wstart;
+           jx < ix * calc.hstride + calc.wend; jx++) {
+        sum_val += *(x + jx + calc.offset_x);
+      }
+    }
+  } else if (calc.kernel_size == 3) {
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = calc.wstart; jx < calc.wend; jx++) {
+        for (int kx = calc.dstart; kx < calc.dend; kx++) {
+          sum_val +=
+              *(x + ix * calc.hstride + jx * calc.wstride + kx + calc.offset_x);
+        }
+      }
+    }
+  }
+  sum_val = rescale_scalar_fixed16(sum_val, calc.x->fp_pos, calc.y->fp_pos);
+  sum_val = saturate16_to_8(sum_val);
+  return (int8_t)sum_val;
+}
+
+int16_t calc_sum_fixed16(pooling_calc_context_t calc) {
+  int32_t sum_val = 0;
+  int16_t *x = (int16_t *)(calc.x->data);
+  if (calc.kernel_size == 2) {
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = ix * calc.hstride + calc.wstart;
+           jx < ix * calc.hstride + calc.wend; jx++) {
+        sum_val += *(x + jx + calc.offset_x);
+      }
+    }
+  } else if (calc.kernel_size == 3) {
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = calc.wstart; jx < calc.wend; jx++) {
+        for (int kx = calc.dstart; kx < calc.dend; kx++) {
+          sum_val +=
+              *(x + ix * calc.hstride + jx * calc.wstride + kx + calc.offset_x);
+        }
+      }
+    }
+  }
+  sum_val = rescale_scalar_fixed32(sum_val, calc.x->fp_pos, calc.y->fp_pos);
+  sum_val = saturate32_to_16(sum_val);
+  return (int16_t)sum_val;
 }
 
 float calc_sum_generic(pooling_calc_context_t calc) {
@@ -417,6 +726,76 @@ float calc_average(pooling_calc_context_t calc) {
     }
   }
   average_val = val / calc.pool_size;
+  return average_val;
+}
+
+int8_t calc_average_fixed8(pooling_calc_context_t calc) {
+  int16_t val = 0;
+  int8_t average_val = 0;
+  int8_t *x = (int8_t *)(calc.x->data);
+  if (calc.kernel_size == 2) {
+    if (!calc.including_pad) {
+      calc.pool_size = (calc.hend - calc.hstart) * (calc.wend - calc.wstart);
+    }
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = ix * calc.hstride + calc.wstart;
+           jx < ix * calc.hstride + calc.wend; jx++) {
+        val += *(x + jx + calc.offset_x);
+      }
+    }
+  } else if (calc.kernel_size == 3) {
+    if (!calc.including_pad) {
+      calc.pool_size = (calc.hend - calc.hstart) * (calc.wend - calc.wstart) *
+                       (calc.dend - calc.dstart);
+    }
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = calc.wstart; jx < calc.wend; jx++) {
+        for (int kx = calc.dstart; kx < calc.dend; kx++) {
+          val +=
+              *(x + ix * calc.hstride + jx * calc.wstride + kx + calc.offset_x);
+        }
+      }
+    }
+  }
+  average_val = val / calc.pool_size;
+  average_val =
+      rescale_scalar_fixed16(average_val, calc.x->fp_pos, calc.y->fp_pos);
+  average_val = saturate16_to_8(average_val);
+  return average_val;
+}
+
+int16_t calc_average_fixed16(pooling_calc_context_t calc) {
+  int32_t val = 0;
+  int16_t average_val = 0;
+  int16_t *x = (int16_t *)(calc.x->data);
+  if (calc.kernel_size == 2) {
+    if (!calc.including_pad) {
+      calc.pool_size = (calc.hend - calc.hstart) * (calc.wend - calc.wstart);
+    }
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = ix * calc.hstride + calc.wstart;
+           jx < ix * calc.hstride + calc.wend; jx++) {
+        val += *(x + jx + calc.offset_x);
+      }
+    }
+  } else if (calc.kernel_size == 3) {
+    if (!calc.including_pad) {
+      calc.pool_size = (calc.hend - calc.hstart) * (calc.wend - calc.wstart) *
+                       (calc.dend - calc.dstart);
+    }
+    for (int ix = calc.hstart; ix < calc.hend; ix++) {
+      for (int jx = calc.wstart; jx < calc.wend; jx++) {
+        for (int kx = calc.dstart; kx < calc.dend; kx++) {
+          val +=
+              *(x + ix * calc.hstride + jx * calc.wstride + kx + calc.offset_x);
+        }
+      }
+    }
+  }
+  average_val = val / calc.pool_size;
+  average_val =
+      rescale_scalar_fixed32(average_val, calc.x->fp_pos, calc.y->fp_pos);
+  average_val = saturate32_to_16(average_val);
   return average_val;
 }
 

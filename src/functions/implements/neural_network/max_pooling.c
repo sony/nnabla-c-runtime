@@ -50,7 +50,25 @@ rt_function_error_t exec_max_pooling(rt_function_t *f) {
 #ifdef CONFIG_MAXPOOLING_FLOAT32
     return exec_pooling(f, (pooling_context_t *)context, p, calc_max);
 #endif /* CONFIG_MAXPOOLING_FLOAT32 */
-  } else {
+  }
+
+  else if (p->calc_context.x->type == NN_DATA_TYPE_INT8 &&
+           p->calc_context.y->type == NN_DATA_TYPE_INT8) {
+#ifdef CONFIG_MAXPOOLING_FIXED8
+    return exec_pooling_fixed8(f, (pooling_context_t *)context, p,
+                               calc_max_fixed8);
+#endif /* CONFIG_MAXPOOLING_FIXED8 */
+  }
+
+  else if (p->calc_context.x->type == NN_DATA_TYPE_INT16 &&
+           p->calc_context.y->type == NN_DATA_TYPE_INT16) {
+#ifdef CONFIG_MAXPOOLING_FIXED16
+    return exec_pooling_fixed16(f, (pooling_context_t *)context, p,
+                                calc_max_fixed16);
+#endif /* CONFIG_MAXPOOLING_FIXED16 */
+  }
+
+  else {
 #ifdef CONFIG_MAXPOOLING_GENERIC
     return exec_pooling_generic(f, (pooling_context_t *)context, p,
                                 calc_max_generic);

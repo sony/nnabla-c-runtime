@@ -17,6 +17,8 @@ add_library(nnablart_functions STATIC
   # Functions
   implements/neural_network/pooling.c
   implements/neural_network/affine/affine.c
+  implements/neural_network/affine/affine_fixed8.c
+  implements/neural_network/affine/affine_fixed16.c
   implements/neural_network/affine/affine_generic.c
   implements/neural_network/max_pooling.c
   implements/neural_network/sum_pooling.c
@@ -61,6 +63,7 @@ add_library(nnablart_functions STATIC
 
   implements/arithmetic/add_scalar.c
   implements/arithmetic/arithmetic.c
+  implements/arithmetic/arithmetic_fixed.c
   implements/arithmetic/arithmetic_generic.c
   implements/arithmetic/div2.c
   implements/arithmetic/mul2.c

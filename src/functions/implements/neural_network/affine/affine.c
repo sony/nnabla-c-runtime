@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <nnablart/config.h>
 #include <nnablart/functions.h>
 
 #include <assert.h>
 #include <string.h>
 
+#include "affine_fixed.h"
 #include "affine_generic.h"
 #include "affine_internal.h"
 
@@ -78,8 +80,30 @@ rt_function_error_t allocate_affine_local_context(rt_function_t *f) {
       p->weight->type == NN_DATA_TYPE_FLOAT &&
       ((p->bias && p->bias->type == NN_DATA_TYPE_FLOAT) || !p->bias)) {
     f->exec_func = exec_affine;
-  } else {
+  }
+
+  else if (p->input->type == NN_DATA_TYPE_INT16 &&
+           p->output->type == NN_DATA_TYPE_INT16 &&
+           p->weight->type == NN_DATA_TYPE_INT16 &&
+           ((p->bias && p->bias->type == NN_DATA_TYPE_INT16) || !p->bias)) {
+#ifdef CONFIG_AFFINE_FIXED16
+    f->exec_func = exec_affine_fixed16;
+#endif /* CONFIG_AFFINE_FIXED16 */
+  }
+
+  else if (p->input->type == NN_DATA_TYPE_INT8 &&
+           p->output->type == NN_DATA_TYPE_INT8 &&
+           p->weight->type == NN_DATA_TYPE_INT8 &&
+           ((p->bias && p->bias->type == NN_DATA_TYPE_INT8) || !p->bias)) {
+#ifdef CONFIG_AFFINE_FIXED8
+    f->exec_func = exec_affine_fixed8;
+#endif /* CONFIG_AFFINE_FIXED8 */
+  }
+
+  else {
+#ifdef CONFIG_AFFINE_GENERIC
     f->exec_func = exec_affine_generic;
+#endif /* CONFIG_AFFINE_GENERIC */
   }
 
   ((affine_local_context_t *)(f->local_context))->data = (void *)p;
