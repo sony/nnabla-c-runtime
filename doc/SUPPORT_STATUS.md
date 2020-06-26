@@ -18,11 +18,11 @@
 
 # Implement status
 
-Total 62/184
+Total 62/187
 
 
 ## Neural Network Layer
-Count 8/15
+Count 8/16
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -31,6 +31,7 @@ Count 8/15
 |             LSTM             |      no      |      -       |      -       |
 |             GRU              |      no      |      -       |      -       |
 |         Convolution          |     yes      |     yes      |     yes      |
+|       FusedConvolution       |      no      |      -       |      -       |
 |     DepthwiseConvolution     |     yes      |     yes      |     yes      |
 |        Deconvolution         |     yes      |     yes      |     yes      |
 |    DepthwiseDeconvolution    |      no      |      -       |      -       |
@@ -250,7 +251,7 @@ Count 0/9
 |        KLMultinomial         |      no      |      -       |      -       |
 
 ## Quantization Neural Network Layers
-Count 6/12
+Count 6/14
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -266,6 +267,8 @@ Count 6/12
 |        MinMaxQuantize        |      no      |      -       |      -       |
 |         Pow2Quantize         |      no      |      -       |      -       |
 |            Prune             |      no      |      -       |      -       |
+|        QuantizeLinear        |      no      |      -       |      -       |
+|       DequantizeLinear       |      no      |      -       |      -       |
 
 ## Validation
 Count 0/3

@@ -66,6 +66,22 @@ rt_function_error_t exec_gru(rt_function_t *f) {
 }
 #endif /* CONFIG_GRU */
 
+// FusedConvolution
+#ifdef CONFIG_FUSEDCONVOLUTION
+rt_function_error_t allocate_fused_convolution_local_context(rt_function_t *f) {
+  f->exec_func = exec_fused_convolution;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_fused_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_fused_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_FUSEDCONVOLUTION */
+
 // DepthwiseDeconvolution
 #ifdef CONFIG_DEPTHWISEDECONVOLUTION
 rt_function_error_t
@@ -1811,6 +1827,38 @@ rt_function_error_t exec_prune(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_PRUNE */
+
+// QuantizeLinear
+#ifdef CONFIG_QUANTIZELINEAR
+rt_function_error_t allocate_quantize_linear_local_context(rt_function_t *f) {
+  f->exec_func = exec_quantize_linear;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_quantize_linear_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_quantize_linear(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_QUANTIZELINEAR */
+
+// DequantizeLinear
+#ifdef CONFIG_DEQUANTIZELINEAR
+rt_function_error_t allocate_dequantize_linear_local_context(rt_function_t *f) {
+  f->exec_func = exec_dequantize_linear;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_dequantize_linear_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_dequantize_linear(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_DEQUANTIZELINEAR */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Spectral Operation

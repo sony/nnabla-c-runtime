@@ -45,6 +45,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_CONVOLUTION: { // Convolution
     printf("NNB: Function type:    Convolution(265)\n");
   } break;
+  case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
+    printf("NNB: Function type:    FusedConvolution(295)\n");
+  } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     printf("NNB: Function type:    DepthwiseConvolution(2)\n");
   } break;
@@ -552,6 +555,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_PRUNE: { // Prune
     printf("NNB: Function type:    Prune(135)\n");
   } break;
+  case NN_FUNCTION_QUANTIZE_LINEAR: { // QuantizeLinear
+    printf("NNB: Function type:    QuantizeLinear(293)\n");
+  } break;
+  case NN_FUNCTION_DEQUANTIZE_LINEAR: { // DequantizeLinear
+    printf("NNB: Function type:    DequantizeLinear(294)\n");
+  } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     printf("NNB: Function type:    TopNError(115)\n");
   } break;
@@ -644,6 +653,35 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+  } break;
+  case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
+    nn_function_fused_convolution_t *f =
+        (nn_function_fused_convolution_t *)func;
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument pad: (");
+    list = (int *)NN_GET(net, f->pad.list);
+    for (i = 0; i < f->pad.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument stride: (");
+    list = (int *)NN_GET(net, f->stride.list);
+    for (i = 0; i < f->stride.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument dilation: (");
+    list = (int *)NN_GET(net, f->dilation.list);
+    for (i = 0; i < f->dilation.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+    printf("NNB: Function argument decay_rate: %f\n", f->decay_rate);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
+    printf("NNB: Function argument nonlinearity: %d\n", f->nonlinearity);
   } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     nn_function_depthwise_convolution_t *f =
@@ -1703,6 +1741,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_PRUNE: { // Prune
     nn_function_prune_t *f = (nn_function_prune_t *)func;
     printf("NNB: Function argument rate: %f\n", f->rate);
+  } break;
+  case NN_FUNCTION_QUANTIZE_LINEAR: { // QuantizeLinear
+    nn_function_quantize_linear_t *f = (nn_function_quantize_linear_t *)func;
+    printf("NNB: Function argument round_mode: %d\n", f->round_mode);
+    printf("NNB: Function argument narrow_range: %d\n", f->narrow_range);
+    printf("NNB: Function argument dtype: %d\n", f->dtype);
+  } break;
+  case NN_FUNCTION_DEQUANTIZE_LINEAR: { // DequantizeLinear
   } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     nn_function_top_n_error_t *f = (nn_function_top_n_error_t *)func;
