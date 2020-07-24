@@ -15,6 +15,7 @@
 #ifndef H_FIXEDPOINT_H
 #define H_FIXEDPOINT_H
 
+#include <math.h>
 #include <stdint.h>
 
 inline int sum_acc_sat8(int8_t *acc, int8_t b) {
@@ -274,7 +275,7 @@ inline int8_t float_to_fixed8(float value, int n_precision_bits) {
   } else if (value <= FIXED8_MIN) {
     return (int8_t)FIXED8_MIN;
   } else {
-    return (int8_t)(value * (1 << n_precision_bits));
+    return (int8_t)roundf(value * (1 << n_precision_bits));
   }
 }
 
@@ -288,7 +289,7 @@ inline int16_t float_to_fixed16(float value, int n_precision_bits) {
   } else if (value <= FIXED16_MIN) {
     return (int16_t)FIXED16_MIN;
   } else {
-    return (int16_t)(value * (1 << n_precision_bits));
+    return (int16_t)roundf(value * (1 << n_precision_bits));
   }
 }
 

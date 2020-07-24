@@ -207,27 +207,79 @@ void calc_arithmetic_fixed8_largebuff(rt_function_t *f,
 
 // // Common algorithm for arithmetic calculation between vector and scalar
 // // value.
-// void calc_scalar_fixed8(rt_function_t *f, int8_t value,
-//                         int8_t (*calc_func)(int8_t, int8_t)) {
-//   int out_size = calc_shape_size(f->outputs[0]->shape);
-//   int8_t *input = f->inputs[0]->data;
-//   int8_t *output = f->outputs[0]->data;
-//   int i; // Iterator
-//   for (i = 0; i < out_size; i++) {
-//     output[i] = calc_func(input[i], value);
-//   }
-// }
+void calc_scalar_fixed8(rt_function_t *f, float value,
+                        int8_t (*calc_func)(int8_t, int8_t)) {
+  int out_size = calc_shape_size(f->outputs[0]->shape);
+  int8_t *input = f->inputs[0]->data;
+  int8_t *output = f->outputs[0]->data;
+  int8_t value_int = float_to_fixed8(value, f->inputs[0]->fp_pos);
+  int i; // Iterator
+  for (i = 0; i < out_size; i++) {
+    output[i] = calc_func(input[i], value_int);
+  }
+}
 
-// void calc_scalar_fixed16(rt_function_t *f, int16_t value,
-//                          int16_t (*calc_func)(int16_t, int16_t)) {
-//   int out_size = calc_shape_size(f->outputs[0]->shape);
-//   int16_t *input = f->inputs[0]->data;
-//   int16_t *output = f->outputs[0]->data;
-//   int i; // Iterator
-//   for (i = 0; i < out_size; i++) {
-//     output[i] = calc_func(input[i], value);
-//   }
-// }
+void calc_scalar_fixed16(rt_function_t *f, float value,
+                         int16_t (*calc_func)(int16_t, int16_t)) {
+  int out_size = calc_shape_size(f->outputs[0]->shape);
+  int16_t *input = f->inputs[0]->data;
+  int16_t *output = f->outputs[0]->data;
+  int16_t value_int = float_to_fixed16(value, f->inputs[0]->fp_pos);
+  int i; // Iterator
+  for (i = 0; i < out_size; i++) {
+    output[i] = calc_func(input[i], value_int);
+  }
+}
+
+void calc_scalar_fixed8_largebuff(rt_function_t *f, float value,
+                                  int16_t (*calc_func)(int8_t, int8_t, int)) {
+  int out_size = calc_shape_size(f->outputs[0]->shape);
+  int8_t *input = f->inputs[0]->data;
+  int8_t *output = f->outputs[0]->data;
+
+  // Compute needed number of range bits to represent given float.
+  // Notice that it should be log(abs(x)) instead of log(1+abs(x)), but the
+  // implemented
+  // formulation makes sure the output of the log is positive.
+  const short n_dec_bits_scalar =
+      roundf(fmaxf(0.0, 8.0 - (1.0 + log2f(1.0 + fabsf(value)))));
+
+  // Convert scalar value to fixed-point.
+  const int8_t value_int = float_to_fixed8(value, n_dec_bits_scalar);
+  const int n_bits_rescale =
+      f->inputs[0]->fp_pos + n_dec_bits_scalar - f->outputs[0]->fp_pos;
+  const int rescaling_factor = 1 << n_bits_rescale;
+  int i; // Iterator
+  for (i = 0; i < out_size; i++) {
+    int16_t output_largebuff = calc_func(input[i], value_int, rescaling_factor);
+    output[i] = saturate16_to_8(output_largebuff);
+  }
+}
+
+void calc_scalar_fixed16_largebuff(rt_function_t *f, float value,
+                                   int32_t (*calc_func)(int16_t, int16_t,
+                                                        int)) {
+  int out_size = calc_shape_size(f->outputs[0]->shape);
+  int16_t *input = f->inputs[0]->data;
+  int16_t *output = f->outputs[0]->data;
+
+  // Compute needed number of range bits to represent given float.
+  // Notice that it should be log(x) instead of log(1+x), but the implemented
+  // formulation makes sure the output of the log is positive.
+  const short n_dec_bits_scalar =
+      roundf(fmaxf(0.0, 16.0 - (1.0 + log2f(1.0 + fabsf(value)))));
+
+  // Convert scalar value to fixed-point.
+  const int16_t value_int = float_to_fixed16(value, n_dec_bits_scalar);
+  const int n_bits_rescale =
+      f->inputs[0]->fp_pos + n_dec_bits_scalar - f->outputs[0]->fp_pos;
+  const int rescaling_factor = 1 << n_bits_rescale;
+  int i; // Iterator
+  for (i = 0; i < out_size; i++) {
+    int32_t output_largebuff = calc_func(input[i], value_int, rescaling_factor);
+    output[i] = saturate32_to_16(output_largebuff);
+  }
+}
 
 // calc callbacks (8-bit)
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "../../utilities/accessor.h"
+#include "../../utilities/fixedpoint.h"
 #include "../../utilities/shape.h"
 #include <nnablart/config.h>
 #include <nnablart/functions.h>
@@ -32,6 +33,8 @@ typedef struct {
 } transpose_private_t;
 
 rt_function_error_t exec_transpose_generic(rt_function_t *f);
+rt_function_error_t exec_transpose_fixed8(rt_function_t *f);
+rt_function_error_t exec_transpose_fixed16(rt_function_t *f);
 
 // Transpose
 rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
@@ -63,7 +66,21 @@ rt_function_error_t allocate_transpose_local_context(rt_function_t *f) {
 #ifdef CONFIG_TRANSPOSE_FLOAT32
     f->exec_func = exec_transpose;
 #endif /* CONFIG_TRANSPOSE_FLOAT32 */
-  } else {
+  }
+
+  else if (p->input->type == NN_DATA_TYPE_INT16 &&
+           p->output->type == NN_DATA_TYPE_INT16) {
+#ifdef CONFIG_TRANSPOSE_FIXED16
+    f->exec_func = exec_transpose_fixed16;
+#endif /* CONFIG_TRANSPOSE_FIXED16 */
+  } else if (p->input->type == NN_DATA_TYPE_INT8 &&
+             p->output->type == NN_DATA_TYPE_INT8) {
+#ifdef CONFIG_TRANSPOSE_FIXED8
+    f->exec_func = exec_transpose_fixed8;
+#endif /* CONFIG_TRANSPOSE_FIXED8 */
+  }
+
+  else {
 #ifdef CONFIG_TRANSPOSE_GENERIC
     f->exec_func = exec_transpose_generic;
 #endif /* CONFIG_TRANSPOSE_GENERIC */
@@ -103,6 +120,50 @@ rt_function_error_t exec_transpose(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_TRANSPOSE_FLOAT32 */
+
+#ifdef CONFIG_TRANSPOSE_FIXED16
+rt_function_error_t exec_transpose_fixed16(rt_function_t *f) {
+  transpose_local_context_t *c =
+      (transpose_local_context_t *)(f->local_context);
+  transpose_private_t *p = (transpose_private_t *)(c->data);
+  int16_t *x = (int16_t *)p->input->data;
+  int16_t *y = (int16_t *)p->output->data;
+
+  for (int o = 0; o < p->output_size; ++o) {
+    int i = 0;
+    for (int d = 0; d < p->input_shape.size; ++d) {
+      const int k =
+          (int)(o / p->output_strides.data[d]) % p->output_shape.data[d];
+      i += k * p->input_strides.data[c->axes.data[d]];
+    }
+    y[o] = x[i];
+  }
+  rescale_fixed16(y, p->output_size, p->input->fp_pos, p->output->fp_pos);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_TRANSPOSE_FIXED16 */
+
+#ifdef CONFIG_TRANSPOSE_FIXED8
+rt_function_error_t exec_transpose_fixed8(rt_function_t *f) {
+  transpose_local_context_t *c =
+      (transpose_local_context_t *)(f->local_context);
+  transpose_private_t *p = (transpose_private_t *)(c->data);
+  int8_t *x = (int8_t *)p->input->data;
+  int8_t *y = (int8_t *)p->output->data;
+
+  for (int o = 0; o < p->output_size; ++o) {
+    int i = 0;
+    for (int d = 0; d < p->input_shape.size; ++d) {
+      const int k =
+          (int)(o / p->output_strides.data[d]) % p->output_shape.data[d];
+      i += k * p->input_strides.data[c->axes.data[d]];
+    }
+    y[o] = x[i];
+  }
+  rescale_fixed8(y, p->output_size, p->input->fp_pos, p->output->fp_pos);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_TRANSPOSE_FIXED8 */
 
 #ifdef CONFIG_TRANSPOSE_GENERIC
 rt_function_error_t exec_transpose_generic(rt_function_t *f) {

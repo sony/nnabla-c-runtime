@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "../../utilities/accessor.h"
+#include "../../utilities/fixedpoint.h"
 #include "../../utilities/shape.h"
 #include <nnablart/config.h>
 #include <nnablart/functions.h>
@@ -29,6 +30,8 @@ typedef struct {
 } reshape_private_t;
 
 rt_function_error_t exec_reshape_generic(rt_function_t *f);
+rt_function_error_t exec_reshape_fixed8(rt_function_t *f);
+rt_function_error_t exec_reshape_fixed16(rt_function_t *f);
 
 // Reshape
 rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
@@ -58,6 +61,16 @@ rt_function_error_t allocate_reshape_local_context(rt_function_t *f) {
 #ifdef CONFIG_RESHAPE_FLOAT32
     f->exec_func = exec_reshape;
 #endif /* CONFIG_RESHAPE_FLOAT32 */
+  } else if (p->input->type == NN_DATA_TYPE_INT16 &&
+             p->output->type == NN_DATA_TYPE_INT16) {
+#ifdef CONFIG_RESHAPE_FIXED16
+    f->exec_func = exec_reshape_fixed16;
+#endif /* CONFIG_RESHAPE_FIXED16 */
+  } else if (p->input->type == NN_DATA_TYPE_INT8 &&
+             p->output->type == NN_DATA_TYPE_INT8) {
+#ifdef CONFIG_RESHAPE_FIXED8
+    f->exec_func = exec_reshape_fixed8;
+#endif /* CONFIG_RESHAPE_FIXED8 */
   } else {
 #ifdef CONFIG_RESHAPE_GENERIC
     f->exec_func = exec_reshape_generic;
@@ -86,6 +99,40 @@ rt_function_error_t exec_reshape(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_RESHAPE_FLOAT32 */
+
+#ifdef CONFIG_RESHAPE_FIXED16
+rt_function_error_t exec_reshape_fixed16(rt_function_t *f) {
+  reshape_local_context_t *context =
+      (reshape_local_context_t *)(f->local_context);
+  reshape_private_t *p = (reshape_private_t *)(context->data);
+  int16_t *x = (int16_t *)(p->input->data);
+  int16_t *y = (int16_t *)(p->output->data);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    y[i] = x[i];
+  }
+  rescale_fixed16(y, p->output_size, p->input->fp_pos, p->output->fp_pos);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_RESHAPE_FIXED16 */
+
+#ifdef CONFIG_RESHAPE_FIXED8
+rt_function_error_t exec_reshape_fixed8(rt_function_t *f) {
+  reshape_local_context_t *context =
+      (reshape_local_context_t *)(f->local_context);
+  reshape_private_t *p = (reshape_private_t *)(context->data);
+  int8_t *x = (int8_t *)(p->input->data);
+  int8_t *y = (int8_t *)(p->output->data);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    y[i] = x[i];
+  }
+  rescale_fixed8(y, p->output_size, p->input->fp_pos, p->output->fp_pos);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_RESHAPE_FIXED8 */
 
 #ifdef CONFIG_RESHAPE_GENERIC
 rt_function_error_t exec_reshape_generic(rt_function_t *f) {
