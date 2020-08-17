@@ -22,7 +22,8 @@ typedef struct {
   rt_list_t kernel; ///< Original type is [Shape]
   rt_list_t stride; ///< Original type is [Shape]
   uint8_t ignore_border;
-  rt_list_t pad; ///< Original type is [Shape]
+  rt_list_t pad;        ///< Original type is [Shape]
+  uint8_t channel_last; ///< bool
   uint8_t including_pad;
   void *data;
 } pooling_context_t;
@@ -59,6 +60,8 @@ typedef struct {
 } pooling_private_t;
 
 typedef float (*exec_pooling_func_t)(pooling_calc_context_t);
+typedef int8_t (*exec_pooling_func_fixed8_t)(pooling_calc_context_t);
+typedef int16_t (*exec_pooling_func_fixed16_t)(pooling_calc_context_t);
 
 rt_function_error_t allocate_pooling(rt_function_t *f,
                                      pooling_context_t *context,
@@ -71,7 +74,14 @@ rt_function_error_t exec_pooling_generic(rt_function_t *f,
                                          pooling_context_t *context,
                                          pooling_private_t *p,
                                          exec_pooling_func_t exec);
-
+rt_function_error_t exec_pooling_fixed8(rt_function_t *f,
+                                        pooling_context_t *context,
+                                        pooling_private_t *p,
+                                        exec_pooling_func_fixed8_t exec);
+rt_function_error_t exec_pooling_fixed16(rt_function_t *f,
+                                         pooling_context_t *context,
+                                         pooling_private_t *p,
+                                         exec_pooling_func_fixed16_t exec);
 /// Calculate max value.
 float calc_max(pooling_calc_context_t calc);
 
@@ -89,5 +99,23 @@ float calc_sum_generic(pooling_calc_context_t calc);
 
 /// Calculate average value.
 float calc_average_generic(pooling_calc_context_t calc);
+
+/// Calculate max value.
+int8_t calc_max_fixed8(pooling_calc_context_t calc);
+
+/// Calculate sum value.
+int8_t calc_sum_fixed8(pooling_calc_context_t calc);
+
+/// Calculate average value.
+int8_t calc_average_fixed8(pooling_calc_context_t calc);
+
+/// Calculate max value.
+int16_t calc_max_fixed16(pooling_calc_context_t calc);
+
+/// Calculate sum value.
+int16_t calc_sum_fixed16(pooling_calc_context_t calc);
+
+/// Calculate average value.
+int16_t calc_average_fixed16(pooling_calc_context_t calc);
 
 #endif // H_POOLING_H_

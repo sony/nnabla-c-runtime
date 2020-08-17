@@ -16,6 +16,7 @@
 #include <nnablart/functions.h>
 
 #include "../../utilities/accessor.h"
+#include "../../utilities/fixedpoint.h"
 #include "../../utilities/shape.h"
 
 #include <math.h>
@@ -32,6 +33,8 @@ typedef struct {
 } relu_private_t;
 
 rt_function_error_t exec_relu_generic(rt_function_t *f);
+rt_function_error_t exec_relu_fixed8(rt_function_t *f);
+rt_function_error_t exec_relu_fixed16(rt_function_t *f);
 
 // Relu
 rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
@@ -65,6 +68,16 @@ rt_function_error_t allocate_relu_local_context(rt_function_t *f) {
 #ifdef CONFIG_RELU_FLOAT32
     f->exec_func = exec_relu;
 #endif /* CONFIG_RELU_FLOAT32 */
+  } else if (p->input->type == NN_DATA_TYPE_INT8 &&
+             p->output->type == NN_DATA_TYPE_INT8) {
+#ifdef CONFIG_RELU_FIXED8
+    f->exec_func = exec_relu_fixed8;
+#endif /* CONFIG_RELU_FIXED8 */
+  } else if (p->input->type == NN_DATA_TYPE_INT16 &&
+             p->output->type == NN_DATA_TYPE_INT16) {
+#ifdef CONFIG_RELU_FIXED16
+    f->exec_func = exec_relu_fixed16;
+#endif /* CONFIG_RELU_FIXED16 */
   } else {
 #ifdef CONFIG_RELU_GENERIC
     f->exec_func = exec_relu_generic;
@@ -92,6 +105,38 @@ rt_function_error_t exec_relu(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_RELU_FLOAT32 */
+
+#ifdef CONFIG_RELU_FIXED8
+rt_function_error_t exec_relu_fixed8(rt_function_t *f) {
+  relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
+  relu_private_t *p = (relu_private_t *)(context->data);
+  int8_t *x = (int8_t *)(p->input->data);
+  int8_t *y = (int8_t *)(p->output->data);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    y[i] = (x[i] > 0) ? x[i] : 0;
+  }
+  rescale_fixed8(y, p->output_size, p->input->fp_pos, p->output->fp_pos);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_RELU_FIXED8 */
+
+#ifdef CONFIG_RELU_FIXED16
+rt_function_error_t exec_relu_fixed16(rt_function_t *f) {
+  relu_local_context_t *context = (relu_local_context_t *)(f->local_context);
+  relu_private_t *p = (relu_private_t *)(context->data);
+  int16_t *x = (int16_t *)(p->input->data);
+  int16_t *y = (int16_t *)(p->output->data);
+
+  int i; // Iterator
+  for (i = 0; i < p->output_size; i++) {
+    y[i] = (x[i] > 0) ? x[i] : 0;
+  }
+  rescale_fixed16(y, p->output_size, p->input->fp_pos, p->output->fp_pos);
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_RELU_FIXED16 */
 
 #ifdef CONFIG_RELU_GENERIC
 rt_function_error_t exec_relu_generic(rt_function_t *f) {

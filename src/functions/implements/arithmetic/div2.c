@@ -20,6 +20,8 @@
 #ifdef CONFIG_DIV2
 
 rt_function_error_t exec_div2_generic(rt_function_t *f);
+rt_function_error_t exec_div2_fixed8(rt_function_t *f);
+rt_function_error_t exec_div2_fixed16(rt_function_t *f);
 
 // Div2
 rt_function_error_t allocate_div2_local_context(rt_function_t *f) {
@@ -41,7 +43,25 @@ rt_function_error_t allocate_div2_local_context(rt_function_t *f) {
 #ifdef CONFIG_DIV2_FLOAT32
     f->exec_func = exec_div2;
 #endif /* CONFIG_DIV2_FLOAT32 */
-  } else {
+  }
+
+  else if (f->inputs[0]->type == NN_DATA_TYPE_INT16 &&
+           f->inputs[1]->type == NN_DATA_TYPE_INT16 &&
+           f->outputs[0]->type == NN_DATA_TYPE_INT16) {
+#ifdef CONFIG_DIV2_FIXED16
+    f->exec_func = exec_div2_fixed16;
+#endif /* CONFIG_DIV2_FIXED16 */
+  }
+
+  else if (f->inputs[0]->type == NN_DATA_TYPE_INT8 &&
+           f->inputs[1]->type == NN_DATA_TYPE_INT8 &&
+           f->outputs[0]->type == NN_DATA_TYPE_INT8) {
+#ifdef CONFIG_DIV2_FIXED8
+    f->exec_func = exec_div2_fixed8;
+#endif /* CONFIG_DIV2_FIXED8 */
+  }
+
+  else {
 #ifdef CONFIG_DIV2_GENERIC
     f->exec_func = exec_div2_generic;
 #endif /* CONFIG_DIV2_GENERIC */
@@ -59,6 +79,28 @@ rt_function_error_t exec_div2(rt_function_t *f) {
   return RT_FUNCTION_ERROR_NOERROR;
 }
 #endif /* CONFIG_DIV2_FLOAT32 */
+
+#ifdef CONFIG_DIV2_FIXED8
+rt_function_error_t exec_div2_fixed8(rt_function_t *f) {
+  const short n_bits_rescale =
+      -f->inputs[0]->fp_pos + f->inputs[1]->fp_pos + f->outputs[0]->fp_pos;
+  const int rescaling_factor = 1 << n_bits_rescale;
+  calc_arithmetic_fixed8_largebuff(f, calc_div_fixed8, rescaling_factor);
+
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_DIV2_FIXED8 */
+
+#ifdef CONFIG_DIV2_FIXED16
+rt_function_error_t exec_div2_fixed16(rt_function_t *f) {
+  const short n_bits_rescale =
+      -f->inputs[0]->fp_pos + f->inputs[1]->fp_pos + f->outputs[0]->fp_pos;
+  const int rescaling_factor = 1 << n_bits_rescale;
+  calc_arithmetic_fixed16_largebuff(f, calc_div_fixed16, rescaling_factor);
+
+  return RT_FUNCTION_ERROR_NOERROR;
+}
+#endif /* CONFIG_DIV2_FIXED16 */
 
 #ifdef CONFIG_DIV2_GENERIC
 rt_function_error_t exec_div2_generic(rt_function_t *f) {
