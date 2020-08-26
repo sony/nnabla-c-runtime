@@ -76,6 +76,10 @@ nnabla-c-runtime-update-function-info: nnabla-install
 	@sed -i -e "s/\(NNABLA_VERSION: \).*/\1$(NNABLA_VERSION)/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
 	@sed -i -e "s/API_LEVEL:.*/$(API_LEVEL)/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
 
+.PHONY: check-api_level
+check-api_level: nnabla-c-runtime-build nnabla-install
+	@bash ./build-tools/test/scripts/check_api_level.sh $(NNABLA_C_RUNTIME_DIRECTORY)
+
 .PHONY: nnabla-c-runtime-generate-function-test
 nnabla-c-runtime-generate-function-test: nnabla-install
 	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla
