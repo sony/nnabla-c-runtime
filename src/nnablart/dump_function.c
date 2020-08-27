@@ -117,6 +117,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_GELU: { // GELU
     printf("NNB: Function type:    GELU(245)\n");
   } break;
+  case NN_FUNCTION_MISH: { // Mish
+    printf("NNB: Function type:    Mish(298)\n");
+  } break;
   case NN_FUNCTION_RELU6: { // ReLU6
     printf("NNB: Function type:    ReLU6(256)\n");
   } break;
@@ -519,6 +522,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_KL_MULTINOMIAL: { // KLMultinomial
     printf("NNB: Function type:    KLMultinomial(104)\n");
   } break;
+  case NN_FUNCTION_AFFINE_GRID: { // AffineGrid
+    printf("NNB: Function type:    AffineGrid(296)\n");
+  } break;
+  case NN_FUNCTION_WARP_BY_GRID: { // WarpByGrid
+    printf("NNB: Function type:    WarpByGrid(297)\n");
+  } break;
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+    printf("NNB: Function type:    WarpByFlow(277)\n");
+  } break;
   case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
     printf("NNB: Function type:    BinarySigmoid(105)\n");
   } break;
@@ -584,9 +596,6 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
     printf("NNB: Function type:    MaxPoolingBackward(272)\n");
-  } break;
-  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
-    printf("NNB: Function type:    WarpByFlow(277)\n");
   } break;
   case NN_FUNCTION_PATCH_CORRELATION: { // PatchCorrelation
     printf("NNB: Function type:    PatchCorrelation(280)\n");
@@ -893,6 +902,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
   } break;
   case NN_FUNCTION_GELU: { // GELU
+  } break;
+  case NN_FUNCTION_MISH: { // Mish
   } break;
   case NN_FUNCTION_RELU6: { // ReLU6
   } break;
@@ -1594,6 +1605,25 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_kl_multinomial_t *f = (nn_function_kl_multinomial_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
   } break;
+  case NN_FUNCTION_AFFINE_GRID: { // AffineGrid
+    nn_function_affine_grid_t *f = (nn_function_affine_grid_t *)func;
+    printf("NNB: Function argument size: (");
+    list = (int *)NN_GET(net, f->size.list);
+    for (i = 0; i < f->size.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument align_corners: %d\n", f->align_corners);
+  } break;
+  case NN_FUNCTION_WARP_BY_GRID: { // WarpByGrid
+    nn_function_warp_by_grid_t *f = (nn_function_warp_by_grid_t *)func;
+    printf("NNB: Function argument mode: %d\n", f->mode);
+    printf("NNB: Function argument padding_mode: %d\n", f->padding_mode);
+    printf("NNB: Function argument align_corners: %d\n", f->align_corners);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+  } break;
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+  } break;
   case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
   } break;
   case NN_FUNCTION_BINARY_TANH: { // BinaryTanh
@@ -1801,8 +1831,6 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
-  } break;
-  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
   } break;
   case NN_FUNCTION_PATCH_CORRELATION: { // PatchCorrelation
     nn_function_patch_correlation_t *f =

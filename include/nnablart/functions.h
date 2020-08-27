@@ -689,6 +689,19 @@ rt_function_error_t free_gelu_local_context(rt_function_t *f);
 rt_function_error_t exec_gelu(rt_function_t *f);
 /// @}
 
+/// @defgroup Mish Mish
+/// @{
+
+/// Allocate Mish local context
+rt_function_error_t allocate_mish_local_context(rt_function_t *f);
+
+/// Free Mish local context
+rt_function_error_t free_mish_local_context(rt_function_t *f);
+
+/// Exec Mish
+rt_function_error_t exec_mish(rt_function_t *f);
+/// @}
+
 /// @defgroup ReLU6 ReLU6
 /// @{
 
@@ -3070,6 +3083,82 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f);
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
+/// @defgroup GeometricNeuralNetworkLayers Geometric Neural Network Layers
+/// @{
+
+/// @defgroup AffineGrid AffineGrid
+/// @{
+
+/// Local context for AffineGrid
+typedef struct {
+  rt_list_t size;        ///< Original type is [repeated int64]
+  uint8_t align_corners; ///< bool
+  void *data;            ///< General purpose data area
+} affine_grid_local_context_t;
+
+/// Allocate AffineGrid local context
+rt_function_error_t allocate_affine_grid_local_context(rt_function_t *f);
+
+/// Free AffineGrid local context
+rt_function_error_t free_affine_grid_local_context(rt_function_t *f);
+
+/// Exec AffineGrid
+rt_function_error_t exec_affine_grid(rt_function_t *f);
+/// @}
+
+/// @defgroup WarpByGrid WarpByGrid
+/// @{
+
+/// Named values for WarpByGrid.mode
+typedef enum {
+  WARP_BY_GRID_MODE_LINEAR,
+  WARP_BY_GRID_MODE_NEAREST,
+  END_OF_WARP_BY_GRID_MODE
+} warp_by_grid_mode_value_t;
+
+/// Named values for WarpByGrid.padding_mode
+typedef enum {
+  WARP_BY_GRID_PADDING_MODE_ZERO,
+  WARP_BY_GRID_PADDING_MODE_REPEAT,
+  WARP_BY_GRID_PADDING_MODE_REFLECT,
+  END_OF_WARP_BY_GRID_PADDING_MODE
+} warp_by_grid_padding_mode_value_t;
+
+/// Local context for WarpByGrid
+typedef struct {
+  warp_by_grid_mode_value_t mode;                 ///< string
+  warp_by_grid_padding_mode_value_t padding_mode; ///< string
+  uint8_t align_corners;                          ///< bool
+  uint8_t channel_last;                           ///< bool
+  void *data;                                     ///< General purpose data area
+} warp_by_grid_local_context_t;
+
+/// Allocate WarpByGrid local context
+rt_function_error_t allocate_warp_by_grid_local_context(rt_function_t *f);
+
+/// Free WarpByGrid local context
+rt_function_error_t free_warp_by_grid_local_context(rt_function_t *f);
+
+/// Exec WarpByGrid
+rt_function_error_t exec_warp_by_grid(rt_function_t *f);
+/// @}
+
+/// @defgroup WarpByFlow WarpByFlow
+/// @{
+
+/// Allocate WarpByFlow local context
+rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f);
+
+/// Free WarpByFlow local context
+rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f);
+
+/// Exec WarpByFlow
+rt_function_error_t exec_warp_by_flow(rt_function_t *f);
+/// @}
+
+/// @}
+
+////////////////////////////////////////////////////////////////////////////////
 /// @defgroup QuantizationNeuralNetworkLayers Quantization Neural Network Layers
 /// @{
 
@@ -3545,19 +3634,6 @@ rt_function_error_t free_max_pooling_backward_local_context(rt_function_t *f);
 
 /// Exec MaxPoolingBackward
 rt_function_error_t exec_max_pooling_backward(rt_function_t *f);
-/// @}
-
-/// @defgroup WarpByFlow WarpByFlow
-/// @{
-
-/// Allocate WarpByFlow local context
-rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f);
-
-/// Free WarpByFlow local context
-rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f);
-
-/// Exec WarpByFlow
-rt_function_error_t exec_warp_by_flow(rt_function_t *f);
 /// @}
 
 /// @defgroup PatchCorrelation PatchCorrelation

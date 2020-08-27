@@ -746,6 +746,19 @@ Neural Network Activation Functions:
     id: 245
     func_type:
     - ALL
+  Mish:
+    snake_name: mish
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 298
+    uniq_name: Mish
+    id: 298
+    func_type:
+    - ALL
   ReLU6:
     snake_name: relu6
     inputs:
@@ -2492,9 +2505,12 @@ Array Manipulation:
     inputs:
       data: {}
       indices: {}
+      out:
+        optional: true
     arguments:
       shape:
         type: repeated int64
+        default: None
     outputs:
       y: {}
     c_runtime: not support
@@ -3162,6 +3178,74 @@ Loss Functions:
     id: 104
     func_type:
     - ALL
+Geometric Neural Network Layers:
+  AffineGrid:
+    snake_name: affine_grid
+    inputs:
+      theta: {}
+    arguments:
+      size:
+        type: repeated int64
+      align_corners:
+        type: bool
+        default: 'False'
+    outputs:
+      grid: {}
+    c_runtime: not support
+    function_ids:
+      iIB: 296
+    uniq_name: AffineGrid_iIB
+    id: 296
+    func_type:
+    - ALL
+  WarpByGrid:
+    snake_name: warp_by_grid
+    inputs:
+      x: {}
+      grid: {}
+    arguments:
+      mode:
+        type: string
+        available_values:
+        - linear
+        - nearest
+        default: '''linear'''
+      padding_mode:
+        type: string
+        available_values:
+        - zero
+        - repeat
+        - reflect
+        default: '''zero'''
+      align_corners:
+        type: bool
+        default: 'False'
+      channel_last:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiBB: 297
+    uniq_name: WarpByGrid_iiBB
+    id: 297
+    func_type:
+    - ALL
+  WarpByFlow:
+    snake_name: warp_by_flow
+    inputs:
+      data: {}
+      flow: {}
+    outputs:
+      warped_image: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 277
+    uniq_name: WarpByFlow
+    id: 277
+    func_type:
+    - ALL
 Quantization Neural Network Layers:
   BinarySigmoid:
     snake_name: binary_sigmoid
@@ -3729,20 +3813,6 @@ Unsupported, Special Use:
       iIiIBiIB: 272
     uniq_name: MaxPoolingBackward_iIiIBiIB
     id: 272
-    func_type:
-    - ALL
-  WarpByFlow:
-    snake_name: warp_by_flow
-    inputs:
-      data: {}
-      flow: {}
-    outputs:
-      warped_image: {}
-    c_runtime: not support
-    function_ids:
-      Empty: 277
-    uniq_name: WarpByFlow
-    id: 277
     func_type:
     - ALL
   PatchCorrelation:

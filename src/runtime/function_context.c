@@ -527,6 +527,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_MISH
+  case NN_FUNCTION_MISH: { // Mish
+    function_context->func.free_local_context_func = free_mish_local_context;
+    function_context->func.local_context = 0;
+    allocate_mish_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_RELU6
   case NN_FUNCTION_RELU6: { // ReLU6
     function_context->func.free_local_context_func = free_relu6_local_context;
@@ -2141,6 +2149,45 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_AFFINEGRID
+  case NN_FUNCTION_AFFINE_GRID: { // AffineGrid
+    function_context->func.free_local_context_func =
+        free_affine_grid_local_context;
+    nn_function_affine_grid_t *f = (nn_function_affine_grid_t *)function;
+    affine_grid_local_context_t *ctx =
+        rt_malloc_func(sizeof(affine_grid_local_context_t));
+    ctx->size = create_rt_list_from_nn_list(n, f->size);
+    ctx->align_corners = f->align_corners;
+    function_context->func.local_context = ctx;
+    allocate_affine_grid_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_WARPBYGRID
+  case NN_FUNCTION_WARP_BY_GRID: { // WarpByGrid
+    function_context->func.free_local_context_func =
+        free_warp_by_grid_local_context;
+    nn_function_warp_by_grid_t *f = (nn_function_warp_by_grid_t *)function;
+    warp_by_grid_local_context_t *ctx =
+        rt_malloc_func(sizeof(warp_by_grid_local_context_t));
+    ctx->mode = f->mode;
+    ctx->padding_mode = f->padding_mode;
+    ctx->align_corners = f->align_corners;
+    ctx->channel_last = f->channel_last;
+    function_context->func.local_context = ctx;
+    allocate_warp_by_grid_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_WARPBYFLOW
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+    function_context->func.free_local_context_func =
+        free_warp_by_flow_local_context;
+    function_context->func.local_context = 0;
+    allocate_warp_by_flow_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_BINARYSIGMOID
   case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
     function_context->func.free_local_context_func =
@@ -2526,15 +2573,6 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->channel_last = f->channel_last;
     function_context->func.local_context = ctx;
     allocate_max_pooling_backward_local_context(&function_context->func);
-  } break;
-#endif
-
-#ifdef CONFIG_WARPBYFLOW
-  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
-    function_context->func.free_local_context_func =
-        free_warp_by_flow_local_context;
-    function_context->func.local_context = 0;
-    allocate_warp_by_flow_local_context(&function_context->func);
   } break;
 #endif
 

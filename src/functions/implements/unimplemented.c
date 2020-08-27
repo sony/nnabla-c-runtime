@@ -188,6 +188,22 @@ rt_function_error_t exec_relu6(rt_function_t *f) {
 }
 #endif /* CONFIG_RELU6 */
 
+// Mish
+#ifdef CONFIG_MISH
+rt_function_error_t allocate_mish_local_context(rt_function_t *f) {
+  f->exec_func = exec_mish;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_mish_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_mish(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_MISH */
+
 // HardSigmoid
 #ifdef CONFIG_HARDSIGMOID
 rt_function_error_t allocate_hard_sigmoid_local_context(rt_function_t *f) {
@@ -1728,6 +1744,58 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 #endif /* CONFIG_KLMULTINOMIAL */
 
 ////////////////////////////////////////////////////////////////////////////////
+// Geometric Neural Network Layers
+////////////////////////////////////////////////////////////////////////////////
+
+// AffineGrid
+#ifdef CONFIG_AFFINEGRID
+rt_function_error_t allocate_affine_grid_local_context(rt_function_t *f) {
+  f->exec_func = exec_affine_grid;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_affine_grid_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_affine_grid(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_AFFINEGRID */
+
+// WarpByGrid
+#ifdef CONFIG_WARPBYGRID
+rt_function_error_t allocate_warp_by_grid_local_context(rt_function_t *f) {
+  f->exec_func = exec_warp_by_grid;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_warp_by_grid_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_warp_by_grid(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WARPBYGRID */
+
+// WarpByFlow
+#ifdef CONFIG_WARPBYFLOW
+rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f) {
+  f->exec_func = exec_warp_by_flow;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WARPBYFLOW */
+
+////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -2050,22 +2118,6 @@ rt_function_error_t exec_max_pooling_backward(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_MAXPOOLINGBACKWARD */
-
-// WarpByFlow
-#ifdef CONFIG_WARPBYFLOW
-rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f) {
-  f->exec_func = exec_warp_by_flow;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_WARPBYFLOW */
 
 // PatchCorrelation
 #ifdef CONFIG_PATCHCORRELATION
