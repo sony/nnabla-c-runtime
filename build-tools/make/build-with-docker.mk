@@ -126,7 +126,7 @@ bwd-nnabla-c-runtime-update-function-info: nnabla-c-runtime-docker_image_test
 ########################################################################################################################
 # Check api_level of NNabla
 .PHONY: bwd-check-api_level
-bwd-check-api_level: nnabla-c-runtime-docker_image_build
+bwd-check-api_level: nnabla-c-runtime-docker_image_test
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
 		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make check-api_level
