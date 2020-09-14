@@ -24,11 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.9.0.dev1")
+#define NN_NNABLA_VERSION ("1.11.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (17)
+#define NN_API_LEVEL (18)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +110,7 @@ typedef enum {
   NN_FUNCTION_CELU = 20,         ///< CELU
   NN_FUNCTION_PRELU = 21,        ///< PReLU
   NN_FUNCTION_GELU = 245,        ///< GELU
+  NN_FUNCTION_MISH = 298,        ///< Mish
   NN_FUNCTION_RELU6 = 256,       ///< ReLU6
   NN_FUNCTION_HARD_SIGMOID_0 =
       249, ///< Recent version of HardSigmoid has arg [Empty]
@@ -260,6 +261,9 @@ typedef enum {
   NN_FUNCTION_HUBER_LOSS = 102,               ///< HuberLoss
   NN_FUNCTION_EPSILON_INSENSITIVE_LOSS = 103, ///< EpsilonInsensitiveLoss
   NN_FUNCTION_KL_MULTINOMIAL = 104,           ///< KLMultinomial
+  NN_FUNCTION_AFFINE_GRID = 296,              ///< AffineGrid
+  NN_FUNCTION_WARP_BY_GRID = 297,             ///< WarpByGrid
+  NN_FUNCTION_WARP_BY_FLOW = 277,             ///< WarpByFlow
   NN_FUNCTION_BINARY_SIGMOID = 105,           ///< BinarySigmoid
   NN_FUNCTION_BINARY_TANH = 106,              ///< BinaryTanh
   NN_FUNCTION_BINARY_CONNECT_AFFINE_0 =
@@ -292,7 +296,6 @@ typedef enum {
   NN_FUNCTION_SINK = 120,                 ///< Sink
   NN_FUNCTION_NMS_DETECTION2D = 231,      ///< NmsDetection2d
   NN_FUNCTION_MAX_POOLING_BACKWARD = 272, ///< MaxPoolingBackward
-  NN_FUNCTION_WARP_BY_FLOW = 277,         ///< WarpByFlow
   NN_FUNCTION_PATCH_CORRELATION = 280,    ///< PatchCorrelation
   NN_END_OF_FUNCTION = 65535              // Ensure this type has 16bits
 } nn_function_type_t;
@@ -743,6 +746,17 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_gelu_t;
+
+/// @}
+
+/// @brief Mish function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_mish_t;
 
 /// @}
 
@@ -2461,6 +2475,47 @@ typedef struct {
 
 /// @}
 
+/// @brief AffineGrid function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t size;        ///< Original type is [repeated int64]
+  uint8_t align_corners; ///< Original type is [bool]
+} nn_function_affine_grid_t;
+
+/// @}
+
+/// @brief WarpByGrid function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint32_t mode;         ///< Original type is [string]
+  uint32_t padding_mode; ///< Original type is [string]
+  uint8_t align_corners; ///< Original type is [bool]
+  uint8_t channel_last;  ///< Original type is [bool]
+} nn_function_warp_by_grid_t;
+
+/// @}
+
+/// @brief WarpByFlow function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_warp_by_flow_t;
+
+/// @}
+
 /// @brief BinarySigmoid function.
 /// @{
 typedef struct {
@@ -2779,17 +2834,6 @@ typedef struct {
   nn_list_t pad;         ///< Original type is [Shape]
   uint8_t channel_last;  ///< Original type is [bool]
 } nn_function_max_pooling_backward_t;
-
-/// @}
-
-/// @brief WarpByFlow function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-} nn_function_warp_by_flow_t;
 
 /// @}
 

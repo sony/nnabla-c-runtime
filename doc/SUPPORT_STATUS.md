@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/187
+Total 62/190
 
 
 ## Neural Network Layer
@@ -44,7 +44,7 @@ Count 8/16
 |            Embed             |      no      |      -       |      -       |
 
 ## Neural Network Activation Functions
-Count 11/21
+Count 11/22
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -61,6 +61,7 @@ Count 11/21
 |             CELU             |     yes      |     yes      |     yes      |
 |            PReLU             |     yes      |     yes      |     yes      |
 |             GELU             |      no      |      -       |      -       |
+|             Mish             |      no      |      -       |      -       |
 |            ReLU6             |      no      |      -       |      -       |
 |         HardSigmoid          |      no      |      -       |      -       |
 |           HardTanh           |      no      |      -       |      -       |
@@ -250,6 +251,15 @@ Count 0/9
 |    EpsilonInsensitiveLoss    |      no      |      -       |      -       |
 |        KLMultinomial         |      no      |      -       |      -       |
 
+## Geometric Neural Network Layers
+Count 0/3
+
+|           Function           |  Available   |    float     |   generic    |
+|------------------------------|--------------|--------------|--------------|
+|          AffineGrid          |      no      |      -       |      -       |
+|          WarpByGrid          |      no      |      -       |      -       |
+|          WarpByFlow          |      no      |      -       |      -       |
+
 ## Quantization Neural Network Layers
 Count 6/14
 
@@ -280,7 +290,7 @@ Count 0/3
 |       ConfusionMatrix        |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
-Count 0/7
+Count 0/6
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -289,6 +299,5 @@ Count 0/7
 |             Sink             |      no      |      -       |      -       |
 |        NmsDetection2d        |      no      |      -       |      -       |
 |      MaxPoolingBackward      |      no      |      -       |      -       |
-|          WarpByFlow          |      no      |      -       |      -       |
 |       PatchCorrelation       |      no      |      -       |      -       |
 
