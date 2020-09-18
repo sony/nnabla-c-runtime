@@ -34,10 +34,16 @@ void calc_arithmetic_fixed16_largebuff(rt_function_t *f,
 void calc_scalar(rt_function_t *f, float value,
                  float (*calc_func)(float, float));
 
-// void calc_scalar_fixed8(rt_function_t *f, int8_t value,
-//                         int8_t (*calc_func)(int8_t, int8_t));
-// void calc_scalar_fixed16(rt_function_t *f, int16_t value,
-//                          int16_t (*calc_func)(int16_t, int16_t));
+void calc_scalar_fixed8(rt_function_t *f, float value,
+                        int8_t (*calc_func)(int8_t, int8_t));
+void calc_scalar_fixed16(rt_function_t *f, float value,
+                         int16_t (*calc_func)(int16_t, int16_t));
+void calc_scalar_fixed8_largebuff(rt_function_t *f, float value,
+                                  int16_t (*calc_func)(int8_t, int8_t,
+                                                       int rescaling_factor));
+void calc_scalar_fixed16_largebuff(rt_function_t *f, float value,
+                                   int32_t (*calc_func)(int16_t, int16_t,
+                                                        int rescaling_factor));
 void calc_scalar_generic(rt_function_t *f, float value,
                          float (*calc_func)(float, float));
 

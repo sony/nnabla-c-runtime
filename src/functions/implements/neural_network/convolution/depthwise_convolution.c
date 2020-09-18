@@ -131,14 +131,61 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
 #endif /* CONFIG_DEPTHWISECONVOLUTION_FLOAT32 */
 
 #ifdef CONFIG_DEPTHWISECONVOLUTION_GENERIC
-  for (i = 0; i < f->num_of_inputs; i++) {
+  for (int i = 0; i < f->num_of_inputs; i++) {
+
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FIXED8
+    if (f->inputs[i]->type == NN_DATA_TYPE_INT8) {
+      f->exec_func = exec_convolution_int8;
+      break;
+    }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FIXED8 */
+
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FIXED16
+    if (f->inputs[i]->type == NN_DATA_TYPE_INT16) {
+      f->exec_func = exec_convolution_int16;
+      break;
+    }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FIXED16 */
+
     if (f->inputs[i]->type != NN_DATA_TYPE_FLOAT) {
       f->exec_func = exec_convolution_generic;
       break;
     }
   }
-  if (f->outputs[0]->type != NN_DATA_TYPE_FLOAT) {
-    f->exec_func = exec_convolution_generic;
+
+  for (int i = 0; i < f->num_of_outputs; i++) {
+    int conv_output_assigned = 0;
+
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FIXED8
+    if ((f->outputs[i]->type == NN_DATA_TYPE_INT8) &&
+        (f->exec_func == exec_convolution_int8)) {
+      f->exec_func = exec_convolution_int8;
+      conv_output_assigned = 1;
+      break;
+    }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FIXED8 */
+
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FIXED16
+    if ((f->outputs[i]->type == NN_DATA_TYPE_INT16) &&
+        (f->exec_func == exec_convolution_int16)) {
+      f->exec_func = exec_convolution_int16;
+      conv_output_assigned = 1;
+      break;
+    }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FIXED16 */
+
+#ifdef CONFIG_DEPTHWISECONVOLUTION_FLOAT32
+    if ((f->outputs[i]->type == NN_DATA_TYPE_FLOAT) &&
+        (f->exec_func == exec_convolution_float)) {
+      f->exec_func = exec_convolution_float;
+      conv_output_assigned = 1;
+      break;
+    }
+#endif /* CONFIG_DEPTHWISECONVOLUTION_FLOAT32 */
+
+    if (!conv_output_assigned) {
+      f->exec_func = exec_convolution_generic;
+    }
   }
 #endif /* CONFIG_DEPTHWISECONVOLUTION_GENERIC */
 
