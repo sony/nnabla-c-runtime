@@ -24,11 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.11.0.dev1")
+#define NN_NNABLA_VERSION ("1.13.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (18)
+#define NN_API_LEVEL (20)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,6 +127,7 @@ typedef enum {
   NN_FUNCTION_FUSED_BATCH_NORMALIZATION = 270, ///< FusedBatchNormalization
   NN_FUNCTION_BATCH_NORMALIZATION = 22,        ///< BatchNormalization
   NN_FUNCTION_SYNC_BATCH_NORMALIZATION = 263,  ///< SyncBatchNormalization
+  NN_FUNCTION_WEIGHT_NORMALIZATION = 304,      ///< WeightNormalization
   NN_FUNCTION_MEAN_SUBTRACTION = 23,           ///< MeanSubtraction
   NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,        ///< ClipGradByValue
   NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,         ///< ClipGradByNorm
@@ -224,8 +225,12 @@ typedef enum {
   NN_FUNCTION_BATCH_INV = 275,       ///< BatchInv
   NN_FUNCTION_BATCH_DET = 276,       ///< BatchDet
   NN_FUNCTION_ASSIGN = 248,          ///< Assign
+  NN_FUNCTION_GATHER_0 = 302,        ///< Recent version of Gather has arg [iiI]
+  NN_FUNCTION_GATHER = 303,          ///< Gather
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
   NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
+  NN_FUNCTION_PACK_PADDED_SEQUENCE = 305, ///< PackPaddedSequence
+  NN_FUNCTION_PAD_PACKED_SEQUENCE = 306,  ///< PadPackedSequence
   NN_FUNCTION_INTERPOLATE_0 =
       127, ///< Recent version of Interpolate has arg [iIiB]
   NN_FUNCTION_INTERPOLATE_1 =
@@ -895,6 +900,20 @@ typedef struct {
   float eps;          ///< Original type is [float]
   uint8_t batch_stat; ///< Original type is [bool]
 } nn_function_sync_batch_normalization_t;
+
+/// @}
+
+/// @brief WeightNormalization function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t dim; ///< Original type is [int64]
+  float eps;   ///< Original type is [float]
+} nn_function_weight_normalization_t;
 
 /// @}
 
@@ -2046,6 +2065,20 @@ typedef struct {
 
 /// @}
 
+/// @brief Gather function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis;       ///< Original type is [int64]
+  int32_t batch_dims; ///< Original type is [int64]
+} nn_function_gather_t;
+
+/// @}
+
 /// @brief GatherNd function.
 /// @{
 typedef struct {
@@ -2067,6 +2100,34 @@ typedef struct {
   // End of common part.
   nn_list_t shape; ///< Original type is [repeated int64]
 } nn_function_scatter_nd_t;
+
+/// @}
+
+/// @brief PackPaddedSequence function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t batch_first; ///< Original type is [bool]
+} nn_function_pack_padded_sequence_t;
+
+/// @}
+
+/// @brief PadPackedSequence function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t batch_first;  ///< Original type is [bool]
+  float padding_value;  ///< Original type is [float]
+  int32_t total_length; ///< Original type is [int64]
+} nn_function_pad_packed_sequence_t;
 
 /// @}
 

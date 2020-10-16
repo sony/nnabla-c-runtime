@@ -897,6 +897,27 @@ free_sync_batch_normalization_local_context(rt_function_t *f);
 rt_function_error_t exec_sync_batch_normalization(rt_function_t *f);
 /// @}
 
+/// @defgroup WeightNormalization WeightNormalization
+/// @{
+
+/// Local context for WeightNormalization
+typedef struct {
+  int32_t dim; ///< int64
+  float eps;   ///< float
+  void *data;  ///< General purpose data area
+} weight_normalization_local_context_t;
+
+/// Allocate WeightNormalization local context
+rt_function_error_t
+allocate_weight_normalization_local_context(rt_function_t *f);
+
+/// Free WeightNormalization local context
+rt_function_error_t free_weight_normalization_local_context(rt_function_t *f);
+
+/// Exec WeightNormalization
+rt_function_error_t exec_weight_normalization(rt_function_t *f);
+/// @}
+
 /// @defgroup MeanSubtraction MeanSubtraction
 /// @{
 
@@ -2458,6 +2479,26 @@ rt_function_error_t free_assign_local_context(rt_function_t *f);
 rt_function_error_t exec_assign(rt_function_t *f);
 /// @}
 
+/// @defgroup Gather Gather
+/// @{
+
+/// Local context for Gather
+typedef struct {
+  int32_t axis;       ///< int64
+  int32_t batch_dims; ///< int64
+  void *data;         ///< General purpose data area
+} gather_local_context_t;
+
+/// Allocate Gather local context
+rt_function_error_t allocate_gather_local_context(rt_function_t *f);
+
+/// Free Gather local context
+rt_function_error_t free_gather_local_context(rt_function_t *f);
+
+/// Exec Gather
+rt_function_error_t exec_gather(rt_function_t *f);
+/// @}
+
 /// @defgroup GatherNd GatherNd
 /// @{
 
@@ -2488,6 +2529,48 @@ rt_function_error_t free_scatter_nd_local_context(rt_function_t *f);
 
 /// Exec ScatterNd
 rt_function_error_t exec_scatter_nd(rt_function_t *f);
+/// @}
+
+/// @defgroup PackPaddedSequence PackPaddedSequence
+/// @{
+
+/// Local context for PackPaddedSequence
+typedef struct {
+  uint8_t batch_first; ///< bool
+  void *data;          ///< General purpose data area
+} pack_padded_sequence_local_context_t;
+
+/// Allocate PackPaddedSequence local context
+rt_function_error_t
+allocate_pack_padded_sequence_local_context(rt_function_t *f);
+
+/// Free PackPaddedSequence local context
+rt_function_error_t free_pack_padded_sequence_local_context(rt_function_t *f);
+
+/// Exec PackPaddedSequence
+rt_function_error_t exec_pack_padded_sequence(rt_function_t *f);
+/// @}
+
+/// @defgroup PadPackedSequence PadPackedSequence
+/// @{
+
+/// Local context for PadPackedSequence
+typedef struct {
+  uint8_t batch_first;  ///< bool
+  float padding_value;  ///< float
+  int32_t total_length; ///< int64
+  void *data;           ///< General purpose data area
+} pad_packed_sequence_local_context_t;
+
+/// Allocate PadPackedSequence local context
+rt_function_error_t
+allocate_pad_packed_sequence_local_context(rt_function_t *f);
+
+/// Free PadPackedSequence local context
+rt_function_error_t free_pad_packed_sequence_local_context(rt_function_t *f);
+
+/// Exec PadPackedSequence
+rt_function_error_t exec_pad_packed_sequence(rt_function_t *f);
 /// @}
 
 /// @}

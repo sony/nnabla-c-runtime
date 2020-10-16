@@ -153,6 +153,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     printf("NNB: Function type:    SyncBatchNormalization(263)\n");
   } break;
+  case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
+    printf("NNB: Function type:    WeightNormalization(304)\n");
+  } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     printf("NNB: Function type:    MeanSubtraction(23)\n");
   } break;
@@ -435,11 +438,20 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ASSIGN: { // Assign
     printf("NNB: Function type:    Assign(248)\n");
   } break;
+  case NN_FUNCTION_GATHER: { // Gather
+    printf("NNB: Function type:    Gather(303)\n");
+  } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
     printf("NNB: Function type:    GatherNd(264)\n");
   } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     printf("NNB: Function type:    ScatterNd(271)\n");
+  } break;
+  case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
+    printf("NNB: Function type:    PackPaddedSequence(305)\n");
+  } break;
+  case NN_FUNCTION_PAD_PACKED_SEQUENCE: { // PadPackedSequence
+    printf("NNB: Function type:    PadPackedSequence(306)\n");
   } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     printf("NNB: Function type:    Interpolate(291)\n");
@@ -962,6 +974,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
   } break;
+  case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
+    nn_function_weight_normalization_t *f =
+        (nn_function_weight_normalization_t *)func;
+    printf("NNB: Function argument dim: %d\n", f->dim);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     nn_function_mean_subtraction_t *f = (nn_function_mean_subtraction_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
@@ -1361,6 +1379,11 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_ASSIGN: { // Assign
   } break;
+  case NN_FUNCTION_GATHER: { // Gather
+    nn_function_gather_t *f = (nn_function_gather_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
+    printf("NNB: Function argument batch_dims: %d\n", f->batch_dims);
+  } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
   } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
@@ -1371,6 +1394,18 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+  } break;
+  case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
+    nn_function_pack_padded_sequence_t *f =
+        (nn_function_pack_padded_sequence_t *)func;
+    printf("NNB: Function argument batch_first: %d\n", f->batch_first);
+  } break;
+  case NN_FUNCTION_PAD_PACKED_SEQUENCE: { // PadPackedSequence
+    nn_function_pad_packed_sequence_t *f =
+        (nn_function_pad_packed_sequence_t *)func;
+    printf("NNB: Function argument batch_first: %d\n", f->batch_first);
+    printf("NNB: Function argument padding_value: %f\n", f->padding_value);
+    printf("NNB: Function argument total_length: %d\n", f->total_length);
   } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     nn_function_interpolate_t *f = (nn_function_interpolate_t *)func;

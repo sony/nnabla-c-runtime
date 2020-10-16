@@ -371,6 +371,23 @@ rt_function_error_t exec_sync_batch_normalization(rt_function_t *f) {
 }
 #endif /* CONFIG_FUSEDBATCHNORMALIZATION */
 
+// WeightNormalization
+#ifdef CONFIG_WEIGHTNORMALIZATION
+rt_function_error_t
+allocate_weight_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_weight_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_weight_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_weight_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WEIGHTNORMALIZATION */
+
 #ifdef CONFIG_CLIPGRADBYVALUE
 rt_function_error_t
 allocate_clip_grad_by_value_local_context(rt_function_t *f) {
@@ -1247,6 +1264,22 @@ rt_function_error_t exec_tile(rt_function_t *f) {
 }
 #endif /* CONFIG_TILE */
 
+// Gather
+#ifdef CONFIG_GATHER
+rt_function_error_t allocate_gather_local_context(rt_function_t *f) {
+  f->exec_func = exec_gather;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_gather_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_gather(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_GATHER */
+
 // Assign
 #ifdef CONFIG_ASSIGN
 rt_function_error_t allocate_assign_local_context(rt_function_t *f) {
@@ -1294,6 +1327,40 @@ rt_function_error_t exec_scatter_nd(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_SCATTERND */
+
+// PackPaddedSequence
+#ifdef CONFIG_PACKPADDEDSEQUENCE
+rt_function_error_t
+allocate_pack_padded_sequence_local_context(rt_function_t *f) {
+  f->exec_func = exec_pack_padded_sequence;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_pack_padded_sequence_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_pack_padded_sequence(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_PACKPADDEDSEQUENCE */
+
+// PadPackedSequence
+#ifdef CONFIG_PADPACKEDSEQUENCE
+rt_function_error_t
+allocate_pad_packed_sequence_local_context(rt_function_t *f) {
+  f->exec_func = exec_pad_packed_sequence;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_pad_packed_sequence_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_pad_packed_sequence(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_PADPACKEDSEQUENCE */
 
 // OneHot
 #ifdef CONFIG_ONEHOT

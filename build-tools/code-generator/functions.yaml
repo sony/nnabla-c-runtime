@@ -972,6 +972,27 @@ Normalization:
     id: 263
     func_type:
     - ALL
+  WeightNormalization:
+    snake_name: weight_normalization
+    inputs:
+      w: {}
+      g: {}
+    arguments:
+      dim:
+        type: int64
+        default: '0'
+      eps:
+        type: float
+        default: 1e-12
+    outputs:
+      w_wn: {}
+    c_runtime: not support
+    function_ids:
+      if: 304
+    uniq_name: WeightNormalization_if
+    id: 304
+    func_type:
+    - ALL
   MeanSubtraction:
     snake_name: mean_subtraction
     inputs:
@@ -2486,6 +2507,28 @@ Array Manipulation:
     id: 248
     func_type:
     - ALL
+  Gather:
+    snake_name: gather
+    inputs:
+      x: {}
+      Indices: {}
+    arguments:
+      axis:
+        type: int64
+        default: 0
+      batch_dims:
+        type: int64
+        default: 0
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiI: 302
+      ii: 303
+    uniq_name: Gather_ii
+    id: 303
+    func_type:
+    - ALL
   GatherNd:
     snake_name: gather_nd
     inputs:
@@ -2518,6 +2561,50 @@ Array Manipulation:
       iI: 271
     uniq_name: ScatterNd_iI
     id: 271
+    func_type:
+    - ALL
+  PackPaddedSequence:
+    snake_name: pack_padded_sequence
+    inputs:
+      padded_sequence: {}
+      lengths: {}
+    arguments:
+      batch_first:
+        type: bool
+        default: 'False'
+    outputs:
+      pack_sequence: {}
+      batch_sizes: {}
+    c_runtime: not support
+    function_ids:
+      B: 305
+    uniq_name: PackPaddedSequence_B
+    id: 305
+    func_type:
+    - ALL
+  PadPackedSequence:
+    snake_name: pad_packed_sequence
+    inputs:
+      packed_sequence: {}
+      batch_sizes: {}
+    arguments:
+      batch_first:
+        type: bool
+        default: 'False'
+      padding_value:
+        type: float
+        default: 0.0
+      total_length:
+        type: int64
+        default: -1
+    outputs:
+      padded_sequence: {}
+      lengths: {}
+    c_runtime: not support
+    function_ids:
+      Bfi: 306
+    uniq_name: PadPackedSequence_Bfi
+    id: 306
     func_type:
     - ALL
 Signal Processing:
