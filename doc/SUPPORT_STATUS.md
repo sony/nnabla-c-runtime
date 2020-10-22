@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/190
+Total 62/194
 
 
 ## Neural Network Layer
@@ -72,13 +72,14 @@ Count 11/22
 |             Sinc             |      no      |      -       |      -       |
 
 ## Normalization
-Count 2/6
+Count 2/7
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |   FusedBatchNormalization    |      no      |      -       |      -       |
 |      BatchNormalization      |     yes      |     yes      |     yes      |
 |    SyncBatchNormalization    |      no      |      -       |      -       |
+|     WeightNormalization      |      no      |      -       |      -       |
 |       MeanSubtraction        |     yes      |     yes      |     yes      |
 |       ClipGradByValue        |      no      |      -       |      -       |
 |        ClipGradByNorm        |      no      |      -       |      -       |
@@ -180,7 +181,7 @@ Count 6/22
 |            ATanh             |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/21
+Count 11/24
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -203,8 +204,11 @@ Count 11/21
 |           BatchInv           |      no      |      -       |      -       |
 |           BatchDet           |      no      |      -       |      -       |
 |            Assign            |      no      |      -       |      -       |
+|            Gather            |      no      |      -       |      -       |
 |           GatherNd           |      no      |      -       |      -       |
 |          ScatterNd           |      no      |      -       |      -       |
+|      PackPaddedSequence      |      no      |      -       |      -       |
+|      PadPackedSequence       |      no      |      -       |      -       |
 
 ## Signal Processing
 Count 0/3

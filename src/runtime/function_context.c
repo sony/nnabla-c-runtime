@@ -664,6 +664,21 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_WEIGHTNORMALIZATION
+  case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
+    function_context->func.free_local_context_func =
+        free_weight_normalization_local_context;
+    nn_function_weight_normalization_t *f =
+        (nn_function_weight_normalization_t *)function;
+    weight_normalization_local_context_t *ctx =
+        rt_malloc_func(sizeof(weight_normalization_local_context_t));
+    ctx->dim = f->dim;
+    ctx->eps = f->eps;
+    function_context->func.local_context = ctx;
+    allocate_weight_normalization_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_MEANSUBTRACTION
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     function_context->func.free_local_context_func =
@@ -1689,6 +1704,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_GATHER
+  case NN_FUNCTION_GATHER: { // Gather
+    function_context->func.free_local_context_func = free_gather_local_context;
+    nn_function_gather_t *f = (nn_function_gather_t *)function;
+    gather_local_context_t *ctx =
+        rt_malloc_func(sizeof(gather_local_context_t));
+    ctx->axis = f->axis;
+    ctx->batch_dims = f->batch_dims;
+    function_context->func.local_context = ctx;
+    allocate_gather_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_GATHERND
   case NN_FUNCTION_GATHER_ND: { // GatherNd
     function_context->func.free_local_context_func =
@@ -1708,6 +1736,36 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->shape = create_rt_list_from_nn_list(n, f->shape);
     function_context->func.local_context = ctx;
     allocate_scatter_nd_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_PACKPADDEDSEQUENCE
+  case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
+    function_context->func.free_local_context_func =
+        free_pack_padded_sequence_local_context;
+    nn_function_pack_padded_sequence_t *f =
+        (nn_function_pack_padded_sequence_t *)function;
+    pack_padded_sequence_local_context_t *ctx =
+        rt_malloc_func(sizeof(pack_padded_sequence_local_context_t));
+    ctx->batch_first = f->batch_first;
+    function_context->func.local_context = ctx;
+    allocate_pack_padded_sequence_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_PADPACKEDSEQUENCE
+  case NN_FUNCTION_PAD_PACKED_SEQUENCE: { // PadPackedSequence
+    function_context->func.free_local_context_func =
+        free_pad_packed_sequence_local_context;
+    nn_function_pad_packed_sequence_t *f =
+        (nn_function_pad_packed_sequence_t *)function;
+    pad_packed_sequence_local_context_t *ctx =
+        rt_malloc_func(sizeof(pad_packed_sequence_local_context_t));
+    ctx->batch_first = f->batch_first;
+    ctx->padding_value = f->padding_value;
+    ctx->total_length = f->total_length;
+    function_context->func.local_context = ctx;
+    allocate_pad_packed_sequence_local_context(&function_context->func);
   } break;
 #endif
 
