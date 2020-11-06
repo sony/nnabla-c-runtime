@@ -193,31 +193,31 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    AddN(281)\n");
   } break;
   case NN_FUNCTION_BC_ADD2: { // BcAdd2
-    printf("NNB: Function type:    BcAdd2(32)\n");
+    printf("NNB: Function type:    BcAdd2(307)\n");
   } break;
   case NN_FUNCTION_SUB2: { // Sub2
-    printf("NNB: Function type:    Sub2(33)\n");
+    printf("NNB: Function type:    Sub2(308)\n");
   } break;
   case NN_FUNCTION_MUL2: { // Mul2
-    printf("NNB: Function type:    Mul2(34)\n");
+    printf("NNB: Function type:    Mul2(309)\n");
   } break;
   case NN_FUNCTION_MUL_N: { // MulN
     printf("NNB: Function type:    MulN(282)\n");
   } break;
   case NN_FUNCTION_DIV2: { // Div2
-    printf("NNB: Function type:    Div2(35)\n");
+    printf("NNB: Function type:    Div2(310)\n");
   } break;
   case NN_FUNCTION_POW2: { // Pow2
-    printf("NNB: Function type:    Pow2(36)\n");
+    printf("NNB: Function type:    Pow2(311)\n");
   } break;
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
-    printf("NNB: Function type:    AddScalar(37)\n");
+    printf("NNB: Function type:    AddScalar(312)\n");
   } break;
   case NN_FUNCTION_MUL_SCALAR: { // MulScalar
-    printf("NNB: Function type:    MulScalar(38)\n");
+    printf("NNB: Function type:    MulScalar(313)\n");
   } break;
   case NN_FUNCTION_POW_SCALAR: { // PowScalar
-    printf("NNB: Function type:    PowScalar(39)\n");
+    printf("NNB: Function type:    PowScalar(314)\n");
   } break;
   case NN_FUNCTION_R_SUB_SCALAR: { // RSubScalar
     printf("NNB: Function type:    RSubScalar(40)\n");
@@ -1064,28 +1064,41 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ADD_N: { // AddN
   } break;
   case NN_FUNCTION_BC_ADD2: { // BcAdd2
+    nn_function_bc_add2_t *f = (nn_function_bc_add2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_SUB2: { // Sub2
+    nn_function_sub2_t *f = (nn_function_sub2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_MUL2: { // Mul2
+    nn_function_mul2_t *f = (nn_function_mul2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_MUL_N: { // MulN
   } break;
   case NN_FUNCTION_DIV2: { // Div2
+    nn_function_div2_t *f = (nn_function_div2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_POW2: { // Pow2
+    nn_function_pow2_t *f = (nn_function_pow2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
     nn_function_add_scalar_t *f = (nn_function_add_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_MUL_SCALAR: { // MulScalar
     nn_function_mul_scalar_t *f = (nn_function_mul_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_POW_SCALAR: { // PowScalar
     nn_function_pow_scalar_t *f = (nn_function_pow_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_R_SUB_SCALAR: { // RSubScalar
     nn_function_r_sub_scalar_t *f = (nn_function_r_sub_scalar_t *)func;
