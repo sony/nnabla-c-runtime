@@ -24,11 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.13.0.dev1")
+#define NN_NNABLA_VERSION ("1.14.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (20)
+#define NN_API_LEVEL (21)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,46 +133,54 @@ typedef enum {
   NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,         ///< ClipGradByNorm
   NN_FUNCTION_SUM = 24,                        ///< Sum
   NN_FUNCTION_MEAN = 25,                       ///< Mean
-  NN_FUNCTION_MAX_0 = 26,              ///< Recent version of Max has arg [iIB]
-  NN_FUNCTION_MAX = 132,               ///< Max
-  NN_FUNCTION_MIN_0 = 27,              ///< Recent version of Min has arg [iIB]
-  NN_FUNCTION_MIN = 130,               ///< Min
-  NN_FUNCTION_PROD = 28,               ///< Prod
-  NN_FUNCTION_REDUCE_SUM = 29,         ///< ReduceSum
-  NN_FUNCTION_REDUCE_MEAN = 30,        ///< ReduceMean
-  NN_FUNCTION_ADD2 = 31,               ///< Add2
-  NN_FUNCTION_ADD_N = 281,             ///< AddN
-  NN_FUNCTION_BC_ADD2 = 32,            ///< BcAdd2
-  NN_FUNCTION_SUB2 = 33,               ///< Sub2
-  NN_FUNCTION_MUL2 = 34,               ///< Mul2
-  NN_FUNCTION_MUL_N = 282,             ///< MulN
-  NN_FUNCTION_DIV2 = 35,               ///< Div2
-  NN_FUNCTION_POW2 = 36,               ///< Pow2
-  NN_FUNCTION_ADD_SCALAR = 37,         ///< AddScalar
-  NN_FUNCTION_MUL_SCALAR = 38,         ///< MulScalar
-  NN_FUNCTION_POW_SCALAR = 39,         ///< PowScalar
-  NN_FUNCTION_R_SUB_SCALAR = 40,       ///< RSubScalar
-  NN_FUNCTION_R_DIV_SCALAR = 41,       ///< RDivScalar
-  NN_FUNCTION_R_POW_SCALAR = 42,       ///< RPowScalar
-  NN_FUNCTION_SIGN = 43,               ///< Sign
-  NN_FUNCTION_MINIMUM2 = 44,           ///< Minimum2
-  NN_FUNCTION_MAXIMUM2 = 45,           ///< Maximum2
-  NN_FUNCTION_MINIMUM_SCALAR = 46,     ///< MinimumScalar
-  NN_FUNCTION_MAXIMUM_SCALAR = 47,     ///< MaximumScalar
-  NN_FUNCTION_LOGICAL_AND = 48,        ///< LogicalAnd
-  NN_FUNCTION_LOGICAL_OR = 49,         ///< LogicalOr
-  NN_FUNCTION_LOGICAL_XOR = 50,        ///< LogicalXor
-  NN_FUNCTION_EQUAL = 51,              ///< Equal
-  NN_FUNCTION_NOT_EQUAL = 52,          ///< NotEqual
-  NN_FUNCTION_GREATER_EQUAL = 53,      ///< GreaterEqual
-  NN_FUNCTION_GREATER = 54,            ///< Greater
-  NN_FUNCTION_LESS_EQUAL = 55,         ///< LessEqual
-  NN_FUNCTION_LESS = 56,               ///< Less
-  NN_FUNCTION_LOGICAL_AND_SCALAR = 57, ///< LogicalAndScalar
-  NN_FUNCTION_LOGICAL_OR_SCALAR = 58,  ///< LogicalOrScalar
-  NN_FUNCTION_LOGICAL_XOR_SCALAR = 59, ///< LogicalXorScalar
-  NN_FUNCTION_EQUAL_SCALAR = 60,       ///< EqualScalar
-  NN_FUNCTION_NOT_EQUAL_SCALAR = 61,   ///< NotEqualScalar
+  NN_FUNCTION_MAX_0 = 26,          ///< Recent version of Max has arg [iIB]
+  NN_FUNCTION_MAX = 132,           ///< Max
+  NN_FUNCTION_MIN_0 = 27,          ///< Recent version of Min has arg [iIB]
+  NN_FUNCTION_MIN = 130,           ///< Min
+  NN_FUNCTION_PROD = 28,           ///< Prod
+  NN_FUNCTION_REDUCE_SUM = 29,     ///< ReduceSum
+  NN_FUNCTION_REDUCE_MEAN = 30,    ///< ReduceMean
+  NN_FUNCTION_ADD2 = 31,           ///< Add2
+  NN_FUNCTION_ADD_N = 281,         ///< AddN
+  NN_FUNCTION_BC_ADD2_0 = 32,      ///< Recent version of BcAdd2 has arg [Empty]
+  NN_FUNCTION_BC_ADD2 = 307,       ///< BcAdd2
+  NN_FUNCTION_SUB2_0 = 33,         ///< Recent version of Sub2 has arg [Empty]
+  NN_FUNCTION_SUB2 = 308,          ///< Sub2
+  NN_FUNCTION_MUL2_0 = 34,         ///< Recent version of Mul2 has arg [Empty]
+  NN_FUNCTION_MUL2 = 309,          ///< Mul2
+  NN_FUNCTION_MUL_N = 282,         ///< MulN
+  NN_FUNCTION_DIV2_0 = 35,         ///< Recent version of Div2 has arg [Empty]
+  NN_FUNCTION_DIV2 = 310,          ///< Div2
+  NN_FUNCTION_POW2_0 = 36,         ///< Recent version of Pow2 has arg [Empty]
+  NN_FUNCTION_POW2 = 311,          ///< Pow2
+  NN_FUNCTION_ADD_SCALAR_0 = 37,   ///< Recent version of AddScalar has arg [f]
+  NN_FUNCTION_ADD_SCALAR = 312,    ///< AddScalar
+  NN_FUNCTION_MUL_SCALAR_0 = 38,   ///< Recent version of MulScalar has arg [f]
+  NN_FUNCTION_MUL_SCALAR = 313,    ///< MulScalar
+  NN_FUNCTION_POW_SCALAR_0 = 39,   ///< Recent version of PowScalar has arg [f]
+  NN_FUNCTION_POW_SCALAR = 314,    ///< PowScalar
+  NN_FUNCTION_R_SUB_SCALAR = 40,   ///< RSubScalar
+  NN_FUNCTION_R_DIV_SCALAR = 41,   ///< RDivScalar
+  NN_FUNCTION_R_POW_SCALAR = 42,   ///< RPowScalar
+  NN_FUNCTION_SIGN = 43,           ///< Sign
+  NN_FUNCTION_MINIMUM2 = 44,       ///< Minimum2
+  NN_FUNCTION_MAXIMUM2 = 45,       ///< Maximum2
+  NN_FUNCTION_MINIMUM_SCALAR = 46, ///< MinimumScalar
+  NN_FUNCTION_MAXIMUM_SCALAR = 47, ///< MaximumScalar
+  NN_FUNCTION_LOGICAL_AND = 48,    ///< LogicalAnd
+  NN_FUNCTION_LOGICAL_OR = 49,     ///< LogicalOr
+  NN_FUNCTION_LOGICAL_XOR = 50,    ///< LogicalXor
+  NN_FUNCTION_EQUAL = 51,          ///< Equal
+  NN_FUNCTION_NOT_EQUAL = 52,      ///< NotEqual
+  NN_FUNCTION_GREATER_EQUAL = 53,  ///< GreaterEqual
+  NN_FUNCTION_GREATER = 54,        ///< Greater
+  NN_FUNCTION_LESS_EQUAL = 55,     ///< LessEqual
+  NN_FUNCTION_LESS = 56,           ///< Less
+  NN_FUNCTION_LOGICAL_AND_SCALAR = 57,   ///< LogicalAndScalar
+  NN_FUNCTION_LOGICAL_OR_SCALAR = 58,    ///< LogicalOrScalar
+  NN_FUNCTION_LOGICAL_XOR_SCALAR = 59,   ///< LogicalXorScalar
+  NN_FUNCTION_EQUAL_SCALAR = 60,         ///< EqualScalar
+  NN_FUNCTION_NOT_EQUAL_SCALAR = 61,     ///< NotEqualScalar
   NN_FUNCTION_GREATER_EQUAL_SCALAR = 62, ///< GreaterEqualScalar
   NN_FUNCTION_GREATER_SCALAR = 63,       ///< GreaterScalar
   NN_FUNCTION_LESS_EQUAL_SCALAR = 64,    ///< LessEqualScalar
@@ -1083,6 +1091,8 @@ typedef struct {
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_bc_add2_t;
 
 /// @}
@@ -1094,6 +1104,8 @@ typedef struct {
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_sub2_t;
 
 /// @}
@@ -1105,6 +1117,8 @@ typedef struct {
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_mul2_t;
 
 /// @}
@@ -1127,6 +1141,8 @@ typedef struct {
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_div2_t;
 
 /// @}
@@ -1138,6 +1154,8 @@ typedef struct {
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_pow2_t;
 
 /// @}
@@ -1150,7 +1168,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  float val; ///< Original type is [double]
+  float val;       ///< Original type is [double]
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_add_scalar_t;
 
 /// @}
@@ -1163,7 +1182,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  float val; ///< Original type is [double]
+  float val;       ///< Original type is [double]
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_mul_scalar_t;
 
 /// @}
@@ -1176,7 +1196,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  float val; ///< Original type is [double]
+  float val;       ///< Original type is [double]
+  uint8_t inplace; ///< Original type is [bool]
 } nn_function_pow_scalar_t;
 
 /// @}

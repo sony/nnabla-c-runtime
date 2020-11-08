@@ -1229,13 +1229,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 32
+      B: 307
     c_runtime: not support
-    uniq_name: BcAdd2
-    id: 32
+    uniq_name: BcAdd2_B
+    id: 307
     func_type:
     - ALL
   Sub2:
@@ -1243,13 +1248,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 33
+      B: 308
     c_runtime: support
-    uniq_name: Sub2
-    id: 33
+    uniq_name: Sub2_B
+    id: 308
     func_type:
     - ALL
   Mul2:
@@ -1257,13 +1267,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 34
+      B: 309
     c_runtime: support
-    uniq_name: Mul2
-    id: 34
+    uniq_name: Mul2_B
+    id: 309
     func_type:
     - ALL
   MulN:
@@ -1285,13 +1300,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 35
+      B: 310
     c_runtime: support
-    uniq_name: Div2
-    id: 35
+    uniq_name: Div2_B
+    id: 310
     func_type:
     - ALL
   Pow2:
@@ -1299,13 +1319,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 36
+      B: 311
     c_runtime: support
-    uniq_name: Pow2
-    id: 36
+    uniq_name: Pow2_B
+    id: 311
     func_type:
     - ALL
   AddScalar:
@@ -1316,13 +1341,17 @@ Arithmetic:
       val:
         type: double
         default: '1'
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       f: 37
+      fB: 312
     c_runtime: support
-    uniq_name: AddScalar_f
-    id: 37
+    uniq_name: AddScalar_fB
+    id: 312
     func_type:
     - ALL
   MulScalar:
@@ -1333,13 +1362,17 @@ Arithmetic:
       val:
         type: double
         default: '1'
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       f: 38
+      fB: 313
     c_runtime: support
-    uniq_name: MulScalar_f
-    id: 38
+    uniq_name: MulScalar_fB
+    id: 313
     func_type:
     - ALL
   PowScalar:
@@ -1350,13 +1383,17 @@ Arithmetic:
       val:
         type: double
         default: '1'
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       f: 39
+      fB: 314
     c_runtime: support
-    uniq_name: PowScalar_f
-    id: 39
+    uniq_name: PowScalar_fB
+    id: 314
     func_type:
     - ALL
   RSubScalar:

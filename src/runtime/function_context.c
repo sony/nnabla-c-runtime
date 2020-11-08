@@ -842,25 +842,50 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_BCADD2
-  case NN_FUNCTION_BC_ADD2: { // BcAdd2
+  case NN_FUNCTION_BC_ADD2_0: { // BcAdd2
     function_context->func.free_local_context_func = free_bc_add2_local_context;
     function_context->func.local_context = 0;
+    allocate_bc_add2_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_BC_ADD2: { // BcAdd2
+    function_context->func.free_local_context_func = free_bc_add2_local_context;
+    nn_function_bc_add2_t *f = (nn_function_bc_add2_t *)function;
+    bc_add2_local_context_t *ctx =
+        rt_malloc_func(sizeof(bc_add2_local_context_t));
+    ctx->inplace = f->inplace;
+    function_context->func.local_context = ctx;
     allocate_bc_add2_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_SUB2
-  case NN_FUNCTION_SUB2: { // Sub2
+  case NN_FUNCTION_SUB2_0: { // Sub2
     function_context->func.free_local_context_func = free_sub2_local_context;
     function_context->func.local_context = 0;
+    allocate_sub2_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_SUB2: { // Sub2
+    function_context->func.free_local_context_func = free_sub2_local_context;
+    nn_function_sub2_t *f = (nn_function_sub2_t *)function;
+    sub2_local_context_t *ctx = rt_malloc_func(sizeof(sub2_local_context_t));
+    ctx->inplace = f->inplace;
+    function_context->func.local_context = ctx;
     allocate_sub2_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_MUL2
-  case NN_FUNCTION_MUL2: { // Mul2
+  case NN_FUNCTION_MUL2_0: { // Mul2
     function_context->func.free_local_context_func = free_mul2_local_context;
     function_context->func.local_context = 0;
+    allocate_mul2_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_MUL2: { // Mul2
+    function_context->func.free_local_context_func = free_mul2_local_context;
+    nn_function_mul2_t *f = (nn_function_mul2_t *)function;
+    mul2_local_context_t *ctx = rt_malloc_func(sizeof(mul2_local_context_t));
+    ctx->inplace = f->inplace;
+    function_context->func.local_context = ctx;
     allocate_mul2_local_context(&function_context->func);
   } break;
 #endif
@@ -874,22 +899,49 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_DIV2
-  case NN_FUNCTION_DIV2: { // Div2
+  case NN_FUNCTION_DIV2_0: { // Div2
     function_context->func.free_local_context_func = free_div2_local_context;
     function_context->func.local_context = 0;
+    allocate_div2_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_DIV2: { // Div2
+    function_context->func.free_local_context_func = free_div2_local_context;
+    nn_function_div2_t *f = (nn_function_div2_t *)function;
+    div2_local_context_t *ctx = rt_malloc_func(sizeof(div2_local_context_t));
+    ctx->inplace = f->inplace;
+    function_context->func.local_context = ctx;
     allocate_div2_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_POW2
-  case NN_FUNCTION_POW2: { // Pow2
+  case NN_FUNCTION_POW2_0: { // Pow2
     function_context->func.free_local_context_func = free_pow2_local_context;
     function_context->func.local_context = 0;
+    allocate_pow2_local_context(&function_context->func);
+  } break;
+  case NN_FUNCTION_POW2: { // Pow2
+    function_context->func.free_local_context_func = free_pow2_local_context;
+    nn_function_pow2_t *f = (nn_function_pow2_t *)function;
+    pow2_local_context_t *ctx = rt_malloc_func(sizeof(pow2_local_context_t));
+    ctx->inplace = f->inplace;
+    function_context->func.local_context = ctx;
     allocate_pow2_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_ADDSCALAR
+  case NN_FUNCTION_ADD_SCALAR_0: { // AddScalar
+    function_context->func.free_local_context_func =
+        free_add_scalar_local_context;
+    nn_function_add_scalar_t *f = (nn_function_add_scalar_t *)function;
+    add_scalar_local_context_t *ctx =
+        rt_malloc_func(sizeof(add_scalar_local_context_t));
+    ctx->val = f->val;
+    ctx->inplace = 0;
+    function_context->func.local_context = ctx;
+    allocate_add_scalar_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
     function_context->func.free_local_context_func =
         free_add_scalar_local_context;
@@ -897,12 +949,24 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     add_scalar_local_context_t *ctx =
         rt_malloc_func(sizeof(add_scalar_local_context_t));
     ctx->val = f->val;
+    ctx->inplace = f->inplace;
     function_context->func.local_context = ctx;
     allocate_add_scalar_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_MULSCALAR
+  case NN_FUNCTION_MUL_SCALAR_0: { // MulScalar
+    function_context->func.free_local_context_func =
+        free_mul_scalar_local_context;
+    nn_function_mul_scalar_t *f = (nn_function_mul_scalar_t *)function;
+    mul_scalar_local_context_t *ctx =
+        rt_malloc_func(sizeof(mul_scalar_local_context_t));
+    ctx->val = f->val;
+    ctx->inplace = 0;
+    function_context->func.local_context = ctx;
+    allocate_mul_scalar_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_MUL_SCALAR: { // MulScalar
     function_context->func.free_local_context_func =
         free_mul_scalar_local_context;
@@ -910,12 +974,24 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     mul_scalar_local_context_t *ctx =
         rt_malloc_func(sizeof(mul_scalar_local_context_t));
     ctx->val = f->val;
+    ctx->inplace = f->inplace;
     function_context->func.local_context = ctx;
     allocate_mul_scalar_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_POWSCALAR
+  case NN_FUNCTION_POW_SCALAR_0: { // PowScalar
+    function_context->func.free_local_context_func =
+        free_pow_scalar_local_context;
+    nn_function_pow_scalar_t *f = (nn_function_pow_scalar_t *)function;
+    pow_scalar_local_context_t *ctx =
+        rt_malloc_func(sizeof(pow_scalar_local_context_t));
+    ctx->val = f->val;
+    ctx->inplace = 0;
+    function_context->func.local_context = ctx;
+    allocate_pow_scalar_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_POW_SCALAR: { // PowScalar
     function_context->func.free_local_context_func =
         free_pow_scalar_local_context;
@@ -923,6 +999,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     pow_scalar_local_context_t *ctx =
         rt_malloc_func(sizeof(pow_scalar_local_context_t));
     ctx->val = f->val;
+    ctx->inplace = f->inplace;
     function_context->func.local_context = ctx;
     allocate_pow_scalar_local_context(&function_context->func);
   } break;

@@ -1148,6 +1148,12 @@ rt_function_error_t exec_add_n(rt_function_t *f);
 /// @defgroup BcAdd2 BcAdd2
 /// @{
 
+/// Local context for BcAdd2
+typedef struct {
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
+} bc_add2_local_context_t;
+
 /// Allocate BcAdd2 local context
 rt_function_error_t allocate_bc_add2_local_context(rt_function_t *f);
 
@@ -1161,6 +1167,12 @@ rt_function_error_t exec_bc_add2(rt_function_t *f);
 /// @defgroup Sub2 Sub2
 /// @{
 
+/// Local context for Sub2
+typedef struct {
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
+} sub2_local_context_t;
+
 /// Allocate Sub2 local context
 rt_function_error_t allocate_sub2_local_context(rt_function_t *f);
 
@@ -1173,6 +1185,12 @@ rt_function_error_t exec_sub2(rt_function_t *f);
 
 /// @defgroup Mul2 Mul2
 /// @{
+
+/// Local context for Mul2
+typedef struct {
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
+} mul2_local_context_t;
 
 /// Allocate Mul2 local context
 rt_function_error_t allocate_mul2_local_context(rt_function_t *f);
@@ -1200,6 +1218,12 @@ rt_function_error_t exec_mul_n(rt_function_t *f);
 /// @defgroup Div2 Div2
 /// @{
 
+/// Local context for Div2
+typedef struct {
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
+} div2_local_context_t;
+
 /// Allocate Div2 local context
 rt_function_error_t allocate_div2_local_context(rt_function_t *f);
 
@@ -1212,6 +1236,12 @@ rt_function_error_t exec_div2(rt_function_t *f);
 
 /// @defgroup Pow2 Pow2
 /// @{
+
+/// Local context for Pow2
+typedef struct {
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
+} pow2_local_context_t;
 
 /// Allocate Pow2 local context
 rt_function_error_t allocate_pow2_local_context(rt_function_t *f);
@@ -1228,8 +1258,9 @@ rt_function_error_t exec_pow2(rt_function_t *f);
 
 /// Local context for AddScalar
 typedef struct {
-  float val;  ///< double
-  void *data; ///< General purpose data area
+  float val;       ///< double
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
 } add_scalar_local_context_t;
 
 /// Allocate AddScalar local context
@@ -1247,8 +1278,9 @@ rt_function_error_t exec_add_scalar(rt_function_t *f);
 
 /// Local context for MulScalar
 typedef struct {
-  float val;  ///< double
-  void *data; ///< General purpose data area
+  float val;       ///< double
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
 } mul_scalar_local_context_t;
 
 /// Allocate MulScalar local context
@@ -1266,8 +1298,9 @@ rt_function_error_t exec_mul_scalar(rt_function_t *f);
 
 /// Local context for PowScalar
 typedef struct {
-  float val;  ///< double
-  void *data; ///< General purpose data area
+  float val;       ///< double
+  uint8_t inplace; ///< bool
+  void *data;      ///< General purpose data area
 } pow_scalar_local_context_t;
 
 /// Allocate PowScalar local context
