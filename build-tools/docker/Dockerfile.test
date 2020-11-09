@@ -27,6 +27,7 @@ RUN set -xe \
     && conda create -y -n py35 python=3.5
 
 RUN /bin/bash -c "source activate py35 \
+    && pip install --upgrade pip \
     && pip install 'Cython>=0.25,<0.26' autopep8 boto3 \
        configparser contextlib2 futures h5py mako \
        numpy protobuf pyyaml requests scikit-image scikit_image scipy tqdm \
