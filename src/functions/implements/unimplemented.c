@@ -353,6 +353,23 @@ rt_function_error_t exec_fused_batch_normalization(rt_function_t *f) {
 }
 #endif /* CONFIG_FUSEDBATCHNORMALIZATION */
 
+// NormNormalization
+#ifdef CONFIG_NORMNORMALIZATION
+rt_function_error_t
+allocate_norm_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_norm_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_norm_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_norm_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_NORMNORMALIZATION */
+
 // SyncBatchNormalization
 #ifdef CONFIG_SYNCBATCHNORMALIZATION
 rt_function_error_t
@@ -369,7 +386,7 @@ free_sync_batch_normalization_local_context(rt_function_t *f) {
 rt_function_error_t exec_sync_batch_normalization(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_FUSEDBATCHNORMALIZATION */
+#endif /* CONFIG_SYNCBATCHNORMALIZATION */
 
 // WeightNormalization
 #ifdef CONFIG_WEIGHTNORMALIZATION
@@ -470,6 +487,22 @@ rt_function_error_t exec_min(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_MIN */
+
+// Norm
+#ifdef CONFIG_NORM
+rt_function_error_t allocate_norm_local_context(rt_function_t *f) {
+  f->exec_func = exec_norm;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_norm_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_norm(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_NORM */
 
 // Prod
 #ifdef CONFIG_PROD
@@ -1327,6 +1360,22 @@ rt_function_error_t exec_scatter_nd(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_SCATTERND */
+
+// ScatterAdd
+#ifdef CONFIG_SCATTERADD
+rt_function_error_t allocate_scatter_add_local_context(rt_function_t *f) {
+  f->exec_func = exec_scatter_add;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_scatter_add_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_scatter_add(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SCATTERADD */
 
 // PackPaddedSequence
 #ifdef CONFIG_PACKPADDEDSEQUENCE

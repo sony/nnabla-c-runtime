@@ -866,6 +866,27 @@ rt_function_error_t free_batch_normalization_local_context(rt_function_t *f);
 rt_function_error_t exec_batch_normalization(rt_function_t *f);
 /// @}
 
+/// @defgroup NormNormalization NormNormalization
+/// @{
+
+/// Local context for NormNormalization
+typedef struct {
+  float p;        ///< float
+  rt_list_t axes; ///< Original type is [repeated int64]
+  float eps;      ///< float
+  void *data;     ///< General purpose data area
+} norm_normalization_local_context_t;
+
+/// Allocate NormNormalization local context
+rt_function_error_t allocate_norm_normalization_local_context(rt_function_t *f);
+
+/// Free NormNormalization local context
+rt_function_error_t free_norm_normalization_local_context(rt_function_t *f);
+
+/// Exec NormNormalization
+rt_function_error_t exec_norm_normalization(rt_function_t *f);
+/// @}
+
 /// @defgroup SyncBatchNormalization SyncBatchNormalization
 /// @{
 
@@ -1059,6 +1080,27 @@ rt_function_error_t free_min_local_context(rt_function_t *f);
 
 /// Exec Min
 rt_function_error_t exec_min(rt_function_t *f);
+/// @}
+
+/// @defgroup Norm Norm
+/// @{
+
+/// Local context for Norm
+typedef struct {
+  float p;           ///< float
+  rt_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< bool
+  void *data;        ///< General purpose data area
+} norm_local_context_t;
+
+/// Allocate Norm local context
+rt_function_error_t allocate_norm_local_context(rt_function_t *f);
+
+/// Free Norm local context
+rt_function_error_t free_norm_local_context(rt_function_t *f);
+
+/// Exec Norm
+rt_function_error_t exec_norm(rt_function_t *f);
 /// @}
 
 /// @defgroup Prod Prod
@@ -2562,6 +2604,25 @@ rt_function_error_t free_scatter_nd_local_context(rt_function_t *f);
 
 /// Exec ScatterNd
 rt_function_error_t exec_scatter_nd(rt_function_t *f);
+/// @}
+
+/// @defgroup ScatterAdd ScatterAdd
+/// @{
+
+/// Local context for ScatterAdd
+typedef struct {
+  int32_t axis; ///< int64
+  void *data;   ///< General purpose data area
+} scatter_add_local_context_t;
+
+/// Allocate ScatterAdd local context
+rt_function_error_t allocate_scatter_add_local_context(rt_function_t *f);
+
+/// Free ScatterAdd local context
+rt_function_error_t free_scatter_add_local_context(rt_function_t *f);
+
+/// Exec ScatterAdd
+rt_function_error_t exec_scatter_add(rt_function_t *f);
 /// @}
 
 /// @defgroup PackPaddedSequence PackPaddedSequence

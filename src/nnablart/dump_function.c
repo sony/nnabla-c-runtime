@@ -150,6 +150,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     printf("NNB: Function type:    BatchNormalization(22)\n");
   } break;
+  case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
+    printf("NNB: Function type:    NormNormalization(317)\n");
+  } break;
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     printf("NNB: Function type:    SyncBatchNormalization(263)\n");
   } break;
@@ -176,6 +179,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_MIN: { // Min
     printf("NNB: Function type:    Min(130)\n");
+  } break;
+  case NN_FUNCTION_NORM: { // Norm
+    printf("NNB: Function type:    Norm(318)\n");
   } break;
   case NN_FUNCTION_PROD: { // Prod
     printf("NNB: Function type:    Prod(28)\n");
@@ -446,6 +452,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     printf("NNB: Function type:    ScatterNd(271)\n");
+  } break;
+  case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
+    printf("NNB: Function type:    ScatterAdd(315)\n");
   } break;
   case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
     printf("NNB: Function type:    PackPaddedSequence(305)\n");
@@ -960,6 +969,18 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
   } break;
+  case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
+    nn_function_norm_normalization_t *f =
+        (nn_function_norm_normalization_t *)func;
+    printf("NNB: Function argument p: %f\n", f->p);
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     nn_function_sync_batch_normalization_t *f =
         (nn_function_sync_batch_normalization_t *)func;
@@ -1042,6 +1063,17 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument keep_dims: %d\n", f->keep_dims);
     printf("NNB: Function argument with_index: %d\n", f->with_index);
     printf("NNB: Function argument only_index: %d\n", f->only_index);
+  } break;
+  case NN_FUNCTION_NORM: { // Norm
+    nn_function_norm_t *f = (nn_function_norm_t *)func;
+    printf("NNB: Function argument p: %f\n", f->p);
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument keep_dims: %d\n", f->keep_dims);
   } break;
   case NN_FUNCTION_PROD: { // Prod
     nn_function_prod_t *f = (nn_function_prod_t *)func;
@@ -1407,6 +1439,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+  } break;
+  case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
+    nn_function_scatter_add_t *f = (nn_function_scatter_add_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
   } break;
   case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
     nn_function_pack_padded_sequence_t *f =
