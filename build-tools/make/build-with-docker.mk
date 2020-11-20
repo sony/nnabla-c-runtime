@@ -50,6 +50,16 @@ NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e http_proxy=${http_proxy}
 NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e https_proxy=${https_proxy}
 NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e ftp_proxy=${ftp_proxy}
 
+PYTHON_VERSION_MAJOR ?= 3
+export PYTHON_VERSION_MAJOR
+NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS += --build-arg PYTHON_VERSION_MAJOR=$(PYTHON_VERSION_MAJOR)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e PYTHON_VERSION_MAJOR=$(PYTHON_VERSION_MAJOR)
+
+PYTHON_VERSION_MINOR ?= 6
+export PYTHON_VERSION_MINOR
+NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS += --build-arg PYTHON_VERSION_MINOR=$(PYTHON_VERSION_MINOR)
+NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e PYTHON_VERSION_MINOR=$(PYTHON_VERSION_MINOR)
+
 ########################################################################################################################
 # Docker images
 .PHONY: nnabla-c-runtime-docker_image_auto_format
