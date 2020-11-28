@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/194
+Total 62/197
 
 
 ## Neural Network Layer
@@ -72,12 +72,13 @@ Count 11/22
 |             Sinc             |      no      |      -       |      -       |
 
 ## Normalization
-Count 2/7
+Count 2/8
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |   FusedBatchNormalization    |      no      |      -       |      -       |
 |      BatchNormalization      |     yes      |     yes      |     yes      |
+|      NormNormalization       |      no      |      -       |      -       |
 |    SyncBatchNormalization    |      no      |      -       |      -       |
 |     WeightNormalization      |      no      |      -       |      -       |
 |       MeanSubtraction        |     yes      |     yes      |     yes      |
@@ -85,7 +86,7 @@ Count 2/7
 |        ClipGradByNorm        |      no      |      -       |      -       |
 
 ## Reduction
-Count 1/7
+Count 1/8
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -93,6 +94,7 @@ Count 1/7
 |             Mean             |      no      |      -       |      -       |
 |             Max              |      no      |      -       |      -       |
 |             Min              |      no      |      -       |      -       |
+|             Norm             |      no      |      -       |      -       |
 |             Prod             |      no      |      -       |      -       |
 |          ReduceSum           |      no      |      -       |      -       |
 |          ReduceMean          |      no      |      -       |      -       |
@@ -181,7 +183,7 @@ Count 6/22
 |            ATanh             |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/24
+Count 11/25
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -207,6 +209,7 @@ Count 11/24
 |            Gather            |      no      |      -       |      -       |
 |           GatherNd           |      no      |      -       |      -       |
 |          ScatterNd           |      no      |      -       |      -       |
+|          ScatterAdd          |      no      |      -       |      -       |
 |      PackPaddedSequence      |      no      |      -       |      -       |
 |      PadPackedSequence       |      no      |      -       |      -       |
 

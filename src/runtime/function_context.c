@@ -646,6 +646,22 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_NORMNORMALIZATION
+  case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
+    function_context->func.free_local_context_func =
+        free_norm_normalization_local_context;
+    nn_function_norm_normalization_t *f =
+        (nn_function_norm_normalization_t *)function;
+    norm_normalization_local_context_t *ctx =
+        rt_malloc_func(sizeof(norm_normalization_local_context_t));
+    ctx->p = f->p;
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    ctx->eps = f->eps;
+    function_context->func.local_context = ctx;
+    allocate_norm_normalization_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_SYNCBATCHNORMALIZATION
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     function_context->func.free_local_context_func =
@@ -789,6 +805,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->only_index = f->only_index;
     function_context->func.local_context = ctx;
     allocate_min_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_NORM
+  case NN_FUNCTION_NORM: { // Norm
+    function_context->func.free_local_context_func = free_norm_local_context;
+    nn_function_norm_t *f = (nn_function_norm_t *)function;
+    norm_local_context_t *ctx = rt_malloc_func(sizeof(norm_local_context_t));
+    ctx->p = f->p;
+    ctx->axes = create_rt_list_from_nn_list(n, f->axes);
+    ctx->keep_dims = f->keep_dims;
+    function_context->func.local_context = ctx;
+    allocate_norm_local_context(&function_context->func);
   } break;
 #endif
 
@@ -1813,6 +1842,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->shape = create_rt_list_from_nn_list(n, f->shape);
     function_context->func.local_context = ctx;
     allocate_scatter_nd_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_SCATTERADD
+  case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
+    function_context->func.free_local_context_func =
+        free_scatter_add_local_context;
+    nn_function_scatter_add_t *f = (nn_function_scatter_add_t *)function;
+    scatter_add_local_context_t *ctx =
+        rt_malloc_func(sizeof(scatter_add_local_context_t));
+    ctx->axis = f->axis;
+    function_context->func.local_context = ctx;
+    allocate_scatter_add_local_context(&function_context->func);
   } break;
 #endif
 

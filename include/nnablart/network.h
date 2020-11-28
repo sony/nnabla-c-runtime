@@ -28,7 +28,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (21)
+#define NN_API_LEVEL (24)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +126,7 @@ typedef enum {
   NN_FUNCTION_SINC = 255,         ///< Sinc
   NN_FUNCTION_FUSED_BATCH_NORMALIZATION = 270, ///< FusedBatchNormalization
   NN_FUNCTION_BATCH_NORMALIZATION = 22,        ///< BatchNormalization
+  NN_FUNCTION_NORM_NORMALIZATION = 317,        ///< NormNormalization
   NN_FUNCTION_SYNC_BATCH_NORMALIZATION = 263,  ///< SyncBatchNormalization
   NN_FUNCTION_WEIGHT_NORMALIZATION = 304,      ///< WeightNormalization
   NN_FUNCTION_MEAN_SUBTRACTION = 23,           ///< MeanSubtraction
@@ -137,6 +138,7 @@ typedef enum {
   NN_FUNCTION_MAX = 132,           ///< Max
   NN_FUNCTION_MIN_0 = 27,          ///< Recent version of Min has arg [iIB]
   NN_FUNCTION_MIN = 130,           ///< Min
+  NN_FUNCTION_NORM = 318,          ///< Norm
   NN_FUNCTION_PROD = 28,           ///< Prod
   NN_FUNCTION_REDUCE_SUM = 29,     ///< ReduceSum
   NN_FUNCTION_REDUCE_MEAN = 30,    ///< ReduceMean
@@ -237,6 +239,7 @@ typedef enum {
   NN_FUNCTION_GATHER = 303,          ///< Gather
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
   NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
+  NN_FUNCTION_SCATTER_ADD = 315,     ///< ScatterAdd
   NN_FUNCTION_PACK_PADDED_SEQUENCE = 305, ///< PackPaddedSequence
   NN_FUNCTION_PAD_PACKED_SEQUENCE = 306,  ///< PadPackedSequence
   NN_FUNCTION_INTERPOLATE_0 =
@@ -894,6 +897,21 @@ typedef struct {
 
 /// @}
 
+/// @brief NormNormalization function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float p;        ///< Original type is [float]
+  nn_list_t axes; ///< Original type is [repeated int64]
+  float eps;      ///< Original type is [float]
+} nn_function_norm_normalization_t;
+
+/// @}
+
 /// @brief SyncBatchNormalization function.
 /// @{
 typedef struct {
@@ -1021,6 +1039,21 @@ typedef struct {
   uint8_t with_index; ///< Original type is [bool]
   uint8_t only_index; ///< Original type is [bool]
 } nn_function_min_t;
+
+/// @}
+
+/// @brief Norm function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float p;           ///< Original type is [float]
+  nn_list_t axes;    ///< Original type is [repeated int64]
+  uint8_t keep_dims; ///< Original type is [bool]
+} nn_function_norm_t;
 
 /// @}
 
@@ -2121,6 +2154,19 @@ typedef struct {
   // End of common part.
   nn_list_t shape; ///< Original type is [repeated int64]
 } nn_function_scatter_nd_t;
+
+/// @}
+
+/// @brief ScatterAdd function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis; ///< Original type is [int64]
+} nn_function_scatter_add_t;
 
 /// @}
 

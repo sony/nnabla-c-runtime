@@ -935,6 +935,29 @@ Normalization:
     id: 22
     func_type:
     - ALL
+  NormNormalization:
+    snake_name: norm_normalization
+    inputs:
+      x: {}
+    arguments:
+      p:
+        type: float
+        default: 2
+      axes:
+        type: repeated int64
+        default: range(x.ndim)
+      eps:
+        type: float
+        default: 1e-12
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      fiIf: 317
+    uniq_name: NormNormalization_fiIf
+    id: 317
+    func_type:
+    - ALL
   SyncBatchNormalization:
     snake_name: sync_batch_normalization
     inputs:
@@ -1143,6 +1166,29 @@ Reduction:
     c_runtime: not support
     uniq_name: Min_iIBBB
     id: 130
+    func_type:
+    - ALL
+  Norm:
+    snake_name: norm
+    inputs:
+      x: {}
+    arguments:
+      p:
+        type: float
+        default: 2
+      axes:
+        type: repeated int64
+        default: range(x.ndim)
+      keep_dims:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      fiIB: 318
+    uniq_name: Norm_fiIB
+    id: 318
     func_type:
     - ALL
   Prod:
@@ -2598,6 +2644,25 @@ Array Manipulation:
       iI: 271
     uniq_name: ScatterNd_iI
     id: 271
+    func_type:
+    - ALL
+  ScatterAdd:
+    snake_name: scatter_add
+    inputs:
+      x0: {}
+      indices: {}
+      x1: {}
+    arguments:
+      axis:
+        type: int64
+        default: 0
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      i: 315
+    uniq_name: ScatterAdd_i
+    id: 315
     func_type:
     - ALL
   PackPaddedSequence:
