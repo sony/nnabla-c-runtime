@@ -1802,6 +1802,15 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_BATCHLOGDET
+  case NN_FUNCTION_BATCH_LOGDET: { // BatchLogdet
+    function_context->func.free_local_context_func =
+        free_batch_logdet_local_context;
+    function_context->func.local_context = 0;
+    allocate_batch_logdet_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_ASSIGN
   case NN_FUNCTION_ASSIGN: { // Assign
     function_context->func.free_local_context_func = free_assign_local_context;

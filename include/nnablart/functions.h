@@ -2541,6 +2541,19 @@ rt_function_error_t free_batch_det_local_context(rt_function_t *f);
 rt_function_error_t exec_batch_det(rt_function_t *f);
 /// @}
 
+/// @defgroup BatchLogdet BatchLogdet
+/// @{
+
+/// Allocate BatchLogdet local context
+rt_function_error_t allocate_batch_logdet_local_context(rt_function_t *f);
+
+/// Free BatchLogdet local context
+rt_function_error_t free_batch_logdet_local_context(rt_function_t *f);
+
+/// Exec BatchLogdet
+rt_function_error_t exec_batch_logdet(rt_function_t *f);
+/// @}
+
 /// @defgroup Assign Assign
 /// @{
 
