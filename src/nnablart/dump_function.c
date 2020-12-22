@@ -441,6 +441,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BATCH_DET: { // BatchDet
     printf("NNB: Function type:    BatchDet(276)\n");
   } break;
+  case NN_FUNCTION_BATCH_LOGDET: { // BatchLogdet
+    printf("NNB: Function type:    BatchLogdet(319)\n");
+  } break;
   case NN_FUNCTION_ASSIGN: { // Assign
     printf("NNB: Function type:    Assign(248)\n");
   } break;
@@ -1421,6 +1424,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BATCH_INV: { // BatchInv
   } break;
   case NN_FUNCTION_BATCH_DET: { // BatchDet
+  } break;
+  case NN_FUNCTION_BATCH_LOGDET: { // BatchLogdet
   } break;
   case NN_FUNCTION_ASSIGN: { // Assign
   } break;

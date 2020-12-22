@@ -2576,6 +2576,19 @@ Array Manipulation:
     id: 276
     func_type:
     - ALL
+  BatchLogdet:
+    snake_name: batch_logdet
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 319
+    uniq_name: BatchLogdet
+    id: 319
+    func_type:
+    - ALL
   Assign:
     snake_name: assign
     inputs:

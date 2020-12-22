@@ -24,11 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.14.0.dev1")
+#define NN_NNABLA_VERSION ("1.15.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (24)
+#define NN_API_LEVEL (25)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +234,7 @@ typedef enum {
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
   NN_FUNCTION_BATCH_INV = 275,       ///< BatchInv
   NN_FUNCTION_BATCH_DET = 276,       ///< BatchDet
+  NN_FUNCTION_BATCH_LOGDET = 319,    ///< BatchLogdet
   NN_FUNCTION_ASSIGN = 248,          ///< Assign
   NN_FUNCTION_GATHER_0 = 302,        ///< Recent version of Gather has arg [iiI]
   NN_FUNCTION_GATHER = 303,          ///< Gather
@@ -2105,6 +2106,17 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_batch_det_t;
+
+/// @}
+
+/// @brief BatchLogdet function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_batch_logdet_t;
 
 /// @}
 

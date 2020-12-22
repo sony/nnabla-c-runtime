@@ -1475,6 +1475,22 @@ rt_function_error_t exec_batch_det(rt_function_t *f) {
 }
 #endif /* CONFIG_BATCHDET */
 
+// BatchLogdet
+#ifdef CONFIG_BATCHLOGDET
+rt_function_error_t allocate_batch_logdet_local_context(rt_function_t *f) {
+  f->exec_func = exec_batch_logdet;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_batch_logdet_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_batch_logdet(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BATCHLOGDET */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Stochasticity
 ////////////////////////////////////////////////////////////////////////////////

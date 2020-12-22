@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/197
+Total 62/198
 
 
 ## Neural Network Layer
@@ -183,7 +183,7 @@ Count 6/22
 |            ATanh             |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/25
+Count 11/26
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -205,6 +205,7 @@ Count 11/25
 |        MatrixDiagPart        |     yes      |     yes      |     yes      |
 |           BatchInv           |      no      |      -       |      -       |
 |           BatchDet           |      no      |      -       |      -       |
+|         BatchLogdet          |      no      |      -       |      -       |
 |            Assign            |      no      |      -       |      -       |
 |            Gather            |      no      |      -       |      -       |
 |           GatherNd           |      no      |      -       |      -       |
