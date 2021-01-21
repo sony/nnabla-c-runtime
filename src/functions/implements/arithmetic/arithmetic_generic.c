@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "arithmetic.h"
 #include "../../utilities/accessor.h"
 #include "../../utilities/shape.h"
+#include "arithmetic.h"
 #include <math.h>
 
 void calc_dim_arithmetic_generic(rt_variable_t *output, rt_variable_t *input1,

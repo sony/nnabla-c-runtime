@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "arithmetic.h"
 #include "../../utilities/fixedpoint.h"
 #include "../../utilities/shape.h"
+#include "arithmetic.h"
 #include <math.h>
 
 // Common algorithm for arithmetic calculation between two vectors has same

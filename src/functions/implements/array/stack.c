@@ -105,9 +105,9 @@ rt_function_error_t exec_stack_generic(rt_function_t *f) {
     for (int j = 0; j < p->outer_size; j++) {
       for (int k = 0; k < p->inner_size; k++) {
         float x = get_input(input, j * p->inner_size + k);
-        set_output(output, j * (p->inner_size * f->num_of_inputs) +
-                               i * p->inner_size + k,
-                   x);
+        set_output(
+            output,
+            j * (p->inner_size * f->num_of_inputs) + i * p->inner_size + k, x);
       }
     }
   }
