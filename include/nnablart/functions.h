@@ -37,7 +37,7 @@ typedef enum {
   RT_FUNCTION_ERROR_MALLOC,                 ///< Memory allocation error. (-998)
   RT_FUNCTION_ERROR_INVALID_NUM_OF_INPUTS,  ///< Invalid number of inputs.(-997)
   RT_FUNCTION_ERROR_INVALID_NUM_OF_OUTPUTS, ///< Invalid number of outputs.
-                                            ///(-996)
+                                            ///< (-996)
   RT_FUNCTION_ERROR_INVALID_SHAPE,          ///< Invalid shape. (-995)
   RT_FUNCTION_ERROR_NOERROR = 0             ///< No error. (0)
 } rt_function_error_t;

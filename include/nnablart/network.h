@@ -61,7 +61,7 @@ typedef struct {
   unsigned int fp_pos : 4; ///< floating point position.
   int32_t data_index;      ///< Location of data. If negative, it means data
                            /// buffer index. Otherwise it means location of data
-  /// in memory.
+                           /// in memory.
 } nn_variable_t;
 
 /// @brief Function types.

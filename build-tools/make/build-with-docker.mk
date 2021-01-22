@@ -64,28 +64,28 @@ NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e PYTHON_VERSION_MINOR=$(PYTHON_VERSION_MIN
 # Docker images
 .PHONY: nnabla-c-runtime-docker_image_auto_format
 nnabla-c-runtime-docker_image_auto_format:
-	docker pull ubuntu:16.04
+	docker pull ubuntu:18.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT) \
 		-f build-tools/docker/Dockerfile.auto-format .
 
 .PHONY: nnabla-c-runtime-docker_image_doc
 nnabla-c-runtime-docker_image_doc:
-	docker pull ubuntu:16.04
+	docker pull ubuntu:18.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC) \
 		-f build-tools/docker/Dockerfile.document .
 
 .PHONY: nnabla-c-runtime-docker_image_build
 nnabla-c-runtime-docker_image_build:
-	docker pull ubuntu:16.04
+	docker pull ubuntu:18.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD) \
 		-f build-tools/docker/Dockerfile.build .
 
 .PHONY: nnabla-c-runtime-docker_image_test
 nnabla-c-runtime-docker_image_test:
-	docker pull ubuntu:16.04
+	docker pull ubuntu:18.04
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) \
 		-f build-tools/docker/Dockerfile.test .

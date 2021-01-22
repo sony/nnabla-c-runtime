@@ -51,9 +51,9 @@ allocate_batch_normalization_local_context(rt_function_t *f) {
   rt_list_t input_shape = clone_list(f->inputs[0]->shape);
   const int axis = context->axes.data[0];
   const int size = calc_shape_size(input_shape);
-  const int size_axis =
-      axis <= 0 ? size : shape_product_of(f->inputs[0], axis,
-                                          f->inputs[0]->shape.size);
+  const int size_axis = axis <= 0 ? size
+                                  : shape_product_of(f->inputs[0], axis,
+                                                     f->inputs[0]->shape.size);
   p->batch_size = size / size_axis;
   p->specified_axis_size = input_shape.data[context->axes.data[0]];
   p->output_size = size / p->batch_size / p->specified_axis_size;
@@ -143,9 +143,9 @@ static void forward_impl_batch(rt_function_t *f,
 
     // Moving mean and var
     rm[i1] = context->decay_rate * rm[i1] + (1 - context->decay_rate) * m[i1];
-    rv[i1] = context->decay_rate * rv[i1] +
-             (1 - context->decay_rate) * v[i1] * multiplication_batch_axis /
-                 (multiplication_batch_axis - 1);
+    rv[i1] = context->decay_rate * rv[i1] + (1 - context->decay_rate) * v[i1] *
+                                                multiplication_batch_axis /
+                                                (multiplication_batch_axis - 1);
 
     const float stdvar = sqrtf(v[i1] + context->eps);
     // Subtract mean and divide by std, and apply beta and gamma.
@@ -253,9 +253,9 @@ forward_impl_batch_generic(rt_function_t *f,
     float rm = get_rm(input_rm, i1);
     float rv = get_rv(input_rv, i1);
     rm = context->decay_rate * rm + (1 - context->decay_rate) * m[i1];
-    rv = context->decay_rate * rv +
-         (1 - context->decay_rate) * v[i1] * multiplication_batch_axis /
-             (multiplication_batch_axis - 1);
+    rv = context->decay_rate * rv + (1 - context->decay_rate) * v[i1] *
+                                        multiplication_batch_axis /
+                                        (multiplication_batch_axis - 1);
     set_rm(input_rm, i1, rm);
     set_rv(input_rv, i1, rv);
 
