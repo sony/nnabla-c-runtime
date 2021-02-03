@@ -44,11 +44,12 @@ $ make CMAKE_TOOLCHAIN_FILE=./build-tools/cmake/$(cross-compiling-cmake) TOOLCHA
 
 > _Note_: Running `make` without `docker` may require the installation of `clang-format` and `autopep8`
 > 
+> _Note_: Cross-compiling with docker is not supported at this moment. 
 
 __Example__
 
 ```bash
-$ make CMAKE_TOOLCHAIN_FILE=./build-tools/cmake/spresense.cmake TOOLCHAIN_PREFIX=~/spresenseenv/usr/
+$ make nnabla-c-runtime-build CMAKE_TOOLCHAIN_FILE=./build-tools/cmake/spresense.cmake TOOLCHAIN_PREFIX=~/spresenseenv/usr/
 ```
 
 ## Make targets
