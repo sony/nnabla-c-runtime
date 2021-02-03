@@ -50,10 +50,6 @@ NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e http_proxy=${http_proxy}
 NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e https_proxy=${https_proxy}
 NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e ftp_proxy=${ftp_proxy}
 
-NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -v $(TOOLCHAIN_PREFIX):$(TOOLCHAIN_PREFIX)
-NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e TOOLCHAIN_PREFIX=$(TOOLCHAIN_PREFIX)
-NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -e CMAKE_TOOLCHAIN_FILE=$(CMAKE_TOOLCHAIN_FILE)
-
 ########################################################################################################################
 # Docker images
 .PHONY: nnabla-c-runtime-docker_image_auto_format
