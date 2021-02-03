@@ -45,14 +45,20 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_CONVOLUTION: { // Convolution
     printf("NNB: Function type:    Convolution(265)\n");
   } break;
+  case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
+    printf("NNB: Function type:    FusedConvolution(295)\n");
+  } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     printf("NNB: Function type:    DepthwiseConvolution(2)\n");
   } break;
   case NN_FUNCTION_DECONVOLUTION: { // Deconvolution
-    printf("NNB: Function type:    Deconvolution(3)\n");
+    printf("NNB: Function type:    Deconvolution(292)\n");
   } break;
   case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
     printf("NNB: Function type:    DepthwiseDeconvolution(4)\n");
+  } break;
+  case NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION: { // AdaptiveSeparableConvolution
+    printf("NNB: Function type:    AdaptiveSeparableConvolution(278)\n");
   } break;
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
     printf("NNB: Function type:    MaxPooling(266)\n");
@@ -67,7 +73,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    SumPooling(268)\n");
   } break;
   case NN_FUNCTION_UNPOOLING: { // Unpooling
-    printf("NNB: Function type:    Unpooling(9)\n");
+    printf("NNB: Function type:    Unpooling(287)\n");
   } break;
   case NN_FUNCTION_EMBED: { // Embed
     printf("NNB: Function type:    Embed(10)\n");
@@ -111,6 +117,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_GELU: { // GELU
     printf("NNB: Function type:    GELU(245)\n");
   } break;
+  case NN_FUNCTION_MISH: { // Mish
+    printf("NNB: Function type:    Mish(298)\n");
+  } break;
   case NN_FUNCTION_RELU6: { // ReLU6
     printf("NNB: Function type:    ReLU6(256)\n");
   } break;
@@ -141,8 +150,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
     printf("NNB: Function type:    BatchNormalization(22)\n");
   } break;
+  case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
+    printf("NNB: Function type:    NormNormalization(317)\n");
+  } break;
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     printf("NNB: Function type:    SyncBatchNormalization(263)\n");
+  } break;
+  case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
+    printf("NNB: Function type:    WeightNormalization(304)\n");
   } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     printf("NNB: Function type:    MeanSubtraction(23)\n");
@@ -165,6 +180,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_MIN: { // Min
     printf("NNB: Function type:    Min(130)\n");
   } break;
+  case NN_FUNCTION_NORM: { // Norm
+    printf("NNB: Function type:    Norm(318)\n");
+  } break;
   case NN_FUNCTION_PROD: { // Prod
     printf("NNB: Function type:    Prod(28)\n");
   } break;
@@ -177,29 +195,35 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ADD2: { // Add2
     printf("NNB: Function type:    Add2(31)\n");
   } break;
+  case NN_FUNCTION_ADD_N: { // AddN
+    printf("NNB: Function type:    AddN(281)\n");
+  } break;
   case NN_FUNCTION_BC_ADD2: { // BcAdd2
-    printf("NNB: Function type:    BcAdd2(32)\n");
+    printf("NNB: Function type:    BcAdd2(307)\n");
   } break;
   case NN_FUNCTION_SUB2: { // Sub2
-    printf("NNB: Function type:    Sub2(33)\n");
+    printf("NNB: Function type:    Sub2(308)\n");
   } break;
   case NN_FUNCTION_MUL2: { // Mul2
-    printf("NNB: Function type:    Mul2(34)\n");
+    printf("NNB: Function type:    Mul2(309)\n");
+  } break;
+  case NN_FUNCTION_MUL_N: { // MulN
+    printf("NNB: Function type:    MulN(282)\n");
   } break;
   case NN_FUNCTION_DIV2: { // Div2
-    printf("NNB: Function type:    Div2(35)\n");
+    printf("NNB: Function type:    Div2(310)\n");
   } break;
   case NN_FUNCTION_POW2: { // Pow2
-    printf("NNB: Function type:    Pow2(36)\n");
+    printf("NNB: Function type:    Pow2(311)\n");
   } break;
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
-    printf("NNB: Function type:    AddScalar(37)\n");
+    printf("NNB: Function type:    AddScalar(312)\n");
   } break;
   case NN_FUNCTION_MUL_SCALAR: { // MulScalar
-    printf("NNB: Function type:    MulScalar(38)\n");
+    printf("NNB: Function type:    MulScalar(313)\n");
   } break;
   case NN_FUNCTION_POW_SCALAR: { // PowScalar
-    printf("NNB: Function type:    PowScalar(39)\n");
+    printf("NNB: Function type:    PowScalar(314)\n");
   } break;
   case NN_FUNCTION_R_SUB_SCALAR: { // RSubScalar
     printf("NNB: Function type:    RSubScalar(40)\n");
@@ -417,8 +441,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_BATCH_DET: { // BatchDet
     printf("NNB: Function type:    BatchDet(276)\n");
   } break;
+  case NN_FUNCTION_BATCH_LOGDET: { // BatchLogdet
+    printf("NNB: Function type:    BatchLogdet(319)\n");
+  } break;
   case NN_FUNCTION_ASSIGN: { // Assign
     printf("NNB: Function type:    Assign(248)\n");
+  } break;
+  case NN_FUNCTION_GATHER: { // Gather
+    printf("NNB: Function type:    Gather(303)\n");
   } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
     printf("NNB: Function type:    GatherNd(264)\n");
@@ -426,8 +456,17 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     printf("NNB: Function type:    ScatterNd(271)\n");
   } break;
+  case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
+    printf("NNB: Function type:    ScatterAdd(315)\n");
+  } break;
+  case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
+    printf("NNB: Function type:    PackPaddedSequence(305)\n");
+  } break;
+  case NN_FUNCTION_PAD_PACKED_SEQUENCE: { // PadPackedSequence
+    printf("NNB: Function type:    PadPackedSequence(306)\n");
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
-    printf("NNB: Function type:    Interpolate(127)\n");
+    printf("NNB: Function type:    Interpolate(291)\n");
   } break;
   case NN_FUNCTION_FFT: { // FFT
     printf("NNB: Function type:    FFT(158)\n");
@@ -453,6 +492,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_RANDN: { // Randn
     printf("NNB: Function type:    Randn(91)\n");
   } break;
+  case NN_FUNCTION_RAND_BINOMIAL: { // RandBinomial
+    printf("NNB: Function type:    RandBinomial(289)\n");
+  } break;
+  case NN_FUNCTION_RAND_BETA: { // RandBeta
+    printf("NNB: Function type:    RandBeta(288)\n");
+  } break;
+  case NN_FUNCTION_RAND_GAMMA: { // RandGamma
+    printf("NNB: Function type:    RandGamma(290)\n");
+  } break;
   case NN_FUNCTION_RANDOM_CHOICE: { // RandomChoice
     printf("NNB: Function type:    RandomChoice(246)\n");
   } break;
@@ -464,6 +512,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_RANDOM_SHIFT: { // RandomShift
     printf("NNB: Function type:    RandomShift(94)\n");
+  } break;
+  case NN_FUNCTION_RANDOM_ERASE: { // RandomErase
+    printf("NNB: Function type:    RandomErase(285)\n");
   } break;
   case NN_FUNCTION_IMAGE_AUGMENTATION: { // ImageAugmentation
     printf("NNB: Function type:    ImageAugmentation(95)\n");
@@ -494,6 +545,15 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_KL_MULTINOMIAL: { // KLMultinomial
     printf("NNB: Function type:    KLMultinomial(104)\n");
+  } break;
+  case NN_FUNCTION_AFFINE_GRID: { // AffineGrid
+    printf("NNB: Function type:    AffineGrid(296)\n");
+  } break;
+  case NN_FUNCTION_WARP_BY_GRID: { // WarpByGrid
+    printf("NNB: Function type:    WarpByGrid(297)\n");
+  } break;
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+    printf("NNB: Function type:    WarpByFlow(277)\n");
   } break;
   case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
     printf("NNB: Function type:    BinarySigmoid(105)\n");
@@ -531,6 +591,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_PRUNE: { // Prune
     printf("NNB: Function type:    Prune(135)\n");
   } break;
+  case NN_FUNCTION_QUANTIZE_LINEAR: { // QuantizeLinear
+    printf("NNB: Function type:    QuantizeLinear(293)\n");
+  } break;
+  case NN_FUNCTION_DEQUANTIZE_LINEAR: { // DequantizeLinear
+    printf("NNB: Function type:    DequantizeLinear(294)\n");
+  } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     printf("NNB: Function type:    TopNError(115)\n");
   } break;
@@ -555,8 +621,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
     printf("NNB: Function type:    MaxPoolingBackward(272)\n");
   } break;
-  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
-    printf("NNB: Function type:    WarpByFlow(277)\n");
+  case NN_FUNCTION_PATCH_CORRELATION: { // PatchCorrelation
+    printf("NNB: Function type:    PatchCorrelation(280)\n");
   } break;
   default:;
   }
@@ -621,6 +687,35 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument group: %d\n", f->group);
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
+  case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
+    nn_function_fused_convolution_t *f =
+        (nn_function_fused_convolution_t *)func;
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument pad: (");
+    list = (int *)NN_GET(net, f->pad.list);
+    for (i = 0; i < f->pad.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument stride: (");
+    list = (int *)NN_GET(net, f->stride.list);
+    for (i = 0; i < f->stride.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument dilation: (");
+    list = (int *)NN_GET(net, f->dilation.list);
+    for (i = 0; i < f->dilation.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+    printf("NNB: Function argument decay_rate: %f\n", f->decay_rate);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
+    printf("NNB: Function argument nonlinearity: %d\n", f->nonlinearity);
+  } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     nn_function_depthwise_convolution_t *f =
         (nn_function_depthwise_convolution_t *)func;
@@ -667,6 +762,13 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+    printf("NNB: Function argument output_padding: (");
+    list = (int *)NN_GET(net, f->output_padding.list);
+    for (i = 0; i < f->output_padding.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
   } break;
   case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
     nn_function_depthwise_deconvolution_t *f =
@@ -691,6 +793,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument divisor: %d\n", f->divisor);
+  } break;
+  case NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION: { // AdaptiveSeparableConvolution
   } break;
   case NN_FUNCTION_MAX_POOLING: { // MaxPooling
     nn_function_max_pooling_t *f = (nn_function_max_pooling_t *)func;
@@ -772,6 +876,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_EMBED: { // Embed
   } break;
@@ -822,6 +927,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_GELU: { // GELU
   } break;
+  case NN_FUNCTION_MISH: { // Mish
+  } break;
   case NN_FUNCTION_RELU6: { // ReLU6
   } break;
   case NN_FUNCTION_HARD_SIGMOID: { // HardSigmoid
@@ -865,6 +972,18 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
   } break;
+  case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
+    nn_function_norm_normalization_t *f =
+        (nn_function_norm_normalization_t *)func;
+    printf("NNB: Function argument p: %f\n", f->p);
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     nn_function_sync_batch_normalization_t *f =
         (nn_function_sync_batch_normalization_t *)func;
@@ -878,6 +997,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument decay_rate: %f\n", f->decay_rate);
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
+  } break;
+  case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
+    nn_function_weight_normalization_t *f =
+        (nn_function_weight_normalization_t *)func;
+    printf("NNB: Function argument dim: %d\n", f->dim);
+    printf("NNB: Function argument eps: %f\n", f->eps);
   } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     nn_function_mean_subtraction_t *f = (nn_function_mean_subtraction_t *)func;
@@ -942,6 +1067,17 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument with_index: %d\n", f->with_index);
     printf("NNB: Function argument only_index: %d\n", f->only_index);
   } break;
+  case NN_FUNCTION_NORM: { // Norm
+    nn_function_norm_t *f = (nn_function_norm_t *)func;
+    printf("NNB: Function argument p: %f\n", f->p);
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument keep_dims: %d\n", f->keep_dims);
+  } break;
   case NN_FUNCTION_PROD: { // Prod
     nn_function_prod_t *f = (nn_function_prod_t *)func;
     printf("NNB: Function argument axes: (");
@@ -960,27 +1096,44 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_add2_t *f = (nn_function_add2_t *)func;
     printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
+  case NN_FUNCTION_ADD_N: { // AddN
+  } break;
   case NN_FUNCTION_BC_ADD2: { // BcAdd2
+    nn_function_bc_add2_t *f = (nn_function_bc_add2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_SUB2: { // Sub2
+    nn_function_sub2_t *f = (nn_function_sub2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_MUL2: { // Mul2
+    nn_function_mul2_t *f = (nn_function_mul2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
+  } break;
+  case NN_FUNCTION_MUL_N: { // MulN
   } break;
   case NN_FUNCTION_DIV2: { // Div2
+    nn_function_div2_t *f = (nn_function_div2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_POW2: { // Pow2
+    nn_function_pow2_t *f = (nn_function_pow2_t *)func;
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_ADD_SCALAR: { // AddScalar
     nn_function_add_scalar_t *f = (nn_function_add_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_MUL_SCALAR: { // MulScalar
     nn_function_mul_scalar_t *f = (nn_function_mul_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_POW_SCALAR: { // PowScalar
     nn_function_pow_scalar_t *f = (nn_function_pow_scalar_t *)func;
     printf("NNB: Function argument val: %f\n", f->val);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
   } break;
   case NN_FUNCTION_R_SUB_SCALAR: { // RSubScalar
     nn_function_r_sub_scalar_t *f = (nn_function_r_sub_scalar_t *)func;
@@ -1272,7 +1425,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_BATCH_DET: { // BatchDet
   } break;
+  case NN_FUNCTION_BATCH_LOGDET: { // BatchLogdet
+  } break;
   case NN_FUNCTION_ASSIGN: { // Assign
+  } break;
+  case NN_FUNCTION_GATHER: { // Gather
+    nn_function_gather_t *f = (nn_function_gather_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
+    printf("NNB: Function argument batch_dims: %d\n", f->batch_dims);
   } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
   } break;
@@ -1285,6 +1445,22 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
   } break;
+  case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
+    nn_function_scatter_add_t *f = (nn_function_scatter_add_t *)func;
+    printf("NNB: Function argument axis: %d\n", f->axis);
+  } break;
+  case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
+    nn_function_pack_padded_sequence_t *f =
+        (nn_function_pack_padded_sequence_t *)func;
+    printf("NNB: Function argument batch_first: %d\n", f->batch_first);
+  } break;
+  case NN_FUNCTION_PAD_PACKED_SEQUENCE: { // PadPackedSequence
+    nn_function_pad_packed_sequence_t *f =
+        (nn_function_pad_packed_sequence_t *)func;
+    printf("NNB: Function argument batch_first: %d\n", f->batch_first);
+    printf("NNB: Function argument padding_value: %f\n", f->padding_value);
+    printf("NNB: Function argument total_length: %d\n", f->total_length);
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     nn_function_interpolate_t *f = (nn_function_interpolate_t *)func;
     printf("NNB: Function argument output_size: (");
@@ -1295,6 +1471,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf(" )\n");
     printf("NNB: Function argument mode: %d\n", f->mode);
     printf("NNB: Function argument align_corners: %d\n", f->align_corners);
+    printf("NNB: Function argument half_pixel: %d\n", f->half_pixel);
+    printf("NNB: Function argument half_pixel_for_nn: %d\n",
+           f->half_pixel_for_nn);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_FFT: { // FFT
     nn_function_fft_t *f = (nn_function_fft_t *)func;
@@ -1360,6 +1540,42 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf(" )\n");
     printf("NNB: Function argument seed: %d\n", f->seed);
   } break;
+  case NN_FUNCTION_RAND_BINOMIAL: { // RandBinomial
+    nn_function_rand_binomial_t *f = (nn_function_rand_binomial_t *)func;
+    printf("NNB: Function argument n: %d\n", f->n);
+    printf("NNB: Function argument p: %f\n", f->p);
+    printf("NNB: Function argument shape: (");
+    list = (int *)NN_GET(net, f->shape.list);
+    for (i = 0; i < f->shape.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
+  case NN_FUNCTION_RAND_BETA: { // RandBeta
+    nn_function_rand_beta_t *f = (nn_function_rand_beta_t *)func;
+    printf("NNB: Function argument alpha: %f\n", f->alpha);
+    printf("NNB: Function argument beta: %f\n", f->beta);
+    printf("NNB: Function argument shape: (");
+    list = (int *)NN_GET(net, f->shape.list);
+    for (i = 0; i < f->shape.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
+  case NN_FUNCTION_RAND_GAMMA: { // RandGamma
+    nn_function_rand_gamma_t *f = (nn_function_rand_gamma_t *)func;
+    printf("NNB: Function argument k: %f\n", f->k);
+    printf("NNB: Function argument theta: %f\n", f->theta);
+    printf("NNB: Function argument shape: (");
+    list = (int *)NN_GET(net, f->shape.list);
+    for (i = 0; i < f->shape.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
   case NN_FUNCTION_RANDOM_CHOICE: { // RandomChoice
     nn_function_random_choice_t *f = (nn_function_random_choice_t *)func;
     printf("NNB: Function argument shape: (");
@@ -1404,6 +1620,18 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument border_mode: %d\n", f->border_mode);
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
     printf("NNB: Function argument seed: %d\n", f->seed);
+  } break;
+  case NN_FUNCTION_RANDOM_ERASE: { // RandomErase
+    nn_function_random_erase_t *f = (nn_function_random_erase_t *)func;
+    printf("NNB: Function argument prob: %f\n", f->prob);
+    printf("NNB: Function argument n: %d\n", f->n);
+    printf("NNB: Function argument share: %d\n", f->share);
+    printf("NNB: Function argument inplace: %d\n", f->inplace);
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument seed: %d\n", f->seed);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+    printf("NNB: Function argument ste_fine_grained: %d\n",
+           f->ste_fine_grained);
   } break;
   case NN_FUNCTION_IMAGE_AUGMENTATION: { // ImageAugmentation
     nn_function_image_augmentation_t *f =
@@ -1465,6 +1693,25 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_KL_MULTINOMIAL: { // KLMultinomial
     nn_function_kl_multinomial_t *f = (nn_function_kl_multinomial_t *)func;
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+  } break;
+  case NN_FUNCTION_AFFINE_GRID: { // AffineGrid
+    nn_function_affine_grid_t *f = (nn_function_affine_grid_t *)func;
+    printf("NNB: Function argument size: (");
+    list = (int *)NN_GET(net, f->size.list);
+    for (i = 0; i < f->size.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument align_corners: %d\n", f->align_corners);
+  } break;
+  case NN_FUNCTION_WARP_BY_GRID: { // WarpByGrid
+    nn_function_warp_by_grid_t *f = (nn_function_warp_by_grid_t *)func;
+    printf("NNB: Function argument mode: %d\n", f->mode);
+    printf("NNB: Function argument padding_mode: %d\n", f->padding_mode);
+    printf("NNB: Function argument align_corners: %d\n", f->align_corners);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+  } break;
+  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
   } break;
   case NN_FUNCTION_BINARY_SIGMOID: { // BinarySigmoid
   } break;
@@ -1614,6 +1861,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_prune_t *f = (nn_function_prune_t *)func;
     printf("NNB: Function argument rate: %f\n", f->rate);
   } break;
+  case NN_FUNCTION_QUANTIZE_LINEAR: { // QuantizeLinear
+    nn_function_quantize_linear_t *f = (nn_function_quantize_linear_t *)func;
+    printf("NNB: Function argument round_mode: %d\n", f->round_mode);
+    printf("NNB: Function argument narrow_range: %d\n", f->narrow_range);
+    printf("NNB: Function argument dtype: %d\n", f->dtype);
+  } break;
+  case NN_FUNCTION_DEQUANTIZE_LINEAR: { // DequantizeLinear
+  } break;
   case NN_FUNCTION_TOP_N_ERROR: { // TopNError
     nn_function_top_n_error_t *f = (nn_function_top_n_error_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
@@ -1666,7 +1921,39 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf(" )\n");
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
-  case NN_FUNCTION_WARP_BY_FLOW: { // WarpByFlow
+  case NN_FUNCTION_PATCH_CORRELATION: { // PatchCorrelation
+    nn_function_patch_correlation_t *f =
+        (nn_function_patch_correlation_t *)func;
+    printf("NNB: Function argument patch: (");
+    list = (int *)NN_GET(net, f->patch.list);
+    for (i = 0; i < f->patch.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument shift: (");
+    list = (int *)NN_GET(net, f->shift.list);
+    for (i = 0; i < f->shift.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument patch_step: (");
+    list = (int *)NN_GET(net, f->patch_step.list);
+    for (i = 0; i < f->patch_step.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument shift_step: (");
+    list = (int *)NN_GET(net, f->shift_step.list);
+    for (i = 0; i < f->shift_step.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument padding: (");
+    list = (int *)NN_GET(net, f->padding.list);
+    for (i = 0; i < f->padding.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
   } break;
   default:;
   }

@@ -40,9 +40,9 @@ rt_function_error_t allocate_softmax_local_context(rt_function_t *f) {
   }
   const int axis = context->axis;
   const int size = calc_shape_size(f->inputs[0]->shape);
-  const int size_axis =
-      axis <= 0 ? size : shape_product_of(f->inputs[0], axis,
-                                          f->inputs[0]->shape.size);
+  const int size_axis = axis <= 0 ? size
+                                  : shape_product_of(f->inputs[0], axis,
+                                                     f->inputs[0]->shape.size);
 
   // axis must be less than ndim of inputs[0].
   if (f->inputs[0]->shape.size <= axis) {

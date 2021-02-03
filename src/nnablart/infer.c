@@ -169,9 +169,27 @@ int infer(nn_network_t *net, int argc, char *argv[]) {
       printf("Cannot open output file:%s.\n", output_filename);
       return -1;
     }
+    int output_data_type = rt_output_variable(context, i)->type;
+    int output_data_size;
 
-    int output_data_size =
-        rt_output_size(context, i) * sizeof(float); // TODO float only.
+    switch (output_data_type) {
+    case NN_DATA_TYPE_FLOAT:
+      output_data_size = rt_output_size(context, i) * sizeof(float);
+      break;
+    case NN_DATA_TYPE_INT8:
+      output_data_size = rt_output_size(context, i) * sizeof(int8_t);
+      break;
+    case NN_DATA_TYPE_INT16:
+      output_data_size = rt_output_size(context, i) * sizeof(int16_t);
+      break;
+    case NN_DATA_TYPE_SIGN:
+      output_data_size = rt_output_size(context, i) >> 3;
+      break;
+    default:
+      printf("Type: %d is not yet supported.", output_data_type);
+      return -1;
+    }
+
     int output_write_size =
         (int)fwrite(rt_output_buffer(context, i), sizeof(uint8_t),
                     output_data_size, output);

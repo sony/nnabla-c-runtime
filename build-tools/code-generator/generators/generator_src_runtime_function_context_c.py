@@ -65,7 +65,8 @@ def _generate_context_code(fn, func, fid_num, arg_fmt, fid):
                         '      ctx->{} = {};'.format(an, arg['default']))
                 elif arg['type'] == 'repeated int64' or arg['type'] == 'Shape':
                     # TODO does not support default shape
-                    l.append('      ctx->{} = 0;'.format(an))
+                    l.append('      ctx->{}.size = 0;'.format(an))
+                    l.append('      ctx->{}.data = NULL;'.format(an))
                     n += 1
                 else:
                     # TODO does not support default string.

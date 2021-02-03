@@ -10,12 +10,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 add_library(nnablart_functions STATIC
   # Utilities
   utilities/accessor.c
+  utilities/fixedpoint.c
   utilities/list.c
   utilities/shape.c
 
   # Functions
   implements/neural_network/pooling.c
   implements/neural_network/affine/affine.c
+  implements/neural_network/affine/affine_fixed8.c
+  implements/neural_network/affine/affine_fixed16.c
   implements/neural_network/affine/affine_generic.c
   implements/neural_network/max_pooling.c
   implements/neural_network/sum_pooling.c
@@ -24,6 +27,8 @@ add_library(nnablart_functions STATIC
   implements/neural_network/convolution/convolution.c
   implements/neural_network/convolution/convolution_generic.c
   implements/neural_network/convolution/convolution_float.c
+  implements/neural_network/convolution/convolution_int8.c
+  implements/neural_network/convolution/convolution_int16.c
   implements/neural_network/convolution/convolution_common.c
   implements/neural_network/convolution/binary_connect_convolution.c
   implements/neural_network/convolution/binary_weight_convolution.c
@@ -58,6 +63,7 @@ add_library(nnablart_functions STATIC
 
   implements/arithmetic/add_scalar.c
   implements/arithmetic/arithmetic.c
+  implements/arithmetic/arithmetic_fixed.c
   implements/arithmetic/arithmetic_generic.c
   implements/arithmetic/div2.c
   implements/arithmetic/mul2.c

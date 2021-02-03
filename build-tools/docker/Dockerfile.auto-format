@@ -12,15 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     clang-format \
     make \
     python3-pip \
+    python3-setuptools \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install setuptools
-RUN pip3 install future
-RUN pip3 install autopep8
+RUN pip3 install -U \
+    autopep8 \
+    future \
+    pyyaml \
+    setuptools \
+    six \
+    wheel

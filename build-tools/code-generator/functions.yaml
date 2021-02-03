@@ -193,6 +193,78 @@ Neural Network Layer:
     id: 265
     func_type:
     - ALL
+  FusedConvolution:
+    snake_name: fused_convolution
+    inputs:
+      x: {}
+      weight:
+        parameter: true
+      bias:
+        optional: true
+        parameter: true
+      beta:
+        optional: true
+        parameter: true
+      gamma:
+        optional: true
+        parameter: true
+      mean:
+        optional: true
+      variance:
+        optional: true
+      z:
+        optional: true
+    arguments:
+      base_axis:
+        type: int64
+        default: '1'
+      pad:
+        type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
+      stride:
+        type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
+      dilation:
+        type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
+      group:
+        type: int64
+        default: '1'
+      channel_last:
+        type: bool
+        default: 'False'
+      decay_rate:
+        type: float
+        default: '0.9'
+      eps:
+        type: float
+        default: 1e-05
+      batch_stat:
+        type: bool
+        default: 'True'
+      nonlinearity:
+        type: string
+        available_values:
+        - identity
+        - relu
+        - sigmoid
+        - tanh
+        - leaky_relu
+        - elu
+        - relu6
+        default: '''relu'''
+      nonlinearity_args:
+        type: repeated float
+        default: list()
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiIiIiIiBffBifF: 295
+    uniq_name: FusedConvolution_iiIiIiIiBffBifF
+    id: 295
+    func_type:
+    - ALL
   DepthwiseConvolution:
     snake_name: depthwise_convolution
     inputs:
@@ -252,13 +324,21 @@ Neural Network Layer:
       group:
         type: int64
         default: '1'
+      channel_last:
+        type: bool
+        default: 'False'
+      output_padding:
+        type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
     outputs:
       y: {}
     function_ids:
       iiIiIiIi: 3
+      iiIiIiIiB: 279
+      iiIiIiIiBiI: 292
     c_runtime: support
-    uniq_name: Deconvolution_iiIiIiIi
-    id: 3
+    uniq_name: Deconvolution_iiIiIiIiBiI
+    id: 292
     func_type:
     - ALL
   DepthwiseDeconvolution:
@@ -293,6 +373,21 @@ Neural Network Layer:
     c_runtime: not support
     uniq_name: DepthwiseDeconvolution_iiIiIiIi
     id: 4
+    func_type:
+    - ALL
+  AdaptiveSeparableConvolution:
+    snake_name: adaptive_separable_convolution
+    inputs:
+      x: {}
+      vertical_kernel: {}
+      horizontal_kernel: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 278
+    uniq_name: AdaptiveSeparableConvolution
+    id: 278
     func_type:
     - ALL
   MaxPooling:
@@ -405,13 +500,17 @@ Neural Network Layer:
     arguments:
       kernel:
         type: Shape
+      channel_last:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       iI: 9
+      iIB: 287
     c_runtime: support
-    uniq_name: Unpooling_iI
-    id: 9
+    uniq_name: Unpooling_iIB
+    id: 287
     func_type:
     - ALL
   Embed:
@@ -647,6 +746,19 @@ Neural Network Activation Functions:
     id: 245
     func_type:
     - ALL
+  Mish:
+    snake_name: mish
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 298
+    uniq_name: Mish
+    id: 298
+    func_type:
+    - ALL
   ReLU6:
     snake_name: relu6
     inputs:
@@ -823,6 +935,29 @@ Normalization:
     id: 22
     func_type:
     - ALL
+  NormNormalization:
+    snake_name: norm_normalization
+    inputs:
+      x: {}
+    arguments:
+      p:
+        type: float
+        default: 2
+      axes:
+        type: repeated int64
+        default: range(x.ndim)
+      eps:
+        type: float
+        default: 1e-12
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      fiIf: 317
+    uniq_name: NormNormalization_fiIf
+    id: 317
+    func_type:
+    - ALL
   SyncBatchNormalization:
     snake_name: sync_batch_normalization
     inputs:
@@ -858,6 +993,27 @@ Normalization:
       CiiIffB: 263
     uniq_name: SyncBatchNormalization_CiiIffB
     id: 263
+    func_type:
+    - ALL
+  WeightNormalization:
+    snake_name: weight_normalization
+    inputs:
+      w: {}
+      g: {}
+    arguments:
+      dim:
+        type: int64
+        default: '0'
+      eps:
+        type: float
+        default: 1e-12
+    outputs:
+      w_wn: {}
+    c_runtime: not support
+    function_ids:
+      if: 304
+    uniq_name: WeightNormalization_if
+    id: 304
     func_type:
     - ALL
   MeanSubtraction:
@@ -1012,6 +1168,29 @@ Reduction:
     id: 130
     func_type:
     - ALL
+  Norm:
+    snake_name: norm
+    inputs:
+      x: {}
+    arguments:
+      p:
+        type: float
+        default: 2
+      axes:
+        type: repeated int64
+        default: range(x.ndim)
+      keep_dims:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      fiIB: 318
+    uniq_name: Norm_fiIB
+    id: 318
+    func_type:
+    - ALL
   Prod:
     snake_name: prod
     inputs:
@@ -1077,18 +1256,37 @@ Arithmetic:
     id: 31
     func_type:
     - ALL
+  AddN:
+    snake_name: add_n
+    inputs:
+      x:
+        variadic: true
+    outputs:
+      y: {}
+    c_runtime: support
+    function_ids:
+      Empty: 281
+    uniq_name: AddN
+    id: 281
+    func_type:
+    - ALL
   BcAdd2:
     snake_name: bc_add2
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 32
+      B: 307
     c_runtime: not support
-    uniq_name: BcAdd2
-    id: 32
+    uniq_name: BcAdd2_B
+    id: 307
     func_type:
     - ALL
   Sub2:
@@ -1096,13 +1294,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 33
+      B: 308
     c_runtime: support
-    uniq_name: Sub2
-    id: 33
+    uniq_name: Sub2_B
+    id: 308
     func_type:
     - ALL
   Mul2:
@@ -1110,13 +1313,32 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 34
+      B: 309
     c_runtime: support
-    uniq_name: Mul2
-    id: 34
+    uniq_name: Mul2_B
+    id: 309
+    func_type:
+    - ALL
+  MulN:
+    snake_name: mul_n
+    inputs:
+      x:
+        variadic: true
+    outputs:
+      y: {}
+    c_runtime: support
+    function_ids:
+      Empty: 282
+    uniq_name: MulN
+    id: 282
     func_type:
     - ALL
   Div2:
@@ -1124,13 +1346,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 35
+      B: 310
     c_runtime: support
-    uniq_name: Div2
-    id: 35
+    uniq_name: Div2_B
+    id: 310
     func_type:
     - ALL
   Pow2:
@@ -1138,13 +1365,18 @@ Arithmetic:
     inputs:
       x0: {}
       x1: {}
+    arguments:
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       Empty: 36
+      B: 311
     c_runtime: support
-    uniq_name: Pow2
-    id: 36
+    uniq_name: Pow2_B
+    id: 311
     func_type:
     - ALL
   AddScalar:
@@ -1155,13 +1387,17 @@ Arithmetic:
       val:
         type: double
         default: '1'
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       f: 37
+      fB: 312
     c_runtime: support
-    uniq_name: AddScalar_f
-    id: 37
+    uniq_name: AddScalar_fB
+    id: 312
     func_type:
     - ALL
   MulScalar:
@@ -1172,13 +1408,17 @@ Arithmetic:
       val:
         type: double
         default: '1'
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       f: 38
+      fB: 313
     c_runtime: support
-    uniq_name: MulScalar_f
-    id: 38
+    uniq_name: MulScalar_fB
+    id: 313
     func_type:
     - ALL
   PowScalar:
@@ -1189,13 +1429,17 @@ Arithmetic:
       val:
         type: double
         default: '1'
+      inplace:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       f: 39
+      fB: 314
     c_runtime: support
-    uniq_name: PowScalar_f
-    id: 39
+    uniq_name: PowScalar_fB
+    id: 314
     func_type:
     - ALL
   RSubScalar:
@@ -2332,6 +2576,19 @@ Array Manipulation:
     id: 276
     func_type:
     - ALL
+  BatchLogdet:
+    snake_name: batch_logdet
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 319
+    uniq_name: BatchLogdet
+    id: 319
+    func_type:
+    - ALL
   Assign:
     snake_name: assign
     inputs:
@@ -2344,6 +2601,28 @@ Array Manipulation:
       Empty: 248
     uniq_name: Assign
     id: 248
+    func_type:
+    - ALL
+  Gather:
+    snake_name: gather
+    inputs:
+      x: {}
+      Indices: {}
+    arguments:
+      axis:
+        type: int64
+        default: 0
+      batch_dims:
+        type: int64
+        default: 0
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiI: 302
+      ii: 303
+    uniq_name: Gather_ii
+    id: 303
     func_type:
     - ALL
   GatherNd:
@@ -2365,9 +2644,12 @@ Array Manipulation:
     inputs:
       data: {}
       indices: {}
+      out:
+        optional: true
     arguments:
       shape:
         type: repeated int64
+        default: None
     outputs:
       y: {}
     c_runtime: not support
@@ -2375,6 +2657,69 @@ Array Manipulation:
       iI: 271
     uniq_name: ScatterNd_iI
     id: 271
+    func_type:
+    - ALL
+  ScatterAdd:
+    snake_name: scatter_add
+    inputs:
+      x0: {}
+      indices: {}
+      x1: {}
+    arguments:
+      axis:
+        type: int64
+        default: 0
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      i: 315
+    uniq_name: ScatterAdd_i
+    id: 315
+    func_type:
+    - ALL
+  PackPaddedSequence:
+    snake_name: pack_padded_sequence
+    inputs:
+      padded_sequence: {}
+      lengths: {}
+    arguments:
+      batch_first:
+        type: bool
+        default: 'False'
+    outputs:
+      pack_sequence: {}
+      batch_sizes: {}
+    c_runtime: not support
+    function_ids:
+      B: 305
+    uniq_name: PackPaddedSequence_B
+    id: 305
+    func_type:
+    - ALL
+  PadPackedSequence:
+    snake_name: pad_packed_sequence
+    inputs:
+      packed_sequence: {}
+      batch_sizes: {}
+    arguments:
+      batch_first:
+        type: bool
+        default: 'False'
+      padding_value:
+        type: float
+        default: 0.0
+      total_length:
+        type: int64
+        default: -1
+    outputs:
+      padded_sequence: {}
+      lengths: {}
+    c_runtime: not support
+    function_ids:
+      Bfi: 306
+    uniq_name: PadPackedSequence_Bfi
+    id: 306
     func_type:
     - ALL
 Signal Processing:
@@ -2392,14 +2737,25 @@ Signal Processing:
         - linear
       align_corners:
         type: bool
-        default: False if mode == 'nearest' else True
+        default: 'True'
+      half_pixel:
+        type: bool
+        default: 'False'
+      half_pixel_for_nn:
+        type: bool
+        default: 'False'
+      channel_last:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       iIiB: 127
+      iIiBB: 286
+      iIiBBBB: 291
     c_runtime: not support
-    uniq_name: Interpolate_iIiB
-    id: 127
+    uniq_name: Interpolate_iIiBBBB
+    id: 291
     func_type:
     - ALL
   FFT:
@@ -2584,6 +2940,81 @@ Stochasticity:
     id: 91
     func_type:
     - ALL
+  RandBinomial:
+    snake_name: rand_binomial
+    inputs: {}
+    arguments:
+      n:
+        type: int64
+        default: '1'
+      p:
+        type: float
+        default: '0.5'
+      shape:
+        type: Shape
+        default: '[]'
+      seed:
+        type: int64
+        default: '-1'
+    outputs:
+      y: {}
+    function_ids:
+      ifiIi: 289
+    c_runtime: not support
+    uniq_name: RandBinomial_ifiIi
+    id: 289
+    func_type:
+    - ALL
+  RandBeta:
+    snake_name: rand_beta
+    inputs: {}
+    arguments:
+      alpha:
+        type: float
+        default: '0.5'
+      beta:
+        type: float
+        default: '0.5'
+      shape:
+        type: Shape
+        default: '[]'
+      seed:
+        type: int64
+        default: '-1'
+    outputs:
+      y: {}
+    function_ids:
+      ffiIi: 288
+    c_runtime: not support
+    uniq_name: RandBeta_ffiIi
+    id: 288
+    func_type:
+    - ALL
+  RandGamma:
+    snake_name: rand_gamma
+    inputs: {}
+    arguments:
+      k:
+        type: float
+        default: '0.5'
+      theta:
+        type: float
+        default: '1'
+      shape:
+        type: Shape
+        default: '[]'
+      seed:
+        type: int64
+        default: '-1'
+    outputs:
+      y: {}
+    function_ids:
+      ffiIi: 290
+    c_runtime: not support
+    uniq_name: RandGamma_ffiIi
+    id: 290
+    func_type:
+    - ALL
   RandomChoice:
     snake_name: random_choice
     inputs:
@@ -2681,6 +3112,55 @@ Stochasticity:
     c_runtime: not support
     uniq_name: RandomShift_iIiii
     id: 94
+    func_type:
+    - ALL
+  RandomErase:
+    snake_name: random_erase
+    inputs:
+      x: {}
+    arguments:
+      prob:
+        type: float
+        default: '0.5'
+      area_ratios:
+        type: repeated float
+        default: (0.02, 0.4)
+      aspect_ratios:
+        type: repeated float
+        default: (0.3, 3.3333)
+      replacements:
+        type: repeated float
+        default: (0.0, 255.0)
+      n:
+        type: int64
+        default: 1
+      share:
+        type: bool
+        default: 'True'
+      inplace:
+        type: bool
+        default: 'False'
+      base_axis:
+        type: int64
+        default: '1'
+      seed:
+        type: int64
+        default: '-1'
+      channel_last:
+        type: bool
+        default: 'False'
+      ste_fine_grained:
+        type: bool
+        default: 'True'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      ffFfFiBfFBiiB: 283
+      ffFfFfFiBBiiB: 284
+      ffFfFfFiBBiiBB: 285
+    uniq_name: RandomErase_ffFfFfFiBBiiBB
+    id: 285
     func_type:
     - ALL
   ImageAugmentation:
@@ -2898,6 +3378,74 @@ Loss Functions:
     c_runtime: not support
     uniq_name: KLMultinomial_i
     id: 104
+    func_type:
+    - ALL
+Geometric Neural Network Layers:
+  AffineGrid:
+    snake_name: affine_grid
+    inputs:
+      theta: {}
+    arguments:
+      size:
+        type: repeated int64
+      align_corners:
+        type: bool
+        default: 'False'
+    outputs:
+      grid: {}
+    c_runtime: not support
+    function_ids:
+      iIB: 296
+    uniq_name: AffineGrid_iIB
+    id: 296
+    func_type:
+    - ALL
+  WarpByGrid:
+    snake_name: warp_by_grid
+    inputs:
+      x: {}
+      grid: {}
+    arguments:
+      mode:
+        type: string
+        available_values:
+        - linear
+        - nearest
+        default: '''linear'''
+      padding_mode:
+        type: string
+        available_values:
+        - zero
+        - repeat
+        - reflect
+        default: '''zero'''
+      align_corners:
+        type: bool
+        default: 'False'
+      channel_last:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiBB: 297
+    uniq_name: WarpByGrid_iiBB
+    id: 297
+    func_type:
+    - ALL
+  WarpByFlow:
+    snake_name: warp_by_flow
+    inputs:
+      data: {}
+      flow: {}
+    outputs:
+      warped_image: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 277
+    uniq_name: WarpByFlow
+    id: 277
     func_type:
     - ALL
 Quantization Neural Network Layers:
@@ -3265,6 +3813,49 @@ Quantization Neural Network Layers:
     id: 135
     func_type:
     - ALL
+  QuantizeLinear:
+    snake_name: quantize_linear
+    inputs:
+      x: {}
+      scale: {}
+      zero_point: {}
+    arguments:
+      round_mode:
+        type: string
+        available_values:
+        - HALF_AWAY_FROM_ZERO
+        - HALF_TO_EVEN
+        default: '''HALF_AWAY_FROM_ZERO'''
+      narrow_range:
+        type: bool
+        default: 'False'
+      dtype:
+        type: int64
+        default: '1'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iBi: 293
+    uniq_name: QuantizeLinear_iBi
+    id: 293
+    func_type:
+    - ALL
+  DequantizeLinear:
+    snake_name: dequantize_linear
+    inputs:
+      x: {}
+      scale: {}
+      zero_point: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 294
+    uniq_name: DequantizeLinear
+    id: 294
+    func_type:
+    - ALL
 Validation:
   TopNError:
     snake_name: top_n_error
@@ -3426,17 +4017,33 @@ Unsupported, Special Use:
     id: 272
     func_type:
     - ALL
-  WarpByFlow:
-    snake_name: warp_by_flow
+  PatchCorrelation:
+    snake_name: patch_correlation
     inputs:
-      data: {}
-      flow: {}
+      x1: {}
+      x2: {}
+    arguments:
+      patch:
+        type: Shape
+        default: (1, 1)
+      shift:
+        type: Shape
+        default: (0, 0)
+      patch_step:
+        type: Shape
+        default: (1, 1)
+      shift_step:
+        type: Shape
+        default: (1, 1)
+      padding:
+        type: Shape
+        default: (0, 0, 0, 0)
     outputs:
-      warped_image: {}
+      y: {}
     c_runtime: not support
     function_ids:
-      Empty: 277
-    uniq_name: WarpByFlow
-    id: 277
+      iIiIiIiIiI: 280
+    uniq_name: PatchCorrelation_iIiIiIiIiI
+    id: 280
     func_type:
     - ALL

@@ -58,8 +58,9 @@ rt_function_error_t exec_affine_generic(rt_function_t *f) {
       for (i = 0; i < p->output_loop_size; i++) {
         int opos = output_offset + i;
         int bpos = i;
-        p->set_output(p->output, opos, p->get_output(p->output, opos) +
-                                           p->get_bias(p->bias, bpos));
+        p->set_output(p->output, opos,
+                      p->get_output(p->output, opos) +
+                          p->get_bias(p->bias, bpos));
       }
     }
   }

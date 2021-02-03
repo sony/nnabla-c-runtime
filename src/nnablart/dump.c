@@ -26,6 +26,7 @@ int dump(nn_network_t *net, int argc, char *argv[]) {
   unsigned int i, j;
 
   printf("NNB: Version: [%d]\n", net->version);
+  printf("NNB: api_level: [%d]\n", net->api_level);
   printf("NNB: Has %d buffers.\n", net->buffers.size);
   int *list = (int *)NN_GET(net, net->buffers.list);
   for (i = 0; i < net->buffers.size; i++) {

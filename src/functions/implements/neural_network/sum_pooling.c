@@ -49,7 +49,25 @@ rt_function_error_t exec_sum_pooling(rt_function_t *f) {
 #ifdef CONFIG_SUMPOOLING_FLOAT32
     return exec_pooling(f, (pooling_context_t *)context, p, calc_sum);
 #endif /* CONFIG_SUMPOOLING_FLOAT32 */
-  } else {
+  }
+
+  else if (p->calc_context.x->type == NN_DATA_TYPE_INT8 &&
+           p->calc_context.y->type == NN_DATA_TYPE_INT8) {
+#ifdef CONFIG_SUMPOOLING_FIXED8
+    return exec_pooling_fixed8(f, (pooling_context_t *)context, p,
+                               calc_sum_fixed8);
+#endif /* CONFIG_SUMPOOLING_FIXED8 */
+  }
+
+  else if (p->calc_context.x->type == NN_DATA_TYPE_INT16 &&
+           p->calc_context.y->type == NN_DATA_TYPE_INT16) {
+#ifdef CONFIG_SUMPOOLING_FIXED16
+    return exec_pooling_fixed16(f, (pooling_context_t *)context, p,
+                                calc_sum_fixed16);
+#endif /* CONFIG_SUMPOOLING_FIXED16 */
+  }
+
+  else {
 #ifdef CONFIG_SUMPOOLING_GENERIC
     return exec_pooling_generic(f, (pooling_context_t *)context, p,
                                 calc_sum_generic);

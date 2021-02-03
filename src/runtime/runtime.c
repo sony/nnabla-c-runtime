@@ -123,6 +123,7 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
   }
 
   if (n->api_level > NN_API_LEVEL) {
+    printf("n->api_level: %d\n", n->api_level);
     return RT_RET_ERROR_VERSION_UNMATCH;
   }
 
@@ -224,8 +225,8 @@ rt_return_value_t rt_initialize_context(rt_context_pointer context,
       for (j = 0; j < c->num_of_callbacks; j++) {
         if ((c->callbacks + j)->type == func->type) {
           rt_return_value_t ret =
-              (c->callbacks +
-               j)->allocate_local_context(n, (void *)(&(c->functions[i])));
+              (c->callbacks + j)
+                  ->allocate_local_context(n, (void *)(&(c->functions[i])));
           if (ret == RT_RET_FUNCTION_MATCH) {
             callback_registered_flag = 1;
             break;
@@ -370,14 +371,29 @@ nn_variable_t *rt_output_variable(rt_context_pointer context, size_t index) {
 
 rt_return_value_t rt_forward(rt_context_pointer context) {
   int i; // Iterator
+  rt_function_error_t ret;
   rt_context_t *c = context;
 
   for (i = 0; i < c->num_of_functions; i++) {
-    c->functions[i].func.exec_func(&(c->functions[i].func));
+    ret = c->functions[i].func.exec_func(&(c->functions[i].func));
+    if (ret != RT_FUNCTION_ERROR_NOERROR) {
+      switch (ret) {
+      case RT_FUNCTION_ERROR_UNIMPLEMENTED:
+        printf("Error: %d, Function (ID: %d) is not implemented in "
+               "nnabla-c-runtime!\n",
+               ret, c->functions[i].info->type);
+        return -1;
+      default:
+        printf("Failed to run exec_func, Error: %d.\n", ret);
+        return -1;
+      }
+    }
   }
 
   return RT_RET_NOERROR;
 }
+
+const char *const rt_nnabla_version(void) { return NN_NNABLA_VERSION; }
 
 const char *const rt_c_runtime_version(void) { return NN_C_RUNTIME_VERSION; }
 

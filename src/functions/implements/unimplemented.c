@@ -66,6 +66,22 @@ rt_function_error_t exec_gru(rt_function_t *f) {
 }
 #endif /* CONFIG_GRU */
 
+// FusedConvolution
+#ifdef CONFIG_FUSEDCONVOLUTION
+rt_function_error_t allocate_fused_convolution_local_context(rt_function_t *f) {
+  f->exec_func = exec_fused_convolution;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_fused_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_fused_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_FUSEDCONVOLUTION */
+
 // DepthwiseDeconvolution
 #ifdef CONFIG_DEPTHWISEDECONVOLUTION
 rt_function_error_t
@@ -83,6 +99,24 @@ rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_DEPTHWISEDECONVOLUTION */
+
+// AdaptiveSeparableConvolution
+#ifdef CONFIG_ADAPTIVESEPARABLECONVOLUTION
+rt_function_error_t
+allocate_adaptive_separable_convolution_local_context(rt_function_t *f) {
+  f->exec_func = exec_adaptive_separable_convolution;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_adaptive_separable_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_adaptive_separable_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ADAPTIVESEPARABLECONVOLUTION */
 
 // GlobalAveragePooling
 #ifdef CONFIG_GLOBALAVERAGEPOOLING
@@ -153,6 +187,22 @@ rt_function_error_t exec_relu6(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_RELU6 */
+
+// Mish
+#ifdef CONFIG_MISH
+rt_function_error_t allocate_mish_local_context(rt_function_t *f) {
+  f->exec_func = exec_mish;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_mish_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_mish(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_MISH */
 
 // HardSigmoid
 #ifdef CONFIG_HARDSIGMOID
@@ -303,6 +353,23 @@ rt_function_error_t exec_fused_batch_normalization(rt_function_t *f) {
 }
 #endif /* CONFIG_FUSEDBATCHNORMALIZATION */
 
+// NormNormalization
+#ifdef CONFIG_NORMNORMALIZATION
+rt_function_error_t
+allocate_norm_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_norm_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_norm_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_norm_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_NORMNORMALIZATION */
+
 // SyncBatchNormalization
 #ifdef CONFIG_SYNCBATCHNORMALIZATION
 rt_function_error_t
@@ -319,7 +386,24 @@ free_sync_batch_normalization_local_context(rt_function_t *f) {
 rt_function_error_t exec_sync_batch_normalization(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_FUSEDBATCHNORMALIZATION */
+#endif /* CONFIG_SYNCBATCHNORMALIZATION */
+
+// WeightNormalization
+#ifdef CONFIG_WEIGHTNORMALIZATION
+rt_function_error_t
+allocate_weight_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_weight_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_weight_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_weight_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WEIGHTNORMALIZATION */
 
 #ifdef CONFIG_CLIPGRADBYVALUE
 rt_function_error_t
@@ -404,6 +488,22 @@ rt_function_error_t exec_min(rt_function_t *f) {
 }
 #endif /* CONFIG_MIN */
 
+// Norm
+#ifdef CONFIG_NORM
+rt_function_error_t allocate_norm_local_context(rt_function_t *f) {
+  f->exec_func = exec_norm;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_norm_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_norm(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_NORM */
+
 // Prod
 #ifdef CONFIG_PROD
 rt_function_error_t allocate_prod_local_context(rt_function_t *f) {
@@ -471,6 +571,38 @@ rt_function_error_t exec_bc_add2(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_BCADD2 */
+
+// AddN
+#ifdef CONFIG_ADDN
+rt_function_error_t allocate_add_n_local_context(rt_function_t *f) {
+  f->exec_func = exec_add_n;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_add_n_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_add_n(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ADDN */
+
+// MulN
+#ifdef CONFIG_MULN
+rt_function_error_t allocate_mul_n_local_context(rt_function_t *f) {
+  f->exec_func = exec_mul_n;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_mul_n_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_mul_n(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_MULN */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
@@ -1165,6 +1297,22 @@ rt_function_error_t exec_tile(rt_function_t *f) {
 }
 #endif /* CONFIG_TILE */
 
+// Gather
+#ifdef CONFIG_GATHER
+rt_function_error_t allocate_gather_local_context(rt_function_t *f) {
+  f->exec_func = exec_gather;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_gather_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_gather(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_GATHER */
+
 // Assign
 #ifdef CONFIG_ASSIGN
 rt_function_error_t allocate_assign_local_context(rt_function_t *f) {
@@ -1212,6 +1360,56 @@ rt_function_error_t exec_scatter_nd(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_SCATTERND */
+
+// ScatterAdd
+#ifdef CONFIG_SCATTERADD
+rt_function_error_t allocate_scatter_add_local_context(rt_function_t *f) {
+  f->exec_func = exec_scatter_add;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_scatter_add_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_scatter_add(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SCATTERADD */
+
+// PackPaddedSequence
+#ifdef CONFIG_PACKPADDEDSEQUENCE
+rt_function_error_t
+allocate_pack_padded_sequence_local_context(rt_function_t *f) {
+  f->exec_func = exec_pack_padded_sequence;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_pack_padded_sequence_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_pack_padded_sequence(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_PACKPADDEDSEQUENCE */
+
+// PadPackedSequence
+#ifdef CONFIG_PADPACKEDSEQUENCE
+rt_function_error_t
+allocate_pad_packed_sequence_local_context(rt_function_t *f) {
+  f->exec_func = exec_pad_packed_sequence;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_pad_packed_sequence_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_pad_packed_sequence(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_PADPACKEDSEQUENCE */
 
 // OneHot
 #ifdef CONFIG_ONEHOT
@@ -1276,6 +1474,22 @@ rt_function_error_t exec_batch_det(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_BATCHDET */
+
+// BatchLogdet
+#ifdef CONFIG_BATCHLOGDET
+rt_function_error_t allocate_batch_logdet_local_context(rt_function_t *f) {
+  f->exec_func = exec_batch_logdet;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_batch_logdet_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_batch_logdet(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BATCHLOGDET */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Stochasticity
@@ -1356,6 +1570,70 @@ rt_function_error_t exec_randn(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_RANDN */
+
+// RandBinomial
+#ifdef CONFIG_RANDBINOMIAL
+rt_function_error_t allocate_rand_binomial_local_context(rt_function_t *f) {
+  f->exec_func = exec_rand_binomial;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_binomial_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand_binomial(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDBINOMIAL */
+
+// RandBeta
+#ifdef CONFIG_RANDBETA
+rt_function_error_t allocate_rand_beta_local_context(rt_function_t *f) {
+  f->exec_func = exec_rand_beta;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_beta_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand_beta(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDBETA */
+
+// RandGamma
+#ifdef CONFIG_RANDGAMMA
+rt_function_error_t allocate_rand_gamma_local_context(rt_function_t *f) {
+  f->exec_func = exec_rand_gamma;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_rand_gamma_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_rand_gamma(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDGAMMA */
+
+// RandomErase
+#ifdef CONFIG_RANDOMERASE
+rt_function_error_t allocate_random_erase_local_context(rt_function_t *f) {
+  f->exec_func = exec_random_erase;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_random_erase_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_random_erase(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_RANDOMERASE */
 
 // RandomChoice
 #ifdef CONFIG_RANDOMCHOICE
@@ -1598,6 +1876,58 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f) {
 #endif /* CONFIG_KLMULTINOMIAL */
 
 ////////////////////////////////////////////////////////////////////////////////
+// Geometric Neural Network Layers
+////////////////////////////////////////////////////////////////////////////////
+
+// AffineGrid
+#ifdef CONFIG_AFFINEGRID
+rt_function_error_t allocate_affine_grid_local_context(rt_function_t *f) {
+  f->exec_func = exec_affine_grid;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_affine_grid_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_affine_grid(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_AFFINEGRID */
+
+// WarpByGrid
+#ifdef CONFIG_WARPBYGRID
+rt_function_error_t allocate_warp_by_grid_local_context(rt_function_t *f) {
+  f->exec_func = exec_warp_by_grid;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_warp_by_grid_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_warp_by_grid(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WARPBYGRID */
+
+// WarpByFlow
+#ifdef CONFIG_WARPBYFLOW
+rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f) {
+  f->exec_func = exec_warp_by_flow;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WARPBYFLOW */
+
+////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1697,6 +2027,38 @@ rt_function_error_t exec_prune(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_PRUNE */
+
+// QuantizeLinear
+#ifdef CONFIG_QUANTIZELINEAR
+rt_function_error_t allocate_quantize_linear_local_context(rt_function_t *f) {
+  f->exec_func = exec_quantize_linear;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_quantize_linear_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_quantize_linear(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_QUANTIZELINEAR */
+
+// DequantizeLinear
+#ifdef CONFIG_DEQUANTIZELINEAR
+rt_function_error_t allocate_dequantize_linear_local_context(rt_function_t *f) {
+  f->exec_func = exec_dequantize_linear;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_dequantize_linear_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_dequantize_linear(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_DEQUANTIZELINEAR */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Spectral Operation
@@ -1889,18 +2251,18 @@ rt_function_error_t exec_max_pooling_backward(rt_function_t *f) {
 }
 #endif /* CONFIG_MAXPOOLINGBACKWARD */
 
-// WarpByFlow
-#ifdef CONFIG_WARPBYFLOW
-rt_function_error_t allocate_warp_by_flow_local_context(rt_function_t *f) {
-  f->exec_func = exec_warp_by_flow;
+// PatchCorrelation
+#ifdef CONFIG_PATCHCORRELATION
+rt_function_error_t allocate_patch_correlation_local_context(rt_function_t *f) {
+  f->exec_func = exec_patch_correlation;
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t free_warp_by_flow_local_context(rt_function_t *f) {
+rt_function_error_t free_patch_correlation_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
+rt_function_error_t exec_patch_correlation(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_WARPBYFLOW */
+#endif /* CONFIG_PATCHCORRELATION */

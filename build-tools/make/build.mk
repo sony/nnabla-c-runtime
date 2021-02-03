@@ -19,6 +19,8 @@
 NNABLA_C_RUNTIME_DIRECTORY ?= $(shell pwd)
 NNABLA_C_RUNTIME_REFERENCE_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/test/nnabla
 NNABLA_C_RUNTIME_TEST_DIRECTORY ?= $(NNABLA_C_RUNTIME_DIRECTORY)/build/test
+NNABLA_VERSION ?= $$(cat $(NNABLA_DIRECTORY)/VERSION.txt)
+API_LEVEL ?= $$(nnabla_cli function_info --api -1|grep API_LEVEL)
 
 export NNABLA_C_RUNTIME_REFERENCE_DIRECTORY
 export NNABLA_C_RUNTIME_TEST_DIRECTORY
@@ -71,7 +73,12 @@ ifneq ("$(NNABLA_DIRECTORY)","")
 .PHONY: nnabla-c-runtime-update-function-info
 nnabla-c-runtime-update-function-info: nnabla-install
 	@nnabla_cli function_info -o $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
-	@api=$(nnabla_cli function_info --api -1|grep API_LEVEL) && sed -i -e "s/API_LEVEL:.*/$api/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
+	@sed -i -e "s/\(NNABLA_VERSION: \).*/\1$(NNABLA_VERSION)/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
+	@sed -i -e "s/API_LEVEL:.*/$(API_LEVEL)/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
+
+.PHONY: check-api_level
+check-api_level: nnabla-c-runtime-build nnabla-install
+	@bash ./build-tools/test/scripts/check_api_level.sh $(NNABLA_C_RUNTIME_DIRECTORY)
 
 .PHONY: nnabla-c-runtime-generate-function-test
 nnabla-c-runtime-generate-function-test: nnabla-install

@@ -309,6 +309,9 @@ void rt_set_malloc(void *(*user_malloc)(size_t size));
 /// @param[in] user_free
 void rt_set_free(void (*user_free)(void *ptr));
 
+/// @brief return nnabla version string
+const char *const rt_nnabla_version(void);
+
 /// @brief return c runtime version string
 const char *const rt_c_runtime_version(void);
 
