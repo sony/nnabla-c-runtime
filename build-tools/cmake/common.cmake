@@ -22,6 +22,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 # Compiler Settings.
 #-------------------------------------------------------------------------------
 
+set(TOOLCHAIN_PREFIX $ENV{TOOLCHAIN_PREFIX})
 set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
 
 if("${CMAKE_TOOLCHAIN_FILE}" STREQUAL "")
@@ -31,5 +32,6 @@ if("${CMAKE_TOOLCHAIN_FILE}" STREQUAL "")
   elseif(MSVC)
   endif()
 else()
+  message(INFO "==============" ${TOOLCHAIN_PREFIX})
   include(${CMAKE_TOOLCHAIN_FILE})
 endif()
