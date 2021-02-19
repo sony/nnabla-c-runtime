@@ -148,7 +148,16 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    FusedBatchNormalization(270)\n");
   } break;
   case NN_FUNCTION_BATCH_NORMALIZATION: { // BatchNormalization
-    printf("NNB: Function type:    BatchNormalization(22)\n");
+    printf("NNB: Function type:    BatchNormalization(326)\n");
+  } break;
+  case NN_FUNCTION_GROUP_NORMALIZATION: { // GroupNormalization
+    printf("NNB: Function type:    GroupNormalization(321)\n");
+  } break;
+  case NN_FUNCTION_INSTANCE_NORMALIZATION: { // InstanceNormalization
+    printf("NNB: Function type:    InstanceNormalization(322)\n");
+  } break;
+  case NN_FUNCTION_LAYER_NORMALIZATION: { // LayerNormalization
+    printf("NNB: Function type:    LayerNormalization(323)\n");
   } break;
   case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
     printf("NNB: Function type:    NormNormalization(317)\n");
@@ -156,8 +165,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SYNC_BATCH_NORMALIZATION: { // SyncBatchNormalization
     printf("NNB: Function type:    SyncBatchNormalization(263)\n");
   } break;
+  case NN_FUNCTION_TENSOR_NORMALIZATION: { // TensorNormalization
+    printf("NNB: Function type:    TensorNormalization(324)\n");
+  } break;
   case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
     printf("NNB: Function type:    WeightNormalization(304)\n");
+  } break;
+  case NN_FUNCTION_WEIGHT_STANDARDIZATION: { // WeightStandardization
+    printf("NNB: Function type:    WeightStandardization(325)\n");
   } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     printf("NNB: Function type:    MeanSubtraction(23)\n");
@@ -474,6 +489,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_IFFT: { // IFFT
     printf("NNB: Function type:    IFFT(159)\n");
   } break;
+  case NN_FUNCTION_STFT: { // STFT
+    printf("NNB: Function type:    STFT(327)\n");
+  } break;
+  case NN_FUNCTION_ISTFT: { // ISTFT
+    printf("NNB: Function type:    ISTFT(328)\n");
+  } break;
   case NN_FUNCTION_DROPOUT: { // Dropout
     printf("NNB: Function type:    Dropout(86)\n");
   } break;
@@ -511,7 +532,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    RandomFlip(93)\n");
   } break;
   case NN_FUNCTION_RANDOM_SHIFT: { // RandomShift
-    printf("NNB: Function type:    RandomShift(94)\n");
+    printf("NNB: Function type:    RandomShift(320)\n");
   } break;
   case NN_FUNCTION_RANDOM_ERASE: { // RandomErase
     printf("NNB: Function type:    RandomErase(285)\n");
@@ -971,6 +992,50 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument decay_rate: %f\n", f->decay_rate);
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
+    printf("NNB: Function argument no_scale: %d\n", f->no_scale);
+    printf("NNB: Function argument no_bias: %d\n", f->no_bias);
+  } break;
+  case NN_FUNCTION_GROUP_NORMALIZATION: { // GroupNormalization
+    nn_function_group_normalization_t *f =
+        (nn_function_group_normalization_t *)func;
+    printf("NNB: Function argument num_groups: %d\n", f->num_groups);
+    printf("NNB: Function argument channel_axis: %d\n", f->channel_axis);
+    printf("NNB: Function argument batch_axis: (");
+    list = (int *)NN_GET(net, f->batch_axis.list);
+    for (i = 0; i < f->batch_axis.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument no_scale: %d\n", f->no_scale);
+    printf("NNB: Function argument no_bias: %d\n", f->no_bias);
+  } break;
+  case NN_FUNCTION_INSTANCE_NORMALIZATION: { // InstanceNormalization
+    nn_function_instance_normalization_t *f =
+        (nn_function_instance_normalization_t *)func;
+    printf("NNB: Function argument channel_axis: %d\n", f->channel_axis);
+    printf("NNB: Function argument batch_axis: (");
+    list = (int *)NN_GET(net, f->batch_axis.list);
+    for (i = 0; i < f->batch_axis.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument no_scale: %d\n", f->no_scale);
+    printf("NNB: Function argument no_bias: %d\n", f->no_bias);
+  } break;
+  case NN_FUNCTION_LAYER_NORMALIZATION: { // LayerNormalization
+    nn_function_layer_normalization_t *f =
+        (nn_function_layer_normalization_t *)func;
+    printf("NNB: Function argument batch_axis: (");
+    list = (int *)NN_GET(net, f->batch_axis.list);
+    for (i = 0; i < f->batch_axis.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument no_scale: %d\n", f->no_scale);
+    printf("NNB: Function argument no_bias: %d\n", f->no_bias);
   } break;
   case NN_FUNCTION_NORM_NORMALIZATION: { // NormNormalization
     nn_function_norm_normalization_t *f =
@@ -998,10 +1063,29 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
   } break;
+  case NN_FUNCTION_TENSOR_NORMALIZATION: { // TensorNormalization
+    nn_function_tensor_normalization_t *f =
+        (nn_function_tensor_normalization_t *)func;
+    printf("NNB: Function argument axes: (");
+    list = (int *)NN_GET(net, f->axes.list);
+    for (i = 0; i < f->axes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument no_scale: %d\n", f->no_scale);
+    printf("NNB: Function argument no_bias: %d\n", f->no_bias);
+  } break;
   case NN_FUNCTION_WEIGHT_NORMALIZATION: { // WeightNormalization
     nn_function_weight_normalization_t *f =
         (nn_function_weight_normalization_t *)func;
     printf("NNB: Function argument dim: %d\n", f->dim);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
+  case NN_FUNCTION_WEIGHT_STANDARDIZATION: { // WeightStandardization
+    nn_function_weight_standardization_t *f =
+        (nn_function_weight_standardization_t *)func;
+    printf("NNB: Function argument channel_axis: %d\n", f->channel_axis);
     printf("NNB: Function argument eps: %f\n", f->eps);
   } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
@@ -1486,6 +1570,23 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument signal_ndim: %d\n", f->signal_ndim);
     printf("NNB: Function argument normalized: %d\n", f->normalized);
   } break;
+  case NN_FUNCTION_STFT: { // STFT
+    nn_function_stft_t *f = (nn_function_stft_t *)func;
+    printf("NNB: Function argument window_size: %d\n", f->window_size);
+    printf("NNB: Function argument stride: %d\n", f->stride);
+    printf("NNB: Function argument fft_size: %d\n", f->fft_size);
+    printf("NNB: Function argument window_type: %d\n", f->window_type);
+    printf("NNB: Function argument center: %d\n", f->center);
+    printf("NNB: Function argument pad_mode: %d\n", f->pad_mode);
+  } break;
+  case NN_FUNCTION_ISTFT: { // ISTFT
+    nn_function_istft_t *f = (nn_function_istft_t *)func;
+    printf("NNB: Function argument window_size: %d\n", f->window_size);
+    printf("NNB: Function argument stride: %d\n", f->stride);
+    printf("NNB: Function argument fft_size: %d\n", f->fft_size);
+    printf("NNB: Function argument window_type: %d\n", f->window_type);
+    printf("NNB: Function argument center: %d\n", f->center);
+  } break;
   case NN_FUNCTION_DROPOUT: { // Dropout
     nn_function_dropout_t *f = (nn_function_dropout_t *)func;
     printf("NNB: Function argument p: %f\n", f->p);
@@ -1618,6 +1719,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument border_mode: %d\n", f->border_mode);
+    printf("NNB: Function argument constant_value: %f\n", f->constant_value);
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
     printf("NNB: Function argument seed: %d\n", f->seed);
   } break;

@@ -909,10 +909,14 @@ Normalization:
     snake_name: batch_normalization
     inputs:
       x: {}
-      beta: {}
-      gamma: {}
-      mean: {}
-      variance: {}
+      beta:
+        optional: true
+      gamma:
+        optional: true
+      mean:
+        optional: true
+      variance:
+        optional: true
     arguments:
       axes:
         type: repeated int64
@@ -926,13 +930,119 @@ Normalization:
       batch_stat:
         type: bool
         default: 'True'
+      no_scale:
+        type: bool
+        default: 'False'
+      no_bias:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       iIffB: 22
+      iIffBBB: 326
     c_runtime: support
-    uniq_name: BatchNormalization_iIffB
-    id: 22
+    uniq_name: BatchNormalization_iIffBBB
+    id: 326
+    func_type:
+    - ALL
+  GroupNormalization:
+    snake_name: group_normalization
+    inputs:
+      x: {}
+      beta:
+        optional: true
+      gamma:
+        optional: true
+    arguments:
+      num_groups:
+        type: int64
+        default: 1
+      channel_axis:
+        type: int64
+        default: 1
+      batch_axis:
+        type: repeated int64
+        default: (0,)
+      eps:
+        type: float
+        default: 1e-05
+      no_scale:
+        type: bool
+        default: 'False'
+      no_bias:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiiIfBB: 321
+    uniq_name: GroupNormalization_iiiIfBB
+    id: 321
+    func_type:
+    - ALL
+  InstanceNormalization:
+    snake_name: instance_normalization
+    inputs:
+      x: {}
+      beta:
+        optional: true
+      gamma:
+        optional: true
+    arguments:
+      channel_axis:
+        type: int64
+        default: 1
+      batch_axis:
+        type: repeated int64
+        default: (0,)
+      eps:
+        type: float
+        default: 1e-05
+      no_scale:
+        type: bool
+        default: 'False'
+      no_bias:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiIfBB: 322
+    uniq_name: InstanceNormalization_iiIfBB
+    id: 322
+    func_type:
+    - ALL
+  LayerNormalization:
+    snake_name: layer_normalization
+    inputs:
+      x: {}
+      beta:
+        optional: true
+      gamma:
+        optional: true
+    arguments:
+      batch_axis:
+        type: repeated int64
+        default: (0,)
+      eps:
+        type: float
+        default: 1e-05
+      no_scale:
+        type: bool
+        default: 'False'
+      no_bias:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iIfBB: 323
+    uniq_name: LayerNormalization_iIfBB
+    id: 323
     func_type:
     - ALL
   NormNormalization:
@@ -995,6 +1105,36 @@ Normalization:
     id: 263
     func_type:
     - ALL
+  TensorNormalization:
+    snake_name: tensor_normalization
+    inputs:
+      x: {}
+      beta:
+        optional: true
+      gamma:
+        optional: true
+    arguments:
+      axes:
+        type: repeated int64
+        default: (1,)
+      eps:
+        type: float
+        default: 1e-05
+      no_scale:
+        type: bool
+        default: 'False'
+      no_bias:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: support
+    function_ids:
+      iIfBB: 324
+    uniq_name: TensorNormalization_iIfBB
+    id: 324
+    func_type:
+    - ALL
   WeightNormalization:
     snake_name: weight_normalization
     inputs:
@@ -1014,6 +1154,26 @@ Normalization:
       if: 304
     uniq_name: WeightNormalization_if
     id: 304
+    func_type:
+    - ALL
+  WeightStandardization:
+    snake_name: weight_standardization
+    inputs:
+      w: {}
+    arguments:
+      channel_axis:
+        type: int64
+        default: 0
+      eps:
+        type: float
+        default: 1e-05
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      if: 325
+    uniq_name: WeightStandardization_if
+    id: 325
     func_type:
     - ALL
   MeanSubtraction:
@@ -2796,6 +2956,74 @@ Signal Processing:
     id: 159
     func_type:
     - ALL
+  STFT:
+    snake_name: stft
+    inputs:
+      x: {}
+    arguments:
+      window_size:
+        type: int64
+      stride:
+        type: int64
+      fft_size:
+        type: int64
+      window_type:
+        type: string
+        available_values:
+        - hanning
+        - hamming
+        - rectangular
+        default: '''hanning'''
+      center:
+        type: bool
+        default: 'True'
+      pad_mode:
+        type: string
+        available_values:
+        - constant
+        - reflect
+        default: '''reflect'''
+    outputs:
+      y_r: {}
+      y_i: {}
+    c_runtime: not support
+    function_ids:
+      iiiiBi: 327
+    uniq_name: STFT_iiiiBi
+    id: 327
+    func_type:
+    - ALL
+  ISTFT:
+    snake_name: istft
+    inputs:
+      y_r: {}
+      y_i: {}
+    arguments:
+      window_size:
+        type: int64
+      stride:
+        type: int64
+      fft_size:
+        type: int64
+      window_type:
+        type: string
+        available_values:
+        - hanning
+        - hamming
+        - rectangular
+        default: '''hanning'''
+      center:
+        type: bool
+        default: 'True'
+    outputs:
+      x: {}
+    c_runtime: not support
+    function_ids:
+      iiiiB: 328
+    uniq_name: ISTFT_iiiiB
+    id: 328
+    func_type:
+    - ALL
 Stochasticity:
   Dropout:
     snake_name: dropout
@@ -3098,7 +3326,11 @@ Stochasticity:
         available_values:
         - nearest
         - reflect
+        - constant
         default: '''nearest'''
+      constant_value:
+        type: float
+        default: '0'
       base_axis:
         type: int64
         default: '1'
@@ -3109,9 +3341,10 @@ Stochasticity:
       y: {}
     function_ids:
       iIiii: 94
+      iIifii: 320
     c_runtime: not support
-    uniq_name: RandomShift_iIiii
-    id: 94
+    uniq_name: RandomShift_iIifii
+    id: 320
     func_type:
     - ALL
   RandomErase:

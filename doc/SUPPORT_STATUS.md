@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/198
+Total 62/205
 
 
 ## Neural Network Layer
@@ -72,15 +72,20 @@ Count 11/22
 |             Sinc             |      no      |      -       |      -       |
 
 ## Normalization
-Count 2/8
+Count 2/13
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |   FusedBatchNormalization    |      no      |      -       |      -       |
 |      BatchNormalization      |     yes      |     yes      |     yes      |
+|      GroupNormalization      |      no      |      -       |      -       |
+|    InstanceNormalization     |      no      |      -       |      -       |
+|      LayerNormalization      |      no      |      -       |      -       |
 |      NormNormalization       |      no      |      -       |      -       |
 |    SyncBatchNormalization    |      no      |      -       |      -       |
+|     TensorNormalization      |      no      |      -       |      -       |
 |     WeightNormalization      |      no      |      -       |      -       |
+|    WeightStandardization     |      no      |      -       |      -       |
 |       MeanSubtraction        |     yes      |     yes      |     yes      |
 |       ClipGradByValue        |      no      |      -       |      -       |
 |        ClipGradByNorm        |      no      |      -       |      -       |
@@ -215,13 +220,15 @@ Count 11/26
 |      PadPackedSequence       |      no      |      -       |      -       |
 
 ## Signal Processing
-Count 0/3
+Count 0/5
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |         Interpolate          |      no      |      -       |      -       |
 |             FFT              |      no      |      -       |      -       |
 |             IFFT             |      no      |      -       |      -       |
+|             STFT             |      no      |      -       |      -       |
+|            ISTFT             |      no      |      -       |      -       |
 
 ## Stochasticity
 Count 1/15

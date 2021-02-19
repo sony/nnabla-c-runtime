@@ -353,6 +353,58 @@ rt_function_error_t exec_fused_batch_normalization(rt_function_t *f) {
 }
 #endif /* CONFIG_FUSEDBATCHNORMALIZATION */
 
+// GroupNormalization
+#ifdef CONFIG_GROUPNORMALIZATION
+rt_function_error_t
+allocate_group_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_group_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_group_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_group_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_GROUPNORMALIZATION */
+
+// InstanceNormalization
+#ifdef CONFIG_INSTANCENORMALIZATION
+rt_function_error_t
+allocate_instance_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_instance_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_instance_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_instance_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_INSTANCENORMALIZATION */
+
+// LayerNormalization
+#ifdef CONFIG_LAYERNORMALIZATION
+rt_function_error_t
+allocate_layer_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_layer_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_layer_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_layer_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LAYERNORMALIZATION */
+
 // NormNormalization
 #ifdef CONFIG_NORMNORMALIZATION
 rt_function_error_t
@@ -388,6 +440,23 @@ rt_function_error_t exec_sync_batch_normalization(rt_function_t *f) {
 }
 #endif /* CONFIG_SYNCBATCHNORMALIZATION */
 
+// TensorNormalization
+#ifdef CONFIG_TENSORNORMALIZATION
+rt_function_error_t
+allocate_tensor_normalization_local_context(rt_function_t *f) {
+  f->exec_func = exec_tensor_normalization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_tensor_normalization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_tensor_normalization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_TENSORNORMALIZATION */
+
 // WeightNormalization
 #ifdef CONFIG_WEIGHTNORMALIZATION
 rt_function_error_t
@@ -404,6 +473,24 @@ rt_function_error_t exec_weight_normalization(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_WEIGHTNORMALIZATION */
+
+// WeightStandardization
+#ifdef CONFIG_WEIGHTSTANDARDIZATION
+rt_function_error_t
+allocate_weight_standardization_local_context(rt_function_t *f) {
+  f->exec_func = exec_weight_standardization;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_weight_standardization_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_weight_standardization(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_WEIGHTSTANDARDIZATION */
 
 #ifdef CONFIG_CLIPGRADBYVALUE
 rt_function_error_t
@@ -2111,6 +2198,38 @@ rt_function_error_t exec_ifft(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_IFFT */
+
+// STFT
+#ifdef CONFIG_STFT
+rt_function_error_t allocate_stft_local_context(rt_function_t *f) {
+  f->exec_func = exec_stft;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_stft_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_stft(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_STFT */
+
+// ISTFT
+#ifdef CONFIG_ISTFT
+rt_function_error_t allocate_istft_local_context(rt_function_t *f) {
+  f->exec_func = exec_istft;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_istft_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_istft(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ISTFT */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Validation
