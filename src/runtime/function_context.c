@@ -228,6 +228,26 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_DEFORMABLECONVOLUTION
+  case NN_FUNCTION_DEFORMABLE_CONVOLUTION: { // DeformableConvolution
+    function_context->func.free_local_context_func =
+        free_deformable_convolution_local_context;
+    nn_function_deformable_convolution_t *f =
+        (nn_function_deformable_convolution_t *)function;
+    deformable_convolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(deformable_convolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->deformable_group = f->deformable_group;
+    ctx->channel_last = f->channel_last;
+    function_context->func.local_context = ctx;
+    allocate_deformable_convolution_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_ADAPTIVESEPARABLECONVOLUTION
   case NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION: { // AdaptiveSeparableConvolution
     function_context->func.free_local_context_func =

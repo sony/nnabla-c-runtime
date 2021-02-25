@@ -375,6 +375,49 @@ Neural Network Layer:
     id: 4
     func_type:
     - ALL
+  DeformableConvolution:
+    snake_name: deformable_convolution
+    inputs:
+      x: {}
+      weight:
+        parameter: true
+      offset: {}
+      mask:
+        optional: true
+      bias:
+        optional: true
+        parameter: true
+    arguments:
+      base_axis:
+        type: int64
+        default: '1'
+      pad:
+        type: Shape
+        default: (0,) * (len(x.shape) - (base_axis+1))
+      stride:
+        type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
+      dilation:
+        type: Shape
+        default: (1,) * (len(x.shape) - (base_axis+1))
+      group:
+        type: int64
+        default: '1'
+      deformable_group:
+        type: int64
+        default: '1'
+      channel_last:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiIiIiIiiB: 329
+    uniq_name: DeformableConvolution_iiIiIiIiiB
+    id: 329
+    func_type:
+    - ALL
   AdaptiveSeparableConvolution:
     snake_name: adaptive_separable_convolution
     inputs:
@@ -2500,6 +2543,7 @@ Array Manipulation:
         available_values:
         - constant
         - reflect
+        - repeat
         default: '''constant'''
       constant_value:
         type: float
