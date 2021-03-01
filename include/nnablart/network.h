@@ -28,7 +28,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (29)
+#define NN_API_LEVEL (30)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,8 +79,9 @@ typedef enum {
       3, ///< Recent version of Deconvolution has arg [iiIiIiIi]
   NN_FUNCTION_DECONVOLUTION_1 =
       279, ///< Recent version of Deconvolution has arg [iiIiIiIiB]
-  NN_FUNCTION_DECONVOLUTION = 292,         ///< Deconvolution
-  NN_FUNCTION_DEPTHWISE_DECONVOLUTION = 4, ///< DepthwiseDeconvolution
+  NN_FUNCTION_DECONVOLUTION = 292,          ///< Deconvolution
+  NN_FUNCTION_DEPTHWISE_DECONVOLUTION = 4,  ///< DepthwiseDeconvolution
+  NN_FUNCTION_DEFORMABLE_CONVOLUTION = 329, ///< DeformableConvolution
   NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION =
       278, ///< AdaptiveSeparableConvolution
   NN_FUNCTION_MAX_POOLING_0 =
@@ -511,6 +512,25 @@ typedef struct {
   nn_list_t dilation; ///< Original type is [Shape]
   int32_t divisor;    ///< Original type is [int64]
 } nn_function_depthwise_deconvolution_t;
+
+/// @}
+
+/// @brief DeformableConvolution function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t base_axis;        ///< Original type is [int64]
+  nn_list_t pad;            ///< Original type is [Shape]
+  nn_list_t stride;         ///< Original type is [Shape]
+  nn_list_t dilation;       ///< Original type is [Shape]
+  int32_t group;            ///< Original type is [int64]
+  int32_t deformable_group; ///< Original type is [int64]
+  uint8_t channel_last;     ///< Original type is [bool]
+} nn_function_deformable_convolution_t;
 
 /// @}
 

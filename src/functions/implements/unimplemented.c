@@ -100,6 +100,24 @@ rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f) {
 }
 #endif /* CONFIG_DEPTHWISEDECONVOLUTION */
 
+// DeformableConvolution
+#ifdef CONFIG_DEFORMABLECONVOLUTION
+rt_function_error_t
+allocate_deformable_convolution_local_context(rt_function_t *f) {
+  f->exec_func = exec_deformable_convolution;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_deformable_convolution_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_deformable_convolution(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_DEFORMABLECONVOLUTION */
+
 // AdaptiveSeparableConvolution
 #ifdef CONFIG_ADAPTIVESEPARABLECONVOLUTION
 rt_function_error_t

@@ -57,6 +57,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_DEPTHWISE_DECONVOLUTION: { // DepthwiseDeconvolution
     printf("NNB: Function type:    DepthwiseDeconvolution(4)\n");
   } break;
+  case NN_FUNCTION_DEFORMABLE_CONVOLUTION: { // DeformableConvolution
+    printf("NNB: Function type:    DeformableConvolution(329)\n");
+  } break;
   case NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION: { // AdaptiveSeparableConvolution
     printf("NNB: Function type:    AdaptiveSeparableConvolution(278)\n");
   } break;
@@ -814,6 +817,33 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument divisor: %d\n", f->divisor);
+  } break;
+  case NN_FUNCTION_DEFORMABLE_CONVOLUTION: { // DeformableConvolution
+    nn_function_deformable_convolution_t *f =
+        (nn_function_deformable_convolution_t *)func;
+    printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument pad: (");
+    list = (int *)NN_GET(net, f->pad.list);
+    for (i = 0; i < f->pad.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument stride: (");
+    list = (int *)NN_GET(net, f->stride.list);
+    for (i = 0; i < f->stride.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument dilation: (");
+    list = (int *)NN_GET(net, f->dilation.list);
+    for (i = 0; i < f->dilation.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument group: %d\n", f->group);
+    printf("NNB: Function argument deformable_group: %d\n",
+           f->deformable_group);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_ADAPTIVE_SEPARABLE_CONVOLUTION: { // AdaptiveSeparableConvolution
   } break;

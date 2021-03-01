@@ -324,6 +324,32 @@ free_depthwise_deconvolution_local_context(rt_function_t *f);
 rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f);
 /// @}
 
+/// @defgroup DeformableConvolution DeformableConvolution
+/// @{
+
+/// Local context for DeformableConvolution
+typedef struct {
+  int32_t base_axis;        ///< int64
+  rt_list_t pad;            ///< Original type is [Shape]
+  rt_list_t stride;         ///< Original type is [Shape]
+  rt_list_t dilation;       ///< Original type is [Shape]
+  int32_t group;            ///< int64
+  int32_t deformable_group; ///< int64
+  uint8_t channel_last;     ///< bool
+  void *data;               ///< General purpose data area
+} deformable_convolution_local_context_t;
+
+/// Allocate DeformableConvolution local context
+rt_function_error_t
+allocate_deformable_convolution_local_context(rt_function_t *f);
+
+/// Free DeformableConvolution local context
+rt_function_error_t free_deformable_convolution_local_context(rt_function_t *f);
+
+/// Exec DeformableConvolution
+rt_function_error_t exec_deformable_convolution(rt_function_t *f);
+/// @}
+
 /// @defgroup AdaptiveSeparableConvolution AdaptiveSeparableConvolution
 /// @{
 
@@ -2403,6 +2429,7 @@ rt_function_error_t exec_slice(rt_function_t *f);
 typedef enum {
   PAD_MODE_CONSTANT,
   PAD_MODE_REFLECT,
+  PAD_MODE_REPEAT,
   END_OF_PAD_MODE
 } pad_mode_value_t;
 
