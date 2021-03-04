@@ -55,7 +55,7 @@ free_binary_connect_convolution_local_context(rt_function_t *f) {
 
 #ifdef CONFIG_BINARYCONNECTCONVOLUTION_FLOAT32
 rt_function_error_t exec_binary_connect_convolution(rt_function_t *f) {
-  return exec_convolution_float(f);
+  return exec_convolution(f);
 }
 #endif /* CONFIG_BINARYCONNECTCONVOLUTION_FLOAT32 */
 
