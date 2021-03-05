@@ -510,6 +510,22 @@ rt_function_error_t exec_weight_standardization(rt_function_t *f) {
 }
 #endif /* CONFIG_WEIGHTSTANDARDIZATION */
 
+// SpectralNorm
+#ifdef CONFIG_SPECTRALNORM
+rt_function_error_t allocate_spectral_norm_local_context(rt_function_t *f) {
+  f->exec_func = exec_spectral_norm;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_spectral_norm_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_spectral_norm(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SPECTRALNORM */
+
 #ifdef CONFIG_CLIPGRADBYVALUE
 rt_function_error_t
 allocate_clip_grad_by_value_local_context(rt_function_t *f) {

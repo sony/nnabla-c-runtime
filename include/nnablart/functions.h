@@ -1083,6 +1083,28 @@ rt_function_error_t free_weight_standardization_local_context(rt_function_t *f);
 rt_function_error_t exec_weight_standardization(rt_function_t *f);
 /// @}
 
+/// @defgroup SpectralNorm SpectralNorm
+/// @{
+
+/// Local context for SpectralNorm
+typedef struct {
+  int32_t dim;  ///< int64
+  int32_t itr;  ///< int64
+  float eps;    ///< float
+  uint8_t test; ///< bool
+  void *data;   ///< General purpose data area
+} spectral_norm_local_context_t;
+
+/// Allocate SpectralNorm local context
+rt_function_error_t allocate_spectral_norm_local_context(rt_function_t *f);
+
+/// Free SpectralNorm local context
+rt_function_error_t free_spectral_norm_local_context(rt_function_t *f);
+
+/// Exec SpectralNorm
+rt_function_error_t exec_spectral_norm(rt_function_t *f);
+/// @}
+
 /// @defgroup MeanSubtraction MeanSubtraction
 /// @{
 

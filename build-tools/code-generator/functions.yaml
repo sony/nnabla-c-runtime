@@ -1219,6 +1219,33 @@ Normalization:
     id: 325
     func_type:
     - ALL
+  SpectralNorm:
+    snake_name: spectral_norm
+    inputs:
+      w: {}
+      u: {}
+    arguments:
+      dim:
+        type: int64
+        default: '0'
+      itr:
+        type: int64
+        default: '1'
+      eps:
+        type: float
+        default: 1e-12
+      test:
+        type: bool
+        default: 'False'
+    outputs:
+      w_sn: {}
+    c_runtime: not support
+    function_ids:
+      iifB: 330
+    uniq_name: SpectralNorm_iifB
+    id: 330
+    func_type:
+    - ALL
   MeanSubtraction:
     snake_name: mean_subtraction
     inputs:

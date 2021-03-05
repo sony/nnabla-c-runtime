@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/206
+Total 62/207
 
 
 ## Neural Network Layer
@@ -73,7 +73,7 @@ Count 11/22
 |             Sinc             |      no      |      -       |      -       |
 
 ## Normalization
-Count 2/13
+Count 2/14
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -87,6 +87,7 @@ Count 2/13
 |     TensorNormalization      |      no      |      -       |      -       |
 |     WeightNormalization      |      no      |      -       |      -       |
 |    WeightStandardization     |      no      |      -       |      -       |
+|         SpectralNorm         |      no      |      -       |      -       |
 |       MeanSubtraction        |     yes      |     yes      |     yes      |
 |       ClipGradByValue        |      no      |      -       |      -       |
 |        ClipGradByNorm        |      no      |      -       |      -       |
