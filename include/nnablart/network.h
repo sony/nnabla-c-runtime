@@ -28,7 +28,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (30)
+#define NN_API_LEVEL (31)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,6 +137,7 @@ typedef enum {
   NN_FUNCTION_TENSOR_NORMALIZATION = 324,     ///< TensorNormalization
   NN_FUNCTION_WEIGHT_NORMALIZATION = 304,     ///< WeightNormalization
   NN_FUNCTION_WEIGHT_STANDARDIZATION = 325,   ///< WeightStandardization
+  NN_FUNCTION_SPECTRAL_NORM = 330,            ///< SpectralNorm
   NN_FUNCTION_MEAN_SUBTRACTION = 23,          ///< MeanSubtraction
   NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,       ///< ClipGradByValue
   NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,        ///< ClipGradByNorm
@@ -1055,6 +1056,22 @@ typedef struct {
   int32_t channel_axis; ///< Original type is [int64]
   float eps;            ///< Original type is [float]
 } nn_function_weight_standardization_t;
+
+/// @}
+
+/// @brief SpectralNorm function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t dim;  ///< Original type is [int64]
+  int32_t itr;  ///< Original type is [int64]
+  float eps;    ///< Original type is [float]
+  uint8_t test; ///< Original type is [bool]
+} nn_function_spectral_norm_t;
 
 /// @}
 

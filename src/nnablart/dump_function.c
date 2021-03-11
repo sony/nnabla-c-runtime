@@ -177,6 +177,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_WEIGHT_STANDARDIZATION: { // WeightStandardization
     printf("NNB: Function type:    WeightStandardization(325)\n");
   } break;
+  case NN_FUNCTION_SPECTRAL_NORM: { // SpectralNorm
+    printf("NNB: Function type:    SpectralNorm(330)\n");
+  } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     printf("NNB: Function type:    MeanSubtraction(23)\n");
   } break;
@@ -1117,6 +1120,13 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
         (nn_function_weight_standardization_t *)func;
     printf("NNB: Function argument channel_axis: %d\n", f->channel_axis);
     printf("NNB: Function argument eps: %f\n", f->eps);
+  } break;
+  case NN_FUNCTION_SPECTRAL_NORM: { // SpectralNorm
+    nn_function_spectral_norm_t *f = (nn_function_spectral_norm_t *)func;
+    printf("NNB: Function argument dim: %d\n", f->dim);
+    printf("NNB: Function argument itr: %d\n", f->itr);
+    printf("NNB: Function argument eps: %f\n", f->eps);
+    printf("NNB: Function argument test: %d\n", f->test);
   } break;
   case NN_FUNCTION_MEAN_SUBTRACTION: { // MeanSubtraction
     nn_function_mean_subtraction_t *f = (nn_function_mean_subtraction_t *)func;
