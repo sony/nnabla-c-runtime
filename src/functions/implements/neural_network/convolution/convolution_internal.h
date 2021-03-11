@@ -59,7 +59,7 @@ typedef struct {
 #define SPW (1) // width of stride/pad
 
 rt_function_error_t exec_convolution_generic(rt_function_t *f);
-rt_function_error_t exec_convolution_float(rt_function_t *f);
+rt_function_error_t exec_convolution(rt_function_t *f);
 rt_function_error_t exec_convolution_int8(rt_function_t *f);
 rt_function_error_t exec_convolution_int16(rt_function_t *f);
 rt_function_error_t

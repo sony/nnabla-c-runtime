@@ -176,8 +176,8 @@ allocate_depthwise_convolution_local_context(rt_function_t *f) {
 
 #ifdef CONFIG_DEPTHWISECONVOLUTION_FLOAT32
     if ((f->outputs[i]->type == NN_DATA_TYPE_FLOAT) &&
-        (f->exec_func == exec_convolution_float)) {
-      f->exec_func = exec_convolution_float;
+        (f->exec_func == exec_convolution)) {
+      f->exec_func = exec_convolution;
       conv_output_assigned = 1;
       break;
     }
@@ -221,7 +221,7 @@ rt_function_error_t free_depthwise_convolution_local_context(rt_function_t *f) {
 
 #ifdef CONFIG_DEPTHWISECONVOLUTION_FLOAT32
 rt_function_error_t exec_depthwise_convolution(rt_function_t *f) {
-  return exec_convolution_float(f);
+  return exec_convolution(f);
 }
 #endif /* CONFIG_DEPTHWISECONVOLUTION_FLOAT32 */
 

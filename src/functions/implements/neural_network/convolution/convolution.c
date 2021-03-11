@@ -33,7 +33,7 @@
 // Convolution
 rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
 #ifdef CONFIG_CONVOLUTION_FLOAT32
-  f->exec_func = exec_convolution_float;
+  f->exec_func = exec_convolution;
 #endif /* CONFIG_CONVOLUTION_FLOAT32 */
 
 #ifdef CONFIG_CONVOLUTION_GENERIC
@@ -82,8 +82,8 @@ rt_function_error_t allocate_convolution_local_context(rt_function_t *f) {
 
 #ifdef CONFIG_CONVOLUTION_FLOAT32
     if ((f->outputs[i]->type == NN_DATA_TYPE_FLOAT) &&
-        (f->exec_func == exec_convolution_float)) {
-      f->exec_func = exec_convolution_float;
+        (f->exec_func == exec_convolution)) {
+      f->exec_func = exec_convolution;
       conv_output_assigned = 1;
       break;
     }

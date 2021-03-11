@@ -139,7 +139,7 @@ static inline void mul_alpha(var_t *out, var_t *a) {
   }
 }
 
-rt_function_error_t exec_convolution_float(rt_function_t *f) {
+rt_function_error_t exec_convolution(rt_function_t *f) {
   convolution_local_context_t *c =
       (convolution_local_context_t *)f->local_context;
   convolution_private_t *p = (convolution_private_t *)(c->data);
