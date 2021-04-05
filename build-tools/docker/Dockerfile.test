@@ -2,6 +2,10 @@ FROM ubuntu:18.04
 
 ENV LANG en_US.UTF-8
 
+ARG PYTHON_VERSION_MAJOR
+ARG PYTHON_VERSION_MINOR
+ENV PYVERNAME=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     bzip2 \
@@ -11,26 +15,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     valgrind \
     wget \
+    python${PYVERNAME} \
+    python3-pip \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV PATH /opt/miniconda3/bin:$PATH
-ENV LD_LIBRARY_PATH /opt/miniconda3/lib:$LD_LIBRARY_PATH
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYVERNAME} 0
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python${PYVERNAME} 0
 
-ARG PYTHON_VERSION_MAJOR
-ARG PYTHON_VERSION_MINOR
-ENV PYVERNAME=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}
+RUN pip3 install --upgrade pip
+RUN pip install wheel setuptools
+RUN pip install Cython autopep8 boto3 configparser \
+    contextlib2 futures h5py mako numpy protobuf pyyaml requests scikit-image scipy tqdm pytest
 
-RUN umask 0 \
-    && mkdir -p /tmp/deps \
-    && cd /tmp/deps \
-    && wget --no-check-certificate https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3 \
-    && rm -rf Miniconda3-latest-Linux-x86_64.sh \
-    && conda install -y python=${PYVERNAME} \
-    && pip install Cython autopep8 boto3 \
-       configparser contextlib2 futures h5py mako \
-       numpy protobuf pyyaml requests scikit-image scipy tqdm pytest \
-    && cd / \
-    && rm -rf /tmp/*
-
+ENV LD_LIBRARY_PATH /usr/local/lib64:$LD_LIBRARY_PATH
