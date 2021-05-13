@@ -783,6 +783,12 @@ rt_function_error_t exec_log_sigmoid(rt_function_t *f);
 /// @defgroup SoftPlus SoftPlus
 /// @{
 
+/// Local context for SoftPlus
+typedef struct {
+  float beta; ///< double
+  void *data; ///< General purpose data area
+} softplus_local_context_t;
+
 /// Allocate SoftPlus local context
 rt_function_error_t allocate_softplus_local_context(rt_function_t *f);
 
@@ -1184,6 +1190,27 @@ rt_function_error_t free_sum_local_context(rt_function_t *f);
 rt_function_error_t exec_sum(rt_function_t *f);
 /// @}
 
+/// @defgroup CumSum CumSum
+/// @{
+
+/// Local context for CumSum
+typedef struct {
+  int32_t axis;      ///< int64
+  uint8_t exclusive; ///< bool
+  uint8_t reverse;   ///< bool
+  void *data;        ///< General purpose data area
+} cumsum_local_context_t;
+
+/// Allocate CumSum local context
+rt_function_error_t allocate_cumsum_local_context(rt_function_t *f);
+
+/// Free CumSum local context
+rt_function_error_t free_cumsum_local_context(rt_function_t *f);
+
+/// Exec CumSum
+rt_function_error_t exec_cumsum(rt_function_t *f);
+/// @}
+
 /// @defgroup Mean Mean
 /// @{
 
@@ -1287,6 +1314,27 @@ rt_function_error_t free_prod_local_context(rt_function_t *f);
 
 /// Exec Prod
 rt_function_error_t exec_prod(rt_function_t *f);
+/// @}
+
+/// @defgroup CumProd CumProd
+/// @{
+
+/// Local context for CumProd
+typedef struct {
+  int32_t axis;      ///< int64
+  uint8_t exclusive; ///< bool
+  uint8_t reverse;   ///< bool
+  void *data;        ///< General purpose data area
+} cumprod_local_context_t;
+
+/// Allocate CumProd local context
+rt_function_error_t allocate_cumprod_local_context(rt_function_t *f);
+
+/// Free CumProd local context
+rt_function_error_t free_cumprod_local_context(rt_function_t *f);
+
+/// Exec CumProd
+rt_function_error_t exec_cumprod(rt_function_t *f);
 /// @}
 
 /// @defgroup ReduceSum ReduceSum
@@ -1782,6 +1830,25 @@ rt_function_error_t free_less_local_context(rt_function_t *f);
 
 /// Exec Less
 rt_function_error_t exec_less(rt_function_t *f);
+/// @}
+
+/// @defgroup SearchSorted SearchSorted
+/// @{
+
+/// Local context for SearchSorted
+typedef struct {
+  uint8_t right; ///< bool
+  void *data;    ///< General purpose data area
+} searchsorted_local_context_t;
+
+/// Allocate SearchSorted local context
+rt_function_error_t allocate_searchsorted_local_context(rt_function_t *f);
+
+/// Free SearchSorted local context
+rt_function_error_t free_searchsorted_local_context(rt_function_t *f);
+
+/// Exec SearchSorted
+rt_function_error_t exec_searchsorted(rt_function_t *f);
 /// @}
 
 /// @defgroup LogicalAndScalar LogicalAndScalar
@@ -2682,17 +2749,23 @@ rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f);
 rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
 /// @}
 
-/// @defgroup BatchInv BatchInv
+/// @defgroup Meshgrid Meshgrid
 /// @{
 
-/// Allocate BatchInv local context
-rt_function_error_t allocate_batch_inv_local_context(rt_function_t *f);
+/// Local context for Meshgrid
+typedef struct {
+  uint8_t ij_indexing; ///< bool
+  void *data;          ///< General purpose data area
+} meshgrid_local_context_t;
 
-/// Free BatchInv local context
-rt_function_error_t free_batch_inv_local_context(rt_function_t *f);
+/// Allocate Meshgrid local context
+rt_function_error_t allocate_meshgrid_local_context(rt_function_t *f);
 
-/// Exec BatchInv
-rt_function_error_t exec_batch_inv(rt_function_t *f);
+/// Free Meshgrid local context
+rt_function_error_t free_meshgrid_local_context(rt_function_t *f);
+
+/// Exec Meshgrid
+rt_function_error_t exec_meshgrid(rt_function_t *f);
 /// @}
 
 /// @defgroup BatchDet BatchDet
@@ -2706,6 +2779,19 @@ rt_function_error_t free_batch_det_local_context(rt_function_t *f);
 
 /// Exec BatchDet
 rt_function_error_t exec_batch_det(rt_function_t *f);
+/// @}
+
+/// @defgroup BatchInv BatchInv
+/// @{
+
+/// Allocate BatchInv local context
+rt_function_error_t allocate_batch_inv_local_context(rt_function_t *f);
+
+/// Free BatchInv local context
+rt_function_error_t free_batch_inv_local_context(rt_function_t *f);
+
+/// Exec BatchInv
+rt_function_error_t exec_batch_inv(rt_function_t *f);
 /// @}
 
 /// @defgroup BatchLogdet BatchLogdet
@@ -3005,9 +3091,10 @@ rt_function_error_t exec_istft(rt_function_t *f);
 
 /// Local context for Dropout
 typedef struct {
-  float p;      ///< double
-  int32_t seed; ///< int64
-  void *data;   ///< General purpose data area
+  float p;             ///< double
+  int32_t seed;        ///< int64
+  uint8_t output_mask; ///< bool
+  void *data;          ///< General purpose data area
 } dropout_local_context_t;
 
 /// Allocate Dropout local context

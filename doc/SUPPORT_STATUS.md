@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/207
+Total 62/211
 
 
 ## Neural Network Layer
@@ -93,16 +93,18 @@ Count 2/14
 |        ClipGradByNorm        |      no      |      -       |      -       |
 
 ## Reduction
-Count 1/8
+Count 1/10
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |             Sum              |     yes      |     yes      |     yes      |
+|            CumSum            |      no      |      -       |      -       |
 |             Mean             |      no      |      -       |      -       |
 |             Max              |      no      |      -       |      -       |
 |             Min              |      no      |      -       |      -       |
 |             Norm             |      no      |      -       |      -       |
 |             Prod             |      no      |      -       |      -       |
+|           CumProd            |      no      |      -       |      -       |
 |          ReduceSum           |      no      |      -       |      -       |
 |          ReduceMean          |      no      |      -       |      -       |
 
@@ -127,7 +129,7 @@ Count 11/14
 |          RPowScalar          |     yes      |     yes      |     yes      |
 
 ## Logical
-Count 5/29
+Count 5/30
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -145,6 +147,7 @@ Count 5/29
 |           Greater            |      no      |      -       |      -       |
 |          LessEqual           |      no      |      -       |      -       |
 |             Less             |      no      |      -       |      -       |
+|         SearchSorted         |      no      |      -       |      -       |
 |       LogicalAndScalar       |      no      |      -       |      -       |
 |       LogicalOrScalar        |      no      |      -       |      -       |
 |       LogicalXorScalar       |      no      |      -       |      -       |
@@ -190,7 +193,7 @@ Count 6/22
 |            ATanh             |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/26
+Count 11/27
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -210,8 +213,9 @@ Count 11/26
 |           Reshape            |     yes      |     yes      |     yes      |
 |          MatrixDiag          |     yes      |     yes      |     yes      |
 |        MatrixDiagPart        |     yes      |     yes      |     yes      |
-|           BatchInv           |      no      |      -       |      -       |
+|           Meshgrid           |      no      |      -       |      -       |
 |           BatchDet           |      no      |      -       |      -       |
+|           BatchInv           |      no      |      -       |      -       |
 |         BatchLogdet          |      no      |      -       |      -       |
 |            Assign            |      no      |      -       |      -       |
 |            Gather            |      no      |      -       |      -       |
