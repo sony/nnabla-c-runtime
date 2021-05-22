@@ -100,6 +100,16 @@ bwd-nnabla-c-runtime-auto-format: nnabla-c-runtime-docker_image_auto_format
 		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT) make nnabla-c-runtime-auto-format
 
 ########################################################################################################################
+# Copyright check
+
+.PHONY: bwd-nnabla-c-runtime-check-copyright
+bwd-nnabla-c-runtime-check-copyright: nnabla-c-runtime-docker_image_auto_format
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) -v $$(pwd)/..:$$(pwd)/.. \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT) make nnabla-c-runtime-check-copyright
+
+
+########################################################################################################################
 # Doc
 .PHONY: bwd-nnabla-c-runtime-doc
 bwd-nnabla-c-runtime-doc: bwd-nnabla-c-runtime-build nnabla-c-runtime-docker_image_doc
