@@ -1,4 +1,5 @@
-# Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+# Copyright 2018,2019,2020,2021 Sony Corporation.
+# Copyright 2021 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -65,6 +66,14 @@ nnabla-c-runtime-doc:
 nnabla-c-runtime-auto-format:
 	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.py" |xargs -n1 autopep8 -i
 	@find $(NNABLA_C_RUNTIME_DIRECTORY) -type f -name "*.[ch]" |xargs -n1 clang-format -i
+
+
+########################################################################################################################
+# Check copyright
+.PHONY: nnabla-c-runtime-check-copyright
+nnabla-c-runtime-check-copyright:
+	python3 $(NNABLA_DIRECTORY)/build-tools/code_formatter/copyright_checker.py --rootdir=$(NNABLA_C_RUNTIME_DIRECTORY)
+
 
 ########################################################################################################################
 # With NNabla
