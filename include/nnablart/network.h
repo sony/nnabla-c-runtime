@@ -24,11 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.17.0.dev1")
+#define NN_NNABLA_VERSION ("1.20.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (31)
+#define NN_API_LEVEL (34)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,10 +121,11 @@ typedef enum {
   NN_FUNCTION_HARD_TANH = 261,    ///< HardTanh
   NN_FUNCTION_LOG_SIGMOID = 251,  ///< LogSigmoid
   NN_FUNCTION_SOFTPLUS_0 = 252,   ///< Recent version of SoftPlus has arg [ii]
-  NN_FUNCTION_SOFTPLUS = 262,     ///< SoftPlus
-  NN_FUNCTION_SOFTSIGN = 253,     ///< SoftSign
-  NN_FUNCTION_TANH_SHRINK = 254,  ///< TanhShrink
-  NN_FUNCTION_SINC = 255,         ///< Sinc
+  NN_FUNCTION_SOFTPLUS_1 = 262,  ///< Recent version of SoftPlus has arg [Empty]
+  NN_FUNCTION_SOFTPLUS = 335,    ///< SoftPlus
+  NN_FUNCTION_SOFTSIGN = 253,    ///< SoftSign
+  NN_FUNCTION_TANH_SHRINK = 254, ///< TanhShrink
+  NN_FUNCTION_SINC = 255,        ///< Sinc
   NN_FUNCTION_FUSED_BATCH_NORMALIZATION = 270, ///< FusedBatchNormalization
   NN_FUNCTION_BATCH_NORMALIZATION_0 =
       22, ///< Recent version of BatchNormalization has arg [iIffB]
@@ -142,6 +143,7 @@ typedef enum {
   NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,       ///< ClipGradByValue
   NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,        ///< ClipGradByNorm
   NN_FUNCTION_SUM = 24,                       ///< Sum
+  NN_FUNCTION_CUMSUM = 331,                   ///< CumSum
   NN_FUNCTION_MEAN = 25,                      ///< Mean
   NN_FUNCTION_MAX_0 = 26,          ///< Recent version of Max has arg [iIB]
   NN_FUNCTION_MAX = 132,           ///< Max
@@ -149,6 +151,7 @@ typedef enum {
   NN_FUNCTION_MIN = 130,           ///< Min
   NN_FUNCTION_NORM = 318,          ///< Norm
   NN_FUNCTION_PROD = 28,           ///< Prod
+  NN_FUNCTION_CUMPROD = 332,       ///< CumProd
   NN_FUNCTION_REDUCE_SUM = 29,     ///< ReduceSum
   NN_FUNCTION_REDUCE_MEAN = 30,    ///< ReduceMean
   NN_FUNCTION_ADD2 = 31,           ///< Add2
@@ -187,6 +190,7 @@ typedef enum {
   NN_FUNCTION_GREATER = 54,        ///< Greater
   NN_FUNCTION_LESS_EQUAL = 55,     ///< LessEqual
   NN_FUNCTION_LESS = 56,           ///< Less
+  NN_FUNCTION_SEARCHSORTED = 333,  ///< SearchSorted
   NN_FUNCTION_LOGICAL_AND_SCALAR = 57,   ///< LogicalAndScalar
   NN_FUNCTION_LOGICAL_OR_SCALAR = 58,    ///< LogicalOrScalar
   NN_FUNCTION_LOGICAL_XOR_SCALAR = 59,   ///< LogicalXorScalar
@@ -241,8 +245,9 @@ typedef enum {
   NN_FUNCTION_RESHAPE = 126,         ///< Reshape
   NN_FUNCTION_MATRIX_DIAG = 84,      ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
-  NN_FUNCTION_BATCH_INV = 275,       ///< BatchInv
+  NN_FUNCTION_MESHGRID = 334,        ///< Meshgrid
   NN_FUNCTION_BATCH_DET = 276,       ///< BatchDet
+  NN_FUNCTION_BATCH_INV = 275,       ///< BatchInv
   NN_FUNCTION_BATCH_LOGDET = 319,    ///< BatchLogdet
   NN_FUNCTION_ASSIGN = 248,          ///< Assign
   NN_FUNCTION_GATHER_0 = 302,        ///< Recent version of Gather has arg [iiI]
@@ -261,7 +266,8 @@ typedef enum {
   NN_FUNCTION_IFFT = 159,          ///< IFFT
   NN_FUNCTION_STFT = 327,          ///< STFT
   NN_FUNCTION_ISTFT = 328,         ///< ISTFT
-  NN_FUNCTION_DROPOUT = 86,        ///< Dropout
+  NN_FUNCTION_DROPOUT_0 = 86,      ///< Recent version of Dropout has arg [fi]
+  NN_FUNCTION_DROPOUT = 336,       ///< Dropout
   NN_FUNCTION_TOP_K_DATA = 87,     ///< TopKData
   NN_FUNCTION_TOP_K_GRAD = 88,     ///< TopKGrad
   NN_FUNCTION_RAND = 89,           ///< Rand
@@ -860,6 +866,8 @@ typedef struct {
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float beta; ///< Original type is [double]
 } nn_function_softplus_t;
 
 /// @}
@@ -1128,6 +1136,21 @@ typedef struct {
 
 /// @}
 
+/// @brief CumSum function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis;      ///< Original type is [int64]
+  uint8_t exclusive; ///< Original type is [bool]
+  uint8_t reverse;   ///< Original type is [bool]
+} nn_function_cumsum_t;
+
+/// @}
+
 /// @brief Mean function.
 /// @{
 typedef struct {
@@ -1200,6 +1223,21 @@ typedef struct {
   nn_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< Original type is [bool]
 } nn_function_prod_t;
+
+/// @}
+
+/// @brief CumProd function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t axis;      ///< Original type is [int64]
+  uint8_t exclusive; ///< Original type is [bool]
+  uint8_t reverse;   ///< Original type is [bool]
+} nn_function_cumprod_t;
 
 /// @}
 
@@ -1563,6 +1601,19 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_less_t;
+
+/// @}
+
+/// @brief SearchSorted function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  uint8_t right; ///< Original type is [bool]
+} nn_function_searchsorted_t;
 
 /// @}
 
@@ -2218,14 +2269,16 @@ typedef struct {
 
 /// @}
 
-/// @brief BatchInv function.
+/// @brief Meshgrid function.
 /// @{
 typedef struct {
   nn_function_type_t type : 16;      ///< Common: type of function.
   nn_function_implement_t impl : 16; ///< Common: function implementation.
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
-} nn_function_batch_inv_t;
+  // End of common part.
+  uint8_t ij_indexing; ///< Original type is [bool]
+} nn_function_meshgrid_t;
 
 /// @}
 
@@ -2237,6 +2290,17 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_batch_det_t;
+
+/// @}
+
+/// @brief BatchInv function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_batch_inv_t;
 
 /// @}
 
@@ -2430,8 +2494,9 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  float p;      ///< Original type is [double]
-  int32_t seed; ///< Original type is [int64]
+  float p;             ///< Original type is [double]
+  int32_t seed;        ///< Original type is [int64]
+  uint8_t output_mask; ///< Original type is [bool]
 } nn_function_dropout_t;
 
 /// @}

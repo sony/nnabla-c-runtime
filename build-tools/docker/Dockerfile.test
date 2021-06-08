@@ -29,3 +29,4 @@ RUN pip install Cython autopep8 boto3 configparser \
     contextlib2 futures h5py mako numpy protobuf pyyaml scikit-image scipy tqdm pytest
 
 ENV LD_LIBRARY_PATH /usr/local/lib64:$LD_LIBRARY_PATH
+ENV PATH /tmp/.local/bin:$PATH

@@ -561,6 +561,22 @@ rt_function_error_t exec_clip_grad_by_norm(rt_function_t *f) {
 // Reduction
 ////////////////////////////////////////////////////////////////////////////////
 
+// CumSum
+#ifdef CONFIG_CUMSUM
+rt_function_error_t allocate_cumsum_local_context(rt_function_t *f) {
+  f->exec_func = exec_cumsum;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_cumsum_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_cumsum(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_CUMSUM */
+
 // Mean
 #ifdef CONFIG_MEAN
 rt_function_error_t allocate_mean_local_context(rt_function_t *f) {
@@ -640,6 +656,22 @@ rt_function_error_t exec_prod(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_PROD */
+
+// CumProd
+#ifdef CONFIG_CUMPROD
+rt_function_error_t allocate_cumprod_local_context(rt_function_t *f) {
+  f->exec_func = exec_cumprod;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_cumprod_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_cumprod(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_CUMPROD */
 
 // ReduceSum
 #ifdef CONFIG_REDUCESUM
@@ -872,6 +904,22 @@ rt_function_error_t exec_less(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_LESS */
+
+// SearchSorted
+#ifdef CONFIG_SEARCHSORTED
+rt_function_error_t allocate_searchsorted_local_context(rt_function_t *f) {
+  f->exec_func = exec_searchsorted;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_searchsorted_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_searchsorted(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SEARCHSORTED */
 
 // LogicalAndScalar
 #ifdef CONFIG_LOGICALANDSCALAR
@@ -1564,21 +1612,21 @@ rt_function_error_t exec_sort(rt_function_t *f) {
 }
 #endif /* CONFIG_SORT */
 
-// BatchInv
-#ifdef CONFIG_BATCHINV
-rt_function_error_t allocate_batch_inv_local_context(rt_function_t *f) {
-  f->exec_func = exec_batch_inv;
+// Meshgrid
+#ifdef CONFIG_MESHGRID
+rt_function_error_t allocate_meshgrid_local_context(rt_function_t *f) {
+  f->exec_func = exec_meshgrid;
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t free_batch_inv_local_context(rt_function_t *f) {
+rt_function_error_t free_meshgrid_local_context(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
-rt_function_error_t exec_batch_inv(rt_function_t *f) {
+rt_function_error_t exec_meshgrid(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
-#endif /* CONFIG_BATCHINV */
+#endif /* CONFIG_MESHGRID */
 
 // BatchDet
 #ifdef CONFIG_BATCHDET
@@ -1595,6 +1643,22 @@ rt_function_error_t exec_batch_det(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_BATCHDET */
+
+// BatchInv
+#ifdef CONFIG_BATCHINV
+rt_function_error_t allocate_batch_inv_local_context(rt_function_t *f) {
+  f->exec_func = exec_batch_inv;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_batch_inv_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_batch_inv(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BATCHINV */
 
 // BatchLogdet
 #ifdef CONFIG_BATCHLOGDET

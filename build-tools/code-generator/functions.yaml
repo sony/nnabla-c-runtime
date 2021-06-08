@@ -861,14 +861,19 @@ Neural Network Activation Functions:
     snake_name: softplus
     inputs:
       x: {}
+    arguments:
+      beta:
+        type: double
+        default: '1.0'
     outputs:
       y: {}
     c_runtime: not support
     function_ids:
       ii: 252
       Empty: 262
-    uniq_name: SoftPlus
-    id: 262
+      f: 335
+    uniq_name: SoftPlus_f
+    id: 335
     func_type:
     - ALL
   SoftSign:
@@ -1324,6 +1329,29 @@ Reduction:
     id: 24
     func_type:
     - ALL
+  CumSum:
+    snake_name: cumsum
+    inputs:
+      x: {}
+    arguments:
+      axis:
+        type: int64
+        default: 0
+      exclusive:
+        type: bool
+        default: 'False'
+      reverse:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iBB: 331
+    uniq_name: CumSum_iBB
+    id: 331
+    func_type:
+    - ALL
   Mean:
     snake_name: mean
     inputs:
@@ -1439,6 +1467,29 @@ Reduction:
     c_runtime: not support
     uniq_name: Prod_iIB
     id: 28
+    func_type:
+    - ALL
+  CumProd:
+    snake_name: cumprod
+    inputs:
+      x: {}
+    arguments:
+      axis:
+        type: int64
+        default: 0
+      exclusive:
+        type: bool
+        default: 'False'
+      reverse:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iBB: 332
+    uniq_name: CumProd_iBB
+    id: 332
     func_type:
     - ALL
   ReduceSum:
@@ -1927,6 +1978,24 @@ Logical:
     c_runtime: not support
     uniq_name: Less
     id: 56
+    func_type:
+    - ALL
+  SearchSorted:
+    snake_name: searchsorted
+    inputs:
+      sorted_sequence: {}
+      values: {}
+    arguments:
+      right:
+        type: bool
+        default: false
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      B: 333
+    uniq_name: SearchSorted_B
+    id: 333
     func_type:
     - ALL
   LogicalAndScalar:
@@ -2781,17 +2850,23 @@ Array Manipulation:
     id: 85
     func_type:
     - ALL
-  BatchInv:
-    snake_name: batch_inv
+  Meshgrid:
+    snake_name: meshgrid
     inputs:
-      x: {}
+      x:
+        variadic: true
+    arguments:
+      ij_indexing:
+        type: bool
+        default: 'False'
     outputs:
-      y: {}
+      y:
+        variadic: true
     c_runtime: not support
     function_ids:
-      Empty: 275
-    uniq_name: BatchInv
-    id: 275
+      B: 334
+    uniq_name: Meshgrid_B
+    id: 334
     func_type:
     - ALL
   BatchDet:
@@ -2805,6 +2880,19 @@ Array Manipulation:
       Empty: 276
     uniq_name: BatchDet
     id: 276
+    func_type:
+    - ALL
+  BatchInv:
+    snake_name: batch_inv
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 275
+    uniq_name: BatchInv
+    id: 275
     func_type:
     - ALL
   BatchLogdet:
@@ -3107,13 +3195,17 @@ Stochasticity:
       seed:
         type: int64
         default: '-1'
+      output_mask:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     function_ids:
       fi: 86
+      fiB: 336
     c_runtime: support
-    uniq_name: Dropout_fi
-    id: 86
+    uniq_name: Dropout_fiB
+    id: 336
     func_type:
     - ALL
   TopKData:
@@ -4295,8 +4387,8 @@ Unsupported, Special Use:
   MaxPoolingBackward:
     snake_name: max_pooling_backward
     inputs:
-      x: {}
       dy: {}
+      x: {}
     arguments:
       kernel:
         type: Shape
