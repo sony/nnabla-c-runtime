@@ -16,12 +16,12 @@ REM limitations under the License.
 @ECHO OFF
 SETLOCAL
 
-IF NOT DEFINED GENERATETARGET (
-  SET GENERATETARGET=Visual Studio 14 2015 Win64
+IF NOT DEFINED generate_target (
+  SET generate_target=Visual Studio 16 2019
 )
 
-IF NOT DEFINED BUILDTYPE (
-  SET BUILDTYPE=Release
+IF NOT DEFINED build_type (
+  SET build_type=Release
 )
 
 
@@ -38,9 +38,9 @@ IF NOT EXIST %NNABLACRUNTIMEBUILDFOLDER% (
 CD %NNABLACRUNTIMEBUILDFOLDER%
 
 ECHO OFF
-cmake -G "%GENERATETARGET%" %NNABLACRUNTIMEROOT% || GOTO :ERROR
+cmake -G "%generate_target%" %NNABLACRUNTIMEROOT% || GOTO :ERROR
 
-cmake --build . --config %BUILDTYPE% --target package|| GOTO :ERROR
+cmake --build . --config %build_type% --target package|| GOTO :ERROR
 
 ENDLOCAL
 EXIT /b
