@@ -1094,11 +1094,12 @@ rt_function_error_t exec_weight_standardization(rt_function_t *f);
 
 /// Local context for SpectralNorm
 typedef struct {
-  int32_t dim;  ///< int64
-  int32_t itr;  ///< int64
-  float eps;    ///< float
-  uint8_t test; ///< bool
-  void *data;   ///< General purpose data area
+  int32_t dim;      ///< int64
+  int32_t itr;      ///< int64
+  float eps;        ///< float
+  uint8_t test;     ///< bool
+  uint8_t output_u; ///< bool
+  void *data;       ///< General purpose data area
 } spectral_norm_local_context_t;
 
 /// Allocate SpectralNorm local context

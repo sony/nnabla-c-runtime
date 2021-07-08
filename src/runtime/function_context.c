@@ -830,6 +830,20 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_SPECTRALNORM
+  case NN_FUNCTION_SPECTRAL_NORM_0: { // SpectralNorm
+    function_context->func.free_local_context_func =
+        free_spectral_norm_local_context;
+    nn_function_spectral_norm_t *f = (nn_function_spectral_norm_t *)function;
+    spectral_norm_local_context_t *ctx =
+        rt_malloc_func(sizeof(spectral_norm_local_context_t));
+    ctx->dim = f->dim;
+    ctx->itr = f->itr;
+    ctx->eps = f->eps;
+    ctx->test = f->test;
+    ctx->output_u = 0;
+    function_context->func.local_context = ctx;
+    allocate_spectral_norm_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_SPECTRAL_NORM: { // SpectralNorm
     function_context->func.free_local_context_func =
         free_spectral_norm_local_context;
@@ -840,6 +854,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->itr = f->itr;
     ctx->eps = f->eps;
     ctx->test = f->test;
+    ctx->output_u = f->output_u;
     function_context->func.local_context = ctx;
     allocate_spectral_norm_local_context(&function_context->func);
   } break;

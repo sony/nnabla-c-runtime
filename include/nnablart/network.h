@@ -24,11 +24,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.20.0.dev1")
+#define NN_NNABLA_VERSION ("1.21.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (34)
+#define NN_API_LEVEL (35)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,24 +138,26 @@ typedef enum {
   NN_FUNCTION_TENSOR_NORMALIZATION = 324,     ///< TensorNormalization
   NN_FUNCTION_WEIGHT_NORMALIZATION = 304,     ///< WeightNormalization
   NN_FUNCTION_WEIGHT_STANDARDIZATION = 325,   ///< WeightStandardization
-  NN_FUNCTION_SPECTRAL_NORM = 330,            ///< SpectralNorm
-  NN_FUNCTION_MEAN_SUBTRACTION = 23,          ///< MeanSubtraction
-  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121,       ///< ClipGradByValue
-  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,        ///< ClipGradByNorm
-  NN_FUNCTION_SUM = 24,                       ///< Sum
-  NN_FUNCTION_CUMSUM = 331,                   ///< CumSum
-  NN_FUNCTION_MEAN = 25,                      ///< Mean
-  NN_FUNCTION_MAX_0 = 26,          ///< Recent version of Max has arg [iIB]
-  NN_FUNCTION_MAX = 132,           ///< Max
-  NN_FUNCTION_MIN_0 = 27,          ///< Recent version of Min has arg [iIB]
-  NN_FUNCTION_MIN = 130,           ///< Min
-  NN_FUNCTION_NORM = 318,          ///< Norm
-  NN_FUNCTION_PROD = 28,           ///< Prod
-  NN_FUNCTION_CUMPROD = 332,       ///< CumProd
-  NN_FUNCTION_REDUCE_SUM = 29,     ///< ReduceSum
-  NN_FUNCTION_REDUCE_MEAN = 30,    ///< ReduceMean
-  NN_FUNCTION_ADD2 = 31,           ///< Add2
-  NN_FUNCTION_ADD_N = 281,         ///< AddN
+  NN_FUNCTION_SPECTRAL_NORM_0 =
+      330, ///< Recent version of SpectralNorm has arg [iifB]
+  NN_FUNCTION_SPECTRAL_NORM = 337,      ///< SpectralNorm
+  NN_FUNCTION_MEAN_SUBTRACTION = 23,    ///< MeanSubtraction
+  NN_FUNCTION_CLIP_GRAD_BY_VALUE = 121, ///< ClipGradByValue
+  NN_FUNCTION_CLIP_GRAD_BY_NORM = 122,  ///< ClipGradByNorm
+  NN_FUNCTION_SUM = 24,                 ///< Sum
+  NN_FUNCTION_CUMSUM = 331,             ///< CumSum
+  NN_FUNCTION_MEAN = 25,                ///< Mean
+  NN_FUNCTION_MAX_0 = 26,               ///< Recent version of Max has arg [iIB]
+  NN_FUNCTION_MAX = 132,                ///< Max
+  NN_FUNCTION_MIN_0 = 27,               ///< Recent version of Min has arg [iIB]
+  NN_FUNCTION_MIN = 130,                ///< Min
+  NN_FUNCTION_NORM = 318,               ///< Norm
+  NN_FUNCTION_PROD = 28,                ///< Prod
+  NN_FUNCTION_CUMPROD = 332,            ///< CumProd
+  NN_FUNCTION_REDUCE_SUM = 29,          ///< ReduceSum
+  NN_FUNCTION_REDUCE_MEAN = 30,         ///< ReduceMean
+  NN_FUNCTION_ADD2 = 31,                ///< Add2
+  NN_FUNCTION_ADD_N = 281,              ///< AddN
   NN_FUNCTION_BC_ADD2_0 = 32,      ///< Recent version of BcAdd2 has arg [Empty]
   NN_FUNCTION_BC_ADD2 = 307,       ///< BcAdd2
   NN_FUNCTION_SUB2_0 = 33,         ///< Recent version of Sub2 has arg [Empty]
@@ -1075,10 +1077,11 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t dim;  ///< Original type is [int64]
-  int32_t itr;  ///< Original type is [int64]
-  float eps;    ///< Original type is [float]
-  uint8_t test; ///< Original type is [bool]
+  int32_t dim;      ///< Original type is [int64]
+  int32_t itr;      ///< Original type is [int64]
+  float eps;        ///< Original type is [float]
+  uint8_t test;     ///< Original type is [bool]
+  uint8_t output_u; ///< Original type is [bool]
 } nn_function_spectral_norm_t;
 
 /// @}
