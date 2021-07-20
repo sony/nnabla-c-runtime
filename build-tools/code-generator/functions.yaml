@@ -1242,13 +1242,17 @@ Normalization:
       test:
         type: bool
         default: 'False'
+      output_u:
+        type: bool
+        default: 'False'
     outputs:
       w_sn: {}
     c_runtime: not support
     function_ids:
       iifB: 330
-    uniq_name: SpectralNorm_iifB
-    id: 330
+      iifBB: 337
+    uniq_name: SpectralNorm_iifBB
+    id: 337
     func_type:
     - ALL
   MeanSubtraction:
