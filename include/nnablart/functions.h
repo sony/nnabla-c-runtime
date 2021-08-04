@@ -482,6 +482,27 @@ rt_function_error_t free_embed_local_context(rt_function_t *f);
 rt_function_error_t exec_embed(rt_function_t *f);
 /// @}
 
+/// @defgroup RoiAlign RoiAlign
+/// @{
+
+/// Local context for RoiAlign
+typedef struct {
+  rt_list_t output_size;  ///< Original type is [Shape]
+  int32_t sampling_ratio; ///< int64
+  uint8_t channel_last;   ///< bool
+  void *data;             ///< General purpose data area
+} roi_align_local_context_t;
+
+/// Allocate RoiAlign local context
+rt_function_error_t allocate_roi_align_local_context(rt_function_t *f);
+
+/// Free RoiAlign local context
+rt_function_error_t free_roi_align_local_context(rt_function_t *f);
+
+/// Exec RoiAlign
+rt_function_error_t exec_roi_align(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2854,6 +2875,19 @@ rt_function_error_t free_gather_nd_local_context(rt_function_t *f);
 rt_function_error_t exec_gather_nd(rt_function_t *f);
 /// @}
 
+/// @defgroup BoolGather BoolGather
+/// @{
+
+/// Allocate BoolGather local context
+rt_function_error_t allocate_bool_gather_local_context(rt_function_t *f);
+
+/// Free BoolGather local context
+rt_function_error_t free_bool_gather_local_context(rt_function_t *f);
+
+/// Exec BoolGather
+rt_function_error_t exec_bool_gather(rt_function_t *f);
+/// @}
+
 /// @defgroup ScatterNd ScatterNd
 /// @{
 
@@ -2890,6 +2924,38 @@ rt_function_error_t free_scatter_add_local_context(rt_function_t *f);
 
 /// Exec ScatterAdd
 rt_function_error_t exec_scatter_add(rt_function_t *f);
+/// @}
+
+/// @defgroup BoolScatter BoolScatter
+/// @{
+
+/// Allocate BoolScatter local context
+rt_function_error_t allocate_bool_scatter_local_context(rt_function_t *f);
+
+/// Free BoolScatter local context
+rt_function_error_t free_bool_scatter_local_context(rt_function_t *f);
+
+/// Exec BoolScatter
+rt_function_error_t exec_bool_scatter(rt_function_t *f);
+/// @}
+
+/// @defgroup BoolFill BoolFill
+/// @{
+
+/// Local context for BoolFill
+typedef struct {
+  float value; ///< float
+  void *data;  ///< General purpose data area
+} bool_fill_local_context_t;
+
+/// Allocate BoolFill local context
+rt_function_error_t allocate_bool_fill_local_context(rt_function_t *f);
+
+/// Free BoolFill local context
+rt_function_error_t free_bool_fill_local_context(rt_function_t *f);
+
+/// Exec BoolFill
+rt_function_error_t exec_bool_fill(rt_function_t *f);
 /// @}
 
 /// @defgroup PackPaddedSequence PackPaddedSequence

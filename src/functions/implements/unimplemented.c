@@ -170,6 +170,22 @@ rt_function_error_t exec_embed(rt_function_t *f) {
 }
 #endif /* CONFIG_EMBED */
 
+// RoiAlign
+#ifdef CONFIG_ROIALIGN
+rt_function_error_t allocate_roi_align_local_context(rt_function_t *f) {
+  f->exec_func = exec_roi_align;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_roi_align_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_roi_align(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ROIALIGN */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Neural Network Activation Functions
 ////////////////////////////////////////////////////////////////////////////////
@@ -1514,6 +1530,22 @@ rt_function_error_t exec_gather_nd(rt_function_t *f) {
 }
 #endif /* CONFIG_GATHERND */
 
+// BoolGather
+#ifdef CONFIG_BOOLGATHER
+rt_function_error_t allocate_bool_gather_local_context(rt_function_t *f) {
+  f->exec_func = exec_bool_gather;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_bool_gather_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_bool_gather(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BOOLGATHER */
+
 // ScatterNd
 #ifdef CONFIG_SCATTERND
 rt_function_error_t allocate_scatter_nd_local_context(rt_function_t *f) {
@@ -1545,6 +1577,38 @@ rt_function_error_t exec_scatter_add(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_SCATTERADD */
+
+// BoolScatter
+#ifdef CONFIG_BOOLSCATTER
+rt_function_error_t allocate_bool_scatter_local_context(rt_function_t *f) {
+  f->exec_func = exec_bool_scatter;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_bool_scatter_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_bool_scatter(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BOOLSCATTER */
+
+// BoolFill
+#ifdef CONFIG_BOOLFILL
+rt_function_error_t allocate_bool_fill_local_context(rt_function_t *f) {
+  f->exec_func = exec_bool_fill;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_bool_fill_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_bool_fill(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BOOLFILL */
 
 // PackPaddedSequence
 #ifdef CONFIG_PACKPADDEDSEQUENCE

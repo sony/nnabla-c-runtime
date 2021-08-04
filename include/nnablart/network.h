@@ -28,7 +28,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (35)
+#define NN_API_LEVEL (36)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,6 +97,7 @@ typedef enum {
   NN_FUNCTION_UNPOOLING_0 = 9,   ///< Recent version of Unpooling has arg [iI]
   NN_FUNCTION_UNPOOLING = 287,   ///< Unpooling
   NN_FUNCTION_EMBED = 10,        ///< Embed
+  NN_FUNCTION_ROI_ALIGN = 338,   ///< RoiAlign
   NN_FUNCTION_SIGMOID = 11,      ///< Sigmoid
   NN_FUNCTION_SWISH = 12,        ///< Swish
   NN_FUNCTION_TANH = 13,         ///< Tanh
@@ -255,8 +256,11 @@ typedef enum {
   NN_FUNCTION_GATHER_0 = 302,        ///< Recent version of Gather has arg [iiI]
   NN_FUNCTION_GATHER = 303,          ///< Gather
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
+  NN_FUNCTION_BOOL_GATHER = 339,     ///< BoolGather
   NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
   NN_FUNCTION_SCATTER_ADD = 315,     ///< ScatterAdd
+  NN_FUNCTION_BOOL_SCATTER = 340,    ///< BoolScatter
+  NN_FUNCTION_BOOL_FILL = 341,       ///< BoolFill
   NN_FUNCTION_PACK_PADDED_SEQUENCE = 305, ///< PackPaddedSequence
   NN_FUNCTION_PAD_PACKED_SEQUENCE = 306,  ///< PadPackedSequence
   NN_FUNCTION_INTERPOLATE_0 =
@@ -639,6 +643,21 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
 } nn_function_embed_t;
+
+/// @}
+
+/// @brief RoiAlign function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t output_size;  ///< Original type is [Shape]
+  int32_t sampling_ratio; ///< Original type is [int64]
+  uint8_t channel_last;   ///< Original type is [bool]
+} nn_function_roi_align_t;
 
 /// @}
 
@@ -2354,6 +2373,17 @@ typedef struct {
 
 /// @}
 
+/// @brief BoolGather function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_bool_gather_t;
+
+/// @}
+
 /// @brief ScatterNd function.
 /// @{
 typedef struct {
@@ -2377,6 +2407,30 @@ typedef struct {
   // End of common part.
   int32_t axis; ///< Original type is [int64]
 } nn_function_scatter_add_t;
+
+/// @}
+
+/// @brief BoolScatter function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_bool_scatter_t;
+
+/// @}
+
+/// @brief BoolFill function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float value; ///< Original type is [float]
+} nn_function_bool_fill_t;
 
 /// @}
 

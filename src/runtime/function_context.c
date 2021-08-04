@@ -397,6 +397,21 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_ROIALIGN
+  case NN_FUNCTION_ROI_ALIGN: { // RoiAlign
+    function_context->func.free_local_context_func =
+        free_roi_align_local_context;
+    nn_function_roi_align_t *f = (nn_function_roi_align_t *)function;
+    roi_align_local_context_t *ctx =
+        rt_malloc_func(sizeof(roi_align_local_context_t));
+    ctx->output_size = create_rt_list_from_nn_list(n, f->output_size);
+    ctx->sampling_ratio = f->sampling_ratio;
+    ctx->channel_last = f->channel_last;
+    function_context->func.local_context = ctx;
+    allocate_roi_align_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_SIGMOID
   case NN_FUNCTION_SIGMOID: { // Sigmoid
     function_context->func.free_local_context_func = free_sigmoid_local_context;
@@ -2060,6 +2075,15 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_BOOLGATHER
+  case NN_FUNCTION_BOOL_GATHER: { // BoolGather
+    function_context->func.free_local_context_func =
+        free_bool_gather_local_context;
+    function_context->func.local_context = 0;
+    allocate_bool_gather_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_SCATTERND
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     function_context->func.free_local_context_func =
@@ -2083,6 +2107,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->axis = f->axis;
     function_context->func.local_context = ctx;
     allocate_scatter_add_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_BOOLSCATTER
+  case NN_FUNCTION_BOOL_SCATTER: { // BoolScatter
+    function_context->func.free_local_context_func =
+        free_bool_scatter_local_context;
+    function_context->func.local_context = 0;
+    allocate_bool_scatter_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_BOOLFILL
+  case NN_FUNCTION_BOOL_FILL: { // BoolFill
+    function_context->func.free_local_context_func =
+        free_bool_fill_local_context;
+    nn_function_bool_fill_t *f = (nn_function_bool_fill_t *)function;
+    bool_fill_local_context_t *ctx =
+        rt_malloc_func(sizeof(bool_fill_local_context_t));
+    ctx->value = f->value;
+    function_context->func.local_context = ctx;
+    allocate_bool_fill_local_context(&function_context->func);
   } break;
 #endif
 
