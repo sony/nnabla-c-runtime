@@ -572,6 +572,32 @@ Neural Network Layer:
     id: 10
     func_type:
     - ALL
+  RoiAlign:
+    snake_name: roi_align
+    inputs:
+      input: {}
+      boxes: {}
+    arguments:
+      output_size:
+        type: Shape
+      spatial_scale:
+        type: repeated float
+        default: (1.0, 1.0)
+      sampling_ratio:
+        type: int64
+        default: -1
+      channel_last:
+        type: bool
+        default: false
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iIfFiB: 338
+    uniq_name: RoiAlign_iIfFiB
+    id: 338
+    func_type:
+    - ALL
 Neural Network Activation Functions:
   Sigmoid:
     snake_name: sigmoid
@@ -2962,6 +2988,20 @@ Array Manipulation:
     id: 264
     func_type:
     - ALL
+  BoolGather:
+    snake_name: bool_gather
+    inputs:
+      input: {}
+      mask: {}
+    outputs:
+      output: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 339
+    uniq_name: BoolGather
+    id: 339
+    func_type:
+    - ALL
   ScatterNd:
     snake_name: scatter_nd
     inputs:
@@ -2999,6 +3039,40 @@ Array Manipulation:
       i: 315
     uniq_name: ScatterAdd_i
     id: 315
+    func_type:
+    - ALL
+  BoolScatter:
+    snake_name: bool_scatter
+    inputs:
+      input: {}
+      mask: {}
+      output:
+        optional: true
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 340
+    uniq_name: BoolScatter
+    id: 340
+    func_type:
+    - ALL
+  BoolFill:
+    snake_name: bool_fill
+    inputs:
+      data: {}
+      mask: {}
+    arguments:
+      value:
+        type: float
+        default: '0'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      f: 341
+    uniq_name: BoolFill_f
+    id: 341
     func_type:
     - ALL
   PackPaddedSequence:

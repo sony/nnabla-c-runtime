@@ -81,6 +81,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_EMBED: { // Embed
     printf("NNB: Function type:    Embed(10)\n");
   } break;
+  case NN_FUNCTION_ROI_ALIGN: { // RoiAlign
+    printf("NNB: Function type:    RoiAlign(338)\n");
+  } break;
   case NN_FUNCTION_SIGMOID: { // Sigmoid
     printf("NNB: Function type:    Sigmoid(11)\n");
   } break;
@@ -486,11 +489,20 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_GATHER_ND: { // GatherNd
     printf("NNB: Function type:    GatherNd(264)\n");
   } break;
+  case NN_FUNCTION_BOOL_GATHER: { // BoolGather
+    printf("NNB: Function type:    BoolGather(339)\n");
+  } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     printf("NNB: Function type:    ScatterNd(271)\n");
   } break;
   case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
     printf("NNB: Function type:    ScatterAdd(315)\n");
+  } break;
+  case NN_FUNCTION_BOOL_SCATTER: { // BoolScatter
+    printf("NNB: Function type:    BoolScatter(340)\n");
+  } break;
+  case NN_FUNCTION_BOOL_FILL: { // BoolFill
+    printf("NNB: Function type:    BoolFill(341)\n");
   } break;
   case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
     printf("NNB: Function type:    PackPaddedSequence(305)\n");
@@ -945,6 +957,17 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_EMBED: { // Embed
+  } break;
+  case NN_FUNCTION_ROI_ALIGN: { // RoiAlign
+    nn_function_roi_align_t *f = (nn_function_roi_align_t *)func;
+    printf("NNB: Function argument output_size: (");
+    list = (int *)NN_GET(net, f->output_size.list);
+    for (i = 0; i < f->output_size.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument sampling_ratio: %d\n", f->sampling_ratio);
+    printf("NNB: Function argument channel_last: %d\n", f->channel_last);
   } break;
   case NN_FUNCTION_SIGMOID: { // Sigmoid
   } break;
@@ -1595,6 +1618,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_GATHER_ND: { // GatherNd
   } break;
+  case NN_FUNCTION_BOOL_GATHER: { // BoolGather
+  } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     nn_function_scatter_nd_t *f = (nn_function_scatter_nd_t *)func;
     printf("NNB: Function argument shape: (");
@@ -1607,6 +1632,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
     nn_function_scatter_add_t *f = (nn_function_scatter_add_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
+  } break;
+  case NN_FUNCTION_BOOL_SCATTER: { // BoolScatter
+  } break;
+  case NN_FUNCTION_BOOL_FILL: { // BoolFill
+    nn_function_bool_fill_t *f = (nn_function_bool_fill_t *)func;
+    printf("NNB: Function argument value: %f\n", f->value);
   } break;
   case NN_FUNCTION_PACK_PADDED_SEQUENCE: { // PackPaddedSequence
     nn_function_pack_padded_sequence_t *f =

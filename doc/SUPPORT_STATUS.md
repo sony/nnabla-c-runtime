@@ -18,11 +18,11 @@
 
 # Implement status
 
-Total 62/211
+Total 62/215
 
 
 ## Neural Network Layer
-Count 8/17
+Count 8/18
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -43,6 +43,7 @@ Count 8/17
 |          SumPooling          |     yes      |     yes      |     yes      |
 |          Unpooling           |     yes      |     yes      |     yes      |
 |            Embed             |      no      |      -       |      -       |
+|           RoiAlign           |      no      |      -       |      -       |
 
 ## Neural Network Activation Functions
 Count 11/22
@@ -193,7 +194,7 @@ Count 6/22
 |            ATanh             |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/27
+Count 11/30
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -220,8 +221,11 @@ Count 11/27
 |            Assign            |      no      |      -       |      -       |
 |            Gather            |      no      |      -       |      -       |
 |           GatherNd           |      no      |      -       |      -       |
+|          BoolGather          |      no      |      -       |      -       |
 |          ScatterNd           |      no      |      -       |      -       |
 |          ScatterAdd          |      no      |      -       |      -       |
+|         BoolScatter          |      no      |      -       |      -       |
+|           BoolFill           |      no      |      -       |      -       |
 |      PackPaddedSequence      |      no      |      -       |      -       |
 |      PadPackedSequence       |      no      |      -       |      -       |
 
