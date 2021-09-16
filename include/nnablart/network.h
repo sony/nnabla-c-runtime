@@ -1,4 +1,4 @@
-// Copyright 2017,2018,2019,2020,2021 Sony Corporation.
+// Copyright 2018,2019,2020,2021 Sony Corporation.
 // Copyright 2021 Sony Group Corporation.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,11 +25,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.21.0.dev1")
+#define NN_NNABLA_VERSION ("1.22.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (36)
+#define NN_API_LEVEL (37)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,10 +258,11 @@ typedef enum {
   NN_FUNCTION_GATHER = 303,          ///< Gather
   NN_FUNCTION_GATHER_ND = 264,       ///< GatherNd
   NN_FUNCTION_BOOL_GATHER = 339,     ///< BoolGather
-  NN_FUNCTION_SCATTER_ND = 271,      ///< ScatterNd
-  NN_FUNCTION_SCATTER_ADD = 315,     ///< ScatterAdd
-  NN_FUNCTION_BOOL_SCATTER = 340,    ///< BoolScatter
-  NN_FUNCTION_BOOL_FILL = 341,       ///< BoolFill
+  NN_FUNCTION_SCATTER_ND_0 = 271, ///< Recent version of ScatterNd has arg [iI]
+  NN_FUNCTION_SCATTER_ND = 342,   ///< ScatterNd
+  NN_FUNCTION_SCATTER_ADD = 315,  ///< ScatterAdd
+  NN_FUNCTION_BOOL_SCATTER = 340, ///< BoolScatter
+  NN_FUNCTION_BOOL_FILL = 341,    ///< BoolFill
   NN_FUNCTION_PACK_PADDED_SEQUENCE = 305, ///< PackPaddedSequence
   NN_FUNCTION_PAD_PACKED_SEQUENCE = 306,  ///< PadPackedSequence
   NN_FUNCTION_INTERPOLATE_0 =
@@ -2394,6 +2395,7 @@ typedef struct {
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
   nn_list_t shape; ///< Original type is [repeated int64]
+  uint8_t add;     ///< Original type is [bool]
 } nn_function_scatter_nd_t;
 
 /// @}

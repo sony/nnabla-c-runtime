@@ -3013,13 +3013,17 @@ Array Manipulation:
       shape:
         type: repeated int64
         default: None
+      add:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
     c_runtime: not support
     function_ids:
       iI: 271
-    uniq_name: ScatterNd_iI
-    id: 271
+      iIB: 342
+    uniq_name: ScatterNd_iIB
+    id: 342
     func_type:
     - ALL
   ScatterAdd:

@@ -2086,6 +2086,17 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_SCATTERND
+  case NN_FUNCTION_SCATTER_ND_0: { // ScatterNd
+    function_context->func.free_local_context_func =
+        free_scatter_nd_local_context;
+    nn_function_scatter_nd_t *f = (nn_function_scatter_nd_t *)function;
+    scatter_nd_local_context_t *ctx =
+        rt_malloc_func(sizeof(scatter_nd_local_context_t));
+    ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->add = 0;
+    function_context->func.local_context = ctx;
+    allocate_scatter_nd_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
     function_context->func.free_local_context_func =
         free_scatter_nd_local_context;
@@ -2093,6 +2104,7 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     scatter_nd_local_context_t *ctx =
         rt_malloc_func(sizeof(scatter_nd_local_context_t));
     ctx->shape = create_rt_list_from_nn_list(n, f->shape);
+    ctx->add = f->add;
     function_context->func.local_context = ctx;
     allocate_scatter_nd_local_context(&function_context->func);
   } break;
