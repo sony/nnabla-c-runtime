@@ -1,4 +1,4 @@
-// Copyright 2017,2018,2019,2020,2021 Sony Corporation.
+// Copyright 2018,2019,2020,2021 Sony Corporation.
 // Copyright 2021 Sony Group Corporation.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -2895,6 +2895,7 @@ rt_function_error_t exec_bool_gather(rt_function_t *f);
 /// Local context for ScatterNd
 typedef struct {
   rt_list_t shape; ///< Original type is [repeated int64]
+  uint8_t add;     ///< bool
   void *data;      ///< General purpose data area
 } scatter_nd_local_context_t;
 

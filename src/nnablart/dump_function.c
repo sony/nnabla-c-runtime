@@ -494,7 +494,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    BoolGather(339)\n");
   } break;
   case NN_FUNCTION_SCATTER_ND: { // ScatterNd
-    printf("NNB: Function type:    ScatterNd(271)\n");
+    printf("NNB: Function type:    ScatterNd(342)\n");
   } break;
   case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
     printf("NNB: Function type:    ScatterAdd(315)\n");
@@ -1629,6 +1629,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+    printf("NNB: Function argument add: %d\n", f->add);
   } break;
   case NN_FUNCTION_SCATTER_ADD: { // ScatterAdd
     nn_function_scatter_add_t *f = (nn_function_scatter_add_t *)func;
