@@ -2183,6 +2183,27 @@ rt_function_error_t free_arange_local_context(rt_function_t *f);
 rt_function_error_t exec_arange(rt_function_t *f);
 /// @}
 
+/// @defgroup Linspace Linspace
+/// @{
+
+/// Local context for Linspace
+typedef struct {
+  float start; ///< float
+  float stop;  ///< float
+  int32_t num; ///< int64
+  void *data;  ///< General purpose data area
+} linspace_local_context_t;
+
+/// Allocate Linspace local context
+rt_function_error_t allocate_linspace_local_context(rt_function_t *f);
+
+/// Free Linspace local context
+rt_function_error_t free_linspace_local_context(rt_function_t *f);
+
+/// Exec Linspace
+rt_function_error_t exec_linspace(rt_function_t *f);
+/// @}
+
 /// @defgroup Abs Abs
 /// @{
 

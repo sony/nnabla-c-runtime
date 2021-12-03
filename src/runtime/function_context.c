@@ -1638,6 +1638,21 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_LINSPACE
+  case NN_FUNCTION_LINSPACE: { // Linspace
+    function_context->func.free_local_context_func =
+        free_linspace_local_context;
+    nn_function_linspace_t *f = (nn_function_linspace_t *)function;
+    linspace_local_context_t *ctx =
+        rt_malloc_func(sizeof(linspace_local_context_t));
+    ctx->start = f->start;
+    ctx->stop = f->stop;
+    ctx->num = f->num;
+    function_context->func.local_context = ctx;
+    allocate_linspace_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_ABS
   case NN_FUNCTION_ABS: { // Abs
     function_context->func.free_local_context_func = free_abs_local_context;

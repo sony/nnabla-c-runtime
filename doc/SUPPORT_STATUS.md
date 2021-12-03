@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/215
+Total 62/216
 
 
 ## Neural Network Layer
@@ -166,12 +166,13 @@ Count 5/30
 |            Where             |      no      |      -       |      -       |
 
 ## Math
-Count 6/22
+Count 6/23
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |           Constant           |      no      |      -       |      -       |
 |            Arange            |      no      |      -       |      -       |
+|           Linspace           |      no      |      -       |      -       |
 |             Abs              |     yes      |     yes      |     yes      |
 |             Exp              |     yes      |     yes      |     yes      |
 |             Log              |     yes      |     yes      |     yes      |

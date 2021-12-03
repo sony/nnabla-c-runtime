@@ -361,6 +361,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ARANGE: { // Arange
     printf("NNB: Function type:    Arange(131)\n");
   } break;
+  case NN_FUNCTION_LINSPACE: { // Linspace
+    printf("NNB: Function type:    Linspace(343)\n");
+  } break;
   case NN_FUNCTION_ABS: { // Abs
     printf("NNB: Function type:    Abs(68)\n");
   } break;
@@ -1432,6 +1435,12 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument start: %f\n", f->start);
     printf("NNB: Function argument stop: %f\n", f->stop);
     printf("NNB: Function argument step: %f\n", f->step);
+  } break;
+  case NN_FUNCTION_LINSPACE: { // Linspace
+    nn_function_linspace_t *f = (nn_function_linspace_t *)func;
+    printf("NNB: Function argument start: %f\n", f->start);
+    printf("NNB: Function argument stop: %f\n", f->stop);
+    printf("NNB: Function argument num: %d\n", f->num);
   } break;
   case NN_FUNCTION_ABS: { // Abs
   } break;
