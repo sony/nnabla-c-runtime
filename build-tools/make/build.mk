@@ -93,7 +93,7 @@ check-api_level: nnabla-c-runtime-build nnabla-install
 nnabla-c-runtime-generate-function-test: nnabla-install
 	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla
 	@cd $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla && PYTHONPATH=$$(cd ../../../build-tools/test/callback && pwd) \
-		python -m pytest ../../../../nnabla/python/test
+		python -m pytest ${PYTEST_OPTS} ../../../../nnabla/python/test
 	@NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/test/scripts/exec_all_functions.sh
 	@python build-tools/test/scripts/generate_yaml.py
 	@rm -rf $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
