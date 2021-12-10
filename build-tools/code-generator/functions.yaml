@@ -2306,6 +2306,25 @@ Math:
     id: 131
     func_type:
     - ALL
+  Linspace:
+    snake_name: linspace
+    inputs: {}
+    arguments:
+      start:
+        type: float
+      stop:
+        type: float
+      num:
+        type: int64
+    outputs:
+      y: {}
+    function_ids:
+      ffi: 343
+    c_runtime: not support
+    uniq_name: Linspace_ffi
+    id: 343
+    func_type:
+    - ALL
   Abs:
     snake_name: abs
     inputs:

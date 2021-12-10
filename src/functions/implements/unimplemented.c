@@ -1218,6 +1218,22 @@ rt_function_error_t exec_arange(rt_function_t *f) {
 }
 #endif /* CONFIG_ARANGE */
 
+// LINSPACE
+#ifdef CONFIG_LINSPACE
+rt_function_error_t allocate_linspace_local_context(rt_function_t *f) {
+  f->exec_func = exec_linspace;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_linspace_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_linspace(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_LINSPACE */
+
 #ifdef CONFIG_SIN
 rt_function_error_t allocate_sin_local_context(rt_function_t *f) {
   f->exec_func = exec_sin;

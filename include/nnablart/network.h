@@ -25,11 +25,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.22.0.dev1")
+#define NN_NNABLA_VERSION ("1.24.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (37)
+#define NN_API_LEVEL (38)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,6 +212,7 @@ typedef enum {
   NN_FUNCTION_WHERE = 240,               ///< Where
   NN_FUNCTION_CONSTANT = 67,             ///< Constant
   NN_FUNCTION_ARANGE = 131,              ///< Arange
+  NN_FUNCTION_LINSPACE = 343,            ///< Linspace
   NN_FUNCTION_ABS = 68,                  ///< Abs
   NN_FUNCTION_EXP = 69,                  ///< Exp
   NN_FUNCTION_LOG = 70,                  ///< Log
@@ -1854,6 +1855,21 @@ typedef struct {
   float stop;  ///< Original type is [float]
   float step;  ///< Original type is [float]
 } nn_function_arange_t;
+
+/// @}
+
+/// @brief Linspace function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  float start; ///< Original type is [float]
+  float stop;  ///< Original type is [float]
+  int32_t num; ///< Original type is [int64]
+} nn_function_linspace_t;
 
 /// @}
 
