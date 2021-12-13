@@ -524,10 +524,10 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    IFFT(159)\n");
   } break;
   case NN_FUNCTION_STFT: { // STFT
-    printf("NNB: Function type:    STFT(327)\n");
+    printf("NNB: Function type:    STFT(344)\n");
   } break;
   case NN_FUNCTION_ISTFT: { // ISTFT
-    printf("NNB: Function type:    ISTFT(328)\n");
+    printf("NNB: Function type:    ISTFT(345)\n");
   } break;
   case NN_FUNCTION_DROPOUT: { // Dropout
     printf("NNB: Function type:    Dropout(336)\n");
@@ -1695,6 +1695,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument window_type: %d\n", f->window_type);
     printf("NNB: Function argument center: %d\n", f->center);
     printf("NNB: Function argument pad_mode: %d\n", f->pad_mode);
+    printf("NNB: Function argument as_istft_backward: %d\n",
+           f->as_istft_backward);
   } break;
   case NN_FUNCTION_ISTFT: { // ISTFT
     nn_function_istft_t *f = (nn_function_istft_t *)func;
@@ -1703,6 +1705,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument fft_size: %d\n", f->fft_size);
     printf("NNB: Function argument window_type: %d\n", f->window_type);
     printf("NNB: Function argument center: %d\n", f->center);
+    printf("NNB: Function argument pad_mode: %d\n", f->pad_mode);
+    printf("NNB: Function argument as_stft_backward: %d\n",
+           f->as_stft_backward);
   } break;
   case NN_FUNCTION_DROPOUT: { // Dropout
     nn_function_dropout_t *f = (nn_function_dropout_t *)func;
