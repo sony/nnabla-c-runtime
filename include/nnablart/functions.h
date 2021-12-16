@@ -3126,6 +3126,7 @@ typedef struct {
   stft_window_type_value_t window_type; ///< string
   uint8_t center;                       ///< bool
   stft_pad_mode_value_t pad_mode;       ///< string
+  uint8_t as_istft_backward;            ///< bool
   void *data;                           ///< General purpose data area
 } stft_local_context_t;
 
@@ -3150,6 +3151,13 @@ typedef enum {
   END_OF_ISTFT_WINDOW_TYPE
 } istft_window_type_value_t;
 
+/// Named values for ISTFT.pad_mode
+typedef enum {
+  ISTFT_PAD_MODE_CONSTANT,
+  ISTFT_PAD_MODE_REFLECT,
+  END_OF_ISTFT_PAD_MODE
+} istft_pad_mode_value_t;
+
 /// Local context for ISTFT
 typedef struct {
   int32_t window_size;                   ///< int64
@@ -3157,6 +3165,8 @@ typedef struct {
   int32_t fft_size;                      ///< int64
   istft_window_type_value_t window_type; ///< string
   uint8_t center;                        ///< bool
+  istft_pad_mode_value_t pad_mode;       ///< string
+  uint8_t as_stft_backward;              ///< bool
   void *data;                            ///< General purpose data area
 } istft_local_context_t;
 

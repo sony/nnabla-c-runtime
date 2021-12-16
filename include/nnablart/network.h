@@ -29,7 +29,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (38)
+#define NN_API_LEVEL (39)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,8 +273,10 @@ typedef enum {
   NN_FUNCTION_INTERPOLATE = 291,   ///< Interpolate
   NN_FUNCTION_FFT = 158,           ///< FFT
   NN_FUNCTION_IFFT = 159,          ///< IFFT
-  NN_FUNCTION_STFT = 327,          ///< STFT
-  NN_FUNCTION_ISTFT = 328,         ///< ISTFT
+  NN_FUNCTION_STFT_0 = 327,        ///< Recent version of STFT has arg [iiiiBi]
+  NN_FUNCTION_STFT = 344,          ///< STFT
+  NN_FUNCTION_ISTFT_0 = 328,       ///< Recent version of ISTFT has arg [iiiiB]
+  NN_FUNCTION_ISTFT = 345,         ///< ISTFT
   NN_FUNCTION_DROPOUT_0 = 86,      ///< Recent version of Dropout has arg [fi]
   NN_FUNCTION_DROPOUT = 336,       ///< Dropout
   NN_FUNCTION_TOP_K_DATA = 87,     ///< TopKData
@@ -2535,12 +2537,13 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t window_size;  ///< Original type is [int64]
-  int32_t stride;       ///< Original type is [int64]
-  int32_t fft_size;     ///< Original type is [int64]
-  uint32_t window_type; ///< Original type is [string]
-  uint8_t center;       ///< Original type is [bool]
-  uint32_t pad_mode;    ///< Original type is [string]
+  int32_t window_size;       ///< Original type is [int64]
+  int32_t stride;            ///< Original type is [int64]
+  int32_t fft_size;          ///< Original type is [int64]
+  uint32_t window_type;      ///< Original type is [string]
+  uint8_t center;            ///< Original type is [bool]
+  uint32_t pad_mode;         ///< Original type is [string]
+  uint8_t as_istft_backward; ///< Original type is [bool]
 } nn_function_stft_t;
 
 /// @}
@@ -2553,11 +2556,13 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t window_size;  ///< Original type is [int64]
-  int32_t stride;       ///< Original type is [int64]
-  int32_t fft_size;     ///< Original type is [int64]
-  uint32_t window_type; ///< Original type is [string]
-  uint8_t center;       ///< Original type is [bool]
+  int32_t window_size;      ///< Original type is [int64]
+  int32_t stride;           ///< Original type is [int64]
+  int32_t fft_size;         ///< Original type is [int64]
+  uint32_t window_type;     ///< Original type is [string]
+  uint8_t center;           ///< Original type is [bool]
+  uint32_t pad_mode;        ///< Original type is [string]
+  uint8_t as_stft_backward; ///< Original type is [bool]
 } nn_function_istft_t;
 
 /// @}

@@ -3243,14 +3243,18 @@ Signal Processing:
         - constant
         - reflect
         default: '''reflect'''
+      as_istft_backward:
+        type: bool
+        default: 'False'
     outputs:
       y_r: {}
       y_i: {}
     c_runtime: not support
     function_ids:
       iiiiBi: 327
-    uniq_name: STFT_iiiiBi
-    id: 327
+      iiiiBiB: 344
+    uniq_name: STFT_iiiiBiB
+    id: 344
     func_type:
     - ALL
   ISTFT:
@@ -3275,13 +3279,23 @@ Signal Processing:
       center:
         type: bool
         default: 'True'
+      pad_mode:
+        type: string
+        available_values:
+        - constant
+        - reflect
+        default: '''reflect'''
+      as_stft_backward:
+        type: bool
+        default: 'False'
     outputs:
       x: {}
     c_runtime: not support
     function_ids:
       iiiiB: 328
-    uniq_name: ISTFT_iiiiB
-    id: 328
+      iiiiBiB: 345
+    uniq_name: ISTFT_iiiiBiB
+    id: 345
     func_type:
     - ALL
 Stochasticity:

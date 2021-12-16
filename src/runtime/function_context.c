@@ -2263,6 +2263,20 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_STFT
+  case NN_FUNCTION_STFT_0: { // STFT
+    function_context->func.free_local_context_func = free_stft_local_context;
+    nn_function_stft_t *f = (nn_function_stft_t *)function;
+    stft_local_context_t *ctx = rt_malloc_func(sizeof(stft_local_context_t));
+    ctx->window_size = f->window_size;
+    ctx->stride = f->stride;
+    ctx->fft_size = f->fft_size;
+    ctx->window_type = f->window_type;
+    ctx->center = f->center;
+    ctx->pad_mode = f->pad_mode;
+    ctx->as_istft_backward = 0;
+    function_context->func.local_context = ctx;
+    allocate_stft_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_STFT: { // STFT
     function_context->func.free_local_context_func = free_stft_local_context;
     nn_function_stft_t *f = (nn_function_stft_t *)function;
@@ -2273,12 +2287,27 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->window_type = f->window_type;
     ctx->center = f->center;
     ctx->pad_mode = f->pad_mode;
+    ctx->as_istft_backward = f->as_istft_backward;
     function_context->func.local_context = ctx;
     allocate_stft_local_context(&function_context->func);
   } break;
 #endif
 
 #ifdef CONFIG_ISTFT
+  case NN_FUNCTION_ISTFT_0: { // ISTFT
+    function_context->func.free_local_context_func = free_istft_local_context;
+    nn_function_istft_t *f = (nn_function_istft_t *)function;
+    istft_local_context_t *ctx = rt_malloc_func(sizeof(istft_local_context_t));
+    ctx->window_size = f->window_size;
+    ctx->stride = f->stride;
+    ctx->fft_size = f->fft_size;
+    ctx->window_type = f->window_type;
+    ctx->center = f->center;
+    ctx->pad_mode = 0;
+    ctx->as_stft_backward = 0;
+    function_context->func.local_context = ctx;
+    allocate_istft_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_ISTFT: { // ISTFT
     function_context->func.free_local_context_func = free_istft_local_context;
     nn_function_istft_t *f = (nn_function_istft_t *)function;
@@ -2288,6 +2317,8 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->fft_size = f->fft_size;
     ctx->window_type = f->window_type;
     ctx->center = f->center;
+    ctx->pad_mode = f->pad_mode;
+    ctx->as_stft_backward = f->as_stft_backward;
     function_context->func.local_context = ctx;
     allocate_istft_local_context(&function_context->func);
   } break;
