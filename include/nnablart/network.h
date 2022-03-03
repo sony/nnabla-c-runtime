@@ -25,11 +25,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.24.0.dev1")
+#define NN_NNABLA_VERSION ("1.26.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (39)
+#define NN_API_LEVEL (40)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,8 +73,10 @@ typedef enum {
   NN_FUNCTION_GRU = 243,  ///< GRU
   NN_FUNCTION_CONVOLUTION_0 =
       1, ///< Recent version of Convolution has arg [iiIiIiIi]
-  NN_FUNCTION_CONVOLUTION = 265,         ///< Convolution
-  NN_FUNCTION_FUSED_CONVOLUTION = 295,   ///< FusedConvolution
+  NN_FUNCTION_CONVOLUTION = 265, ///< Convolution
+  NN_FUNCTION_FUSED_CONVOLUTION_0 =
+      295, ///< Recent version of FusedConvolution has arg [iiIiIiIiBffBifF]
+  NN_FUNCTION_FUSED_CONVOLUTION = 346,   ///< FusedConvolution
   NN_FUNCTION_DEPTHWISE_CONVOLUTION = 2, ///< DepthwiseConvolution
   NN_FUNCTION_DECONVOLUTION_0 =
       3, ///< Recent version of Deconvolution has arg [iiIiIiIi]
@@ -476,6 +478,8 @@ typedef struct {
   float eps;             ///< Original type is [float]
   uint8_t batch_stat;    ///< Original type is [bool]
   uint32_t nonlinearity; ///< Original type is [string]
+  uint32_t pad_mode;     ///< Original type is [string]
+  float constant_value;  ///< Original type is [float]
 } nn_function_fused_convolution_t;
 
 /// @}
@@ -2575,9 +2579,8 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  float p;             ///< Original type is [double]
-  int32_t seed;        ///< Original type is [int64]
-  uint8_t output_mask; ///< Original type is [bool]
+  float p;      ///< Original type is [double]
+  int32_t seed; ///< Original type is [int64]
 } nn_function_dropout_t;
 
 /// @}

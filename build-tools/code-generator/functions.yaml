@@ -1,4 +1,4 @@
-# Copyright (c) 2017 Sony Corporation. All Rights Reserved.
+# Copyright 2021 Sony Group Corporation.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -256,13 +256,24 @@ Neural Network Layer:
       nonlinearity_args:
         type: repeated float
         default: list()
+      pad_mode:
+        type: string
+        available_values:
+        - constant
+        - reflect
+        - repeat
+        default: '''constant'''
+      constant_value:
+        type: float
+        default: '0'
     outputs:
       y: {}
     c_runtime: not support
     function_ids:
       iiIiIiIiBffBifF: 295
-    uniq_name: FusedConvolution_iiIiIiIiBffBifF
-    id: 295
+      iiIiIiIiBffBifFif: 346
+    uniq_name: FusedConvolution_iiIiIiIiBffBifFif
+    id: 346
     func_type:
     - ALL
   DepthwiseConvolution:
@@ -3310,16 +3321,13 @@ Stochasticity:
       seed:
         type: int64
         default: '-1'
-      output_mask:
-        type: bool
-        default: 'False'
     outputs:
       y: {}
     function_ids:
       fi: 86
       fiB: 336
     c_runtime: support
-    uniq_name: Dropout_fiB
+    uniq_name: Dropout_fi
     id: 336
     func_type:
     - ALL
