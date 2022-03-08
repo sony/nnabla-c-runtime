@@ -118,6 +118,28 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_FUSEDCONVOLUTION
+  case NN_FUNCTION_FUSED_CONVOLUTION_0: { // FusedConvolution
+    function_context->func.free_local_context_func =
+        free_fused_convolution_local_context;
+    nn_function_fused_convolution_t *f =
+        (nn_function_fused_convolution_t *)function;
+    fused_convolution_local_context_t *ctx =
+        rt_malloc_func(sizeof(fused_convolution_local_context_t));
+    ctx->base_axis = f->base_axis;
+    ctx->pad = create_rt_list_from_nn_list(n, f->pad);
+    ctx->stride = create_rt_list_from_nn_list(n, f->stride);
+    ctx->dilation = create_rt_list_from_nn_list(n, f->dilation);
+    ctx->group = f->group;
+    ctx->channel_last = f->channel_last;
+    ctx->decay_rate = f->decay_rate;
+    ctx->eps = f->eps;
+    ctx->batch_stat = f->batch_stat;
+    ctx->nonlinearity = f->nonlinearity;
+    ctx->pad_mode = f->pad_mode;
+    ctx->constant_value = 0;
+    function_context->func.local_context = ctx;
+    allocate_fused_convolution_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
     function_context->func.free_local_context_func =
         free_fused_convolution_local_context;
@@ -135,6 +157,8 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->eps = f->eps;
     ctx->batch_stat = f->batch_stat;
     ctx->nonlinearity = f->nonlinearity;
+    ctx->pad_mode = f->pad_mode;
+    ctx->constant_value = f->constant_value;
     function_context->func.local_context = ctx;
     allocate_fused_convolution_local_context(&function_context->func);
   } break;
@@ -2332,7 +2356,6 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
         rt_malloc_func(sizeof(dropout_local_context_t));
     ctx->p = f->p;
     ctx->seed = f->seed;
-    ctx->output_mask = 0;
     function_context->func.local_context = ctx;
     allocate_dropout_local_context(&function_context->func);
   } break;
@@ -2343,7 +2366,6 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
         rt_malloc_func(sizeof(dropout_local_context_t));
     ctx->p = f->p;
     ctx->seed = f->seed;
-    ctx->output_mask = f->output_mask;
     function_context->func.local_context = ctx;
     allocate_dropout_local_context(&function_context->func);
   } break;

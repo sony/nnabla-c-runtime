@@ -226,6 +226,14 @@ typedef enum {
   END_OF_FUSED_CONVOLUTION_NONLINEARITY
 } fused_convolution_nonlinearity_value_t;
 
+/// Named values for FusedConvolution.pad_mode
+typedef enum {
+  FUSED_CONVOLUTION_PAD_MODE_CONSTANT,
+  FUSED_CONVOLUTION_PAD_MODE_REFLECT,
+  FUSED_CONVOLUTION_PAD_MODE_REPEAT,
+  END_OF_FUSED_CONVOLUTION_PAD_MODE
+} fused_convolution_pad_mode_value_t;
+
 /// Local context for FusedConvolution
 typedef struct {
   int32_t base_axis;    ///< int64
@@ -238,6 +246,8 @@ typedef struct {
   float eps;            ///< float
   uint8_t batch_stat;   ///< bool
   fused_convolution_nonlinearity_value_t nonlinearity; ///< string
+  fused_convolution_pad_mode_value_t pad_mode;         ///< string
+  float constant_value;                                ///< float
   void *data; ///< General purpose data area
 } fused_convolution_local_context_t;
 
@@ -3191,10 +3201,9 @@ rt_function_error_t exec_istft(rt_function_t *f);
 
 /// Local context for Dropout
 typedef struct {
-  float p;             ///< double
-  int32_t seed;        ///< int64
-  uint8_t output_mask; ///< bool
-  void *data;          ///< General purpose data area
+  float p;      ///< double
+  int32_t seed; ///< int64
+  void *data;   ///< General purpose data area
 } dropout_local_context_t;
 
 /// Allocate Dropout local context

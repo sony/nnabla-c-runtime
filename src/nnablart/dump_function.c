@@ -47,7 +47,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    Convolution(265)\n");
   } break;
   case NN_FUNCTION_FUSED_CONVOLUTION: { // FusedConvolution
-    printf("NNB: Function type:    FusedConvolution(295)\n");
+    printf("NNB: Function type:    FusedConvolution(346)\n");
   } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     printf("NNB: Function type:    DepthwiseConvolution(2)\n");
@@ -770,6 +770,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument eps: %f\n", f->eps);
     printf("NNB: Function argument batch_stat: %d\n", f->batch_stat);
     printf("NNB: Function argument nonlinearity: %d\n", f->nonlinearity);
+    printf("NNB: Function argument pad_mode: %d\n", f->pad_mode);
+    printf("NNB: Function argument constant_value: %f\n", f->constant_value);
   } break;
   case NN_FUNCTION_DEPTHWISE_CONVOLUTION: { // DepthwiseConvolution
     nn_function_depthwise_convolution_t *f =
@@ -1713,7 +1715,6 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     nn_function_dropout_t *f = (nn_function_dropout_t *)func;
     printf("NNB: Function argument p: %f\n", f->p);
     printf("NNB: Function argument seed: %d\n", f->seed);
-    printf("NNB: Function argument output_mask: %d\n", f->output_mask);
   } break;
   case NN_FUNCTION_TOP_K_DATA: { // TopKData
     nn_function_top_k_data_t *f = (nn_function_top_k_data_t *)func;
