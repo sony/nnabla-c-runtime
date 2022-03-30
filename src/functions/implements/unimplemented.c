@@ -1757,6 +1757,22 @@ rt_function_error_t exec_batch_logdet(rt_function_t *f) {
 }
 #endif /* CONFIG_BATCHLOGDET */
 
+// BatchtCholesky
+#ifdef CONFIG_BATCHCHOLESKY
+rt_function_error_t allocate_batch_cholesky_local_context(rt_function_t *f) {
+  f->exec_func = exec_batch_cholesky;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_batch_cholesky_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_batch_cholesky(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_BATCHCHOLESKY */
+
 ////////////////////////////////////////////////////////////////////////////////
 // Stochasticity
 ////////////////////////////////////////////////////////////////////////////////

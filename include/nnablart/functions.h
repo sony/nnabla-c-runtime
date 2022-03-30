@@ -2861,6 +2861,25 @@ rt_function_error_t free_batch_logdet_local_context(rt_function_t *f);
 rt_function_error_t exec_batch_logdet(rt_function_t *f);
 /// @}
 
+/// @defgroup BatchCholesky BatchCholesky
+/// @{
+
+/// Local context for BatchCholesky
+typedef struct {
+  uint8_t upper; ///< bool
+  void *data;    ///< General purpose data area
+} batch_cholesky_local_context_t;
+
+/// Allocate BatchCholesky local context
+rt_function_error_t allocate_batch_cholesky_local_context(rt_function_t *f);
+
+/// Free BatchCholesky local context
+rt_function_error_t free_batch_cholesky_local_context(rt_function_t *f);
+
+/// Exec BatchCholesky
+rt_function_error_t exec_batch_cholesky(rt_function_t *f);
+/// @}
+
 /// @defgroup Assign Assign
 /// @{
 

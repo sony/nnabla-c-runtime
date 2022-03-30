@@ -2968,6 +2968,23 @@ Array Manipulation:
     id: 319
     func_type:
     - ALL
+  BatchCholesky:
+    snake_name: batch_cholesky
+    inputs:
+      x: {}
+    arguments:
+      upper:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      B: 347
+    uniq_name: BatchCholesky_B
+    id: 347
+    func_type:
+    - ALL
   Assign:
     snake_name: assign
     inputs:
