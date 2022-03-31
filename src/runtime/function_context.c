@@ -2085,6 +2085,19 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_BATCHCHOLESKY
+  case NN_FUNCTION_BATCH_CHOLESKY: { // BatchCholesky
+    function_context->func.free_local_context_func =
+        free_batch_cholesky_local_context;
+    nn_function_batch_cholesky_t *f = (nn_function_batch_cholesky_t *)function;
+    batch_cholesky_local_context_t *ctx =
+        rt_malloc_func(sizeof(batch_cholesky_local_context_t));
+    ctx->upper = f->upper;
+    function_context->func.local_context = ctx;
+    allocate_batch_cholesky_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_ASSIGN
   case NN_FUNCTION_ASSIGN: { // Assign
     function_context->func.free_local_context_func = free_assign_local_context;

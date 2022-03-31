@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/216
+Total 62/217
 
 
 ## Neural Network Layer
@@ -195,7 +195,7 @@ Count 6/23
 |            ATanh             |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/30
+Count 11/31
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -219,6 +219,7 @@ Count 11/30
 |           BatchDet           |      no      |      -       |      -       |
 |           BatchInv           |      no      |      -       |      -       |
 |         BatchLogdet          |      no      |      -       |      -       |
+|        BatchCholesky         |      no      |      -       |      -       |
 |            Assign            |      no      |      -       |      -       |
 |            Gather            |      no      |      -       |      -       |
 |           GatherNd           |      no      |      -       |      -       |
