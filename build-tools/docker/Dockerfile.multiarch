@@ -1,0 +1,58 @@
+# Copyright 2022 Sony Group Corporation.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Please refer to https://github.com/multiarch/qemu-user-static
+# enable qemu-user-static at first
+# docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+FROM multiarch/ubuntu-core:armhf-bionic
+
+ARG PIP_INS_OPTS
+ARG PYTHONWARNINGS
+ARG CURL_OPTS
+ARG WGET_OPTS
+ARG APT_OPTS
+
+ENV LANG en_US.UTF-8
+
+ARG PYTHON_VERSION_MAJOR
+ARG PYTHON_VERSION_MINOR
+ENV PYVERNAME=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}
+
+RUN eval ${APT_OPTS} && apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    bzip2 \
+    clang-format \
+    wget \
+    gcc \
+    cmake \
+    make \
+    valgrind \
+    python${PYVERNAME} \
+    python3-pip \
+    python${PYVERNAME}-dev \
+    liblzma-dev \
+    && apt-get -yqq clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYVERNAME} 0
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python${PYVERNAME} 0
+
+RUN pip3 install ${PIP_INS_OPTS} --upgrade pip
+RUN pip install ${PIP_INS_OPTS} wheel setuptools
+RUN pip install ${PIP_INS_OPTS} Cython autopep8 boto3 configparser \
+    contextlib2 futures mako numpy protobuf pyyaml tqdm pytest
+
+ENV LD_LIBRARY_PATH /usr/local/lib64:$LD_LIBRARY_PATH
+ENV PATH /tmp/.local/bin:$PATH
