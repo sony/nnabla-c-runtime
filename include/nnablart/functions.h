@@ -99,8 +99,8 @@ extern void (*rt_free_func)(void *ptr);      ///< free function pointer
 
 /// Local context for Affine
 typedef struct {
-  int32_t base_axis; ///< int64
   void *data;        ///< General purpose data area
+  int32_t base_axis; ///< int64
 } affine_local_context_t;
 
 /// Allocate Affine local context
@@ -125,12 +125,12 @@ typedef enum {
 
 /// Local context for RNN
 typedef struct {
+  void *data;                            ///< General purpose data area
   int32_t num_layers;                    ///< int64
   rnn_nonlinearity_value_t nonlinearity; ///< string
   float dropout;                         ///< float
   uint8_t bidirectional;                 ///< bool
   uint8_t training;                      ///< bool
-  void *data;                            ///< General purpose data area
 } rnn_local_context_t;
 
 /// Allocate RNN local context
@@ -148,11 +148,11 @@ rt_function_error_t exec_rnn(rt_function_t *f);
 
 /// Local context for LSTM
 typedef struct {
+  void *data;            ///< General purpose data area
   int32_t num_layers;    ///< int64
   float dropout;         ///< float
   uint8_t bidirectional; ///< bool
   uint8_t training;      ///< bool
-  void *data;            ///< General purpose data area
 } lstm_local_context_t;
 
 /// Allocate LSTM local context
@@ -170,11 +170,11 @@ rt_function_error_t exec_lstm(rt_function_t *f);
 
 /// Local context for GRU
 typedef struct {
+  void *data;            ///< General purpose data area
   int32_t num_layers;    ///< int64
   float dropout;         ///< float
   uint8_t bidirectional; ///< bool
   uint8_t training;      ///< bool
-  void *data;            ///< General purpose data area
 } gru_local_context_t;
 
 /// Allocate GRU local context
@@ -192,13 +192,13 @@ rt_function_error_t exec_gru(rt_function_t *f);
 
 /// Local context for Convolution
 typedef struct {
+  void *data;           ///< General purpose data area
   int32_t base_axis;    ///< int64
   rt_list_t pad;        ///< Original type is [Shape]
   rt_list_t stride;     ///< Original type is [Shape]
   rt_list_t dilation;   ///< Original type is [Shape]
   int32_t group;        ///< int64
   uint8_t channel_last; ///< bool
-  void *data;           ///< General purpose data area
 } convolution_local_context_t;
 
 /// Allocate Convolution local context
@@ -236,6 +236,7 @@ typedef enum {
 
 /// Local context for FusedConvolution
 typedef struct {
+  void *data;           ///< General purpose data area
   int32_t base_axis;    ///< int64
   rt_list_t pad;        ///< Original type is [Shape]
   rt_list_t stride;     ///< Original type is [Shape]
@@ -248,7 +249,6 @@ typedef struct {
   fused_convolution_nonlinearity_value_t nonlinearity; ///< string
   fused_convolution_pad_mode_value_t pad_mode;         ///< string
   float constant_value;                                ///< float
-  void *data; ///< General purpose data area
 } fused_convolution_local_context_t;
 
 /// Allocate FusedConvolution local context
@@ -266,12 +266,12 @@ rt_function_error_t exec_fused_convolution(rt_function_t *f);
 
 /// Local context for DepthwiseConvolution
 typedef struct {
+  void *data;         ///< General purpose data area
   int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t multiplier; ///< int64
-  void *data;         ///< General purpose data area
 } depthwise_convolution_local_context_t;
 
 /// Allocate DepthwiseConvolution local context
@@ -290,6 +290,7 @@ rt_function_error_t exec_depthwise_convolution(rt_function_t *f);
 
 /// Local context for Deconvolution
 typedef struct {
+  void *data;               ///< General purpose data area
   int32_t base_axis;        ///< int64
   rt_list_t pad;            ///< Original type is [Shape]
   rt_list_t stride;         ///< Original type is [Shape]
@@ -297,7 +298,6 @@ typedef struct {
   int32_t group;            ///< int64
   uint8_t channel_last;     ///< bool
   rt_list_t output_padding; ///< Original type is [Shape]
-  void *data;               ///< General purpose data area
 } deconvolution_local_context_t;
 
 /// Allocate Deconvolution local context
@@ -315,12 +315,12 @@ rt_function_error_t exec_deconvolution(rt_function_t *f);
 
 /// Local context for DepthwiseDeconvolution
 typedef struct {
+  void *data;         ///< General purpose data area
   int32_t base_axis;  ///< int64
   rt_list_t pad;      ///< Original type is [Shape]
   rt_list_t stride;   ///< Original type is [Shape]
   rt_list_t dilation; ///< Original type is [Shape]
   int32_t divisor;    ///< int64
-  void *data;         ///< General purpose data area
 } depthwise_deconvolution_local_context_t;
 
 /// Allocate DepthwiseDeconvolution local context
@@ -340,6 +340,7 @@ rt_function_error_t exec_depthwise_deconvolution(rt_function_t *f);
 
 /// Local context for DeformableConvolution
 typedef struct {
+  void *data;               ///< General purpose data area
   int32_t base_axis;        ///< int64
   rt_list_t pad;            ///< Original type is [Shape]
   rt_list_t stride;         ///< Original type is [Shape]
@@ -347,7 +348,6 @@ typedef struct {
   int32_t group;            ///< int64
   int32_t deformable_group; ///< int64
   uint8_t channel_last;     ///< bool
-  void *data;               ///< General purpose data area
 } deformable_convolution_local_context_t;
 
 /// Allocate DeformableConvolution local context
@@ -381,12 +381,12 @@ rt_function_error_t exec_adaptive_separable_convolution(rt_function_t *f);
 
 /// Local context for MaxPooling
 typedef struct {
+  void *data;            ///< General purpose data area
   rt_list_t kernel;      ///< Original type is [Shape]
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
   uint8_t channel_last;  ///< bool
-  void *data;            ///< General purpose data area
 } max_pooling_local_context_t;
 
 /// Allocate MaxPooling local context
@@ -404,13 +404,13 @@ rt_function_error_t exec_max_pooling(rt_function_t *f);
 
 /// Local context for AveragePooling
 typedef struct {
+  void *data;            ///< General purpose data area
   rt_list_t kernel;      ///< Original type is [Shape]
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
   uint8_t channel_last;  ///< bool
   uint8_t including_pad; ///< bool
-  void *data;            ///< General purpose data area
 } average_pooling_local_context_t;
 
 /// Allocate AveragePooling local context
@@ -442,12 +442,12 @@ rt_function_error_t exec_global_average_pooling(rt_function_t *f);
 
 /// Local context for SumPooling
 typedef struct {
+  void *data;            ///< General purpose data area
   rt_list_t kernel;      ///< Original type is [Shape]
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
   uint8_t channel_last;  ///< bool
-  void *data;            ///< General purpose data area
 } sum_pooling_local_context_t;
 
 /// Allocate SumPooling local context
@@ -465,9 +465,9 @@ rt_function_error_t exec_sum_pooling(rt_function_t *f);
 
 /// Local context for Unpooling
 typedef struct {
+  void *data;           ///< General purpose data area
   rt_list_t kernel;     ///< Original type is [Shape]
   uint8_t channel_last; ///< bool
-  void *data;           ///< General purpose data area
 } unpooling_local_context_t;
 
 /// Allocate Unpooling local context
@@ -498,10 +498,10 @@ rt_function_error_t exec_embed(rt_function_t *f);
 
 /// Local context for RoiAlign
 typedef struct {
+  void *data;             ///< General purpose data area
   rt_list_t output_size;  ///< Original type is [Shape]
   int32_t sampling_ratio; ///< int64
   uint8_t channel_last;   ///< bool
-  void *data;             ///< General purpose data area
 } roi_align_local_context_t;
 
 /// Allocate RoiAlign local context
@@ -565,8 +565,8 @@ rt_function_error_t exec_tanh(rt_function_t *f);
 
 /// Local context for ReLU
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } relu_local_context_t;
 
 /// Allocate ReLU local context
@@ -584,9 +584,9 @@ rt_function_error_t exec_relu(rt_function_t *f);
 
 /// Local context for LeakyReLU
 typedef struct {
+  void *data;      ///< General purpose data area
   float alpha;     ///< float
   uint8_t inplace; ///< bool
-  void *data;      ///< General purpose data area
 } leaky_relu_local_context_t;
 
 /// Allocate LeakyReLU local context
@@ -604,8 +604,8 @@ rt_function_error_t exec_leaky_relu(rt_function_t *f);
 
 /// Local context for Softmax
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } softmax_local_context_t;
 
 /// Allocate Softmax local context
@@ -623,8 +623,8 @@ rt_function_error_t exec_softmax(rt_function_t *f);
 
 /// Local context for LogSoftmax
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } log_softmax_local_context_t;
 
 /// Allocate LogSoftmax local context
@@ -642,8 +642,8 @@ rt_function_error_t exec_log_softmax(rt_function_t *f);
 
 /// Local context for ELU
 typedef struct {
-  float alpha; ///< double
   void *data;  ///< General purpose data area
+  float alpha; ///< double
 } elu_local_context_t;
 
 /// Allocate ELU local context
@@ -661,9 +661,9 @@ rt_function_error_t exec_elu(rt_function_t *f);
 
 /// Local context for SELU
 typedef struct {
+  void *data;  ///< General purpose data area
   float scale; ///< double
   float alpha; ///< double
-  void *data;  ///< General purpose data area
 } selu_local_context_t;
 
 /// Allocate SELU local context
@@ -681,8 +681,8 @@ rt_function_error_t exec_selu(rt_function_t *f);
 
 /// Local context for CReLU
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } crelu_local_context_t;
 
 /// Allocate CReLU local context
@@ -700,9 +700,9 @@ rt_function_error_t exec_crelu(rt_function_t *f);
 
 /// Local context for CELU
 typedef struct {
+  void *data;   ///< General purpose data area
   float alpha;  ///< double
   int32_t axis; ///< int64
-  void *data;   ///< General purpose data area
 } celu_local_context_t;
 
 /// Allocate CELU local context
@@ -720,8 +720,8 @@ rt_function_error_t exec_celu(rt_function_t *f);
 
 /// Local context for PReLU
 typedef struct {
-  int32_t base_axis; ///< int64
   void *data;        ///< General purpose data area
+  int32_t base_axis; ///< int64
 } prelu_local_context_t;
 
 /// Allocate PReLU local context
@@ -817,8 +817,8 @@ rt_function_error_t exec_log_sigmoid(rt_function_t *f);
 
 /// Local context for SoftPlus
 typedef struct {
-  float beta; ///< double
   void *data; ///< General purpose data area
+  float beta; ///< double
 } softplus_local_context_t;
 
 /// Allocate SoftPlus local context
@@ -887,12 +887,12 @@ typedef enum {
 
 /// Local context for FusedBatchNormalization
 typedef struct {
+  void *data;         ///< General purpose data area
   rt_list_t axes;     ///< Original type is [repeated int64]
   float decay_rate;   ///< float
   float eps;          ///< float
   uint8_t batch_stat; ///< bool
   fused_batch_normalization_nonlinearity_value_t nonlinearity; ///< string
-  void *data; ///< General purpose data area
 } fused_batch_normalization_local_context_t;
 
 /// Allocate FusedBatchNormalization local context
@@ -912,13 +912,13 @@ rt_function_error_t exec_fused_batch_normalization(rt_function_t *f);
 
 /// Local context for BatchNormalization
 typedef struct {
+  void *data;         ///< General purpose data area
   rt_list_t axes;     ///< Original type is [repeated int64]
   float decay_rate;   ///< float
   float eps;          ///< float
   uint8_t batch_stat; ///< bool
   uint8_t no_scale;   ///< bool
   uint8_t no_bias;    ///< bool
-  void *data;         ///< General purpose data area
 } batch_normalization_local_context_t;
 
 /// Allocate BatchNormalization local context
@@ -937,13 +937,13 @@ rt_function_error_t exec_batch_normalization(rt_function_t *f);
 
 /// Local context for GroupNormalization
 typedef struct {
+  void *data;           ///< General purpose data area
   int32_t num_groups;   ///< int64
   int32_t channel_axis; ///< int64
   rt_list_t batch_axis; ///< Original type is [repeated int64]
   float eps;            ///< float
   uint8_t no_scale;     ///< bool
   uint8_t no_bias;      ///< bool
-  void *data;           ///< General purpose data area
 } group_normalization_local_context_t;
 
 /// Allocate GroupNormalization local context
@@ -962,12 +962,12 @@ rt_function_error_t exec_group_normalization(rt_function_t *f);
 
 /// Local context for InstanceNormalization
 typedef struct {
+  void *data;           ///< General purpose data area
   int32_t channel_axis; ///< int64
   rt_list_t batch_axis; ///< Original type is [repeated int64]
   float eps;            ///< float
   uint8_t no_scale;     ///< bool
   uint8_t no_bias;      ///< bool
-  void *data;           ///< General purpose data area
 } instance_normalization_local_context_t;
 
 /// Allocate InstanceNormalization local context
@@ -986,11 +986,11 @@ rt_function_error_t exec_instance_normalization(rt_function_t *f);
 
 /// Local context for LayerNormalization
 typedef struct {
+  void *data;           ///< General purpose data area
   rt_list_t batch_axis; ///< Original type is [repeated int64]
   float eps;            ///< float
   uint8_t no_scale;     ///< bool
   uint8_t no_bias;      ///< bool
-  void *data;           ///< General purpose data area
 } layer_normalization_local_context_t;
 
 /// Allocate LayerNormalization local context
@@ -1009,10 +1009,10 @@ rt_function_error_t exec_layer_normalization(rt_function_t *f);
 
 /// Local context for NormNormalization
 typedef struct {
+  void *data;     ///< General purpose data area
   float p;        ///< float
   rt_list_t axes; ///< Original type is [repeated int64]
   float eps;      ///< float
-  void *data;     ///< General purpose data area
 } norm_normalization_local_context_t;
 
 /// Allocate NormNormalization local context
@@ -1036,12 +1036,12 @@ typedef enum {
 
 /// Local context for SyncBatchNormalization
 typedef struct {
+  void *data;                                   ///< General purpose data area
   sync_batch_normalization_group_value_t group; ///< string
   rt_list_t axes;     ///< Original type is [repeated int64]
   float decay_rate;   ///< float
   float eps;          ///< float
   uint8_t batch_stat; ///< bool
-  void *data;         ///< General purpose data area
 } sync_batch_normalization_local_context_t;
 
 /// Allocate SyncBatchNormalization local context
@@ -1061,11 +1061,11 @@ rt_function_error_t exec_sync_batch_normalization(rt_function_t *f);
 
 /// Local context for TensorNormalization
 typedef struct {
+  void *data;       ///< General purpose data area
   rt_list_t axes;   ///< Original type is [repeated int64]
   float eps;        ///< float
   uint8_t no_scale; ///< bool
   uint8_t no_bias;  ///< bool
-  void *data;       ///< General purpose data area
 } tensor_normalization_local_context_t;
 
 /// Allocate TensorNormalization local context
@@ -1084,9 +1084,9 @@ rt_function_error_t exec_tensor_normalization(rt_function_t *f);
 
 /// Local context for WeightNormalization
 typedef struct {
+  void *data;  ///< General purpose data area
   int32_t dim; ///< int64
   float eps;   ///< float
-  void *data;  ///< General purpose data area
 } weight_normalization_local_context_t;
 
 /// Allocate WeightNormalization local context
@@ -1105,9 +1105,9 @@ rt_function_error_t exec_weight_normalization(rt_function_t *f);
 
 /// Local context for WeightStandardization
 typedef struct {
+  void *data;           ///< General purpose data area
   int32_t channel_axis; ///< int64
   float eps;            ///< float
-  void *data;           ///< General purpose data area
 } weight_standardization_local_context_t;
 
 /// Allocate WeightStandardization local context
@@ -1126,12 +1126,12 @@ rt_function_error_t exec_weight_standardization(rt_function_t *f);
 
 /// Local context for SpectralNorm
 typedef struct {
+  void *data;       ///< General purpose data area
   int32_t dim;      ///< int64
   int32_t itr;      ///< int64
   float eps;        ///< float
   uint8_t test;     ///< bool
   uint8_t output_u; ///< bool
-  void *data;       ///< General purpose data area
 } spectral_norm_local_context_t;
 
 /// Allocate SpectralNorm local context
@@ -1149,9 +1149,9 @@ rt_function_error_t exec_spectral_norm(rt_function_t *f);
 
 /// Local context for MeanSubtraction
 typedef struct {
+  void *data;                  ///< General purpose data area
   int32_t base_axis;           ///< int64
   uint8_t update_running_mean; ///< bool
-  void *data;                  ///< General purpose data area
 } mean_subtraction_local_context_t;
 
 /// Allocate MeanSubtraction local context
@@ -1182,9 +1182,9 @@ rt_function_error_t exec_clip_grad_by_value(rt_function_t *f);
 
 /// Local context for ClipGradByNorm
 typedef struct {
+  void *data;      ///< General purpose data area
   float clip_norm; ///< float
   rt_list_t axes;  ///< Original type is [repeated int64]
-  void *data;      ///< General purpose data area
 } clip_grad_by_norm_local_context_t;
 
 /// Allocate ClipGradByNorm local context
@@ -1208,9 +1208,9 @@ rt_function_error_t exec_clip_grad_by_norm(rt_function_t *f);
 
 /// Local context for Sum
 typedef struct {
+  void *data;        ///< General purpose data area
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *data;        ///< General purpose data area
 } sum_local_context_t;
 
 /// Allocate Sum local context
@@ -1228,10 +1228,10 @@ rt_function_error_t exec_sum(rt_function_t *f);
 
 /// Local context for CumSum
 typedef struct {
+  void *data;        ///< General purpose data area
   int32_t axis;      ///< int64
   uint8_t exclusive; ///< bool
   uint8_t reverse;   ///< bool
-  void *data;        ///< General purpose data area
 } cumsum_local_context_t;
 
 /// Allocate CumSum local context
@@ -1249,9 +1249,9 @@ rt_function_error_t exec_cumsum(rt_function_t *f);
 
 /// Local context for Mean
 typedef struct {
+  void *data;        ///< General purpose data area
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *data;        ///< General purpose data area
 } mean_local_context_t;
 
 /// Allocate Mean local context
@@ -1269,11 +1269,11 @@ rt_function_error_t exec_mean(rt_function_t *f);
 
 /// Local context for Max
 typedef struct {
+  void *data;         ///< General purpose data area
   rt_list_t axes;     ///< Original type is [repeated int64]
   uint8_t keep_dims;  ///< bool
   uint8_t with_index; ///< bool
   uint8_t only_index; ///< bool
-  void *data;         ///< General purpose data area
 } max_local_context_t;
 
 /// Allocate Max local context
@@ -1291,11 +1291,11 @@ rt_function_error_t exec_max(rt_function_t *f);
 
 /// Local context for Min
 typedef struct {
+  void *data;         ///< General purpose data area
   rt_list_t axes;     ///< Original type is [repeated int64]
   uint8_t keep_dims;  ///< bool
   uint8_t with_index; ///< bool
   uint8_t only_index; ///< bool
-  void *data;         ///< General purpose data area
 } min_local_context_t;
 
 /// Allocate Min local context
@@ -1313,10 +1313,10 @@ rt_function_error_t exec_min(rt_function_t *f);
 
 /// Local context for Norm
 typedef struct {
+  void *data;        ///< General purpose data area
   float p;           ///< float
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *data;        ///< General purpose data area
 } norm_local_context_t;
 
 /// Allocate Norm local context
@@ -1334,9 +1334,9 @@ rt_function_error_t exec_norm(rt_function_t *f);
 
 /// Local context for Prod
 typedef struct {
+  void *data;        ///< General purpose data area
   rt_list_t axes;    ///< Original type is [repeated int64]
   uint8_t keep_dims; ///< bool
-  void *data;        ///< General purpose data area
 } prod_local_context_t;
 
 /// Allocate Prod local context
@@ -1354,10 +1354,10 @@ rt_function_error_t exec_prod(rt_function_t *f);
 
 /// Local context for CumProd
 typedef struct {
+  void *data;        ///< General purpose data area
   int32_t axis;      ///< int64
   uint8_t exclusive; ///< bool
   uint8_t reverse;   ///< bool
-  void *data;        ///< General purpose data area
 } cumprod_local_context_t;
 
 /// Allocate CumProd local context
@@ -1407,8 +1407,8 @@ rt_function_error_t exec_reduce_mean(rt_function_t *f);
 
 /// Local context for Add2
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } add2_local_context_t;
 
 /// Allocate Add2 local context
@@ -1439,8 +1439,8 @@ rt_function_error_t exec_add_n(rt_function_t *f);
 
 /// Local context for BcAdd2
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } bc_add2_local_context_t;
 
 /// Allocate BcAdd2 local context
@@ -1458,8 +1458,8 @@ rt_function_error_t exec_bc_add2(rt_function_t *f);
 
 /// Local context for Sub2
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } sub2_local_context_t;
 
 /// Allocate Sub2 local context
@@ -1477,8 +1477,8 @@ rt_function_error_t exec_sub2(rt_function_t *f);
 
 /// Local context for Mul2
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } mul2_local_context_t;
 
 /// Allocate Mul2 local context
@@ -1509,8 +1509,8 @@ rt_function_error_t exec_mul_n(rt_function_t *f);
 
 /// Local context for Div2
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } div2_local_context_t;
 
 /// Allocate Div2 local context
@@ -1528,8 +1528,8 @@ rt_function_error_t exec_div2(rt_function_t *f);
 
 /// Local context for Pow2
 typedef struct {
-  uint8_t inplace; ///< bool
   void *data;      ///< General purpose data area
+  uint8_t inplace; ///< bool
 } pow2_local_context_t;
 
 /// Allocate Pow2 local context
@@ -1547,9 +1547,9 @@ rt_function_error_t exec_pow2(rt_function_t *f);
 
 /// Local context for AddScalar
 typedef struct {
+  void *data;      ///< General purpose data area
   float val;       ///< double
   uint8_t inplace; ///< bool
-  void *data;      ///< General purpose data area
 } add_scalar_local_context_t;
 
 /// Allocate AddScalar local context
@@ -1567,9 +1567,9 @@ rt_function_error_t exec_add_scalar(rt_function_t *f);
 
 /// Local context for MulScalar
 typedef struct {
+  void *data;      ///< General purpose data area
   float val;       ///< double
   uint8_t inplace; ///< bool
-  void *data;      ///< General purpose data area
 } mul_scalar_local_context_t;
 
 /// Allocate MulScalar local context
@@ -1587,9 +1587,9 @@ rt_function_error_t exec_mul_scalar(rt_function_t *f);
 
 /// Local context for PowScalar
 typedef struct {
+  void *data;      ///< General purpose data area
   float val;       ///< double
   uint8_t inplace; ///< bool
-  void *data;      ///< General purpose data area
 } pow_scalar_local_context_t;
 
 /// Allocate PowScalar local context
@@ -1607,8 +1607,8 @@ rt_function_error_t exec_pow_scalar(rt_function_t *f);
 
 /// Local context for RSubScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } r_sub_scalar_local_context_t;
 
 /// Allocate RSubScalar local context
@@ -1626,8 +1626,8 @@ rt_function_error_t exec_r_sub_scalar(rt_function_t *f);
 
 /// Local context for RDivScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } r_div_scalar_local_context_t;
 
 /// Allocate RDivScalar local context
@@ -1645,8 +1645,8 @@ rt_function_error_t exec_r_div_scalar(rt_function_t *f);
 
 /// Local context for RPowScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } r_pow_scalar_local_context_t;
 
 /// Allocate RPowScalar local context
@@ -1670,8 +1670,8 @@ rt_function_error_t exec_r_pow_scalar(rt_function_t *f);
 
 /// Local context for Sign
 typedef struct {
-  float alpha; ///< float
   void *data;  ///< General purpose data area
+  float alpha; ///< float
 } sign_local_context_t;
 
 /// Allocate Sign local context
@@ -1715,8 +1715,8 @@ rt_function_error_t exec_maximum2(rt_function_t *f);
 
 /// Local context for MinimumScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } minimum_scalar_local_context_t;
 
 /// Allocate MinimumScalar local context
@@ -1734,8 +1734,8 @@ rt_function_error_t exec_minimum_scalar(rt_function_t *f);
 
 /// Local context for MaximumScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } maximum_scalar_local_context_t;
 
 /// Allocate MaximumScalar local context
@@ -1870,8 +1870,8 @@ rt_function_error_t exec_less(rt_function_t *f);
 
 /// Local context for SearchSorted
 typedef struct {
-  uint8_t right; ///< bool
   void *data;    ///< General purpose data area
+  uint8_t right; ///< bool
 } searchsorted_local_context_t;
 
 /// Allocate SearchSorted local context
@@ -1889,8 +1889,8 @@ rt_function_error_t exec_searchsorted(rt_function_t *f);
 
 /// Local context for LogicalAndScalar
 typedef struct {
-  uint8_t val; ///< bool
   void *data;  ///< General purpose data area
+  uint8_t val; ///< bool
 } logical_and_scalar_local_context_t;
 
 /// Allocate LogicalAndScalar local context
@@ -1908,8 +1908,8 @@ rt_function_error_t exec_logical_and_scalar(rt_function_t *f);
 
 /// Local context for LogicalOrScalar
 typedef struct {
-  uint8_t val; ///< bool
   void *data;  ///< General purpose data area
+  uint8_t val; ///< bool
 } logical_or_scalar_local_context_t;
 
 /// Allocate LogicalOrScalar local context
@@ -1927,8 +1927,8 @@ rt_function_error_t exec_logical_or_scalar(rt_function_t *f);
 
 /// Local context for LogicalXorScalar
 typedef struct {
-  uint8_t val; ///< bool
   void *data;  ///< General purpose data area
+  uint8_t val; ///< bool
 } logical_xor_scalar_local_context_t;
 
 /// Allocate LogicalXorScalar local context
@@ -1946,8 +1946,8 @@ rt_function_error_t exec_logical_xor_scalar(rt_function_t *f);
 
 /// Local context for EqualScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } equal_scalar_local_context_t;
 
 /// Allocate EqualScalar local context
@@ -1965,8 +1965,8 @@ rt_function_error_t exec_equal_scalar(rt_function_t *f);
 
 /// Local context for NotEqualScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } not_equal_scalar_local_context_t;
 
 /// Allocate NotEqualScalar local context
@@ -1984,8 +1984,8 @@ rt_function_error_t exec_not_equal_scalar(rt_function_t *f);
 
 /// Local context for GreaterEqualScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } greater_equal_scalar_local_context_t;
 
 /// Allocate GreaterEqualScalar local context
@@ -2004,8 +2004,8 @@ rt_function_error_t exec_greater_equal_scalar(rt_function_t *f);
 
 /// Local context for GreaterScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } greater_scalar_local_context_t;
 
 /// Allocate GreaterScalar local context
@@ -2023,8 +2023,8 @@ rt_function_error_t exec_greater_scalar(rt_function_t *f);
 
 /// Local context for LessEqualScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } less_equal_scalar_local_context_t;
 
 /// Allocate LessEqualScalar local context
@@ -2042,8 +2042,8 @@ rt_function_error_t exec_less_equal_scalar(rt_function_t *f);
 
 /// Local context for LessScalar
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } less_scalar_local_context_t;
 
 /// Allocate LessScalar local context
@@ -2100,8 +2100,8 @@ rt_function_error_t exec_isinf(rt_function_t *f);
 
 /// Local context for ResetNaN
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } reset_nan_local_context_t;
 
 /// Allocate ResetNaN local context
@@ -2119,8 +2119,8 @@ rt_function_error_t exec_reset_nan(rt_function_t *f);
 
 /// Local context for ResetInf
 typedef struct {
-  float val;  ///< double
   void *data; ///< General purpose data area
+  float val;  ///< double
 } reset_inf_local_context_t;
 
 /// Allocate ResetInf local context
@@ -2157,9 +2157,9 @@ rt_function_error_t exec_where(rt_function_t *f);
 
 /// Local context for Constant
 typedef struct {
+  void *data;      ///< General purpose data area
   float val;       ///< float
   rt_list_t shape; ///< Original type is [Shape]
-  void *data;      ///< General purpose data area
 } constant_local_context_t;
 
 /// Allocate Constant local context
@@ -2177,10 +2177,10 @@ rt_function_error_t exec_constant(rt_function_t *f);
 
 /// Local context for Arange
 typedef struct {
+  void *data;  ///< General purpose data area
   float start; ///< float
   float stop;  ///< float
   float step;  ///< float
-  void *data;  ///< General purpose data area
 } arange_local_context_t;
 
 /// Allocate Arange local context
@@ -2198,10 +2198,10 @@ rt_function_error_t exec_arange(rt_function_t *f);
 
 /// Local context for Linspace
 typedef struct {
+  void *data;  ///< General purpose data area
   float start; ///< float
   float stop;  ///< float
   int32_t num; ///< int64
-  void *data;  ///< General purpose data area
 } linspace_local_context_t;
 
 /// Allocate Linspace local context
@@ -2271,9 +2271,9 @@ rt_function_error_t exec_identity(rt_function_t *f);
 
 /// Local context for BatchMatmul
 typedef struct {
+  void *data;          ///< General purpose data area
   uint8_t transpose_a; ///< bool
   uint8_t transpose_b; ///< bool
-  void *data;          ///< General purpose data area
 } batch_matmul_local_context_t;
 
 /// Allocate BatchMatmul local context
@@ -2492,8 +2492,8 @@ rt_function_error_t exec_atanh(rt_function_t *f);
 
 /// Local context for Concatenate
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } concatenate_local_context_t;
 
 /// Allocate Concatenate local context
@@ -2511,8 +2511,8 @@ rt_function_error_t exec_concatenate(rt_function_t *f);
 
 /// Local context for Split
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } split_local_context_t;
 
 /// Allocate Split local context
@@ -2530,8 +2530,8 @@ rt_function_error_t exec_split(rt_function_t *f);
 
 /// Local context for Stack
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } stack_local_context_t;
 
 /// Allocate Stack local context
@@ -2549,10 +2549,10 @@ rt_function_error_t exec_stack(rt_function_t *f);
 
 /// Local context for Slice
 typedef struct {
+  void *data;      ///< General purpose data area
   rt_list_t start; ///< Original type is [repeated int64]
   rt_list_t stop;  ///< Original type is [repeated int64]
   rt_list_t step;  ///< Original type is [repeated int64]
-  void *data;      ///< General purpose data area
 } slice_local_context_t;
 
 /// Allocate Slice local context
@@ -2578,10 +2578,10 @@ typedef enum {
 
 /// Local context for Pad
 typedef struct {
+  void *data;            ///< General purpose data area
   rt_list_t pad_width;   ///< Original type is [repeated int64]
   pad_mode_value_t mode; ///< string
   float constant_value;  ///< float
-  void *data;            ///< General purpose data area
 } pad_local_context_t;
 
 /// Allocate Pad local context
@@ -2599,8 +2599,8 @@ rt_function_error_t exec_pad(rt_function_t *f);
 
 /// Local context for Transpose
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
   void *data;     ///< General purpose data area
+  rt_list_t axes; ///< Original type is [repeated int64]
 } transpose_local_context_t;
 
 /// Allocate Transpose local context
@@ -2618,8 +2618,8 @@ rt_function_error_t exec_transpose(rt_function_t *f);
 
 /// Local context for Broadcast
 typedef struct {
-  rt_list_t shape; ///< Original type is [Shape]
   void *data;      ///< General purpose data area
+  rt_list_t shape; ///< Original type is [Shape]
 } broadcast_local_context_t;
 
 /// Allocate Broadcast local context
@@ -2637,8 +2637,8 @@ rt_function_error_t exec_broadcast(rt_function_t *f);
 
 /// Local context for BroadcastTo
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } broadcast_to_local_context_t;
 
 /// Allocate BroadcastTo local context
@@ -2656,8 +2656,8 @@ rt_function_error_t exec_broadcast_to(rt_function_t *f);
 
 /// Local context for Tile
 typedef struct {
-  rt_list_t reps; ///< Original type is [repeated int64]
   void *data;     ///< General purpose data area
+  rt_list_t reps; ///< Original type is [repeated int64]
 } tile_local_context_t;
 
 /// Allocate Tile local context
@@ -2675,8 +2675,8 @@ rt_function_error_t exec_tile(rt_function_t *f);
 
 /// Local context for OneHot
 typedef struct {
-  rt_list_t shape; ///< Original type is [Shape]
   void *data;      ///< General purpose data area
+  rt_list_t shape; ///< Original type is [Shape]
 } one_hot_local_context_t;
 
 /// Allocate OneHot local context
@@ -2694,8 +2694,8 @@ rt_function_error_t exec_one_hot(rt_function_t *f);
 
 /// Local context for Flip
 typedef struct {
-  rt_list_t axes; ///< Original type is [repeated int64]
   void *data;     ///< General purpose data area
+  rt_list_t axes; ///< Original type is [repeated int64]
 } flip_local_context_t;
 
 /// Allocate Flip local context
@@ -2720,9 +2720,9 @@ typedef enum {
 
 /// Local context for Shift
 typedef struct {
+  void *data;                            ///< General purpose data area
   rt_list_t shifts;                      ///< Original type is [repeated int64]
   shift_border_mode_value_t border_mode; ///< string
-  void *data;                            ///< General purpose data area
 } shift_local_context_t;
 
 /// Allocate Shift local context
@@ -2740,11 +2740,11 @@ rt_function_error_t exec_shift(rt_function_t *f);
 
 /// Local context for Sort
 typedef struct {
+  void *data;         ///< General purpose data area
   int32_t axis;       ///< int64
   uint8_t reverse;    ///< bool
   uint8_t with_index; ///< bool
   uint8_t only_index; ///< bool
-  void *data;         ///< General purpose data area
 } sort_local_context_t;
 
 /// Allocate Sort local context
@@ -2762,9 +2762,9 @@ rt_function_error_t exec_sort(rt_function_t *f);
 
 /// Local context for Reshape
 typedef struct {
+  void *data;      ///< General purpose data area
   rt_list_t shape; ///< Original type is [Shape]
   uint8_t inplace; ///< bool
-  void *data;      ///< General purpose data area
 } reshape_local_context_t;
 
 /// Allocate Reshape local context
@@ -2808,8 +2808,8 @@ rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
 
 /// Local context for Meshgrid
 typedef struct {
-  uint8_t ij_indexing; ///< bool
   void *data;          ///< General purpose data area
+  uint8_t ij_indexing; ///< bool
 } meshgrid_local_context_t;
 
 /// Allocate Meshgrid local context
@@ -2866,8 +2866,8 @@ rt_function_error_t exec_batch_logdet(rt_function_t *f);
 
 /// Local context for BatchCholesky
 typedef struct {
-  uint8_t upper; ///< bool
   void *data;    ///< General purpose data area
+  uint8_t upper; ///< bool
 } batch_cholesky_local_context_t;
 
 /// Allocate BatchCholesky local context
@@ -2898,9 +2898,9 @@ rt_function_error_t exec_assign(rt_function_t *f);
 
 /// Local context for Gather
 typedef struct {
+  void *data;         ///< General purpose data area
   int32_t axis;       ///< int64
   int32_t batch_dims; ///< int64
-  void *data;         ///< General purpose data area
 } gather_local_context_t;
 
 /// Allocate Gather local context
@@ -2944,9 +2944,9 @@ rt_function_error_t exec_bool_gather(rt_function_t *f);
 
 /// Local context for ScatterNd
 typedef struct {
+  void *data;      ///< General purpose data area
   rt_list_t shape; ///< Original type is [repeated int64]
   uint8_t add;     ///< bool
-  void *data;      ///< General purpose data area
 } scatter_nd_local_context_t;
 
 /// Allocate ScatterNd local context
@@ -2964,8 +2964,8 @@ rt_function_error_t exec_scatter_nd(rt_function_t *f);
 
 /// Local context for ScatterAdd
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } scatter_add_local_context_t;
 
 /// Allocate ScatterAdd local context
@@ -2996,8 +2996,8 @@ rt_function_error_t exec_bool_scatter(rt_function_t *f);
 
 /// Local context for BoolFill
 typedef struct {
-  float value; ///< float
   void *data;  ///< General purpose data area
+  float value; ///< float
 } bool_fill_local_context_t;
 
 /// Allocate BoolFill local context
@@ -3015,8 +3015,8 @@ rt_function_error_t exec_bool_fill(rt_function_t *f);
 
 /// Local context for PackPaddedSequence
 typedef struct {
-  uint8_t batch_first; ///< bool
   void *data;          ///< General purpose data area
+  uint8_t batch_first; ///< bool
 } pack_padded_sequence_local_context_t;
 
 /// Allocate PackPaddedSequence local context
@@ -3035,10 +3035,10 @@ rt_function_error_t exec_pack_padded_sequence(rt_function_t *f);
 
 /// Local context for PadPackedSequence
 typedef struct {
+  void *data;           ///< General purpose data area
   uint8_t batch_first;  ///< bool
   float padding_value;  ///< float
   int32_t total_length; ///< int64
-  void *data;           ///< General purpose data area
 } pad_packed_sequence_local_context_t;
 
 /// Allocate PadPackedSequence local context
@@ -3070,13 +3070,13 @@ typedef enum {
 
 /// Local context for Interpolate
 typedef struct {
+  void *data;                    ///< General purpose data area
   rt_list_t output_size;         ///< Original type is [repeated int64]
   interpolate_mode_value_t mode; ///< string
   uint8_t align_corners;         ///< bool
   uint8_t half_pixel;            ///< bool
   uint8_t half_pixel_for_nn;     ///< bool
   uint8_t channel_last;          ///< bool
-  void *data;                    ///< General purpose data area
 } interpolate_local_context_t;
 
 /// Allocate Interpolate local context
@@ -3094,9 +3094,9 @@ rt_function_error_t exec_interpolate(rt_function_t *f);
 
 /// Local context for FFT
 typedef struct {
+  void *data;          ///< General purpose data area
   int32_t signal_ndim; ///< int64
   uint8_t normalized;  ///< bool
-  void *data;          ///< General purpose data area
 } fft_local_context_t;
 
 /// Allocate FFT local context
@@ -3114,9 +3114,9 @@ rt_function_error_t exec_fft(rt_function_t *f);
 
 /// Local context for IFFT
 typedef struct {
+  void *data;          ///< General purpose data area
   int32_t signal_ndim; ///< int64
   uint8_t normalized;  ///< bool
-  void *data;          ///< General purpose data area
 } ifft_local_context_t;
 
 /// Allocate IFFT local context
@@ -3149,6 +3149,7 @@ typedef enum {
 
 /// Local context for STFT
 typedef struct {
+  void *data;                           ///< General purpose data area
   int32_t window_size;                  ///< int64
   int32_t stride;                       ///< int64
   int32_t fft_size;                     ///< int64
@@ -3156,7 +3157,6 @@ typedef struct {
   uint8_t center;                       ///< bool
   stft_pad_mode_value_t pad_mode;       ///< string
   uint8_t as_istft_backward;            ///< bool
-  void *data;                           ///< General purpose data area
 } stft_local_context_t;
 
 /// Allocate STFT local context
@@ -3189,6 +3189,7 @@ typedef enum {
 
 /// Local context for ISTFT
 typedef struct {
+  void *data;                            ///< General purpose data area
   int32_t window_size;                   ///< int64
   int32_t stride;                        ///< int64
   int32_t fft_size;                      ///< int64
@@ -3196,7 +3197,6 @@ typedef struct {
   uint8_t center;                        ///< bool
   istft_pad_mode_value_t pad_mode;       ///< string
   uint8_t as_stft_backward;              ///< bool
-  void *data;                            ///< General purpose data area
 } istft_local_context_t;
 
 /// Allocate ISTFT local context
@@ -3220,9 +3220,9 @@ rt_function_error_t exec_istft(rt_function_t *f);
 
 /// Local context for Dropout
 typedef struct {
+  void *data;   ///< General purpose data area
   float p;      ///< double
   int32_t seed; ///< int64
-  void *data;   ///< General purpose data area
 } dropout_local_context_t;
 
 /// Allocate Dropout local context
@@ -3240,11 +3240,11 @@ rt_function_error_t exec_dropout(rt_function_t *f);
 
 /// Local context for TopKData
 typedef struct {
+  void *data;        ///< General purpose data area
   int32_t k;         ///< int64
   uint8_t abs;       ///< bool
   uint8_t reduce;    ///< bool
   int32_t base_axis; ///< int64
-  void *data;        ///< General purpose data area
 } top_k_data_local_context_t;
 
 /// Allocate TopKData local context
@@ -3262,10 +3262,10 @@ rt_function_error_t exec_top_k_data(rt_function_t *f);
 
 /// Local context for TopKGrad
 typedef struct {
+  void *data;        ///< General purpose data area
   int32_t k;         ///< int64
   uint8_t abs;       ///< bool
   int32_t base_axis; ///< int64
-  void *data;        ///< General purpose data area
 } top_k_grad_local_context_t;
 
 /// Allocate TopKGrad local context
@@ -3283,11 +3283,11 @@ rt_function_error_t exec_top_k_grad(rt_function_t *f);
 
 /// Local context for Rand
 typedef struct {
+  void *data;      ///< General purpose data area
   float low;       ///< float
   float high;      ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } rand_local_context_t;
 
 /// Allocate Rand local context
@@ -3305,11 +3305,11 @@ rt_function_error_t exec_rand(rt_function_t *f);
 
 /// Local context for Randint
 typedef struct {
+  void *data;      ///< General purpose data area
   int32_t low;     ///< int64
   int32_t high;    ///< int64
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } randint_local_context_t;
 
 /// Allocate Randint local context
@@ -3327,11 +3327,11 @@ rt_function_error_t exec_randint(rt_function_t *f);
 
 /// Local context for Randn
 typedef struct {
+  void *data;      ///< General purpose data area
   float mu;        ///< float
   float sigma;     ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } randn_local_context_t;
 
 /// Allocate Randn local context
@@ -3349,11 +3349,11 @@ rt_function_error_t exec_randn(rt_function_t *f);
 
 /// Local context for RandBinomial
 typedef struct {
+  void *data;      ///< General purpose data area
   int32_t n;       ///< int64
   float p;         ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } rand_binomial_local_context_t;
 
 /// Allocate RandBinomial local context
@@ -3371,11 +3371,11 @@ rt_function_error_t exec_rand_binomial(rt_function_t *f);
 
 /// Local context for RandBeta
 typedef struct {
+  void *data;      ///< General purpose data area
   float alpha;     ///< float
   float beta;      ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } rand_beta_local_context_t;
 
 /// Allocate RandBeta local context
@@ -3393,11 +3393,11 @@ rt_function_error_t exec_rand_beta(rt_function_t *f);
 
 /// Local context for RandGamma
 typedef struct {
+  void *data;      ///< General purpose data area
   float k;         ///< float
   float theta;     ///< float
   rt_list_t shape; ///< Original type is [Shape]
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } rand_gamma_local_context_t;
 
 /// Allocate RandGamma local context
@@ -3415,10 +3415,10 @@ rt_function_error_t exec_rand_gamma(rt_function_t *f);
 
 /// Local context for RandomChoice
 typedef struct {
+  void *data;      ///< General purpose data area
   rt_list_t shape; ///< Original type is [Shape]
   uint8_t replace; ///< bool
   int32_t seed;    ///< int64
-  void *data;      ///< General purpose data area
 } random_choice_local_context_t;
 
 /// Allocate RandomChoice local context
@@ -3436,10 +3436,10 @@ rt_function_error_t exec_random_choice(rt_function_t *f);
 
 /// Local context for RandomCrop
 typedef struct {
+  void *data;        ///< General purpose data area
   rt_list_t shape;   ///< Original type is [Shape]
   int32_t base_axis; ///< int64
   int32_t seed;      ///< int64
-  void *data;        ///< General purpose data area
 } random_crop_local_context_t;
 
 /// Allocate RandomCrop local context
@@ -3457,10 +3457,10 @@ rt_function_error_t exec_random_crop(rt_function_t *f);
 
 /// Local context for RandomFlip
 typedef struct {
+  void *data;        ///< General purpose data area
   rt_list_t axes;    ///< Original type is [repeated int64]
   int32_t base_axis; ///< int64
   int32_t seed;      ///< int64
-  void *data;        ///< General purpose data area
 } random_flip_local_context_t;
 
 /// Allocate RandomFlip local context
@@ -3486,12 +3486,12 @@ typedef enum {
 
 /// Local context for RandomShift
 typedef struct {
+  void *data;       ///< General purpose data area
   rt_list_t shifts; ///< Original type is [repeated int64]
   random_shift_border_mode_value_t border_mode; ///< string
   float constant_value;                         ///< float
   int32_t base_axis;                            ///< int64
   int32_t seed;                                 ///< int64
-  void *data;                                   ///< General purpose data area
 } random_shift_local_context_t;
 
 /// Allocate RandomShift local context
@@ -3509,6 +3509,7 @@ rt_function_error_t exec_random_shift(rt_function_t *f);
 
 /// Local context for RandomErase
 typedef struct {
+  void *data;               ///< General purpose data area
   float prob;               ///< float
   int32_t n;                ///< int64
   uint8_t share;            ///< bool
@@ -3517,7 +3518,6 @@ typedef struct {
   int32_t seed;             ///< int64
   uint8_t channel_last;     ///< bool
   uint8_t ste_fine_grained; ///< bool
-  void *data;               ///< General purpose data area
 } random_erase_local_context_t;
 
 /// Allocate RandomErase local context
@@ -3535,6 +3535,7 @@ rt_function_error_t exec_random_erase(rt_function_t *f);
 
 /// Local context for ImageAugmentation
 typedef struct {
+  void *data;              ///< General purpose data area
   rt_list_t shape;         ///< Original type is [Shape]
   rt_list_t pad;           ///< Original type is [Shape]
   float min_scale;         ///< float
@@ -3551,7 +3552,6 @@ typedef struct {
   uint8_t contrast_each;   ///< bool
   float noise;             ///< float
   int32_t seed;            ///< int64
-  void *data;              ///< General purpose data area
 } image_augmentation_local_context_t;
 
 /// Allocate ImageAugmentation local context
@@ -3603,8 +3603,8 @@ rt_function_error_t exec_binary_cross_entropy(rt_function_t *f);
 
 /// Local context for SoftmaxCrossEntropy
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } softmax_cross_entropy_local_context_t;
 
 /// Allocate SoftmaxCrossEntropy local context
@@ -3623,8 +3623,8 @@ rt_function_error_t exec_softmax_cross_entropy(rt_function_t *f);
 
 /// Local context for CategoricalCrossEntropy
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } categorical_cross_entropy_local_context_t;
 
 /// Allocate CategoricalCrossEntropy local context
@@ -3670,8 +3670,8 @@ rt_function_error_t exec_absolute_error(rt_function_t *f);
 
 /// Local context for HuberLoss
 typedef struct {
-  float delta; ///< float
   void *data;  ///< General purpose data area
+  float delta; ///< float
 } huber_loss_local_context_t;
 
 /// Allocate HuberLoss local context
@@ -3689,8 +3689,8 @@ rt_function_error_t exec_huber_loss(rt_function_t *f);
 
 /// Local context for EpsilonInsensitiveLoss
 typedef struct {
-  float epsilon; ///< float
   void *data;    ///< General purpose data area
+  float epsilon; ///< float
 } epsilon_insensitive_loss_local_context_t;
 
 /// Allocate EpsilonInsensitiveLoss local context
@@ -3710,8 +3710,8 @@ rt_function_error_t exec_epsilon_insensitive_loss(rt_function_t *f);
 
 /// Local context for KLMultinomial
 typedef struct {
-  int32_t base_axis; ///< int64
   void *data;        ///< General purpose data area
+  int32_t base_axis; ///< int64
 } kl_multinomial_local_context_t;
 
 /// Allocate KLMultinomial local context
@@ -3735,9 +3735,9 @@ rt_function_error_t exec_kl_multinomial(rt_function_t *f);
 
 /// Local context for AffineGrid
 typedef struct {
+  void *data;            ///< General purpose data area
   rt_list_t size;        ///< Original type is [repeated int64]
   uint8_t align_corners; ///< bool
-  void *data;            ///< General purpose data area
 } affine_grid_local_context_t;
 
 /// Allocate AffineGrid local context
@@ -3770,11 +3770,11 @@ typedef enum {
 
 /// Local context for WarpByGrid
 typedef struct {
+  void *data;                                     ///< General purpose data area
   warp_by_grid_mode_value_t mode;                 ///< string
   warp_by_grid_padding_mode_value_t padding_mode; ///< string
   uint8_t align_corners;                          ///< bool
   uint8_t channel_last;                           ///< bool
-  void *data;                                     ///< General purpose data area
 } warp_by_grid_local_context_t;
 
 /// Allocate WarpByGrid local context
@@ -3837,9 +3837,9 @@ rt_function_error_t exec_binary_tanh(rt_function_t *f);
 
 /// Local context for BinaryConnectAffine
 typedef struct {
+  void *data;             ///< General purpose data area
   int32_t base_axis;      ///< int64
   float quantize_zero_to; ///< float
-  void *data;             ///< General purpose data area
 } binary_connect_affine_local_context_t;
 
 /// Allocate BinaryConnectAffine local context
@@ -3858,13 +3858,13 @@ rt_function_error_t exec_binary_connect_affine(rt_function_t *f);
 
 /// Local context for BinaryConnectConvolution
 typedef struct {
+  void *data;             ///< General purpose data area
   int32_t base_axis;      ///< int64
   rt_list_t pad;          ///< Original type is [Shape]
   rt_list_t stride;       ///< Original type is [Shape]
   rt_list_t dilation;     ///< Original type is [Shape]
   int32_t group;          ///< int64
   float quantize_zero_to; ///< float
-  void *data;             ///< General purpose data area
 } binary_connect_convolution_local_context_t;
 
 /// Allocate BinaryConnectConvolution local context
@@ -3884,9 +3884,9 @@ rt_function_error_t exec_binary_connect_convolution(rt_function_t *f);
 
 /// Local context for BinaryWeightAffine
 typedef struct {
+  void *data;             ///< General purpose data area
   int32_t base_axis;      ///< int64
   float quantize_zero_to; ///< float
-  void *data;             ///< General purpose data area
 } binary_weight_affine_local_context_t;
 
 /// Allocate BinaryWeightAffine local context
@@ -3905,13 +3905,13 @@ rt_function_error_t exec_binary_weight_affine(rt_function_t *f);
 
 /// Local context for BinaryWeightConvolution
 typedef struct {
+  void *data;             ///< General purpose data area
   int32_t base_axis;      ///< int64
   rt_list_t pad;          ///< Original type is [Shape]
   rt_list_t stride;       ///< Original type is [Shape]
   rt_list_t dilation;     ///< Original type is [Shape]
   int32_t group;          ///< int64
   float quantize_zero_to; ///< float
-  void *data;             ///< General purpose data area
 } binary_weight_convolution_local_context_t;
 
 /// Allocate BinaryWeightConvolution local context
@@ -3938,12 +3938,12 @@ typedef enum {
 
 /// Local context for INQAffine
 typedef struct {
+  void *data;               ///< General purpose data area
   int32_t base_axis;        ///< int64
   int32_t num_bits;         ///< int64
   rt_list_t inq_iterations; ///< Original type is [repeated int64]
   inq_affine_selection_algorithm_value_t selection_algorithm; ///< string
   int32_t seed;                                               ///< int64
-  void *data; ///< General purpose data area
 } inq_affine_local_context_t;
 
 /// Allocate INQAffine local context
@@ -3968,6 +3968,7 @@ typedef enum {
 
 /// Local context for INQConvolution
 typedef struct {
+  void *data;               ///< General purpose data area
   int32_t base_axis;        ///< int64
   rt_list_t pad;            ///< Original type is [Shape]
   rt_list_t stride;         ///< Original type is [Shape]
@@ -3977,7 +3978,6 @@ typedef struct {
   rt_list_t inq_iterations; ///< Original type is [repeated int64]
   inq_convolution_selection_algorithm_value_t selection_algorithm; ///< string
   int32_t seed;                                                    ///< int64
-  void *data; ///< General purpose data area
 } inq_convolution_local_context_t;
 
 /// Allocate INQConvolution local context
@@ -3995,11 +3995,11 @@ rt_function_error_t exec_inq_convolution(rt_function_t *f);
 
 /// Local context for FixedPointQuantize
 typedef struct {
+  void *data;               ///< General purpose data area
   uint8_t sign;             ///< bool
   int32_t n;                ///< int64
   float delta;              ///< float
   uint8_t ste_fine_grained; ///< bool
-  void *data;               ///< General purpose data area
 } fixed_point_quantize_local_context_t;
 
 /// Allocate FixedPointQuantize local context
@@ -4018,12 +4018,12 @@ rt_function_error_t exec_fixed_point_quantize(rt_function_t *f);
 
 /// Local context for MinMaxQuantize
 typedef struct {
+  void *data;               ///< General purpose data area
   float decay;              ///< float
   uint8_t x_min_max;        ///< bool
   uint8_t ema;              ///< bool
   uint8_t ste_fine_grained; ///< bool
   float eps;                ///< float
-  void *data;               ///< General purpose data area
 } min_max_quantize_local_context_t;
 
 /// Allocate MinMaxQuantize local context
@@ -4041,12 +4041,12 @@ rt_function_error_t exec_min_max_quantize(rt_function_t *f);
 
 /// Local context for Pow2Quantize
 typedef struct {
+  void *data;               ///< General purpose data area
   uint8_t sign;             ///< bool
   uint8_t with_zero;        ///< bool
   int32_t n;                ///< int64
   int32_t m;                ///< int64
   uint8_t ste_fine_grained; ///< bool
-  void *data;               ///< General purpose data area
 } pow2_quantize_local_context_t;
 
 /// Allocate Pow2Quantize local context
@@ -4064,8 +4064,8 @@ rt_function_error_t exec_pow2_quantize(rt_function_t *f);
 
 /// Local context for Prune
 typedef struct {
-  float rate; ///< float
   void *data; ///< General purpose data area
+  float rate; ///< float
 } prune_local_context_t;
 
 /// Allocate Prune local context
@@ -4090,10 +4090,10 @@ typedef enum {
 
 /// Local context for QuantizeLinear
 typedef struct {
+  void *data;                                    ///< General purpose data area
   quantize_linear_round_mode_value_t round_mode; ///< string
   uint8_t narrow_range;                          ///< bool
   int32_t dtype;                                 ///< int64
-  void *data;                                    ///< General purpose data area
 } quantize_linear_local_context_t;
 
 /// Allocate QuantizeLinear local context
@@ -4130,9 +4130,9 @@ rt_function_error_t exec_dequantize_linear(rt_function_t *f);
 
 /// Local context for TopNError
 typedef struct {
+  void *data;   ///< General purpose data area
   int32_t axis; ///< int64
   int32_t n;    ///< int64
-  void *data;   ///< General purpose data area
 } top_n_error_local_context_t;
 
 /// Allocate TopNError local context
@@ -4163,8 +4163,8 @@ rt_function_error_t exec_binary_error(rt_function_t *f);
 
 /// Local context for ConfusionMatrix
 typedef struct {
-  int32_t axis; ///< int64
   void *data;   ///< General purpose data area
+  int32_t axis; ///< int64
 } confusion_matrix_local_context_t;
 
 /// Allocate ConfusionMatrix local context
@@ -4188,9 +4188,9 @@ rt_function_error_t exec_confusion_matrix(rt_function_t *f);
 
 /// Local context for VATNoise
 typedef struct {
+  void *data;        ///< General purpose data area
   int32_t base_axis; ///< int64
   float eps;         ///< float
-  void *data;        ///< General purpose data area
 } vat_noise_local_context_t;
 
 /// Allocate VATNoise local context
@@ -4221,8 +4221,8 @@ rt_function_error_t exec_unlink(rt_function_t *f);
 
 /// Local context for Sink
 typedef struct {
-  uint8_t one_input_grad; ///< bool
   void *data;             ///< General purpose data area
+  uint8_t one_input_grad; ///< bool
 } sink_local_context_t;
 
 /// Allocate Sink local context
@@ -4240,10 +4240,10 @@ rt_function_error_t exec_sink(rt_function_t *f);
 
 /// Local context for NmsDetection2d
 typedef struct {
+  void *data;            ///< General purpose data area
   float thresh;          ///< float
   float nms;             ///< float
   uint8_t nms_per_class; ///< bool
-  void *data;            ///< General purpose data area
 } nms_detection2d_local_context_t;
 
 /// Allocate NmsDetection2d local context
@@ -4261,12 +4261,12 @@ rt_function_error_t exec_nms_detection2d(rt_function_t *f);
 
 /// Local context for MaxPoolingBackward
 typedef struct {
+  void *data;            ///< General purpose data area
   rt_list_t kernel;      ///< Original type is [Shape]
   rt_list_t stride;      ///< Original type is [Shape]
   uint8_t ignore_border; ///< bool
   rt_list_t pad;         ///< Original type is [Shape]
   uint8_t channel_last;  ///< bool
-  void *data;            ///< General purpose data area
 } max_pooling_backward_local_context_t;
 
 /// Allocate MaxPoolingBackward local context
@@ -4285,12 +4285,12 @@ rt_function_error_t exec_max_pooling_backward(rt_function_t *f);
 
 /// Local context for PatchCorrelation
 typedef struct {
+  void *data;           ///< General purpose data area
   rt_list_t patch;      ///< Original type is [Shape]
   rt_list_t shift;      ///< Original type is [Shape]
   rt_list_t patch_step; ///< Original type is [Shape]
   rt_list_t shift_step; ///< Original type is [Shape]
   rt_list_t padding;    ///< Original type is [Shape]
-  void *data;           ///< General purpose data area
 } patch_correlation_local_context_t;
 
 /// Allocate PatchCorrelation local context

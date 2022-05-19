@@ -28,6 +28,7 @@ NNABLA_C_RUNTIME_DOCKER_IMAGE_AUTO_FORMAT ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAM
 NNABLA_C_RUNTIME_DOCKER_IMAGE_DOC ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-doc
 NNABLA_C_RUNTIME_DOCKER_IMAGE_BUILD ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-build
 NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-test
+NNABLA_C_RUNTIME_DOCKER_IMAGE_MULTIARCH_TEST ?= $(NNABLA_C_RUNTIME_DOCKER_IMAGE_NAME_BASE)-multiarch-test
 
 NNABLA_C_RUNTIME_DOCKER_RUN_OPTS +=--rm
 NNABLA_C_RUNTIME_DOCKER_RUN_OPTS += -v $$(pwd):$$(pwd)
@@ -121,6 +122,13 @@ nnabla-c-runtime-docker_image_test:
 	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) \
 		-f build-tools/docker/Dockerfile.test .
 
+
+.PHONY: nnabla-c-runtime-docker_multiarch_test
+nnabla-c-runtime-docker_multiarch_test:
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& docker build $(NNABLA_C_RUNTIME_DOCKER_BUILD_ARGS) -t $(NNABLA_C_RUNTIME_DOCKER_IMAGE_MULTIARCH_TEST) \
+		-f build-tools/docker/Dockerfile.multiarch .
+
 ########################################################################################################################
 # Auto Format
 
@@ -213,3 +221,11 @@ bwd-nnabla-c-runtime-shell:
 	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
 	&& docker run -it $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
 		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make build-shell
+
+
+.PHONY: bwd-nnabla-c-runtime-multiarch-shell
+bwd-nnabla-c-runtime-multiarch-shell:
+	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
+	&& echo "docker run -it --rm $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) $(NNABLA_C_RUNTIME_DOCKER_IMAGE_MULTIARCH_TEST) /bin/bash" \
+	&& docker run -it --rm $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
+		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_MULTIARCH_TEST) /bin/bash
