@@ -20,13 +20,13 @@
 #include <nnablart/functions.h>
 
 typedef struct {
+  void *data;
   rt_list_t kernel; ///< Original type is [Shape]
   rt_list_t stride; ///< Original type is [Shape]
   uint8_t ignore_border;
   rt_list_t pad;        ///< Original type is [Shape]
   uint8_t channel_last; ///< bool
   uint8_t including_pad;
-  void *data;
 } pooling_context_t;
 
 typedef struct {
