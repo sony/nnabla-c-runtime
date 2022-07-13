@@ -126,7 +126,7 @@ rt_function_error_t exec_concatenate_generic(rt_function_t *f) {
   for (int i = 0; i < f->num_of_inputs; i++) {
     rt_variable_t *input = f->inputs[i];
     rt_variable_getter get_input = select_getter(input);
-    const int inner_size = calc_size(p->in_shape[i], c->axis);
+    const int inner_size = calc_size(f->inputs[i]->shape, c->axis);
     for (int j = 0; j < p->outer_size; ++j) {
       for (int k = 0; k < inner_size; k++) {
         const float x = get_input(input, j * inner_size + k);
