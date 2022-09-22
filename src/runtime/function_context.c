@@ -1844,6 +1844,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_ERF
+  case NN_FUNCTION_ERF: { // Erf
+    function_context->func.free_local_context_func = free_erf_local_context;
+    function_context->func.local_context = 0;
+    allocate_erf_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_CONCATENATE
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     function_context->func.free_local_context_func =
@@ -2024,6 +2032,18 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->inplace = f->inplace;
     function_context->func.local_context = ctx;
     allocate_reshape_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_SHAPE
+  case NN_FUNCTION_SHAPE: { // Shape
+    function_context->func.free_local_context_func = free_shape_local_context;
+    nn_function_shape_t *f = (nn_function_shape_t *)function;
+    shape_local_context_t *ctx = rt_malloc_func(sizeof(shape_local_context_t));
+    ctx->start = f->start;
+    ctx->end = f->end;
+    function_context->func.local_context = ctx;
+    allocate_shape_local_context(&function_context->func);
   } break;
 #endif
 

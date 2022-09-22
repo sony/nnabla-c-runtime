@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/217
+Total 62/219
 
 
 ## Neural Network Layer
@@ -166,7 +166,7 @@ Count 5/30
 |            Where             |      no      |      -       |      -       |
 
 ## Math
-Count 6/23
+Count 6/24
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -193,9 +193,10 @@ Count 6/23
 |            ASinh             |      no      |      -       |      -       |
 |            ACosh             |      no      |      -       |      -       |
 |            ATanh             |      no      |      -       |      -       |
+|             Erf              |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/31
+Count 11/32
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -213,6 +214,7 @@ Count 11/31
 |            Shift             |     yes      |     yes      |     yes      |
 |             Sort             |      no      |      -       |      -       |
 |           Reshape            |     yes      |     yes      |     yes      |
+|            Shape             |      no      |      -       |      -       |
 |          MatrixDiag          |     yes      |     yes      |     yes      |
 |        MatrixDiagPart        |     yes      |     yes      |     yes      |
 |           Meshgrid           |      no      |      -       |      -       |

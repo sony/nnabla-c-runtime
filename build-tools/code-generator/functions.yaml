@@ -2608,6 +2608,19 @@ Math:
     id: 183
     func_type:
     - ALL
+  Erf:
+    snake_name: erf
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 349
+    uniq_name: Erf
+    id: 349
+    func_type:
+    - ALL
 Array Manipulation:
   Concatenate:
     snake_name: concatenate
@@ -2882,6 +2895,26 @@ Array Manipulation:
     c_runtime: support
     uniq_name: Reshape_iIB
     id: 126
+    func_type:
+    - ALL
+  Shape:
+    snake_name: shape
+    inputs:
+      x: {}
+    arguments:
+      start:
+        type: int64
+        default: 0
+      end:
+        type: int64
+        default: 0
+    outputs:
+      shape: {}
+    c_runtime: not support
+    function_ids:
+      ii: 348
+    uniq_name: Shape_ii
+    id: 348
     func_type:
     - ALL
   MatrixDiag:

@@ -25,11 +25,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.27.0.dev1")
+#define NN_NNABLA_VERSION ("1.31.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (41)
+#define NN_API_LEVEL (42)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,6 +235,7 @@ typedef enum {
   NN_FUNCTION_ASINH = 181,               ///< ASinh
   NN_FUNCTION_ACOSH = 182,               ///< ACosh
   NN_FUNCTION_ATANH = 183,               ///< ATanh
+  NN_FUNCTION_ERF = 349,                 ///< Erf
   NN_FUNCTION_CONCATENATE = 74,          ///< Concatenate
   NN_FUNCTION_SPLIT = 75,                ///< Split
   NN_FUNCTION_STACK = 76,                ///< Stack
@@ -250,6 +251,7 @@ typedef enum {
   NN_FUNCTION_SORT = 129,                ///< Sort
   NN_FUNCTION_RESHAPE_0 = 83,        ///< Recent version of Reshape has arg [iI]
   NN_FUNCTION_RESHAPE = 126,         ///< Reshape
+  NN_FUNCTION_SHAPE = 348,           ///< Shape
   NN_FUNCTION_MATRIX_DIAG = 84,      ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
   NN_FUNCTION_MESHGRID = 334,        ///< Meshgrid
@@ -2103,6 +2105,17 @@ typedef struct {
 
 /// @}
 
+/// @brief Erf function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_erf_t;
+
+/// @}
+
 /// @brief Concatenate function.
 /// @{
 typedef struct {
@@ -2291,6 +2304,20 @@ typedef struct {
   nn_list_t shape; ///< Original type is [Shape]
   uint8_t inplace; ///< Original type is [bool]
 } nn_function_reshape_t;
+
+/// @}
+
+/// @brief Shape function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t start; ///< Original type is [int64]
+  int32_t end;   ///< Original type is [int64]
+} nn_function_shape_t;
 
 /// @}
 

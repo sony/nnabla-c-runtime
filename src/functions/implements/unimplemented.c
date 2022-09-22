@@ -2580,3 +2580,35 @@ rt_function_error_t exec_patch_correlation(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_PATCHCORRELATION */
+
+// Shape
+#ifdef CONFIG_SHAPE
+rt_function_error_t allocate_shape_local_context(rt_function_t *f) {
+  f->exec_func = exec_shape;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_shape_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_shape(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_SHAPE */
+
+// Erf
+#ifdef CONFIG_ERF
+rt_function_error_t allocate_erf_local_context(rt_function_t *f) {
+  f->exec_func = exec_shape;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_erf_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_erf(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ERF */
