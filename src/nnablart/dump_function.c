@@ -424,6 +424,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_ATANH: { // ATanh
     printf("NNB: Function type:    ATanh(183)\n");
   } break;
+  case NN_FUNCTION_ERF: { // Erf
+    printf("NNB: Function type:    Erf(349)\n");
+  } break;
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     printf("NNB: Function type:    Concatenate(74)\n");
   } break;
@@ -465,6 +468,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_RESHAPE: { // Reshape
     printf("NNB: Function type:    Reshape(126)\n");
+  } break;
+  case NN_FUNCTION_SHAPE: { // Shape
+    printf("NNB: Function type:    Shape(348)\n");
   } break;
   case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
     printf("NNB: Function type:    MatrixDiag(84)\n");
@@ -1490,6 +1496,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_ATANH: { // ATanh
   } break;
+  case NN_FUNCTION_ERF: { // Erf
+  } break;
   case NN_FUNCTION_CONCATENATE: { // Concatenate
     nn_function_concatenate_t *f = (nn_function_concatenate_t *)func;
     printf("NNB: Function argument axis: %d\n", f->axis);
@@ -1609,6 +1617,11 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     }
     printf(" )\n");
     printf("NNB: Function argument inplace: %d\n", f->inplace);
+  } break;
+  case NN_FUNCTION_SHAPE: { // Shape
+    nn_function_shape_t *f = (nn_function_shape_t *)func;
+    printf("NNB: Function argument start: %d\n", f->start);
+    printf("NNB: Function argument end: %d\n", f->end);
   } break;
   case NN_FUNCTION_MATRIX_DIAG: { // MatrixDiag
   } break;

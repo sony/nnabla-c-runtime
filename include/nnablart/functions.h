@@ -2481,6 +2481,19 @@ rt_function_error_t free_atanh_local_context(rt_function_t *f);
 rt_function_error_t exec_atanh(rt_function_t *f);
 /// @}
 
+/// @defgroup Erf Erf
+/// @{
+
+/// Allocate Erf local context
+rt_function_error_t allocate_erf_local_context(rt_function_t *f);
+
+/// Free Erf local context
+rt_function_error_t free_erf_local_context(rt_function_t *f);
+
+/// Exec Erf
+rt_function_error_t exec_erf(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2775,6 +2788,26 @@ rt_function_error_t free_reshape_local_context(rt_function_t *f);
 
 /// Exec Reshape
 rt_function_error_t exec_reshape(rt_function_t *f);
+/// @}
+
+/// @defgroup Shape Shape
+/// @{
+
+/// Local context for Shape
+typedef struct {
+  void *data;    ///< General purpose data area
+  int32_t start; ///< int64
+  int32_t end;   ///< int64
+} shape_local_context_t;
+
+/// Allocate Shape local context
+rt_function_error_t allocate_shape_local_context(rt_function_t *f);
+
+/// Free Shape local context
+rt_function_error_t free_shape_local_context(rt_function_t *f);
+
+/// Exec Shape
+rt_function_error_t exec_shape(rt_function_t *f);
 /// @}
 
 /// @defgroup MatrixDiag MatrixDiag
