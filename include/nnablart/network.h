@@ -29,7 +29,7 @@ extern "C" {
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (42)
+#define NN_API_LEVEL (43)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -275,20 +275,21 @@ typedef enum {
       127, ///< Recent version of Interpolate has arg [iIiB]
   NN_FUNCTION_INTERPOLATE_1 =
       286, ///< Recent version of Interpolate has arg [iIiBB]
-  NN_FUNCTION_INTERPOLATE = 291,   ///< Interpolate
-  NN_FUNCTION_FFT = 158,           ///< FFT
-  NN_FUNCTION_IFFT = 159,          ///< IFFT
-  NN_FUNCTION_STFT_0 = 327,        ///< Recent version of STFT has arg [iiiiBi]
-  NN_FUNCTION_STFT = 344,          ///< STFT
-  NN_FUNCTION_ISTFT_0 = 328,       ///< Recent version of ISTFT has arg [iiiiB]
-  NN_FUNCTION_ISTFT = 345,         ///< ISTFT
-  NN_FUNCTION_DROPOUT_0 = 86,      ///< Recent version of Dropout has arg [fi]
-  NN_FUNCTION_DROPOUT = 336,       ///< Dropout
-  NN_FUNCTION_TOP_K_DATA = 87,     ///< TopKData
-  NN_FUNCTION_TOP_K_GRAD = 88,     ///< TopKGrad
-  NN_FUNCTION_RAND = 89,           ///< Rand
-  NN_FUNCTION_RANDINT = 90,        ///< Randint
-  NN_FUNCTION_RANDN = 91,          ///< Randn
+  NN_FUNCTION_INTERPOLATE = 291, ///< Interpolate
+  NN_FUNCTION_FFT = 158,         ///< FFT
+  NN_FUNCTION_IFFT = 159,        ///< IFFT
+  NN_FUNCTION_STFT_0 = 327,      ///< Recent version of STFT has arg [iiiiBi]
+  NN_FUNCTION_STFT = 344,        ///< STFT
+  NN_FUNCTION_ISTFT_0 = 328,     ///< Recent version of ISTFT has arg [iiiiB]
+  NN_FUNCTION_ISTFT = 345,       ///< ISTFT
+  NN_FUNCTION_DROPOUT_0 = 86,    ///< Recent version of Dropout has arg [fi]
+  NN_FUNCTION_DROPOUT = 336,     ///< Dropout
+  NN_FUNCTION_TOP_K_DATA_0 = 87, ///< Recent version of TopKData has arg [iBBi]
+  NN_FUNCTION_TOP_K_DATA = 350,  ///< TopKData
+  NN_FUNCTION_TOP_K_GRAD = 88,   ///< TopKGrad
+  NN_FUNCTION_RAND = 89,         ///< Rand
+  NN_FUNCTION_RANDINT = 90,      ///< Randint
+  NN_FUNCTION_RANDN = 91,        ///< Randn
   NN_FUNCTION_RAND_BINOMIAL = 289, ///< RandBinomial
   NN_FUNCTION_RAND_BETA = 288,     ///< RandBeta
   NN_FUNCTION_RAND_GAMMA = 290,    ///< RandGamma
@@ -2634,10 +2635,12 @@ typedef struct {
   nn_list_t inputs;                  ///< Common: List of input variables.
   nn_list_t outputs;                 ///< Common: List of output variables.
   // End of common part.
-  int32_t k;         ///< Original type is [int64]
-  uint8_t abs;       ///< Original type is [bool]
-  uint8_t reduce;    ///< Original type is [bool]
-  int32_t base_axis; ///< Original type is [int64]
+  int32_t k;          ///< Original type is [int64]
+  uint8_t abs;        ///< Original type is [bool]
+  uint8_t reduce;     ///< Original type is [bool]
+  int32_t base_axis;  ///< Original type is [int64]
+  uint8_t largest;    ///< Original type is [bool]
+  uint8_t with_index; ///< Original type is [bool]
 } nn_function_top_k_data_t;
 
 /// @}

@@ -542,7 +542,7 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function type:    Dropout(336)\n");
   } break;
   case NN_FUNCTION_TOP_K_DATA: { // TopKData
-    printf("NNB: Function type:    TopKData(87)\n");
+    printf("NNB: Function type:    TopKData(350)\n");
   } break;
   case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
     printf("NNB: Function type:    TopKGrad(88)\n");
@@ -1742,6 +1742,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument abs: %d\n", f->abs);
     printf("NNB: Function argument reduce: %d\n", f->reduce);
     printf("NNB: Function argument base_axis: %d\n", f->base_axis);
+    printf("NNB: Function argument largest: %d\n", f->largest);
+    printf("NNB: Function argument with_index: %d\n", f->with_index);
   } break;
   case NN_FUNCTION_TOP_K_GRAD: { // TopKGrad
     nn_function_top_k_grad_t *f = (nn_function_top_k_grad_t *)func;

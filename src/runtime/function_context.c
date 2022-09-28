@@ -2405,6 +2405,21 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
 #endif
 
 #ifdef CONFIG_TOPKDATA
+  case NN_FUNCTION_TOP_K_DATA_0: { // TopKData
+    function_context->func.free_local_context_func =
+        free_top_k_data_local_context;
+    nn_function_top_k_data_t *f = (nn_function_top_k_data_t *)function;
+    top_k_data_local_context_t *ctx =
+        rt_malloc_func(sizeof(top_k_data_local_context_t));
+    ctx->k = f->k;
+    ctx->abs = f->abs;
+    ctx->reduce = f->reduce;
+    ctx->base_axis = f->base_axis;
+    ctx->largest = 1;
+    ctx->with_index = 0;
+    function_context->func.local_context = ctx;
+    allocate_top_k_data_local_context(&function_context->func);
+  } break;
   case NN_FUNCTION_TOP_K_DATA: { // TopKData
     function_context->func.free_local_context_func =
         free_top_k_data_local_context;
@@ -2415,6 +2430,8 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->abs = f->abs;
     ctx->reduce = f->reduce;
     ctx->base_axis = f->base_axis;
+    ctx->largest = f->largest;
+    ctx->with_index = f->with_index;
     function_context->func.local_context = ctx;
     allocate_top_k_data_local_context(&function_context->func);
   } break;
