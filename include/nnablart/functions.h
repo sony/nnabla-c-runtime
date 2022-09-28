@@ -3273,11 +3273,13 @@ rt_function_error_t exec_dropout(rt_function_t *f);
 
 /// Local context for TopKData
 typedef struct {
-  void *data;        ///< General purpose data area
-  int32_t k;         ///< int64
-  uint8_t abs;       ///< bool
-  uint8_t reduce;    ///< bool
-  int32_t base_axis; ///< int64
+  void *data;         ///< General purpose data area
+  int32_t k;          ///< int64
+  uint8_t abs;        ///< bool
+  uint8_t reduce;     ///< bool
+  int32_t base_axis;  ///< int64
+  uint8_t largest;    ///< bool
+  uint8_t with_index; ///< bool
 } top_k_data_local_context_t;
 
 /// Allocate TopKData local context

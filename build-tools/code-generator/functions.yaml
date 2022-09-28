@@ -3397,13 +3397,21 @@ Stochasticity:
       base_axis:
         type: int64
         default: '1'
+      largest:
+        type: bool
+        default: 'True'
+      with_index:
+        type: bool
+        default: 'False'
     outputs:
       y: {}
+      indices: {}
     function_ids:
       iBBi: 87
+      iBBiBB: 350
     c_runtime: not support
-    uniq_name: TopKData_iBBi
-    id: 87
+    uniq_name: TopKData_iBBiBB
+    id: 350
     func_type:
     - ALL
   TopKGrad:
