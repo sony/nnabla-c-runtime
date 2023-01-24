@@ -2247,6 +2247,14 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
+#ifdef CONFIG_NONZERO
+  case NN_FUNCTION_NONZERO: { // NonZero
+    function_context->func.free_local_context_func = free_nonzero_local_context;
+    function_context->func.local_context = 0;
+    allocate_nonzero_local_context(&function_context->func);
+  } break;
+#endif
+
 #ifdef CONFIG_INTERPOLATE
   case NN_FUNCTION_INTERPOLATE_0: { // Interpolate
     function_context->func.free_local_context_func =
@@ -2292,6 +2300,25 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->channel_last = f->channel_last;
     function_context->func.local_context = ctx;
     allocate_interpolate_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_ONNXRESIZE
+  case NN_FUNCTION_ONNX_RESIZE: { // ONNXResize
+    function_context->func.free_local_context_func =
+        free_onnx_resize_local_context;
+    nn_function_onnx_resize_t *f = (nn_function_onnx_resize_t *)function;
+    onnx_resize_local_context_t *ctx =
+        rt_malloc_func(sizeof(onnx_resize_local_context_t));
+    ctx->sizes = create_rt_list_from_nn_list(n, f->sizes);
+    ctx->mode = f->mode;
+    ctx->coordinate_transformation_mode = f->coordinate_transformation_mode;
+    ctx->cubic_coeff_a = f->cubic_coeff_a;
+    ctx->exclude_outside = f->exclude_outside;
+    ctx->extrapolation_value = f->extrapolation_value;
+    ctx->nearest_mode = f->nearest_mode;
+    function_context->func.local_context = ctx;
+    allocate_onnx_resize_local_context(&function_context->func);
   } break;
 #endif
 
@@ -3181,6 +3208,23 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->nms_per_class = f->nms_per_class;
     function_context->func.local_context = ctx;
     allocate_nms_detection2d_local_context(&function_context->func);
+  } break;
+#endif
+
+#ifdef CONFIG_ONNXNONMAXSUPPRESSION
+  case NN_FUNCTION_ONNX_NON_MAX_SUPPRESSION: { // ONNXNonMaxSuppression
+    function_context->func.free_local_context_func =
+        free_onnx_non_max_suppression_local_context;
+    nn_function_onnx_non_max_suppression_t *f =
+        (nn_function_onnx_non_max_suppression_t *)function;
+    onnx_non_max_suppression_local_context_t *ctx =
+        rt_malloc_func(sizeof(onnx_non_max_suppression_local_context_t));
+    ctx->center_point_box = f->center_point_box;
+    ctx->max_output_boxes_per_class = f->max_output_boxes_per_class;
+    ctx->iou_threshold = f->iou_threshold;
+    ctx->score_threshold = f->score_threshold;
+    function_context->func.local_context = ctx;
+    allocate_onnx_non_max_suppression_local_context(&function_context->func);
   } break;
 #endif
 

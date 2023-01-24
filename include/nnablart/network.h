@@ -25,11 +25,11 @@ extern "C" {
 #include <stdint.h> // for fixed bit length integer type
 #include <stdlib.h> // for size_t
 
-#define NN_NNABLA_VERSION ("1.31.0.dev1")
+#define NN_NNABLA_VERSION ("1.34.0.dev1")
 #define NN_C_RUNTIME_VERSION ("1.2.0.dev1_c1")
 #define NN_BINARY_FORMAT_MINIMUM_VERSION (2)
 #define NN_BINARY_FORMAT_VERSION (3)
-#define NN_API_LEVEL (43)
+#define NN_API_LEVEL (44)
 #define NN_API_LEVEL_MAX (5000)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,11 +271,13 @@ typedef enum {
   NN_FUNCTION_BOOL_FILL = 341,    ///< BoolFill
   NN_FUNCTION_PACK_PADDED_SEQUENCE = 305, ///< PackPaddedSequence
   NN_FUNCTION_PAD_PACKED_SEQUENCE = 306,  ///< PadPackedSequence
+  NN_FUNCTION_NONZERO = 351,              ///< NonZero
   NN_FUNCTION_INTERPOLATE_0 =
       127, ///< Recent version of Interpolate has arg [iIiB]
   NN_FUNCTION_INTERPOLATE_1 =
       286, ///< Recent version of Interpolate has arg [iIiBB]
   NN_FUNCTION_INTERPOLATE = 291, ///< Interpolate
+  NN_FUNCTION_ONNX_RESIZE = 352, ///< ONNXResize
   NN_FUNCTION_FFT = 158,         ///< FFT
   NN_FUNCTION_IFFT = 159,        ///< IFFT
   NN_FUNCTION_STFT_0 = 327,      ///< Recent version of STFT has arg [iiiiBi]
@@ -336,21 +338,22 @@ typedef enum {
   NN_FUNCTION_FIXED_POINT_QUANTIZE = 113,      ///< FixedPointQuantize
   NN_FUNCTION_MIN_MAX_QUANTIZE_0 =
       273, ///< Recent version of MinMaxQuantize has arg [fBBB]
-  NN_FUNCTION_MIN_MAX_QUANTIZE = 274,     ///< MinMaxQuantize
-  NN_FUNCTION_POW2_QUANTIZE = 114,        ///< Pow2Quantize
-  NN_FUNCTION_PRUNE = 135,                ///< Prune
-  NN_FUNCTION_QUANTIZE_LINEAR = 293,      ///< QuantizeLinear
-  NN_FUNCTION_DEQUANTIZE_LINEAR = 294,    ///< DequantizeLinear
-  NN_FUNCTION_TOP_N_ERROR = 115,          ///< TopNError
-  NN_FUNCTION_BINARY_ERROR = 116,         ///< BinaryError
-  NN_FUNCTION_CONFUSION_MATRIX = 117,     ///< ConfusionMatrix
-  NN_FUNCTION_VAT_NOISE = 118,            ///< VATNoise
-  NN_FUNCTION_UNLINK = 119,               ///< Unlink
-  NN_FUNCTION_SINK = 120,                 ///< Sink
-  NN_FUNCTION_NMS_DETECTION2D = 231,      ///< NmsDetection2d
-  NN_FUNCTION_MAX_POOLING_BACKWARD = 272, ///< MaxPoolingBackward
-  NN_FUNCTION_PATCH_CORRELATION = 280,    ///< PatchCorrelation
-  NN_END_OF_FUNCTION = 65535              // Ensure this type has 16bits
+  NN_FUNCTION_MIN_MAX_QUANTIZE = 274,         ///< MinMaxQuantize
+  NN_FUNCTION_POW2_QUANTIZE = 114,            ///< Pow2Quantize
+  NN_FUNCTION_PRUNE = 135,                    ///< Prune
+  NN_FUNCTION_QUANTIZE_LINEAR = 293,          ///< QuantizeLinear
+  NN_FUNCTION_DEQUANTIZE_LINEAR = 294,        ///< DequantizeLinear
+  NN_FUNCTION_TOP_N_ERROR = 115,              ///< TopNError
+  NN_FUNCTION_BINARY_ERROR = 116,             ///< BinaryError
+  NN_FUNCTION_CONFUSION_MATRIX = 117,         ///< ConfusionMatrix
+  NN_FUNCTION_VAT_NOISE = 118,                ///< VATNoise
+  NN_FUNCTION_UNLINK = 119,                   ///< Unlink
+  NN_FUNCTION_SINK = 120,                     ///< Sink
+  NN_FUNCTION_NMS_DETECTION2D = 231,          ///< NmsDetection2d
+  NN_FUNCTION_ONNX_NON_MAX_SUPPRESSION = 353, ///< ONNXNonMaxSuppression
+  NN_FUNCTION_MAX_POOLING_BACKWARD = 272,     ///< MaxPoolingBackward
+  NN_FUNCTION_PATCH_CORRELATION = 280,        ///< PatchCorrelation
+  NN_END_OF_FUNCTION = 65535                  // Ensure this type has 16bits
 } nn_function_type_t;
 
 /// @brief Function implement type.
@@ -2529,6 +2532,17 @@ typedef struct {
 
 /// @}
 
+/// @brief NonZero function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+} nn_function_nonzero_t;
+
+/// @}
+
 /// @brief Interpolate function.
 /// @{
 typedef struct {
@@ -2544,6 +2558,25 @@ typedef struct {
   uint8_t half_pixel_for_nn; ///< Original type is [bool]
   uint8_t channel_last;      ///< Original type is [bool]
 } nn_function_interpolate_t;
+
+/// @}
+
+/// @brief ONNXResize function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  nn_list_t sizes; ///< Original type is [repeated int64]
+  uint32_t mode;   ///< Original type is [string]
+  uint32_t coordinate_transformation_mode; ///< Original type is [string]
+  float cubic_coeff_a;                     ///< Original type is [float]
+  int32_t exclude_outside;                 ///< Original type is [int64]
+  float extrapolation_value;               ///< Original type is [float]
+  uint32_t nearest_mode;                   ///< Original type is [string]
+} nn_function_onnx_resize_t;
 
 /// @}
 
@@ -3317,6 +3350,22 @@ typedef struct {
   float nms;             ///< Original type is [float]
   uint8_t nms_per_class; ///< Original type is [bool]
 } nn_function_nms_detection2d_t;
+
+/// @}
+
+/// @brief ONNXNonMaxSuppression function.
+/// @{
+typedef struct {
+  nn_function_type_t type : 16;      ///< Common: type of function.
+  nn_function_implement_t impl : 16; ///< Common: function implementation.
+  nn_list_t inputs;                  ///< Common: List of input variables.
+  nn_list_t outputs;                 ///< Common: List of output variables.
+  // End of common part.
+  int32_t center_point_box;           ///< Original type is [int64]
+  int32_t max_output_boxes_per_class; ///< Original type is [int64]
+  float iou_threshold;                ///< Original type is [float]
+  float score_threshold;              ///< Original type is [float]
+} nn_function_onnx_non_max_suppression_t;
 
 /// @}
 

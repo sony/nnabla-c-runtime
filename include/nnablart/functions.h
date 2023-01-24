@@ -3085,6 +3085,19 @@ rt_function_error_t free_pad_packed_sequence_local_context(rt_function_t *f);
 rt_function_error_t exec_pad_packed_sequence(rt_function_t *f);
 /// @}
 
+/// @defgroup NonZero NonZero
+/// @{
+
+/// Allocate NonZero local context
+rt_function_error_t allocate_nonzero_local_context(rt_function_t *f);
+
+/// Free NonZero local context
+rt_function_error_t free_nonzero_local_context(rt_function_t *f);
+
+/// Exec NonZero
+rt_function_error_t exec_nonzero(rt_function_t *f);
+/// @}
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3120,6 +3133,59 @@ rt_function_error_t free_interpolate_local_context(rt_function_t *f);
 
 /// Exec Interpolate
 rt_function_error_t exec_interpolate(rt_function_t *f);
+/// @}
+
+/// @defgroup ONNXResize ONNXResize
+/// @{
+
+/// Named values for ONNXResize.mode
+typedef enum {
+  ONNX_RESIZE_MODE_NEAREST,
+  ONNX_RESIZE_MODE_LINEAR,
+  ONNX_RESIZE_MODE_CUBIC,
+  END_OF_ONNX_RESIZE_MODE
+} onnx_resize_mode_value_t;
+
+/// Named values for ONNXResize.coordinate_transformation_mode
+typedef enum {
+  ONNX_RESIZE_COORDINATE_TRANSFORMATION_MODE_HALF_PIXEL,
+  ONNX_RESIZE_COORDINATE_TRANSFORMATION_MODE_PYTORCH_HALF_PIXEL,
+  ONNX_RESIZE_COORDINATE_TRANSFORMATION_MODE_ALIGN_CORNERS,
+  ONNX_RESIZE_COORDINATE_TRANSFORMATION_MODE_ASYMMETRIC,
+  ONNX_RESIZE_COORDINATE_TRANSFORMATION_MODE_TF_CROP_AND_RESIZE,
+  END_OF_ONNX_RESIZE_COORDINATE_TRANSFORMATION_MODE
+} onnx_resize_coordinate_transformation_mode_value_t;
+
+/// Named values for ONNXResize.nearest_mode
+typedef enum {
+  ONNX_RESIZE_NEAREST_MODE_ROUND_PREFER_FLOOR,
+  ONNX_RESIZE_NEAREST_MODE_ROUND_PREFER_CEIL,
+  ONNX_RESIZE_NEAREST_MODE_FLOOR,
+  ONNX_RESIZE_NEAREST_MODE_CEIL,
+  END_OF_ONNX_RESIZE_NEAREST_MODE
+} onnx_resize_nearest_mode_value_t;
+
+/// Local context for ONNXResize
+typedef struct {
+  void *data;                    ///< General purpose data area
+  rt_list_t sizes;               ///< Original type is [repeated int64]
+  onnx_resize_mode_value_t mode; ///< string
+  onnx_resize_coordinate_transformation_mode_value_t
+      coordinate_transformation_mode;            ///< string
+  float cubic_coeff_a;                           ///< float
+  int32_t exclude_outside;                       ///< int64
+  float extrapolation_value;                     ///< float
+  onnx_resize_nearest_mode_value_t nearest_mode; ///< string
+} onnx_resize_local_context_t;
+
+/// Allocate ONNXResize local context
+rt_function_error_t allocate_onnx_resize_local_context(rt_function_t *f);
+
+/// Free ONNXResize local context
+rt_function_error_t free_onnx_resize_local_context(rt_function_t *f);
+
+/// Exec ONNXResize
+rt_function_error_t exec_onnx_resize(rt_function_t *f);
 /// @}
 
 /// @defgroup FFT FFT
@@ -4289,6 +4355,30 @@ rt_function_error_t free_nms_detection2d_local_context(rt_function_t *f);
 
 /// Exec NmsDetection2d
 rt_function_error_t exec_nms_detection2d(rt_function_t *f);
+/// @}
+
+/// @defgroup ONNXNonMaxSuppression ONNXNonMaxSuppression
+/// @{
+
+/// Local context for ONNXNonMaxSuppression
+typedef struct {
+  void *data;                         ///< General purpose data area
+  int32_t center_point_box;           ///< int64
+  int32_t max_output_boxes_per_class; ///< int64
+  float iou_threshold;                ///< float
+  float score_threshold;              ///< float
+} onnx_non_max_suppression_local_context_t;
+
+/// Allocate ONNXNonMaxSuppression local context
+rt_function_error_t
+allocate_onnx_non_max_suppression_local_context(rt_function_t *f);
+
+/// Free ONNXNonMaxSuppression local context
+rt_function_error_t
+free_onnx_non_max_suppression_local_context(rt_function_t *f);
+
+/// Exec ONNXNonMaxSuppression
+rt_function_error_t exec_onnx_non_max_suppression(rt_function_t *f);
 /// @}
 
 /// @defgroup MaxPoolingBackward MaxPoolingBackward

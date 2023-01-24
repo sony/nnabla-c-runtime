@@ -2612,3 +2612,53 @@ rt_function_error_t exec_erf(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_ERF */
+
+// OnnxResize
+#ifdef CONFIG_ONNXRESIZE
+rt_function_error_t allocate_onnx_resize_local_context(rt_function_t *f) {
+  f->exec_func = exec_onnx_resize;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_onnx_resize_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_onnx_resize(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ONNXRESIZE */
+
+// Nonzero
+#ifdef CONFIG_NONZERO
+rt_function_error_t allocate_nonzero_local_context(rt_function_t *f) {
+  f->exec_func = exec_nonzero;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t free_nonzero_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_nonzero(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_NONZERO */
+
+// OnnxNonMaxSuppression
+#ifdef CONFIG_ONNXNONMAXSUPPRESSION
+rt_function_error_t
+allocate_onnx_non_max_suppression_local_context(rt_function_t *f) {
+  f->exec_func = exec_onnx_non_max_suppression;
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t
+free_onnx_non_max_suppression_local_context(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+
+rt_function_error_t exec_onnx_non_max_suppression(rt_function_t *f) {
+  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
+}
+#endif /* CONFIG_ONNXNONMAXSUPPRESSION */

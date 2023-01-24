@@ -523,8 +523,14 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_PAD_PACKED_SEQUENCE: { // PadPackedSequence
     printf("NNB: Function type:    PadPackedSequence(306)\n");
   } break;
+  case NN_FUNCTION_NONZERO: { // NonZero
+    printf("NNB: Function type:    NonZero(351)\n");
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     printf("NNB: Function type:    Interpolate(291)\n");
+  } break;
+  case NN_FUNCTION_ONNX_RESIZE: { // ONNXResize
+    printf("NNB: Function type:    ONNXResize(352)\n");
   } break;
   case NN_FUNCTION_FFT: { // FFT
     printf("NNB: Function type:    FFT(158)\n");
@@ -681,6 +687,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_NMS_DETECTION2D: { // NmsDetection2d
     printf("NNB: Function type:    NmsDetection2d(231)\n");
+  } break;
+  case NN_FUNCTION_ONNX_NON_MAX_SUPPRESSION: { // ONNXNonMaxSuppression
+    printf("NNB: Function type:    ONNXNonMaxSuppression(353)\n");
   } break;
   case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
     printf("NNB: Function type:    MaxPoolingBackward(272)\n");
@@ -1684,6 +1693,8 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument padding_value: %f\n", f->padding_value);
     printf("NNB: Function argument total_length: %d\n", f->total_length);
   } break;
+  case NN_FUNCTION_NONZERO: { // NonZero
+  } break;
   case NN_FUNCTION_INTERPOLATE: { // Interpolate
     nn_function_interpolate_t *f = (nn_function_interpolate_t *)func;
     printf("NNB: Function argument output_size: (");
@@ -1698,6 +1709,23 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument half_pixel_for_nn: %d\n",
            f->half_pixel_for_nn);
     printf("NNB: Function argument channel_last: %d\n", f->channel_last);
+  } break;
+  case NN_FUNCTION_ONNX_RESIZE: { // ONNXResize
+    nn_function_onnx_resize_t *f = (nn_function_onnx_resize_t *)func;
+    printf("NNB: Function argument sizes: (");
+    list = (int *)NN_GET(net, f->sizes.list);
+    for (i = 0; i < f->sizes.size; i++) {
+      printf(" %d", *(list + i));
+    }
+    printf(" )\n");
+    printf("NNB: Function argument mode: %d\n", f->mode);
+    printf("NNB: Function argument coordinate_transformation_mode: %d\n",
+           f->coordinate_transformation_mode);
+    printf("NNB: Function argument cubic_coeff_a: %f\n", f->cubic_coeff_a);
+    printf("NNB: Function argument exclude_outside: %d\n", f->exclude_outside);
+    printf("NNB: Function argument extrapolation_value: %f\n",
+           f->extrapolation_value);
+    printf("NNB: Function argument nearest_mode: %d\n", f->nearest_mode);
   } break;
   case NN_FUNCTION_FFT: { // FFT
     nn_function_fft_t *f = (nn_function_fft_t *)func;
@@ -2144,6 +2172,16 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
     printf("NNB: Function argument thresh: %f\n", f->thresh);
     printf("NNB: Function argument nms: %f\n", f->nms);
     printf("NNB: Function argument nms_per_class: %d\n", f->nms_per_class);
+  } break;
+  case NN_FUNCTION_ONNX_NON_MAX_SUPPRESSION: { // ONNXNonMaxSuppression
+    nn_function_onnx_non_max_suppression_t *f =
+        (nn_function_onnx_non_max_suppression_t *)func;
+    printf("NNB: Function argument center_point_box: %d\n",
+           f->center_point_box);
+    printf("NNB: Function argument max_output_boxes_per_class: %d\n",
+           f->max_output_boxes_per_class);
+    printf("NNB: Function argument iou_threshold: %f\n", f->iou_threshold);
+    printf("NNB: Function argument score_threshold: %f\n", f->score_threshold);
   } break;
   case NN_FUNCTION_MAX_POOLING_BACKWARD: { // MaxPoolingBackward
     nn_function_max_pooling_backward_t *f =

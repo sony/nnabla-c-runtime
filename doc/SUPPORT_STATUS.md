@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/219
+Total 62/222
 
 
 ## Neural Network Layer
@@ -196,7 +196,7 @@ Count 6/24
 |             Erf              |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/32
+Count 11/33
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -232,13 +232,15 @@ Count 11/32
 |           BoolFill           |      no      |      -       |      -       |
 |      PackPaddedSequence      |      no      |      -       |      -       |
 |      PadPackedSequence       |      no      |      -       |      -       |
+|           NonZero            |      no      |      -       |      -       |
 
 ## Signal Processing
-Count 0/5
+Count 0/6
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
 |         Interpolate          |      no      |      -       |      -       |
+|          ONNXResize          |      no      |      -       |      -       |
 |             FFT              |      no      |      -       |      -       |
 |             IFFT             |      no      |      -       |      -       |
 |             STFT             |      no      |      -       |      -       |
@@ -319,7 +321,7 @@ Count 0/3
 |       ConfusionMatrix        |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
-Count 0/6
+Count 0/7
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -327,6 +329,7 @@ Count 0/6
 |            Unlink            |      no      |      -       |      -       |
 |             Sink             |      no      |      -       |      -       |
 |        NmsDetection2d        |      no      |      -       |      -       |
+|    ONNXNonMaxSuppression     |      no      |      -       |      -       |
 |      MaxPoolingBackward      |      no      |      -       |      -       |
 |       PatchCorrelation       |      no      |      -       |      -       |
 
