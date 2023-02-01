@@ -3203,6 +3203,19 @@ Array Manipulation:
     id: 306
     func_type:
     - ALL
+  NonZero:
+    snake_name: nonzero
+    inputs:
+      x: {}
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      Empty: 351
+    uniq_name: NonZero
+    id: 351
+    func_type:
+    - ALL
 Signal Processing:
   Interpolate:
     snake_name: interpolate
@@ -3237,6 +3250,62 @@ Signal Processing:
     c_runtime: not support
     uniq_name: Interpolate_iIiBBBB
     id: 291
+    func_type:
+    - ALL
+  ONNXResize:
+    snake_name: onnx_resize
+    inputs:
+      x: {}
+    arguments:
+      roi:
+        type: repeated float
+        default: ()
+      scales:
+        type: repeated float
+        default: ()
+      sizes:
+        type: repeated int64
+        default: ()
+      mode:
+        type: string
+        available_values:
+        - nearest
+        - linear
+        - cubic
+        default: '''nearest'''
+      coordinate_transformation_mode:
+        type: string
+        available_values:
+        - half_pixel
+        - pytorch_half_pixel
+        - align_corners
+        - asymmetric
+        - tf_crop_and_resize
+        default: '''half_pixel'''
+      cubic_coeff_a:
+        type: float
+        default: -0.75
+      exclude_outside:
+        type: int64
+        default: 0
+      extrapolation_value:
+        type: float
+        default: 0.0
+      nearest_mode:
+        type: string
+        available_values:
+        - round_prefer_floor
+        - round_prefer_ceil
+        - floor
+        - ceil
+        default: '''round_prefer_floor'''
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      fFfFiIiififi: 352
+    uniq_name: ONNXResize_fFfFiIiififi
+    id: 352
     func_type:
     - ALL
   FFT:
@@ -4563,6 +4632,33 @@ Unsupported, Special Use:
     c_runtime: not support
     uniq_name: NmsDetection2d_ffB
     id: 231
+    func_type:
+    - ALL
+  ONNXNonMaxSuppression:
+    snake_name: onnx_non_max_suppression
+    inputs:
+      boxes: {}
+      scores: {}
+    arguments:
+      center_point_box:
+        type: int64
+        default: 0
+      max_output_boxes_per_class:
+        type: int64
+        default: 0
+      iou_threshold:
+        type: float
+        default: 0.0
+      score_threshold:
+        type: float
+        default: 0.0
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      iiff: 353
+    uniq_name: ONNXNonMaxSuppression_iiff
+    id: 353
     func_type:
     - ALL
   MaxPoolingBackward:
