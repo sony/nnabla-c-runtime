@@ -2600,7 +2600,7 @@ rt_function_error_t exec_shape(rt_function_t *f) {
 // Erf
 #ifdef CONFIG_ERF
 rt_function_error_t allocate_erf_local_context(rt_function_t *f) {
-  f->exec_func = exec_shape;
+  f->exec_func = exec_erf;
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 
