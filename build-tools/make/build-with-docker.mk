@@ -192,17 +192,6 @@ bwd-check-api_level: nnabla-c-runtime-docker_image_test
 
 ########################################################################################################################
 # Tests
-.PHONY: bwd-nnabla-c-runtime-generate-function-test
-bwd-nnabla-c-runtime-generate-function-test: nnabla-c-runtime-docker_image_test
-	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
-		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-generate-function-test
-
-.PHONY: bwd-nnabla-c-runtime-test-all-functions
-bwd-nnabla-c-runtime-test-all-functions: nnabla-c-runtime-docker_image_test
-	cd $(NNABLA_C_RUNTIME_DIRECTORY) \
-	&& docker run $(NNABLA_C_RUNTIME_DOCKER_RUN_OPTS) \
-		$(NNABLA_C_RUNTIME_DOCKER_IMAGE_TEST) make nnabla-c-runtime-test-all-functions
 
 ifneq ("$(NNABLA_EXAMPLES_DIRECTORY)","")
 

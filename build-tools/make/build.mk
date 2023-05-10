@@ -89,31 +89,6 @@ nnabla-c-runtime-update-function-info: nnabla-install
 check-api_level: nnabla-c-runtime-build nnabla-install
 	@bash ./build-tools/test/scripts/check_api_level.sh $(NNABLA_C_RUNTIME_DIRECTORY)
 
-.PHONY: nnabla-c-runtime-generate-function-test
-nnabla-c-runtime-generate-function-test: nnabla-install
-	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla
-	@cd $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla && PYTHONPATH=$$(cd ../../../build-tools/test/callback && pwd) \
-		python -m pytest ${PYTEST_OPTS} ../../../../nnabla/python/test
-	@NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/test/scripts/exec_all_functions.sh
-	@python build-tools/test/scripts/generate_yaml.py
-	@rm -rf $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
-	@mkdir -p $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions
-	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*.nntxt $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
-	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*.yaml $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
-	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_input_*.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
-	@ln $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla/succeed/*_output_?.bin $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/
-	@rm -f $(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY)/functions/*_nnabla_cli_output_?.bin
-
-.PHONY: nnabla-c-runtime-test-all-functions
-nnabla-c-runtime-test-all-functions: nnabla-c-runtime-build nnabla-install
-	@rm -rf $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/nnb
-	@rm -rf $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/csrc
-	@mkdir -p $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/
-	@python build-tools/test/scripts/create_nnabla_c_runtime_function_test_makefile.py
-	@NNABLA_C_RUNTIME_REFERENCE_DIRECTORY=$(NNABLA_C_RUNTIME_REFERENCE_DIRECTORY) \
-	 NNABLA_C_RUNTIME_TEST_DIRECTORY=$(NNABLA_C_RUNTIME_TEST_DIRECTORY) \
-		$(MAKE) -k -j1 -f $(NNABLA_C_RUNTIME_TEST_DIRECTORY)/nnabla-c-runtime/test_functions.mk
-
 ifneq ("$(NNABLA_EXAMPLES_DIRECTORY)","")
 
 .PHONY: nnabla-c-runtime-generate-mnist-test
