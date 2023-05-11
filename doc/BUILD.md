@@ -77,13 +77,6 @@ $ make
 - nnabla-c-runtime-update-function-info
 - bwd-nnabla-c-runtime-update-function-info
 
-#### Tests (Needs `nnabla` directory)
-- nnabla-c-runtime-generate-function-test
-- bwd-nnabla-c-runtime-generate-function-test
-
-- nnabla-c-runtime-test-all-functions
-- bwd-nnabla-c-runtime-test-all-functions
-
 #### Development in docker container (Needs `nnabla` directory)
 - bwd-nnabla-c-runtime-shell
 
