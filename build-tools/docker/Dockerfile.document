@@ -20,11 +20,12 @@ ARG PYTHONWARNINGS
 ARG CURL_OPTS
 ARG WGET_OPTS
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    doxygen \
-    graphviz \
-    make \
-    plantuml \
+RUN eval ${APT_OPTS} && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       doxygen \
+       graphviz \
+       make \
+       plantuml \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 

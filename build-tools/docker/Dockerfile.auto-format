@@ -20,12 +20,13 @@ ARG PYTHONWARNINGS
 ARG CURL_OPTS
 ARG WGET_OPTS
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    clang-format \
-    make \
-    git \
-    python3-pip \
-    python3-setuptools \
+RUN eval ${APT_OPTS} && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       clang-format \
+       make \
+       git \
+       python3-pip \
+       python3-setuptools \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 

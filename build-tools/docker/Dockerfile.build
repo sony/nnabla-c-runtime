@@ -20,16 +20,15 @@ ARG PYTHONWARNINGS
 ARG CURL_OPTS
 ARG WGET_OPTS
 
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    clang-format \
-    cmake \
-    gcc \
-    make \
-    python3 \
-    python3-pip \
+RUN eval ${APT_OPTS} && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       build-essential \
+       clang-format \
+       cmake \
+       gcc \
+       make \
+       python3 \
+       python3-pip \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 
