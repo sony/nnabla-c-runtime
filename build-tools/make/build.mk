@@ -81,7 +81,7 @@ nnabla-c-runtime-check-copyright:
 ifneq ("$(NNABLA_DIRECTORY)","")
 .PHONY: nnabla-c-runtime-update-function-info
 nnabla-c-runtime-update-function-info: nnabla-install
-	@nnabla_cli function_info -o $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
+	@nnabla_cli function_info -x Einsum -o $(NNABLA_C_RUNTIME_DIRECTORY)/build-tools/code-generator/functions.yaml
 	@sed -i -e "s/\(NNABLA_VERSION: \).*/\1$(NNABLA_VERSION)/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
 	@sed -i -e "s/API_LEVEL:.*/$(API_LEVEL)/" $(NNABLA_C_RUNTIME_DIRECTORY)/VERSION.txt
 
