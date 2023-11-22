@@ -478,6 +478,9 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
     printf("NNB: Function type:    MatrixDiagPart(85)\n");
   } break;
+  case NN_FUNCTION_TRILU: { // Trilu
+    printf("NNB: Function type:    Trilu(360)\n");
+  } break;
   case NN_FUNCTION_MESHGRID: { // Meshgrid
     printf("NNB: Function type:    Meshgrid(334)\n");
   } break;
@@ -696,6 +699,18 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_PATCH_CORRELATION: { // PatchCorrelation
     printf("NNB: Function type:    PatchCorrelation(280)\n");
+  } break;
+  case NN_FUNCTION_UNIQUE: { // Unique
+    printf("NNB: Function type:    Unique(358)\n");
+  } break;
+  case NN_FUNCTION_EYE_LIKE: { // EyeLike
+    printf("NNB: Function type:    EyeLike(354)\n");
+  } break;
+  case NN_FUNCTION_MOD2: { // Mod2
+    printf("NNB: Function type:    Mod2(355)\n");
+  } break;
+  case NN_FUNCTION_BIT_SHIFT: { // BitShift
+    printf("NNB: Function type:    BitShift(356)\n");
   } break;
   default:;
   }
@@ -1636,6 +1651,11 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
   } break;
   case NN_FUNCTION_MATRIX_DIAG_PART: { // MatrixDiagPart
   } break;
+  case NN_FUNCTION_TRILU: { // Trilu
+    nn_function_trilu_t *f = (nn_function_trilu_t *)func;
+    printf("NNB: Function argument k: %d\n", f->k);
+    printf("NNB: Function argument upper: %d\n", f->upper);
+  } break;
   case NN_FUNCTION_MESHGRID: { // Meshgrid
     nn_function_meshgrid_t *f = (nn_function_meshgrid_t *)func;
     printf("NNB: Function argument ij_indexing: %d\n", f->ij_indexing);
@@ -2240,6 +2260,27 @@ void dump_function(nn_network_t *net, nn_function_t *func) {
       printf(" %d", *(list + i));
     }
     printf(" )\n");
+  } break;
+  case NN_FUNCTION_UNIQUE: { // Unique
+    nn_function_unique_t *f = (nn_function_unique_t *)func;
+    printf("NNB: Function argument flatten: %d\n", f->flatten);
+    printf("NNB: Function argument axis: %d\n", f->axis);
+    printf("NNB: Function argument sorted: %d\n", f->sorted);
+    printf("NNB: Function argument with_index: %d\n", f->with_index);
+    printf("NNB: Function argument with_inverse: %d\n", f->with_inverse);
+    printf("NNB: Function argument with_counts: %d\n", f->with_counts);
+  } break;
+  case NN_FUNCTION_EYE_LIKE: { // EyeLike
+    nn_function_eye_like_t *f = (nn_function_eye_like_t *)func;
+    printf("NNB: Function argument k: %d\n", f->k);
+  } break;
+  case NN_FUNCTION_MOD2: { // Mod2
+    nn_function_mod2_t *f = (nn_function_mod2_t *)func;
+    printf("NNB: Function argument fmod: %d\n", f->fmod);
+  } break;
+  case NN_FUNCTION_BIT_SHIFT: { // BitShift
+    nn_function_bit_shift_t *f = (nn_function_bit_shift_t *)func;
+    printf("NNB: Function argument direction: %d\n", f->direction);
   } break;
   default:;
   }
