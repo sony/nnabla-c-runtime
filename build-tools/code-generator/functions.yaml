@@ -2943,6 +2943,26 @@ Array Manipulation:
     id: 85
     func_type:
     - ALL
+  Trilu:
+    snake_name: trilu
+    inputs:
+      x: {}
+    arguments:
+      k:
+        type: int64
+        default: '0'
+      upper:
+        type: bool
+        default: 'True'
+    outputs:
+      y: {}
+    c_runtime: support
+    function_ids:
+      iB: 360
+    uniq_name: Trilu_iB
+    id: 360
+    func_type:
+    - ALL
   Meshgrid:
     snake_name: meshgrid
     inputs:
@@ -4720,3 +4740,112 @@ Unsupported, Special Use:
     id: 280
     func_type:
     - ALL
+  Unique:
+    snake_name: unique
+    inputs:
+      x: {}
+    arguments:
+      flatten:
+        type: bool
+        default: 'True'
+      axis:
+        type: int64
+        default: None
+      sorted:
+        type: bool
+        default: 'True'
+      with_index:
+        type: bool
+        default: 'False'
+      with_inverse:
+        type: bool
+        default: 'False'
+      with_counts:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+      indices: {}
+      inverse_indices: {}
+      counts: {}
+    c_runtime: not support
+    function_ids:
+      BiBBBB: 358
+    uniq_name: Unique_BiBBBB
+    id: 358
+    func_type:
+    - ALL
+  EyeLike:
+    snake_name: eye_like
+    inputs:
+      x: {}
+    arguments:
+      k:
+        type: int64
+        default: '0'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      i: 354
+    uniq_name: EyeLike_i
+    id: 354
+    func_type:
+    - ALL
+  Mod2:
+    snake_name: mod2
+    inputs:
+      x0: {}
+      x1: {}
+    arguments:
+      fmod:
+        type: bool
+        default: 'False'
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      B: 355
+    uniq_name: Mod2_B
+    id: 355
+    func_type:
+    - ALL
+  BitShift:
+    snake_name: bit_shift
+    inputs:
+      x: {}
+      shift: {}
+    arguments:
+      direction:
+        type: string
+        available_values:
+        - LEFT
+        - RIGHT
+        default: '''LEFT'''
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      i: 356
+    uniq_name: BitShift_i
+    id: 356
+    func_type:
+    - ALL
+  Einsum:
+    snake_name: einsum
+    inputs:
+      x:
+        variadic: true
+    arguments:
+      equation:
+        type: string
+        default: ''
+    outputs:
+      y: {}
+    c_runtime: not support
+    function_ids:
+      i: 359
+    uniq_name: Einsum_i
+    id: 359
+    func_type:
+    - None

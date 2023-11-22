@@ -87,6 +87,8 @@ def generate(filename, info):
     l = []
     for cn, cat in info.items():
         for fn, func in cat.items():
+            if func['func_type'] == ['None']:
+                continue
             l.append('#ifdef CONFIG_{}'.format(fn.upper()))
             for n, f in enumerate(func['function_ids'].items()):
                 l += _generate_context_code(fn, func, n, f[0], f[1])
