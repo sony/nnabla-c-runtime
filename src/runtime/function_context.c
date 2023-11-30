@@ -2065,18 +2065,6 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
   } break;
 #endif
 
-#ifdef CONFIG_TRILU
-  case NN_FUNCTION_TRILU: { // Trilu
-    function_context->func.free_local_context_func = free_trilu_local_context;
-    nn_function_trilu_t *f = (nn_function_trilu_t *)function;
-    trilu_local_context_t *ctx = rt_malloc_func(sizeof(trilu_local_context_t));
-    ctx->k = f->k;
-    ctx->upper = f->upper;
-    function_context->func.local_context = ctx;
-    allocate_trilu_local_context(&function_context->func);
-  } break;
-#endif
-
 #ifdef CONFIG_MESHGRID
   case NN_FUNCTION_MESHGRID: { // Meshgrid
     function_context->func.free_local_context_func =
@@ -3273,60 +3261,6 @@ void allocate_function_context(nn_network_t *n, nn_function_t *function,
     ctx->padding = create_rt_list_from_nn_list(n, f->padding);
     function_context->func.local_context = ctx;
     allocate_patch_correlation_local_context(&function_context->func);
-  } break;
-#endif
-
-#ifdef CONFIG_UNIQUE
-  case NN_FUNCTION_UNIQUE: { // Unique
-    function_context->func.free_local_context_func = free_unique_local_context;
-    nn_function_unique_t *f = (nn_function_unique_t *)function;
-    unique_local_context_t *ctx =
-        rt_malloc_func(sizeof(unique_local_context_t));
-    ctx->flatten = f->flatten;
-    ctx->axis = f->axis;
-    ctx->sorted = f->sorted;
-    ctx->with_index = f->with_index;
-    ctx->with_inverse = f->with_inverse;
-    ctx->with_counts = f->with_counts;
-    function_context->func.local_context = ctx;
-    allocate_unique_local_context(&function_context->func);
-  } break;
-#endif
-
-#ifdef CONFIG_EYELIKE
-  case NN_FUNCTION_EYE_LIKE: { // EyeLike
-    function_context->func.free_local_context_func =
-        free_eye_like_local_context;
-    nn_function_eye_like_t *f = (nn_function_eye_like_t *)function;
-    eye_like_local_context_t *ctx =
-        rt_malloc_func(sizeof(eye_like_local_context_t));
-    ctx->k = f->k;
-    function_context->func.local_context = ctx;
-    allocate_eye_like_local_context(&function_context->func);
-  } break;
-#endif
-
-#ifdef CONFIG_MOD2
-  case NN_FUNCTION_MOD2: { // Mod2
-    function_context->func.free_local_context_func = free_mod2_local_context;
-    nn_function_mod2_t *f = (nn_function_mod2_t *)function;
-    mod2_local_context_t *ctx = rt_malloc_func(sizeof(mod2_local_context_t));
-    ctx->fmod = f->fmod;
-    function_context->func.local_context = ctx;
-    allocate_mod2_local_context(&function_context->func);
-  } break;
-#endif
-
-#ifdef CONFIG_BITSHIFT
-  case NN_FUNCTION_BIT_SHIFT: { // BitShift
-    function_context->func.free_local_context_func =
-        free_bit_shift_local_context;
-    nn_function_bit_shift_t *f = (nn_function_bit_shift_t *)function;
-    bit_shift_local_context_t *ctx =
-        rt_malloc_func(sizeof(bit_shift_local_context_t));
-    ctx->direction = f->direction;
-    function_context->func.local_context = ctx;
-    allocate_bit_shift_local_context(&function_context->func);
   } break;
 #endif
 

@@ -722,22 +722,6 @@ rt_function_error_t exec_reduce_mean(rt_function_t *f) {
 }
 #endif /* CONFIG_REDUCEMEAN */
 
-// UNIQUE
-#ifdef CONFIG_UNIQUE
-rt_function_error_t allocate_unique_local_context(rt_function_t *f) {
-  f->exec_func = exec_unique;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_unique_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_unique(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_UNIQUE */
-
 ////////////////////////////////////////////////////////////////////////////////
 // Arithmetic
 ////////////////////////////////////////////////////////////////////////////////
@@ -789,22 +773,6 @@ rt_function_error_t exec_mul_n(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_MULN */
-
-// MOD2
-#ifdef CONFIG_MOD2
-rt_function_error_t allocate_mod2_local_context(rt_function_t *f) {
-  f->exec_func = exec_mod2;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_mod2_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_mod2(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_MOD2 */
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical
@@ -2241,22 +2209,6 @@ rt_function_error_t exec_warp_by_flow(rt_function_t *f) {
 }
 #endif /* CONFIG_WARPBYFLOW */
 
-// TRILU
-#ifdef CONFIG_TRILU
-rt_function_error_t allocate_trilu_local_context(rt_function_t *f) {
-  f->exec_func = exec_trilu;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_trilu_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_trilu(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_TRILU */
-
 ////////////////////////////////////////////////////////////////////////////////
 // Quantization Neural Network Layers
 ////////////////////////////////////////////////////////////////////////////////
@@ -2710,35 +2662,3 @@ rt_function_error_t exec_onnx_non_max_suppression(rt_function_t *f) {
   return RT_FUNCTION_ERROR_UNIMPLEMENTED;
 }
 #endif /* CONFIG_ONNXNONMAXSUPPRESSION */
-
-// BITSHIFT
-#ifdef CONFIG_BITSHIFT
-rt_function_error_t allocate_bit_shift_local_context(rt_function_t *f) {
-  f->exec_func = exec_bit_shift;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_bit_shift_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_bit_shift(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_BITSHIFT */
-
-// EYELIKE
-#ifdef CONFIG_EYELIKE
-rt_function_error_t allocate_eye_like_local_context(rt_function_t *f) {
-  f->exec_func = exec_eye_like;
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t free_eye_like_local_context(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-
-rt_function_error_t exec_eye_like(rt_function_t *f) {
-  return RT_FUNCTION_ERROR_UNIMPLEMENTED;
-}
-#endif /* CONFIG_EYELIKE */

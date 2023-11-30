@@ -254,7 +254,6 @@ typedef enum {
   NN_FUNCTION_SHAPE = 348,           ///< Shape
   NN_FUNCTION_MATRIX_DIAG = 84,      ///< MatrixDiag
   NN_FUNCTION_MATRIX_DIAG_PART = 85, ///< MatrixDiagPart
-  NN_FUNCTION_TRILU = 360,           ///< Trilu
   NN_FUNCTION_MESHGRID = 334,        ///< Meshgrid
   NN_FUNCTION_BATCH_DET = 276,       ///< BatchDet
   NN_FUNCTION_BATCH_INV = 275,       ///< BatchInv
@@ -354,11 +353,6 @@ typedef enum {
   NN_FUNCTION_ONNX_NON_MAX_SUPPRESSION = 353, ///< ONNXNonMaxSuppression
   NN_FUNCTION_MAX_POOLING_BACKWARD = 272,     ///< MaxPoolingBackward
   NN_FUNCTION_PATCH_CORRELATION = 280,        ///< PatchCorrelation
-  NN_FUNCTION_UNIQUE = 358,                   ///< Unique
-  NN_FUNCTION_EYE_LIKE = 354,                 ///< EyeLike
-  NN_FUNCTION_MOD2 = 355,                     ///< Mod2
-  NN_FUNCTION_BIT_SHIFT = 356,                ///< BitShift
-  NN_FUNCTION_EINSUM = 359,                   ///< Einsum
   NN_END_OF_FUNCTION = 65535                  // Ensure this type has 16bits
 } nn_function_type_t;
 
@@ -2353,20 +2347,6 @@ typedef struct {
 
 /// @}
 
-/// @brief Trilu function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-  // End of common part.
-  int32_t k;     ///< Original type is [int64]
-  uint8_t upper; ///< Original type is [bool]
-} nn_function_trilu_t;
-
-/// @}
-
 /// @brief Meshgrid function.
 /// @{
 typedef struct {
@@ -3420,76 +3400,6 @@ typedef struct {
   nn_list_t shift_step; ///< Original type is [Shape]
   nn_list_t padding;    ///< Original type is [Shape]
 } nn_function_patch_correlation_t;
-
-/// @}
-
-/// @brief Unique function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-  // End of common part.
-  uint8_t flatten;      ///< Original type is [bool]
-  int32_t axis;         ///< Original type is [int64]
-  uint8_t sorted;       ///< Original type is [bool]
-  uint8_t with_index;   ///< Original type is [bool]
-  uint8_t with_inverse; ///< Original type is [bool]
-  uint8_t with_counts;  ///< Original type is [bool]
-} nn_function_unique_t;
-
-/// @}
-
-/// @brief EyeLike function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-  // End of common part.
-  int32_t k; ///< Original type is [int64]
-} nn_function_eye_like_t;
-
-/// @}
-
-/// @brief Mod2 function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-  // End of common part.
-  uint8_t fmod; ///< Original type is [bool]
-} nn_function_mod2_t;
-
-/// @}
-
-/// @brief BitShift function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-  // End of common part.
-  uint32_t direction; ///< Original type is [string]
-} nn_function_bit_shift_t;
-
-/// @}
-
-/// @brief Einsum function.
-/// @{
-typedef struct {
-  nn_function_type_t type : 16;      ///< Common: type of function.
-  nn_function_implement_t impl : 16; ///< Common: function implementation.
-  nn_list_t inputs;                  ///< Common: List of input variables.
-  nn_list_t outputs;                 ///< Common: List of output variables.
-  // End of common part.
-  uint32_t equation; ///< Original type is [string]
-} nn_function_einsum_t;
 
 /// @}
 
