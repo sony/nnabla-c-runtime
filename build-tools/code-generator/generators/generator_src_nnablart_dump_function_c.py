@@ -20,6 +20,8 @@ def generate(filename, info):
     dump = []
     for cn, cat in info.items():
         for fn, func in cat.items():
+            if func['func_type'] == ['None']:
+                continue
             printname.append(
                 '    case NN_FUNCTION_{}: {{ // {}'.format(func['snake_name'].upper(), fn))
             printname.append(

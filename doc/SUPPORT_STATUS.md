@@ -18,7 +18,7 @@
 
 # Implement status
 
-Total 62/222
+Total 63/228
 
 
 ## Neural Network Layer
@@ -196,7 +196,7 @@ Count 6/24
 |             Erf              |      no      |      -       |      -       |
 
 ## Array Manipulation
-Count 11/33
+Count 11/34
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -217,6 +217,7 @@ Count 11/33
 |            Shape             |      no      |      -       |      -       |
 |          MatrixDiag          |     yes      |     yes      |     yes      |
 |        MatrixDiagPart        |     yes      |     yes      |     yes      |
+|            Trilu             |      no      |      -       |      -       |
 |           Meshgrid           |      no      |      -       |      -       |
 |           BatchDet           |      no      |      -       |      -       |
 |           BatchInv           |      no      |      -       |      -       |
@@ -321,7 +322,7 @@ Count 0/3
 |       ConfusionMatrix        |      no      |      -       |      -       |
 
 ## Unsupported, Special Use
-Count 0/7
+Count 1/12
 
 |           Function           |  Available   |    float     |   generic    |
 |------------------------------|--------------|--------------|--------------|
@@ -332,4 +333,9 @@ Count 0/7
 |    ONNXNonMaxSuppression     |      no      |      -       |      -       |
 |      MaxPoolingBackward      |      no      |      -       |      -       |
 |       PatchCorrelation       |      no      |      -       |      -       |
+|            Unique            |      no      |      -       |      -       |
+|           EyeLike            |      no      |      -       |      -       |
+|             Mod2             |      no      |      -       |      -       |
+|           BitShift           |      no      |      -       |      -       |
+|            Einsum            |     yes      |      ?       |      ?       |
 

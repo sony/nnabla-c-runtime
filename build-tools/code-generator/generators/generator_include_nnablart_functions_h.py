@@ -23,6 +23,8 @@ def generate(filename, info):
             '/// @defgroup {} {}'.format(cn.split(',').pop().replace(' ', ''), cn.split(',').pop()))
         defines.append('/// @{')
         for fn, func in cat.items():
+            if func['func_type'] == ['None']:
+                continue
             defines.append('')
             defines.append('/// @defgroup {0} {0}'.format(fn))
             defines.append('/// @{')

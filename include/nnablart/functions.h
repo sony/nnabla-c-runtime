@@ -2836,6 +2836,26 @@ rt_function_error_t free_matrix_diag_part_local_context(rt_function_t *f);
 rt_function_error_t exec_matrix_diag_part(rt_function_t *f);
 /// @}
 
+/// @defgroup Trilu Trilu
+/// @{
+
+/// Local context for Trilu
+typedef struct {
+  void *data;    ///< General purpose data area
+  int32_t k;     ///< int64
+  uint8_t upper; ///< bool
+} trilu_local_context_t;
+
+/// Allocate Trilu local context
+rt_function_error_t allocate_trilu_local_context(rt_function_t *f);
+
+/// Free Trilu local context
+rt_function_error_t free_trilu_local_context(rt_function_t *f);
+
+/// Exec Trilu
+rt_function_error_t exec_trilu(rt_function_t *f);
+/// @}
+
 /// @defgroup Meshgrid Meshgrid
 /// @{
 
@@ -4426,6 +4446,94 @@ rt_function_error_t free_patch_correlation_local_context(rt_function_t *f);
 
 /// Exec PatchCorrelation
 rt_function_error_t exec_patch_correlation(rt_function_t *f);
+/// @}
+
+/// @defgroup Unique Unique
+/// @{
+
+/// Local context for Unique
+typedef struct {
+  void *data;           ///< General purpose data area
+  uint8_t flatten;      ///< bool
+  int32_t axis;         ///< int64
+  uint8_t sorted;       ///< bool
+  uint8_t with_index;   ///< bool
+  uint8_t with_inverse; ///< bool
+  uint8_t with_counts;  ///< bool
+} unique_local_context_t;
+
+/// Allocate Unique local context
+rt_function_error_t allocate_unique_local_context(rt_function_t *f);
+
+/// Free Unique local context
+rt_function_error_t free_unique_local_context(rt_function_t *f);
+
+/// Exec Unique
+rt_function_error_t exec_unique(rt_function_t *f);
+/// @}
+
+/// @defgroup EyeLike EyeLike
+/// @{
+
+/// Local context for EyeLike
+typedef struct {
+  void *data; ///< General purpose data area
+  int32_t k;  ///< int64
+} eye_like_local_context_t;
+
+/// Allocate EyeLike local context
+rt_function_error_t allocate_eye_like_local_context(rt_function_t *f);
+
+/// Free EyeLike local context
+rt_function_error_t free_eye_like_local_context(rt_function_t *f);
+
+/// Exec EyeLike
+rt_function_error_t exec_eye_like(rt_function_t *f);
+/// @}
+
+/// @defgroup Mod2 Mod2
+/// @{
+
+/// Local context for Mod2
+typedef struct {
+  void *data;   ///< General purpose data area
+  uint8_t fmod; ///< bool
+} mod2_local_context_t;
+
+/// Allocate Mod2 local context
+rt_function_error_t allocate_mod2_local_context(rt_function_t *f);
+
+/// Free Mod2 local context
+rt_function_error_t free_mod2_local_context(rt_function_t *f);
+
+/// Exec Mod2
+rt_function_error_t exec_mod2(rt_function_t *f);
+/// @}
+
+/// @defgroup BitShift BitShift
+/// @{
+
+/// Named values for BitShift.direction
+typedef enum {
+  BIT_SHIFT_DIRECTION_LEFT,
+  BIT_SHIFT_DIRECTION_RIGHT,
+  END_OF_BIT_SHIFT_DIRECTION
+} bit_shift_direction_value_t;
+
+/// Local context for BitShift
+typedef struct {
+  void *data;                            ///< General purpose data area
+  bit_shift_direction_value_t direction; ///< string
+} bit_shift_local_context_t;
+
+/// Allocate BitShift local context
+rt_function_error_t allocate_bit_shift_local_context(rt_function_t *f);
+
+/// Free BitShift local context
+rt_function_error_t free_bit_shift_local_context(rt_function_t *f);
+
+/// Exec BitShift
+rt_function_error_t exec_bit_shift(rt_function_t *f);
 /// @}
 
 /// @}
