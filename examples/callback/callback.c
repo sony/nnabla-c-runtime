@@ -221,6 +221,7 @@ static rt_return_value_t cb_alloc(nn_network_t *net, void *function_context) {
 
   func->func.exec_func = cb_exec;
   func->func.free_local_context_func = cb_free;
+  func->func.local_context = 0;
   return RT_RET_FUNCTION_MATCH;
 }
 
