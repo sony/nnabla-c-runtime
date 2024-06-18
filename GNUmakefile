@@ -29,7 +29,7 @@ clean-all:
 ########################################################################################################################
 # Include NNABLA make file if exists.
 PYTHON_VERSION_MAJOR ?= 3
-PYTHON_VERSION_MINOR ?= 9
+PYTHON_VERSION_MINOR ?= 10
 BUILD_DIRECTORY_WHEEL_SUFFIX ?= _py$(PYTHON_VERSION_MAJOR)$(PYTHON_VERSION_MINOR)
 
 ifneq ("$(wildcard ../nnabla)","")
