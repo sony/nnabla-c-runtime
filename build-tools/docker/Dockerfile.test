@@ -29,26 +29,44 @@ ENV PYVERNAME=${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}
 RUN eval ${APT_OPTS} && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
        build-essential \
+       ca-certificates \
+       libssl-dev \
+       zlib1g-dev \
+       libbz2-dev \
+       libreadline-dev \
+       libsqlite3-dev \
+       curl \
+       git \
+       libncursesw5-dev \
+       xz-utils \
+       tk-dev \
+       libxml2-dev \
+       libxmlsec1-dev \
+       libffi-dev \
+       liblzma-dev \
        bzip2 \
        clang-format \
        wget \
        cmake \
        make \
        valgrind \
-       python${PYVERNAME} \
-       python3-pip \
-       python${PYVERNAME}-dev \
-       liblzma-dev \
     && apt-get -yqq clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYVERNAME} 0
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python${PYVERNAME} 0
-
-RUN pip3 install ${PIP_INS_OPTS} --upgrade pip
-RUN pip install ${PIP_INS_OPTS} wheel setuptools
-RUN pip install ${PIP_INS_OPTS} Cython autopep8 boto3 configparser \
-    contextlib2 futures h5py mako numpy protobuf pyyaml scikit-image scipy tqdm pytest
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv \
+    && export PYENV_ROOT="$HOME/.pyenv" \
+    && export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/plugins/python-build/bin:$PATH" \
+    && export PYTHON_BUILD_CURL_OPTS="${CURL_OPTS}" \
+    && export PYTHON_BUILD_WGET_OPTS="${WGET_OPTS}" \
+    && export PYTHON_CONFIGURE_OPTS=--disable-shared \
+    && eval "$(pyenv init -)" \
+    && python-build `pyenv latest -k ${PYVERNAME}` /usr/local \
+    && pyenv global system \
+    && pip install ${PIP_INS_OPTS} --no-cache-dir --upgrade pip \
+    && pip install ${PIP_INS_OPTS} wheel setuptools \
+    && pip install ${PIP_INS_OPTS} Cython autopep8 boto3 configparser \
+       contextlib2 futures h5py mako numpy protobuf pyyaml scikit-image scipy tqdm pytest \
+    && rm -rf ~/.pyenv/.git /tmp/*
 
 ENV LD_LIBRARY_PATH /usr/local/lib64:$LD_LIBRARY_PATH
 ENV PATH /tmp/.local/bin:$PATH
