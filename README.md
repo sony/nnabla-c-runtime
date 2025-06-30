@@ -14,6 +14,10 @@
  limitations under the License.
 -->
 
+***Notice: nnabla is under maintenance phase and we will not be actively developing.***
+
+----
+
 # NNabla C Runtime
 
 This is a runtime library for inference Neural Network created by [Neural Network Libraries](https://github.com/sony/nnabla).
