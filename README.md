@@ -23,7 +23,7 @@
 This is a runtime library for inference Neural Network created by [Neural Network Libraries](https://github.com/sony/nnabla).
 
 
-[Neural Network Libraries](https://github.com/sony/nnabla) and [Neural Network Console](https://dl.sony.com) can output DNN training result as [NNP](https://nnabla.readthedocs.io/en/latest/format.html) file.
+[Neural Network Libraries](https://github.com/sony/nnabla) and [Neural Network Console](https://github.com/sony/neural-network-console) can output DNN training result as [NNP](https://nnabla.readthedocs.io/en/latest/format.html) file.
 
 [File Format Converter](https://nnabla.readthedocs.io/en/latest/python/file_format_converter/file_format_converter.html) can convert NNP file into `NNB` file interpreted by [Runtime](https://github.com/sony/nnabla-c-runtime/tree/master/src/runtime) or `C Source Code` to call [Functions](https://github.com/sony/nnabla-c-runtime/tree/master/src/runtime).
 
