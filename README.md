@@ -1,3 +1,6 @@
+> This project has reached end of life on [April 3, 2025].
+> No further development or security support is provided.
+
 <!--
  Copyright 2017 Sony Corporation.
 
@@ -13,10 +16,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
-***Notice: nnabla is under maintenance phase and we will not be actively developing.***
-
-----
 
 # NNabla C Runtime
 
